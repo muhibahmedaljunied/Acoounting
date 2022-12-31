@@ -75,13 +75,26 @@
                                 </td>
 
                                 <td>
-                                    <div id="factura_producto" class="input_nombre">
+                                    <!-- <div id="factura_producto" class="input_nombre">
                                         <select v-model="store[index]" name="type" id="type" class="form-control"
                                             required>
                                             <option v-for="store in stores" v-bind:value="store.id">
                                                 {{ store.text }}
                                             </option>
                                         </select>
+                                    </div> -->
+
+
+                                    <div class="custom-search">
+
+                                        <input :id="'purchase_store_tree' + index" type="text" readonly
+                                            class="custom-search-input">
+                                        <input :id="'purchase_store_tree_id' + index" type="hidden" readonly
+                                            class="custom-search-input">
+
+                                        <button class="custom-search-botton" type="button" data-toggle="modal"
+                                            data-target="#exampleModalStore" @click="detect_index_store(index)"> <i
+                                                class="fa fa-plus-circle"></i></button>
                                     </div>
                                 </td>
 
@@ -160,6 +173,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade" id="exampleModalStore" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="well" id="treeview_json_store"></div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -174,6 +207,7 @@ export default {
     data() {
         return {
             indexselected: '',
+            indexselectedstore: '',
             text_message: '',
             type: '',
             type_refresh: '',
@@ -182,6 +216,7 @@ export default {
 
             product_name: [],
             product: [],
+            store: [],
             products: '',
             word_search: '',
             check_state: [],
@@ -224,6 +259,7 @@ export default {
     mounted() {
         this.list();
         this.showtree();
+        this.showtreestore();
         this.counts[0] = 1;
         this.type = 'purchase';
         this.type_refresh = 'increment';
@@ -236,6 +272,10 @@ export default {
         detect_index(index) {
 
             this.indexselected = index;
+        },
+        detect_index_store(index) {
+
+            this.indexselectedstore = index;
         },
 
         showtree() {
@@ -304,6 +344,146 @@ export default {
                     $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
 
                     gf.product[gf.indexselected] = data.node.id;
+
+
+
+                });
+
+            });
+            // this.axios.post(`/tree_store`).then((response) => {
+            //     this.jsonTreeDataStore = response.data.stores;
+
+
+            //     $('#treeview_json_store').jstree({
+            //         core: {
+            //             themes: {
+            //                 responsive: false,
+            //             },
+            //             // so that create works
+            //             check_callback: true,
+            //             data: this.jsonTreeDataStore,
+            //         },
+            //         types: {
+            //             default: {
+            //                 icon: "fa fa-folder text-primary",
+            //             },
+            //             file: {
+            //                 icon: "fa fa-file  text-primary",
+            //             },
+            //         },
+            //         checkbox: {
+            //             three_state: false,
+
+            //         },
+            //         state: {
+            //             key: "demo2"
+            //         },
+            //         search: {
+            //             case_insensitive: true,
+            //             show_only_matches: true
+            //         },
+            //         plugins: ["checkbox",
+            //             "contextmenu",
+            //             "dnd",
+            //             "massload",
+            //             "search",
+            //             "sort",
+            //             "state",
+            //             "types",
+            //             "unique",
+            //             "wholerow",
+            //             "changed",
+            //             "conditionalselect"],
+            //         contextmenu: {
+            //             items: contextmenu
+            //         },
+
+
+
+
+
+
+            //     }).on("changed.jstree", function (e, data) {
+
+            //         // console.log(data.node.id);
+            //         $(`#purchase_tree${gf.indexselected}`).val(data.node.text);
+            //         $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
+
+            //         // gf.intostore[gf.indexselected] = $(`#supply_tree${gf.indexselected}`).val(data.node.text);
+            //         //  modal-title-store
+            //         // gf.get_store(data.node.id);
+
+
+            //     });
+
+            // });
+        },
+        showtreestore() {
+
+            let gf = this;
+            this.axios.post(`/tree_store`).then((response) => {
+                this.jsonTreeDataStore = response.data.stores;
+
+
+                $('#treeview_json_store').jstree({
+                    core: {
+                        themes: {
+                            responsive: false,
+                        },
+                        // so that create works
+                        check_callback: true,
+                        data: this.jsonTreeDataStore,
+                    },
+                    types: {
+                        default: {
+                            icon: "fa fa-folder text-primary",
+                        },
+                        file: {
+                            icon: "fa fa-file  text-primary",
+                        },
+                    },
+                    checkbox: {
+                        three_state: false,
+
+                    },
+                    state: {
+                        key: "demo2"
+                    },
+                    search: {
+                        case_insensitive: true,
+                        show_only_matches: true
+                    },
+                    plugins: ["checkbox",
+                        "contextmenu",
+                        "dnd",
+                        "massload",
+                        "search",
+                        "sort",
+                        "state",
+                        "types",
+                        "unique",
+                        "wholerow",
+                        "changed",
+                        "conditionalselect"],
+                    contextmenu: {
+                        items: contextmenu
+                    },
+
+
+
+
+
+
+                }).on("changed.jstree", function (e, data) {
+
+                    console.log(data.node.id);
+
+                    //  modal-title-store
+
+                    $(`#purchase_store_tree${gf.indexselectedstore}`).val(data.node.text);
+                    $(`#purchase_store_tree_id${gf.indexselectedstore}`).val(data.node.id);
+
+                    gf.store[gf.indexselectedstore] = data.node.id;
 
 
 
