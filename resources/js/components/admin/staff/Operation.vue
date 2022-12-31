@@ -22,23 +22,23 @@
                         <li class="nav-item">
                           <a href="#tab2" class="nav-link" data-toggle="tab">التاخير</a>
                         </li> -->
-                        
+
 
                         <li class="nav-item">
                           <a href="#tab3" class="nav-link" data-toggle="tab"> الاضافي</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab7" class="nav-link" data-toggle="tab"> الخصم</a>
+                          <a href="#tab4" class="nav-link" data-toggle="tab"> الخصم</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab4" class="nav-link" data-toggle="tab">القرض</a>
+                          <a href="#tab5" class="nav-link" data-toggle="tab">القرض</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab5" class="nav-link" data-toggle="tab">السلف</a>
+                          <a href="#tab6" class="nav-link" data-toggle="tab">السلف</a>
                         </li>
-                        <li class="nav-item">
-                          <a href="#tab5" class="nav-link" data-toggle="tab">العهد</a>
-                        </li>
+                        <!-- <li class="nav-item">
+                          <a href="#tab7" class="nav-link" data-toggle="tab">العهد</a>
+                        </li> -->
                         <!-- <li class="nav-item">
                           <a href="#tab5" class="nav-link" data-toggle="tab">انهاء خدمه موظف</a>
                         </li>
@@ -61,9 +61,9 @@
                           <a href="#tab11" class="nav-link" data-toggle="tab"> اضافه موظف </a>
                         </li>
 
-                        <li class="nav-item">
-                          <a href="#tab12" class="nav-link" data-toggle="tab">  الرواتب والبدلات </a>
-                        </li>
+                        <!-- <li class="nav-item">
+                          <a href="#tab12" class="nav-link" data-toggle="tab"> الرواتب والبدلات </a>
+                        </li> -->
 
                       </ul>
                     </div>
@@ -83,17 +83,17 @@
                         <delay></delay>
 
                       </div> -->
-                  
+
                       <div class="tab-pane" id="tab3">
                         <extra></extra>
                       </div>
-                      <div class="tab-pane" id="tab7">
+                      <div class="tab-pane" id="tab4">
                         <discount></discount>
                       </div>
-                      <div class="tab-pane" id="tab4">
+                      <div class="tab-pane" id="tab5">
                         <loan></loan>
                       </div>
-                      <div class="tab-pane" id="tab5">
+                      <div class="tab-pane" id="tab6">
                         <advance></advance>
                       </div>
                       <!-- <div class="tab-pane" id="tab6">
@@ -102,20 +102,20 @@
                       <div class="tab-pane active" id="tab8">
                         <attendance></attendance>
                       </div>
-                      <div class="tab-pane active" id="tab9">
+                      <div class="tab-pane" id="tab9">
                         <leave></leave>
                       </div>
                       <div class="tab-pane" id="tab10">
                         <allowance></allowance>
 
                       </div>
-                      <div class="tab-pane active" id="tab11">
+                      <div class="tab-pane" id="tab11">
                         <personal-information></personal-information>
                       </div>
-
+<!-- 
                       <div class="tab-pane active" id="tab12">
                         <salary-allowance></salary-allowance>
-                      </div>
+                      </div> -->
 
                     </div>
                   </div>

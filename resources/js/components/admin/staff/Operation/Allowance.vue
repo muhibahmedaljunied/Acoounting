@@ -158,62 +158,7 @@
                         <div class="card-body">
                           <div class="form-row">
 
-                            <div class="form-group col-md-6" style="text-align: center">
-                              <h5>البدلات الشهريه</h5>
-
-
-
-                              <div class="table-responsive">
-                                <table class="table table-bordered text-right">
-                                  <thead>
-                                    <tr>
-
-
-                                      <th>اسم البدل</th>
-                                      <th>المبلغ</th>
-                                      <th>اضافه</th>
-
-
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                   
-
-                                    <tr v-for="index in count_" :key="index">
-
-
-
-                                      <td>
-
-                                        <input v-model="allow.allow_1[index - 1]" type="text" name="name" id="name"
-                                          class="form-control" />
-
-                                      </td>
-                                      <td><input v-model="qty.qty_1[index - 1]" type="number"
-                                          class="form-control input_cantidad"></td>
-
-                                      <td v-if="index == 1">
-
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                          v-on:click="addComponent(count.count_monthly, 0)">
-                                          <i class="fa fa-plus-circle"></i></a>
-
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                          v-on:click="disComponent(count.count_monthly, 0)">
-                                          <i class="fa fa-minus-circle"></i></a>
-
-
-
-                                      </td>
-
-
-                                    </tr>
-
-                                  </tbody>
-
-                                </table>
-                              </div>
-                            </div>
+                   
 
 
                             <div class="form-group col-md-6" style="text-align: center">
