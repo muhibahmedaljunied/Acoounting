@@ -12,7 +12,7 @@ class Account extends Model
     public function children(){
 
 
-        return $this->hasMany('App\Account', 'parent_id','id')->with('children');
+        return $this->hasMany('App\Models\Account', 'parent_id','id')->with('children');
 
 
     }

@@ -60,7 +60,7 @@
 
                 <div class="form-group">
                   <label for="Product">رقم الحساب</label>
-                  <input id='account_number_first_level' type="text" class="form-control" required />
+                  <input id='account_number' type="text" class="form-control" required />
 
                 </div>
 
@@ -89,10 +89,14 @@
 
                 </div>
 
+                <input id='parent' type="hidden" />
+
+<input id='rank' type="hidden" />
+
               </div>
                 </div>
                 <div class="card-footer">
-                  <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"> حفظ </button>
+                  <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm"> حفظ </button>
                 </div>
               </form>
             </div>
@@ -331,33 +335,19 @@
 export default {
   data() {
     return {
-      n: "",
-      show: false,
-
-      account_id: [],
-      text: [],
-      account_name_en: [],
-      // account_main: [],
-      rank: [],
-      account_first_level: '',
-      account_type: [],
-      currency: [],
-
-
-
-      tree: {
-        child: [],
-      },
-
-      account_main: '',
-      count: 1,
+      file: '',
+      text: '',
+      product: '',
+   
+      // product_first_level: '',
+      last_nodes: '',
+      rank: 1,
+      parent: 0,
+      id: '',
       trees: "",
-      jsonTreeData: [],
-
-
       errors: "",
-
-      success: "",
+      jsonTreeData: [],
+      add: 0,
     };
   },
 
@@ -384,8 +374,8 @@ export default {
         this.jsonTreeData = response.data.accounts;
         this.last_nodes = response.data.last_nodes;
 
-        $(`#account_number_first_level`).val(response.data.last_nodes + 1);
-
+        // $(`#account_number_first_level`).val(response.data.last_nodes + 1);
+        $(`#account_number`).val(response.data.last_nodes + 1);
         $('#treeview_json').jstree({
           core: {
             themes: {

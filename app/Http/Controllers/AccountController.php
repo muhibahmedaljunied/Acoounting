@@ -118,7 +118,7 @@ class AccountController extends Controller
     public function store(Request $request)
     {
 
-        return response()->json($request->all());
+        // return response()->json($request->all());
         $account = new Account();
 
         $account->id = $request->post('account_id');
@@ -203,7 +203,7 @@ class AccountController extends Controller
 
     }
    
-
+  
 
     public function tree_account()
     {
@@ -213,6 +213,8 @@ class AccountController extends Controller
         return response()->json(['accounts' => $accounts,'last_nodes' => $last_nodes]);
 
 
+
+        
         
     }
 
