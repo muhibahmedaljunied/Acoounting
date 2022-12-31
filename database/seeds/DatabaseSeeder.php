@@ -1,0 +1,470 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('roles')->insert([
+            'id'       => 1,
+            'name'   => "Admin",
+            'status'   => 1,
+        ]);
+
+        DB::table('roles')->insert([
+            'id'       => 3,
+            'name'   => "Customer",
+            'status'   => 1,
+        ]);
+
+        DB::table('users')->insert([
+            'id'        => 1,
+            'role_id'    => 1,
+            'name'    => "مهيب الجنيد",
+            'phone'  => "776165784",
+            'email'     => 'muhib@gmail.com',
+            'email_verified_at' => now(),
+            'address'    => "taiz",
+            'password'  => bcrypt('12345678'),
+            'status'    => 1,
+            'remember_token' => '13131313',
+
+        ]);
+
+        DB::table('users')->insert([
+            'id'        => 2,
+            'role_id'    => 1,
+            'name'    => "محمد عامر",
+            'phone'  => "738017689",
+            'email'     => 'muhamed@gmail.com',
+            'email_verified_at' => now(),
+            'address'    => "sana'a",
+            'password'  => bcrypt('12345678'),
+            'status'    => 1,
+            'remember_token' => '12313131313',
+
+        ]);
+        // ----------------------------------------------------------------------------------------------
+        DB::table('suppliers')->insert([
+            'id'        => 1,
+            'name'    => "عمار",
+            'last_name'    => "النمر",
+            'phone'  => "738017689",
+            'email'     => 'muhib2@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+
+        DB::table('suppliers')->insert([
+            'id'        => 2,
+            'name'    => "بسام",
+            'last_name'    => "الارحبي",
+            'phone'  => "738017689",
+            'email'     => 'muhib3@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+
+        DB::table('suppliers')->insert([
+            'id'        => 3,
+            'name'    => "عصام",
+            'last_name'    => "الحنيد",
+            'phone'  => "738017689",
+            'email'     => 'muhib4@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+
+        DB::table('suppliers')->insert([
+            'id'        => 4,
+            'name'    => "حسين",
+            'last_name'    => "الحشيشي",
+            'phone'  => "738017689",
+            'email'     => 'muhib5@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+        // -----------------------------------------------------------------------------
+        DB::table('customers')->insert([
+            'id'        => 1,
+            'name'    => "بشير",
+            'phone'  => "738017689",
+            'email'     => 'muhib1@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+
+        DB::table('customers')->insert([
+            'id'        => 2,
+            'name'    => "عبدالمجيد",
+
+            'phone'  => "738017689",
+            'email'     => 'muhib2@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+
+        DB::table('customers')->insert([
+            'id'        => 3,
+            'name'    => "اسد",
+
+            'phone'  => "738017689",
+            'email'     => 'muhib3@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+
+        DB::table('customers')->insert([
+            'id'        => 4,
+            'name'    => "شملان",
+
+            'phone'  => "738017689",
+            'email'     => 'muhib4@gmail.com',
+            'address'    => "sana'a",
+            'status'    => 1,
+
+        ]);
+        // -----------------------------------------------------------------------------------------
+
+        DB::table('statuses')->insert([
+            'id'        => 1,
+            'name'    => 'تالف',
+
+        ]);
+
+
+        DB::table('statuses')->insert([
+            'id'        => 2,
+            'name'    => 'جديد',
+
+        ]);
+
+        DB::table('statuses')->insert([
+            'id'        => 3,
+            'name'    => 'مستخدم',
+
+        ]);
+
+        DB::table('statuses')->insert([
+            'id'        => 4,
+            'name'    => 'سليم',
+
+        ]);
+
+        DB::table('statuses')->insert([
+            'id'        => 5,
+            'name'    => 'عطلان',
+
+        ]);
+
+        // -------------------------------------Staff---------------------------------------------------------
+
+        DB::table('branches')->insert([
+            'id'        => 1,
+            'name'    => 'تعز',
+
+        ]);
+        DB::table('branches')->insert([
+            'id'        => 2,
+            'name'    => 'صنعاء',
+
+        ]);
+        DB::table('branches')->insert([
+            'id'        => 3,
+            'name'    => 'اب',
+
+        ]);
+        DB::table('branches')->insert([
+            'id'        => 4,
+            'name'    => 'عدن',
+
+        ]);
+        //     // -----------------------------departments---------------------------
+        DB::table('departments')->insert([
+            'id'        => 1,
+            'name'    => 'حاسوب',
+
+        ]);
+        DB::table('departments')->insert([
+            'id'        => 2,
+            'name'    => 'هندسه',
+
+        ]);
+        //   -----------------------job----------------------------------
+
+        DB::table('jobs')->insert([
+            'id'        => 1,
+            'name'    => 'IT',
+
+        ]);
+        DB::table('jobs')->insert([
+            'id'        => 2,
+            'name'    => 'computer',
+
+        ]);
+        //   -----------------------stafftype----------------------------------
+
+        DB::table('staff_types')->insert([
+            'id'        => 1,
+            'name'    => 'رسمي',
+
+        ]);
+        DB::table('staff_types')->insert([
+            'id'        => 2,
+            'name'    => 'متعاقد',
+
+        ]);
+        //   -----------------------qualification----------------------------------
+
+        DB::table('qualifications')->insert([
+            'id'        => 1,
+            'name'    => 'بكلوريوس',
+
+        ]);
+        DB::table('qualifications')->insert([
+            'id'        => 2,
+            'name'    => 'ماجستر',
+
+        ]);
+        //   -----------------------absence_type----------------------------------
+
+        DB::table('absence_types')->insert([
+            'id'        => 1,
+            'name'    => 'بعذر',
+
+        ]);
+        DB::table('absence_types')->insert([
+            'id'        => 2,
+            'name'    => 'بغير عذر',
+
+        ]);
+        //   -----------------------allowance----------------------------------
+
+        DB::table('allowance_types')->insert([
+            'id'        => 1,
+            'name'    => 'شهريه',
+
+        ]);
+        DB::table('allowance_types')->insert([
+            'id'        => 2,
+            'name'    => 'غير شهريه',
+
+        ]);
+
+
+
+        //   -----------------------allowance----------------------------------
+
+        //  DB::table('allowances')->insert([
+        //     'id'        => 1,
+        //     'staff_id'    => 1,
+        //     'name'    => 'بدل سكن',
+        //     'allowance_type_id'=>1
+
+        // ]);
+        // DB::table('allowances')->insert([
+        //     'id'        => 2,
+        //     'staff_id'    => 1,
+        //     'name'    => 'بدل مواصلات',
+        //     'allowance_type_id'=>1
+
+        // ]);
+
+
+
+        //   -----------------------delay_types----------------------------------
+        DB::table('delay_types')->insert([
+            'id'        => 1,
+            'name'    => ' ربع ساعه',
+
+        ]);
+        DB::table('delay_types')->insert([
+            'id'        => 2,
+            'name'    => 'نص ساعه',
+
+        ]);
+        //   -----------------------extra_types----------------------------------
+
+        DB::table('extra_types')->insert([
+            'id'        => 1,
+            'name'    => 'وقت الدوام',
+
+        ]);
+        DB::table('extra_types')->insert([
+            'id'        => 2,
+            'name'    => 'بعد الدوام',
+
+        ]);
+
+        //   -----------------------discount_types----------------------------------
+
+        DB::table('discount_types')->insert([
+            'id'        => 1,
+            'name'    => 'سداد سلفه',
+
+        ]);
+        DB::table('discount_types')->insert([
+            'id'        => 2,
+            'name'    => 'مخالفه قوانين',
+
+        ]);
+
+        DB::table('discount_types')->insert([
+            'id'        => 3,
+            'name'    => 'جزاء',
+
+        ]);
+        //   -----------------------units----------------------------------
+
+        DB::table('unit')->insert([
+            'id'        => 1,
+            'name'    => 'كرتون',
+
+        ]);
+        DB::table('unit')->insert([
+            'id'        => 2,
+            'name'    => 'قطعه',
+
+        ]);
+
+        DB::table('unit')->insert([
+            'id'        => 3,
+            'name'    => 'حبه',
+
+        ]);
+        DB::table('unit')->insert([
+            'id'        => 4,
+            'name'    => 'كيلو',
+
+        ]);
+        DB::table('unit')->insert([
+            'id'        => 5,
+            'name'    => 'جرام',
+
+        ]);
+        DB::table('unit')->insert([
+            'id'        => 6,
+            'name'    => 'متر',
+
+        ]);
+
+        //   -----------------------extra_types----------------------------------
+
+        DB::table('vacation_types')->insert([
+            'id'        => 1,
+            'name'    => 'عارضه',
+
+        ]);
+        DB::table('vacation_types')->insert([
+            'id'        => 2,
+            'name'    => 'مستحقه',
+
+        ]);
+        DB::table('vacation_types')->insert([
+            'id'        => 3,
+            'name'    => 'اجازه رسميه',
+
+        ]);
+        DB::table('vacation_types')->insert([
+            'id'        => 4,
+            'name'    => 'اذن',
+
+        ]);
+        //   -----------------------personality----------------------------------
+
+        DB::table('nationalities')->insert([
+            'id'        => 1,
+            'name'    => 'اليمن',
+
+        ]);
+        DB::table('nationalities')->insert([
+            'id'        => 2,
+            'name'    => 'السعوديه',
+
+        ]);
+        //   -----------------------relgion----------------------------------
+
+        DB::table('staff_religions')->insert([
+            'id'        => 1,
+            'name'    => 'مسلم',
+
+        ]);
+        DB::table('staff_religions')->insert([
+            'id'        => 2,
+            'name'    => 'مسيحي',
+
+        ]);
+        // --------------------------------------------products--------------------------------------------------
+        // DB::table('products')->insert([
+        //     'id'        => 1,
+        //     'parent_id'    => '',
+        //     'text'=>'عصاير',
+        //     'rank'=>''
+
+        // ]);
+
+        // DB::table('products')->insert([
+        //     'id'        => 11,
+        //     'parent_id'    => 1,
+        //     'text'=>'يمني',
+        //     'rank'=>1
+
+        // ]);
+
+        // DB::table('products')->insert([
+        //     'id'        => 111,
+        //     'parent_id'    => 11,
+        //     'text'=>'هايل سعيد',
+        //     'rank'=>2
+
+        // ]);
+
+
+        // DB::table('products')->insert([
+        //     'id'        => 1111,
+        //     'parent_id'    => 111,
+        //     'text'=>'الهناء',
+        //     'rank'=>3
+
+        // ]);
+        // -----------------------------------stores-----------------------------------------------------
+
+
+        // DB::table('products')->insert([
+        //     'id'        => 1,
+        //     'parent_id'    => '',
+        //     'text'=>'جدر',
+        //     'rank'=>''
+
+        // ]);
+
+        // DB::table('products')->insert([
+        //     'id'        => 11,
+        //     'parent_id'    => 1,
+        //     'text'=>'المخزن1',
+        //     'rank'=>1
+
+        // ]);
+
+        // DB::table('products')->insert([
+        //     'id'        => 12,
+        //     'parent_id'    => 1,
+        //     'text'=>'المخزن2',
+        //     'rank'=>1
+
+        // ]);
+    }
+}
