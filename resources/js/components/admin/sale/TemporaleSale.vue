@@ -24,7 +24,7 @@
                                 <th>الحاله</th>
                                 <th> المواصفات والطراز</th>
                                 <th>الكميه المنوفره</th>
-                                <th>الوحده</th>
+                                <!-- <th>الوحده</th> -->
                                 <th>السعر</th>
                                 <th>الكميه</th>
                                 <th>الضريبه</th>
@@ -66,7 +66,7 @@
                                         {{ product.availabe_qty }}
                                     </div>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <div id="factura_producto" class="input_nombre">
                                         <select v-model="status[index]" name="type" id="type" class="form-control"
                                             required>
@@ -75,7 +75,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                </td>
+                                </td> -->
                                 <td>
                                     <input type="number" v-model="price[index]" id="price"
                                         class="form-control input_cantidad" onkeypress="return " />

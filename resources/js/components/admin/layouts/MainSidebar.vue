@@ -332,11 +332,11 @@
             </li>
           </ul>
 
-          <ul class="slide-menu">
+          <!-- <ul class="slide-menu">
             <li>
               <router-link class="slide-item" to="/unit">الوحدات</router-link>
             </li>
-          </ul>
+          </ul> -->
 
             <ul class="slide-menu">
             <li>

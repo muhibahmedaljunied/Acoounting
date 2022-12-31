@@ -13,8 +13,8 @@
                                 <th>الحاله</th>
                                 <th>الموصفات والطراز</th>
                                 <th>المخزن</th>
-                                <th>الوحده</th>
-                                <th>التكلفه</th>
+                                <!-- <th>الوحده</th>
+                                <th>التكلفه</th> -->
 
                                 <th>السعر</th>
                                 <th>الكميه</th>
@@ -85,7 +85,7 @@
                                     </div>
                                 </td>
 
-                                <td>
+                                <!-- <td>
                                     <div id="factura_producto" class="input_nombre">
                                         <select v-model="store[index]" name="type" id="type" class="form-control"
                                             required>
@@ -100,7 +100,7 @@
                                 <td>
                                     <input type="number" v-model="price[index]" id="qty"
                                         class="form-control input_cantidad" onkeypress="return valida(event)" />
-                                </td>
+                                </td> -->
 
 
 
