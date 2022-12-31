@@ -3,25 +3,28 @@
   <div class="row row-sm">
     <div class="col-xl-6">
       <div class="card">
-        <div class="card-body" id="printme">
-          <div class="text-right">
-            <h3> شجره الحسابات</h3>
-          </div>
+        <div class="card-header pb-0">
+            <div class="d-flex justify-content-between">
 
+              <span style="font-size: x-large"> شجره الحسابات</span>
+              <!-- <router-link to="create_product" id="agregar_productos"
+                class="tn btn-info btn-lg waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link> -->
+
+            </div>
+
+          </div>
+        <div class="card-body">
           <div class="container">
             <div class="row justify-content-left">
               <div class="col-md-6">
                 <div class="card">
-                  <div class="card-header">
-                   
-
-                  </div>
+                
                   <div class="card-body">
-                    <div class="container">
+                    <!-- <div class="container"> -->
                       <!-- <button @click="prints()">click</button> -->
                       <div class="well" id="treeview_json"></div>
 
-                    </div>
+                    <!-- </div> -->
                   </div>
                 </div>
               </div>
@@ -63,7 +66,7 @@
 
                 <div class="form-group">
                   <label for="Product">اسم الحساب</label>
-                  <input v-model="account_first_level" type="text" name="Product" id="account_first_level"
+                  <input v-model="text" type="text" name="Product" id="account_first_level"
                     class="form-control" required />
 
                 </div>
@@ -89,7 +92,7 @@
               </div>
                 </div>
                 <div class="card-footer">
-                  <button type="button" class="btn btn-primary btn-lg btn-block" @click="add_product"> حفظ </button>
+                  <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"> حفظ </button>
                 </div>
               </form>
             </div>
@@ -360,9 +363,9 @@ export default {
 
 
   created() {
-    // localStorage.setItem('id', 0);
-    // localStorage.setItem('rank', 0);
-    // localStorage.setItem('table', 'account');
+    localStorage.setItem('id', 0);
+    localStorage.setItem('rank', 0);
+    localStorage.setItem('table', 'account');
 
 
     // --------
@@ -437,86 +440,29 @@ export default {
       });
     },
 
-    // Import() {
-    //   this.axios.post(`/AccountImport`).then(({ data }) => {
-    //     this.list();
-    //     toast.fire({
-    //       title: "تم الاستيراد بنجاح",
-    //       text: "Account are successfully exported.",
-    //       button: "Close", // Text on button
-    //       icon: "success", //built in icons: success, warning, error, info
-    //       timer: 3000, //timeOut for auto-close
-    //       buttons: {
-    //         confirm: {
-    //           text: "OK",
-    //           value: true,
-    //           visible: true,
-    //           className: "",
-    //           closeModal: true,
-    //         },
-    //         cancel: {
-    //           text: "Cancel",
-    //           value: false,
-    //           visible: true,
-    //           className: "",
-    //           closeModal: true,
-    //         },
-    //       },
-    //     });
-    //   });
-    // },
+   
 
-    // Export() {
-    //   this.axios.post(`/AccountExport`).then((responce) => {
-    //     toast.fire({
-    //       title: "تم التصدير بنجاح",
-    //       text: "Accounts are successfully exported.",
-    //       button: "Close", // Text on button
-    //       icon: "success", //built in icons: success, warning, error, info
-    //       timer: 3000, //timeOut for auto-close
-    //       buttons: {
-    //         confirm: {
-    //           text: "OK",
-    //           value: true,
-    //           visible: true,
-    //           className: "",
-    //           closeModal: true,
-    //         },
-    //         cancel: {
-    //           text: "Cancel",
-    //           value: false,
-    //           visible: true,
-    //           className: "",
-    //           closeModal: true,
-    //         },
-    //       },
-    //     });
-
-    //     console.log(responce);
-    //   });
-
+    // first_level(e) {
+    //   e.preventDefault();
+    //   addnode_first(this.account_first_level);
 
     // },
 
-    first_level(e) {
-      e.preventDefault();
-      addnode_first(this.account_first_level);
-
-    },
-
-    data_for_select_node(node_id) {
+    // data_for_select_node(node_id) {
 
 
-      $("#account_main_first_level").val(node_id);
+    //   $("#account_main_first_level").val(node_id);
 
-    },
+    // },
 
 
 
 
-    submitForm(e) {
-      e.preventDefault();
+    submitForm() {
+
+      // e.preventDefault();
       addnode(this.text);
+      // this.$router.go(0);
     },
 
     update_account(e) {
@@ -527,7 +473,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<!-- <style scoped>
 .custom-search {
   position: relative;
   width: 300px;
@@ -557,5 +503,5 @@ export default {
   border-radius: 100px;
   z-index: 2;
 }
-</style>
+</style> -->
 

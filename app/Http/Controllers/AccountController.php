@@ -118,8 +118,7 @@ class AccountController extends Controller
     public function store(Request $request)
     {
 
-
-
+        return response()->json($request->all());
         $account = new Account();
 
         $account->id = $request->post('account_id');

@@ -92,13 +92,12 @@
 
                       <div id="factura_producto" class="input_nombre">
                         <label for="Product">الوحده الريسيه</label>
-                                        <select name="type" id="type" class="form-control"
-                                            required>
-                                            <option >
-                                                
-                                            </option>
-                                        </select>
-                                    </div>
+                        <select name="type" id="type" class="form-control" required>
+                          <option>
+
+                          </option>
+                        </select>
+                      </div>
 
 
                       <div class="form-group">

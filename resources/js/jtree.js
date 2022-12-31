@@ -52,7 +52,7 @@ initial = function () {
   
    addnode =  function (text) {
  
-    // alert(text);
+    console.log(text)
 
     let currentObj = this;
     const config = {
