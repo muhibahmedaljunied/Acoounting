@@ -298,11 +298,10 @@ export default {
     },
 
     get_search(word_search) {
-      this.axios
-        .post(`/extrasearch`, { word_search: this.word_search })
-        .then(({ data }) => {
-          this.extras = data;
+      this.axios.post(`/extrasearch`, { word_search: this.word_search }).then(({ data }) => {
 
+          this.extras = data;
+          
           // this.$root.logo = "Category";
         });
     },
@@ -338,19 +337,7 @@ export default {
         // ---------------------------------------------------------------
         console.log(response);
 
-        // this.temporale = response.data;
-        // this.temporale.forEach((item) => {
-        //   this.total_quantity = item.tem_qty + this.total_quantity;
-  
-        //   this.grand_total = item.subtotal + this.grand_total;
-        //   this.To_pay = item.subtotal + this.To_pay;
-  
-        //   this.total_tax = item.tax + this.total_tax;
-  
-          //  console.log(this.total_tax);
-  
-  
-        // });
+       
   
         toastMessage("تم الاضافه بنجاح");
         // this.$router.go(0);

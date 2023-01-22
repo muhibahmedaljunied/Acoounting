@@ -179,21 +179,21 @@
 export default {
   data() {
 
-    return data;
-    // return {
-    //   sale_detail: 0,
-    //   sale_id: "",
-    //   dateselected: "2021-11-18",
-    //   note: "",
-    //   Total_quantity: 0,
-    //   check_state:[],
-    //   return_qty: [],
-    //   seen: false,
+    // return data;
+    return {
+      sale_detail: 0,
+      sale_id: "",
+      dateselected: "2021-11-18",
+      note: "",
+      Total_quantity: 0,
+      check_state:[],
+      return_qty: [],
+      seen: false,
 
-    //   not_qty: true,
-    //   message_check: false,
-    //   text_message: 0,
-    // };
+      not_qty: true,
+      message_check: false,
+      text_message: 0,
+    };
   },
   mounted() {
     let uri = `/sale_details/${this.$route.params.id}`;

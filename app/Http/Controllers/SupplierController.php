@@ -7,6 +7,7 @@ use App\Models\Supplier;
 use App\Exports\SupplierExport;
 use App\Imports\SupplierImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
 use Storage;
 use DB;
 class SupplierController extends Controller
@@ -77,6 +78,20 @@ class SupplierController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:2',
+            'email' => 'required|email|unique:users',
+            'phone'=>'required'
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+        
+
+
+        // ---------------------------------------------------------------
     	$user = new Supplier();
         $user->name = $request->post('name');
         $user->last_name = $request->post('last_name');
@@ -86,7 +101,6 @@ class SupplierController extends Controller
         $user->address = $request->post('address');
 
         $user->save();
-
         return back();
     }
 

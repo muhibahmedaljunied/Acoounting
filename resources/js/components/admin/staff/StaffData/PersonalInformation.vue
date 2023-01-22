@@ -3,66 +3,24 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
+        <div class="col-md-4" >
+            <label for="status">اسم الموظف</label>
+            <select v-model="staffselected" name="type" id="type" class="form-control " required>
+              <option v-for="staff in staffs.data" v-bind:value="staff.id">
+                {{ staff.name }}
+              </option>
+            </select>
+          </div>
         <div class="card-header pb-0">
           <!-- <div class="d-flex justify-content-between">
             <span class="h2"> البيانات الشخصيه</span>
           </div> -->
 
-          <div class="col-md-4" >
-            <label for="status">اسم الموظف</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-          <div class="col-md-4" >
-            <label for="status">الفرع</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-          <div class="col-md-4" >
-            <label for="status">نوع الوظيفه</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
+          
+       
+     
            
-            <!-- <a
-              class="tn btn-info btn-lg waves-effect btn-agregar"
-              data-toggle="modal"
-              id="agregar_productos"
-              data-target="#addPI"
-            >
-              <i class="fa fa-plus-circle"></i
-            ></a>
-
-            <input
-              type="search"
-              autocomplete="on"
-              name="search"
-              data-toggle="dropdown"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="true"
-              placeholder="بحث عن صنف"
-              v-model="word_search"
-              @input="get_search()"
-            /> -->
+          
 
        
         </div>

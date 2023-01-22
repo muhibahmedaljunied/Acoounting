@@ -1,6 +1,6 @@
 <template>
   <!-- row opened -->
-  <div>
+  <div class="container-fluid">
     <div class="row row-sm">
 
       <div class="col-xl-6">
@@ -39,82 +39,118 @@
           </div>
         </div>
       </div>
+
+
+
+
       <div class="col-xl-6">
+        <div class="card">
 
 
-        <div class="container">
-          <div class="row justify-content-left">
-            <div class="col-md-6">
-              <div class="card">
+          <form method="post">
+
+            <div class="card-body">
+              <div class="form">
+                <!-- <h3 class="text-center">اضافه منتج</h3> -->
 
 
-                <form method="post">
+                <div class="form-group">
+                  <ul>
+                    <div v-for="error in errors">
+                      <li>{{ error[0] }}</li>
+                    </div>
+                  </ul>
+                </div>
 
-                  <div class="card-body">
-                    <div class="form">
-                      <!-- <h3 class="text-center">اضافه منتج</h3> -->
+                <div class="form-group">
+                  <label for="Product">رقم المنتج</label>
+                  <input id='product_number' type="text" class="form-control" required readonly />
 
+                </div>
+                <div class="form-group">
+                  <label for="Product">اسم المنتج</label>
+                  <input v-model="text" type="text" name="Product" id="product" class="form-control" required /><span
+                    style="color:red">{{ error_text[0] }}</span>
 
-                      <div class="form-group">
-                        <ul>
-                          <div v-for="error in errors">
-                            <li>{{ error[0] }}</li>
-                          </div>
-                        </ul>
-                      </div>
+                </div>
 
-                      <div class="form-group">
-                        <label for="Product">رقم المنتج</label>
-                        <input id='product_number' type="text" class="form-control" required readonly />
+                <div class="form-group">
+                  <label for="radio-example-one">متفرع </label>
 
-                      </div>
-                      <div class="form-group">
-                        <label for="Product">اسم المنتج</label>
-                        <input v-model="text" type="text" name="Product" id="product" class="form-control" required />
+                  <input type="checkbox" name='fieldset2' v-model="status" id="status">
+                  <input id='parent' type="hidden" />
 
-                      </div>
+                  <input id='rank' type="hidden" />
 
-                      <div class="form-group">
-                        <label for="radio-example-one">متفرع </label>
-
-                        <input type="checkbox" name='fieldset2' id="attend" @change="check()" />
-                        <input id='parent' type="hidden" />
-
-                        <input id='rank' type="hidden" />
-
-                      </div>
-
-                      <!-- <div class="form-group">
-                        <label for="Product">الوحده الريسيه</label>
-                        <input v-model="text" type="text" name="Product" id="product" class="form-control" required />
-
-                      </div> -->
-
-                      <div id="factura_producto" class="input_nombre">
-                        <label for="Product">الوحده الريسيه</label>
-                        <select name="type" id="type" class="form-control" required>
-                          <option>
-
-                          </option>
-                        </select>
-                      </div>
+                </div>
 
 
-                      <div class="form-group">
-                        <label for="Product"> سعر الشراء</label>
-                        <input v-model="text" type="text" name="Product" id="product" class="form-control" required />
-
-                      </div>
-
-                      <div class="form-group">
-                        <label for="Product"> الحد الادني للمنتج</label>
-                        <input v-model="text" type="number" name="Product" id="product" class="form-control" required />
-
-                      </div>
+                <div v-if="!status">
+                  <div class="row">
 
 
+                    <div class='col-md-4'>
+                      <label for="Product">الوحده الرئيسيه</label>
+                      <select v-model="unit" id="supplier" class="form-control">
+                        <option v-for="unit in units" v-bind:value="unit.id">
+                          {{ unit.name }}
+                        </option>
+                      </select>
 
-                      <!-- <div class="form-group">
+                    </div>
+                    <div class='col-md-4'>
+                      <label for="purchase_price"> سعر الشراء</label>
+                      <input v-model="purchase_price" type="text" name="purchase_price" id="purchase_price"
+                        class="form-control" /><span
+                    style="color:red">{{ error_purchase_price[0] }}</span>
+
+
+                    </div>
+                    <div class='col-md-4'>
+                      <label for="radio-example-one">يوجد وحدات تجزئه </label>
+
+                      <input type="checkbox" name='fieldset2' id="status" v-model="check_state">
+
+
+                    </div>
+                  </div>
+                  <div class="row" v-if="check_state">
+                    <div class="col-md-4">
+                      <label for="Product">وحده التجزئه</label>
+                      <!-- retail_unit -->
+                      <select v-model="retail_unit" class="form-control">
+                        <option v-for="unit in units" v-bind:value="unit.id">
+                          {{ unit.name }}
+                        </option>
+                      </select>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+                      <label for="purchase_price"> سعر الشراء</label>
+                      <input v-model="purchase_price_for_retail_unit" type="text" name="purchase_price"
+                        id="purchase_price" class="form-control" />
+
+                    </div>
+                    <div class='col-md-4'>
+                      <label for="purchase_price">عدد وحدات التجزئه بالوحده الاساسيه</label>
+                      <input v-model="hash_rate" type="text" name="purchase_price" id="purchase_price"
+                        class="form-control" />
+
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Product Minimum"> الحد الادني للمنتج</label>
+                    <input v-model="product_minimum" type="number" name="Minimum" id="Minimum" class="form-control" />
+                    <span
+                    style="color:red">{{ error_hash_rate[0] }}</span>
+                  </div>
+
+                </div>
+
+                <!-- <div class="form-group">
                     <label for="Product">الرتبه</label>
                     <input v-model="rank" type="text" id="rank" class="form-control" readonly required />
 
@@ -125,27 +161,25 @@
 
                   </div> -->
 
-                      <div class="form-group">
-                        <label for="filePhoto">الصوره</label>
-                        <input v-on:change="onFileChange" type="file" name="image" class="form-control-file"
-                          id="filePhoto" />
-                        <img src="" id="previewHolder" width="150px" />
-                      </div>
+                <div class="form-group">
+                  <label for="filePhoto">الصوره</label>
+                  <input v-on:change="onFileChange" type="file" name="image" class="form-control-file" id="filePhoto" />
+                  <img src="" id="previewHolder" width="150px" />
+                </div>
 
 
 
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <button type="button" class="btn btn-primary btn-lg btn-block" @click="add_product"> حفظ </button>
-                  </div>
-                </form>
               </div>
             </div>
-          </div>
+            <div class="card-footer">
+              <button type="button" class="btn btn-primary btn-lg btn-block" @click="add_product"> حفظ </button>
+            </div>
+          </form>
         </div>
-
       </div>
+
+
+
 
       <!--/div-->
     </div>
@@ -172,10 +206,24 @@ export default {
 
   data() {
     return {
+      // show_retail_unit:false,
+
+      check_state: '',
+      error_text: '',
+      error_hash_rate: '',
+      error_purchase_price: '',
+      units: '',
+      unit: '',
+      retail_unit: '',
+      hash_rate: '',
+      purchase_price: '',
+      purchase_price_for_retail_unit: '',
+      product_minimum: '',
       file: '',
       text: '',
       product: '',
       image: '',
+      status: false,
       // product_first_level: '',
       last_nodes: '',
       rank: 1,
@@ -189,6 +237,15 @@ export default {
 
     };
   },
+  mounted() {
+    // this.list();
+    this.axios.post("/unit").then((response) => {
+      console.log(response);
+      this.units = response.data.units;
+
+
+    });
+  },
   created() {
     localStorage.setItem('id', 0);
     localStorage.setItem('rank', 0);
@@ -200,6 +257,7 @@ export default {
   },
 
   methods: {
+
     showtree() {
 
       let gthis = 'this';
@@ -291,22 +349,6 @@ export default {
     },
 
 
-    // Import() {
-    //   this.axios.post(`/ProductImport`).then(({
-
-    //   }) => {
-    //     this.list();
-
-    //     toastMessage("تم الاستيراد بنجاح");
-    //   });
-    // },
-    // Export() {
-    //   this.axios.post(`/ProductExport`).then((responce) => {
-    //     toastMessage("تم التصدير بنجاح");
-
-    //     console.log(responce.data.data);
-    //   });
-    // },
 
     first_level(e) {
 
@@ -320,8 +362,8 @@ export default {
     add_product(e) {
       // e.preventDefault();
 
-      addnode(this.text);
-      this.$router.go(0);
+      addnode(this);
+      // this.$router.go(0);
 
 
 

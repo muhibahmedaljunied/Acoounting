@@ -54,23 +54,23 @@
                   <th class="wd-15p border-bottom-0">العمليات</th>
                 </tr>
               </thead>
-              <tbody v-if="users && users.data.length > 0">
-                <tr v-for="(user, index) in users.data" :key="index">
+              <tbody v-if="units && units.length > 0">
+                <tr v-for="(unit, index) in units" :key="index">
                      <td>{{ index+1 }}</td>
-                  <td>{{ user.name }}</td>
+                  <td>{{ unit.name }}</td>
             
                 
 
                   <td>
                     <button
                       type="button"
-                      @click="delete_user(user.id)"
+                      @click="delete_unit(unit.id)"
                       class="btn btn-danger"
                     >
                       <i class="fa fa-trash"></i>
                     </button>
                     <router-link
-                      :to="{ name: 'edit_unit', params: { id: user.id } }"
+                      :to="{ name: 'edit_unit', params: { id: unit.id } }"
                       class="btn btn-success"
                       ><i class="fa fa-edit"></i
                     ></router-link>
@@ -86,7 +86,7 @@
           </div>
           <pagination
             align="center"
-            :data="users"
+            :data="units"
             @pagination-change-page="list"
           ></pagination>
         </div>
@@ -104,9 +104,9 @@ export default {
   },
   data() {
     return {
-      //   user: "yes",
+      //   unit: "yes",
 
-      users: {
+      units: {
         type: Object,
         default: null,
       },
@@ -118,25 +118,25 @@ export default {
     this.list();
   },
   methods: {
-    delete_user(id) {
-      this.axios.post(`/delete_user/${id}`).then((response) => {
-        // this.$router.push('user')
+    delete_unit(id) {
+      this.axios.post(`/delete_unit/${id}`).then((response) => {
+        // this.$router.push('unit')
       });
 
       this.list();
     },
     get_search(word_search) {
       this.axios
-        .post(`/usersearch`, { word_search: this.word_search })
+        .post(`/unitsearch`, { word_search: this.word_search })
         .then(({ data }) => {
-          this.users = data;
+          this.units = data.units;
         });
     },
     list(page = 1) {
       this.axios
-        .post(`/user?page=${page}`)
+        .post(`/unit?page=${page}`)
         .then(({ data }) => {
-          this.users = data;
+          this.units = data.units;
         })
         .catch(({ response }) => {
           console.error(response);

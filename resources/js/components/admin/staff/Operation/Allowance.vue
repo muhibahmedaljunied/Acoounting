@@ -3,31 +3,22 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="d-flex justify-content-between">
-            <span class="h2"> الرواتب والبدلات</span>
-          </div>
+        <div class="card-header">
+          <span class="h2"> الرواتب والبدلات</span>
+          <div style="display: flex;float: left; margin: 5px">
 
-          <div class="d-flex justify-content-right">
-            <!-- <router-link
-                to="create_category"
-                id="agregar_productos"
-                class="tn btn-info btn-lg waves-effect btn-agregar"
-                ><i class="fa fa-plus-circle"></i
-              ></router-link> -->
-            <a class="tn btn-info btn-lg waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-              data-target="#addsalary">
+
+            <a class="btn btn-info btn-sm waves-effect" data-toggle="modal" data-target="#addsalary">
               <i class="fa fa-plus-circle"></i></a>
+            <input autocomplete="on" v-model="word_search" type="text" class="form-control input-text"
+              placeholder="بحث ...." aria-label="Recipient's username" aria-describedby="basic-addon2"
+              @input="get_search()">
 
-
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="true" placeholder="بحث عن صنف" v-model="word_search"
-              @input="get_search()" />
-
-            <div></div>
           </div>
+
         </div>
-        <div class="card-body" id="printme">
+        <div class="card-body">
+
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -35,7 +26,7 @@
                   <!-- <th class="wd-15p border-bottom-0">الرقم الوظيفي</th> -->
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
                   <!-- <th class="wd-15p border-bottom-0">الفرع</th>
-                    <th class="wd-15p border-bottom-0">القسم</th> -->
+                  <th class="wd-15p border-bottom-0">القسم</th> -->
                   <th class="wd-15p border-bottom-0">الراتب الاساسي</th>
 
                   <th class="wd-15p border-bottom-0"> البدلات</th>
@@ -48,7 +39,7 @@
 
                   <td>{{ staff_allowance.staff }}</td>
                   <!-- <td>{{ staff_allowance.personal_card }}</td>
-                    <td>{{ staff_allowance.job }}</td> -->
+                  <td>{{ staff_allowance.job }}</td> -->
                   <td>{{ staff_allowance.salary }}</td>
                   <td>{{ staff_allowance.allowance }}</td>
                   <td>
@@ -57,14 +48,14 @@
                     </button>
 
                     <!-- <router-link
-                        :to="{
-                          name: 'edit_staff',
-                          params: { id: staff.id },
-                        }"
-                        class="edit btn btn-success"
-                      >
-                        <i class="fa fa-edit"></i
-                      ></router-link> -->
+                      :to="{
+                        name: 'edit_staff',
+                        params: { id: staff.id },
+                      }"
+                      class="edit btn btn-success"
+                    >
+                      <i class="fa fa-edit"></i
+                    ></router-link> -->
                   </td>
                 </tr>
               </tbody>
@@ -75,217 +66,169 @@
               </tbody>
             </table>
           </div>
-          <pagination align="center" :data="staff_allowances" @pagination-change-page="list"></pagination>
         </div>
-        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-          aria-hidden="true" style="display: none" id="addsalary">
-          <div class="modal-dialog modal-lg" style="max-width: 1000%">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                  x
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="row row-sm">
-                  <div class="col-xl-12">
-                    <form action="post">
-                      <div class="card">
-                        <div class="card-header pb-0">
-                          <div class="d-flex justify-content-between">
-                            <h4 class="card-title mg-b-0">
-                              <span class="h2"> الرواتب والبدلات</span>
-                            </h4>
-                            <i class="mdi mdi-dots-horizontal text-gray"></i>
-                          </div>
-                        </div>
-                        <div class="card-body">
-                          <div class="form-row">
-                            <!-- <div class="form-group col-md-2">
-                                <label for="inputState">الفرع</label>
-                                <select v-model="branchselected" id="inputState" class="form-control">
-                                  <option v-for="branch in branches" v-bind:value="branch.id">
-                                    {{ branch.name }}
-                                  </option>
-                                </select>
-                              </div> -->
+      </div>
 
-                            <!-- <div class="form-group col-md-2">
-                              <label for="inputState">نوع المؤظف</label>
-                              <select v-model="staff_typeselected" id="inputState" class="form-control">
-                                <option v-for="staff_type in staff_types" v-bind:value="staff_type.id">
-                                  {{ staff_type.name }}
-                                </option>
-                              </select>
-                            </div>
 
-                            <div class="form-group col-md-2">
-                              <label for="inputState">الوظيفه</label>
-                              <select v-model="jobselected" id="inputState" class="form-control">
-                                <option v-for="job in jobs" v-bind:value="job.id">
-                                  {{ job.name }}
-                                </option>
-                              </select>
-                            </div> -->
 
-                            <div class="form-group col-md-2">
-                              <label for="inputState">اسم المؤظف</label>
-                              <select v-model="staffselected" id="inputState" class="form-control">
-                                <option v-for="staff in staffs" v-bind:value="staff.id">
-                                  {{ staff.name }}
-                                </option>
-                              </select>
-                            </div>
 
-                            <!-- <div class="form-group col-md-2">
-                                <label for="inputState">التاريخ</label>
-  
-                                <input v-model="date" class="form-control" type="date" name="exampleRadios" />
-                              </div> -->
 
-                            <div class="form-group col-md-2">
-                              <label for="exampleRadios">الراتب</label><br />
-                              <input v-model="salaryselected" class="form-control" type="number" name="exampleRadios" />
-                            </div>
-                            <div class="form-group col-md-2">
-                              <label for="exampleRadios">البدلات</label><br />
-                              <input  class="form-control" type="number" name="exampleRadios" />
-                            </div>
-                          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+      <pagination align="center" :data="staff_allowances" @pagination-change-page="list"></pagination>
+
+      <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" style="display: none" id="addsalary">
+        <div class="modal-dialog modal-lg" style="max-width: 1000%">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                x
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row row-sm">
+                <div class="col-xl-12">
+                  <form action="post">
+                    <div class="card">
+                      <div class="card-header pb-0">
+                        <div class="d-flex justify-content-between">
+                          <h4 class="card-title mg-b-0">
+                            <span class="h2"> الرواتب والبدلات</span>
+                          </h4>
+                          <i class="mdi mdi-dots-horizontal text-gray"></i>
                         </div>
                       </div>
-                      <div class="card">
-                        <div class="card-body">
-                          <div class="form-row">
+                      <!-- <div class="card-body">
+                        <div class="form-row">
+                        
 
-                   
+                          <div class="form-group col-md-2">
+                            <label for="inputState">اسم المؤظف</label>
+                            <select v-model="staffselected" id="inputState" class="form-control">
+                              <option v-for="staff in staffs" v-bind:value="staff.id">
+                                {{ staff.name }}
+                              </option>
+                            </select>
+                          </div>
 
+                    
 
-                            <div class="form-group col-md-6" style="text-align: center">
-                              <h5>البدلات الشهريه</h5>
-
-
-
-                              <div class="table-responsive">
-                                <table class="table table-bordered text-right">
-                                  <thead>
-                                    <tr>
-
-
-                                      <th>اسم البدل</th>
-                                      <th>المبلغ</th>
-                                      <th>اضافه</th>
-
-
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                   
-
-                                    <tr v-for="index in count.count_monthly" :key="index">
-
-
-
-                                      <td>
-
-                                        <input v-model="allow.allow_1[index - 1]" type="text" name="name" id="name"
-                                          class="form-control" />
-
-                                      </td>
-                                      <td><input v-model="qty.qty_1[index - 1]" type="number"
-                                          class="form-control input_cantidad"></td>
-
-                                      <td v-if="index == 1">
-
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                          v-on:click="addComponent(count.count_monthly, 0)">
-                                          <i class="fa fa-plus-circle"></i></a>
-
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                          v-on:click="disComponent(count.count_monthly, 0)">
-                                          <i class="fa fa-minus-circle"></i></a>
-
-
-
-                                      </td>
-
-
-                                    </tr>
-
-                                  </tbody>
-
-                                </table>
-                              </div>
-                            </div>
-
-                            <div class="form-group col-md-6" style="text-align: center">
-                              <h5>البدلات الغير الشهريه</h5>
-
-
-
-                              <div class="table-responsive">
-                                <table class="table table-bordered text-right">
-                                  <thead>
-                                    <tr>
-
-                                      <th>اسم البدل</th>
-                                      <th>المبلغ</th>
-                                      <th>اضافه</th>
-
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                 
-                                    <tr v-for="index in count.count_not_monthly" :key="index">
-
-
-                                      <td>
-
-
-                                        <input v-model="allow.allow_2[index - 1]" type="text" name="name" id="name"
-                                          class="form-control" />
-
-
-                                      </td>
-                                      <td><input v-model="qty.qty_2[index - 1]" type=" number"
-                                          class="form-control input_cantidad"></td>
-
-
-                                      <td v-if="index == 1">
-
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                          v-on:click="addComponent(count.count_not_monthly, 1)">
-                                          <i class="fa fa-plus-circle"></i></a>
-
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                          v-on:click="disComponent(count.count_not_monthly, 1)">
-                                          <i class="fa fa-minus-circle"></i></a>
-
-
-
-                                      </td>
-                                    </tr>
-                                  </tbody>
-
-                                </table>
-                              </div>
-                            </div>
+                          <div class="form-group col-md-2">
+                            <label for="exampleRadios">الراتب</label><br />
+                            <input v-model="salaryselected" class="form-control" type="number" name="exampleRadios" />
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label for="exampleRadios">البدلات</label><br />
+                            <input class="form-control" type="number" name="exampleRadios" />
                           </div>
                         </div>
+                      </div> -->
+                    </div>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="form-row">
+
+
+
+
+                          <div class="form-group col-md-12" style="text-align: center">
+                            <!-- <h5>البدلات الشهريه</h5> -->
+
+
+
+                            <div class="table-responsive">
+                              <table class="table table-bordered text-right">
+                                <thead>
+                                  <tr>
+
+                                    <th>اسم المؤظف</th>
+                                    <th>اسم البدل</th>
+                                    <th>نوع البدل</th>
+                                    <th>المبلغ</th>
+                                    <th>اضافه</th>
+
+
+                                  </tr>
+                                </thead>
+                                <tbody>
+
+
+                                  <tr v-for="index in count" :key="index">
+
+                                    <td>
+                                    <select v-model="staffselected[index]" id="inputState" class="form-control">
+                              <option v-for="staff in staffs" v-bind:value="staff.id">
+                                {{ staff.name }}
+                              </option>
+                            </select>
+                          </td>
+
+                                    <td>
+
+                                      <input v-model="allow[index]" type="text" name="name" id="name"
+                                        class="form-control" />
+
+                                    </td>
+
+                                    <td> <select v-model="allowance_type[index]" id="inputState" class="form-control">
+                                        <option v-for="allowance_type in allowance_types" v-bind:value="allowance_type.id">
+                                          {{ allowance_type.name }}
+                                        </option>
+                                      </select></td>
+                                    <td><input v-model="qty[index]" type="number"
+                                        class="form-control input_cantidad"></td>
+
+                                    <td v-if="index == 1">
+
+                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                        v-on:click="addComponent(count, 0)">
+                                        <i class="fa fa-plus-circle"></i></a>
+
+                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                        v-on:click="disComponent(count, 0)">
+                                        <i class="fa fa-minus-circle"></i></a>
+
+
+
+                                    </td>
+
+
+                                  </tr>
+
+                                </tbody>
+
+                              </table>
+                            </div>
+                          </div>
+
+
+                        </div>
                       </div>
-                      <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
-                          العمليه</span></a>
-                    </form>
-                  </div>
-                  <!--/div-->
+                    </div>
+                    <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
+                        العمليه</span></a>
+                  </form>
                 </div>
+                <!--/div-->
               </div>
             </div>
           </div>
-
-
         </div>
+
+
       </div>
+
     </div>
 
     <!-- ================================== -->
@@ -296,7 +239,7 @@
   </div>
 
 </template>
-  
+
 <script>
 import pagination from "laravel-vue-pagination";
 
@@ -309,89 +252,56 @@ export default {
     return {
       // category: "yes",
 
-      salarys: {
+      staff_allowances: {
         type: Object,
         default: null,
       },
-      allow: {
-        allow_1: [],
-        allow_2: []
 
-      },
-      qty: {
-        qty_1: [],
-        qty_2: []
 
-      },
-      count: {
-        count_monthly: 1,
-        count_not_monthly: 1
-
-      },
-      counts: {
-        counts_monthly: [],
-        counts_not_monthly: []
-
-      },
+      count: 1,
+      counts: {},
 
       staff_id: '',
       salary: '',
-
+      allow: [],
+      qty: [],
       branchselected: "",
       staff_allowances: "",
-      salaryselected:0,
+      salaryselected: 0,
       date: "",
       allowances: "",
-      salv1: [],
-      salv2: [],
+      allowance_type: [],
       allowance: [],
       checkselected: [],
-      staffselected: 1,
+      staffselected: [],
       jobselected: 1,
       brancheselected: 1,
       staff_typeselected: 1,
 
       staffs: "",
-      jobs: "",
-      branches: "",
+      // jobs: "",
+      // branches: "",
       staff_types: "",
       allowance_types: "",
-      allowance_type:'',
+      // allowance_type: '',
 
       word_search: "",
     };
   },
   mounted() {
     this.list();
-    this.counts.counts_monthly[0] = 0;
-    this.counts.counts_not_monthly[0] = 0;
+    this.counts[0] = 1;
+    this.type = 'allowance';
+    
+   
 
   },
   methods: {
-    addComponent(index, type) {
-      // alert(index);
-      if (type == 0) {
-        this.count.count_monthly += 1;
-        this.counts.counts_monthly[index] = this.count.count_monthly;
-      } else {
-        this.count.count_not_monthly += 1;
-        this.counts.counts_not_monthly[index] = this.count.count_not_monthly;
-      }
-
+    addComponent(index) {
+      addComponent(this,index);
     },
-    disComponent(index, type) {
-      // this.count -= 1;
-      // this.$delete(this.counts, index);
-
-      if (type == 0) {
-        this.count.count_monthly -= 1;
-        this.$delete(this.counts.counts_monthly, index);
-      } else {
-        this.count.count_not_monthly -= 1;
-        this.$delete(this.counts.counts_not_monthly, index);
-      }
-
-
+    disComponent(index) {
+      disComponent(this,index);
     },
     get_search(word_search) {
       this.axios
@@ -407,14 +317,13 @@ export default {
 
       axios
         .post(`/store_allowance`, {
+          type: this.type,
           staff: this.staffselected,
-          allowance_type:this.allowance_type,
-          salary: this.salaryselected,
+          allowance_type: this.allowance_type,
+          // salary: this.salaryselected,
           count: this.counts,
           allow: this.allow,
           qty: this.qty,
-          
-
 
         })
         .then((response) => {
@@ -433,40 +342,50 @@ export default {
 
       // }
     },
-   
+
     list(page = 1) {
-    
+
       this.axios
-        .post(`/salary?page=${page}`)
+        .post(`/allowance?page=${page}`)
         .then(({ data }) => {
+          console.log(data);
           this.staffs = data.staffs;
-          // this.salarys = data;
-          this.jobs = data.jobs;
-          this.branches = data.branches;
-          this.staff_types = data.staff_types;
-          this.allowances = data.allowances;
-          this.staff_allowances = data.staff_allowances;
+          this.allowance_types = data.allowance_types
+          this.staff_allowances = data.staff_allowances
+  
         })
         .catch(({ response }) => {
           console.error(response);
         });
     },
-    handleAllowance(index, valueselected, allowance_id) {
-      this.allowance[index] = {
-        id: allowance_id,
-        qty: 1,
-        check: valueselected,
-        name: this.staffselected,
+    // handleAllowance(index, valueselected, allowance_id) {
+    //   this.allowance[index] = {
+    //     id: allowance_id,
+    //     qty: 1,
+    //     check: valueselected,
+    //     name: this.staffselected,
 
-      };
+    //   };
 
-      console.log(this.allowance);
-    },
+    //   console.log(this.allowance);
+    // },
 
 
   },
 };
-         //
+       //
 </script>
-  
-  
+<style scoped>
+.btn:hover {
+  color: #fff;
+}
+
+.input-text:focus {
+
+
+  box-shadow: 0px 0px 0px;
+  border-color: #f8c146;
+  outline: 0px;
+}
+</style>
+

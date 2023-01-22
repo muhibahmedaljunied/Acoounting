@@ -25,7 +25,7 @@
                   id="name"
                   class="form-control"
                      required
-                />
+                /><span style="color:red">{{ error_name[0] }}</span>
               </div>
               <div class="form-group">
                 <label for="phone">الهاتف</label>
@@ -45,7 +45,7 @@
                   name="email"
                   id="email"
                   class="form-control"
-                />
+                /><span style="color:red">{{ error_email[0] }}</span>
               </div>
                <div class="form-group">
                 <label for="password">كلمه السر</label>
@@ -57,6 +57,7 @@
                   class="form-control"
                      required
                 />
+                <span style="color:red">{{ error_password[0] }}</span>
               </div>
               <div class="form-group">
                 <label for="address">العنوان</label>
@@ -110,6 +111,9 @@
 export default {
   data() {
     return {
+      error_name:'',
+      error_email:'',
+      error_password:'',
       name: "",
       phone: "",
       email: "",
@@ -164,9 +168,14 @@ export default {
           toastMessage("تم الاضافه بنجاح");
          
         })
-        .catch(function (error) {
-          currentObj.output = error;
-        });
+        .catch(error => {
+                       console.error(error)
+                       
+                       this.error_name = error.response.data.error.name
+                       this.error_email = error.response.data.error.email
+                       this.error_password = error.response.data.error.password
+                       
+                     });
 
                 this.$router.go(-1);
 

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
        
         <div class="col-md-9">
@@ -32,7 +32,7 @@
                 <div class="col-md-4">
                   <label for="date">التاريخ</label><br />
 
-                  <input name="date" type="date" v-model="date" />
+                  <input name="date" type="date" v-model="date" class="form-control"/>
                 </div>
                 <div class="col-md-4">
                   

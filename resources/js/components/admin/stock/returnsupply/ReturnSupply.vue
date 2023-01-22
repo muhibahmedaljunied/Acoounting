@@ -194,7 +194,7 @@ export default {
     // return {
     //   supply_detail: "",
     //   supply_id: "",
-    //   dateselected: new Date().toISOString().substr(0, 10),
+    //   date: new Date().toISOString().substr(0, 10),
     //   note: "",
     //   Total_quantity: 0,
     //   return_qty: [],

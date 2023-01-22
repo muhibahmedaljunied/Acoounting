@@ -25,7 +25,7 @@ class CreateAllowancesTable extends Migration
 
             $table->string('name');
             $table->integer('qty');
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }

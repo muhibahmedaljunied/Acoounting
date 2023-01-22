@@ -6,6 +6,7 @@
         <div class="card-header pb-0">
           <div class="d-flex justify-content-between">
             <span class="h2"> البيانات الشخصيه</span>
+
           </div>
 
           <div class="d-flex justify-content-right">
@@ -15,27 +16,13 @@
               class="tn btn-info btn-lg waves-effect btn-agregar"
               ><i class="fa fa-plus-circle"></i
             ></router-link> -->
-            <a
-              class="tn btn-info btn-lg waves-effect btn-agregar"
-              data-toggle="modal"
-              id="agregar_productos"
-              data-target="#addPI"
-            >
-              <i class="fa fa-plus-circle"></i
-            ></a>
+            <a class="tn btn-info btn-lg waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+              data-target="#addPI">
+              <i class="fa fa-plus-circle"></i></a>
 
-            <input
-              type="search"
-              autocomplete="on"
-              name="search"
-              data-toggle="dropdown"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="true"
-              placeholder="بحث عن صنف"
-              v-model="word_search"
-              @input="get_search()"
-            />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
+              aria-haspopup="true" aria-expanded="true" placeholder="بحث عن صنف" v-model="word_search"
+              @input="get_search()" />
 
             <div></div>
           </div>
@@ -73,7 +60,7 @@
               <tbody v-if="staffs && staffs.data.length > 0">
                 <tr v-for="(staff, index) in staffs.data" :key="index">
                   <td>{{ staff.id }}</td>
-        
+
                   <td>{{ staff.staff }}</td>
                   <td>{{ staff.personal_card }}</td>
                   <td>{{ staff.job }}</td>
@@ -98,23 +85,15 @@
 
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                    <button
-                      type="button"
-                      @click="delete_category(staff.id)"
-                      class="btn btn-danger"
-                    >
+                    <button type="button" @click="delete_category(staff.id)" class="btn btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
 
-                    <router-link
-                      :to="{
-                        name: 'edit_staff',
-                        params: { id: staff.id },
-                      }"
-                      class="edit btn btn-success"
-                    >
-                      <i class="fa fa-edit"></i
-                    ></router-link>
+                    <router-link :to="{
+                      name: 'edit_staff',
+                      params: { id: staff.id },
+                    }" class="edit btn btn-success">
+                      <i class="fa fa-edit"></i></router-link>
                   </td>
                 </tr>
               </tbody>
@@ -125,37 +104,21 @@
               </tbody>
             </table>
           </div>
-          <pagination
-            align="center"
-            :data="staffs"
-            @pagination-change-page="list"
-          ></pagination>
+          <pagination align="center" :data="staffs" @pagination-change-page="list"></pagination>
         </div>
-        <div
-          class="modal fade bs-example-modal-lg"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myLargeModalLabel"
-          aria-hidden="true"
-          style="display: none"
-          id="addPI"
-        >
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+          aria-hidden="true" style="display: none" id="addPI">
           <div class="modal-dialog modal-lg" style="max-width: 600%">
             <div class="modal-content">
               <div class="modal-header">
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   x
                 </button>
               </div>
               <div class="modal-body">
                 <div class="row row-sm">
                   <div class="col-xl-12">
-                    <form method="post" @submit.prevent="submitForm">
+                    <form method="post">
                       <div class="card">
                         <div class="card-header pb-0">
                           <div class="d-flex justify-content-between">
@@ -169,69 +132,36 @@
                           <div class="form-row">
                             <div class="form-group col-md-3">
                               <label for="inputEmail4">اسم المؤظف</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                placeholder="ادخل اسم المؤظف"
-                              />
+                              <input v-model="name" type="text" class="form-control" placeholder="ادخل اسم المؤظف" />
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputAddress">الفرع</label>
-                              <select
-                                v-model="branchselected"
-                                class="form-control"
-                                required
-                              >
-                                <option
-                                  v-for="branch in branches"
-                                  v-bind:value="branch.id"
-                                >
+                              <select v-model="branchselected" class="form-control" required>
+                                <option v-for="branch in branches" v-bind:value="branch.id">
                                   {{ branch.name }}
                                 </option>
                               </select>
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputAddress">القسم</label>
-                              <select
-                                v-model="departmentselected"
-                                class="form-control"
-                                required
-                              >
-                                <option
-                                  v-for="department in departments"
-                                  v-bind:value="department.id"
-                                >
+                              <select v-model="departmentselected" class="form-control" required>
+                                <option v-for="department in departments" v-bind:value="department.id">
                                   {{ department.name }}
                                 </option>
                               </select>
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputPassword4">الهويه</label>
-                              <input
-                                v-model="card"
-                                type="number"
-                                class="form-control"
-                              />
+                              <input v-model="card" type="number" class="form-control" />
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputPassword4">الهاتف</label>
-                              <input
-                                v-model="phone"
-                                type="number"
-                                class="form-control"
-                              />
+                              <input v-model="phone" type="number" class="form-control" />
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputAddress">التعين</label>
-                              <select
-                                v-model="jobselected"
-                                class="form-control"
-                                required
-                              >
-                                <option
-                                  v-for="job in jobs"
-                                  v-bind:value="job.id"
-                                >
+                              <select v-model="jobselected" class="form-control" required>
+                                <option v-for="job in jobs" v-bind:value="job.id">
                                   {{ job.name }}
                                 </option>
                               </select>
@@ -250,57 +180,29 @@
 
                             <div class="form-group col-md-2">
                               <label for="inputCity">تاريخ التعين</label>
-                              <input
-                                v-model="date"
-                                type="date"
-                                class="form-control"
-                                id="inputCity"
-                              />
+                              <input v-model="date" type="date" class="form-control" id="inputCity" />
                             </div>
                             <hr />
                             <div class="form-group col-md-4">
                               <label for="inputState">حاله المؤظف</label>
-                              <select
-                                v-model="statusselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
+                              <select v-model="statusselected" name="type" id="type" class="form-control" required>
                                 <option v-bind:value="1">بدء العمل</option>
                                 <option v-bind:value="2">لم يبدء العمل</option>
                               </select>
                             </div>
                             <div class="form-group col-md-4">
                               <label for="inputZip">المؤهلات </label>
-                              <select
-                                v-model="qualificationselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
-                                <option
-                                  v-for="qualification in qualifications"
-                                  v-bind:value="qualification.id"
-                                >
+                              <select v-model="qualificationselected" name="type" id="type" class="form-control"
+                                required>
+                                <option v-for="qualification in qualifications" v-bind:value="qualification.id">
                                   {{ qualification.name }}
                                 </option>
                               </select>
                             </div>
                             <div class="form-group col-md-4">
                               <label for="inputZip">الجنسيه </label>
-                              <select
-                                v-model="nationalityselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
-                                <option
-                                  v-for="nationality in nationalities"
-                                  v-bind:value="nationality.id"
-                                >
+                              <select v-model="nationalityselected" name="type" id="type" class="form-control" required>
+                                <option v-for="nationality in nationalities" v-bind:value="nationality.id">
                                   {{ nationality.name }}
                                 </option>
                               </select>
@@ -308,13 +210,7 @@
                             <hr />
                             <div class="form-group col-md-2">
                               <label for="inputZip">الجنس </label>
-                              <select
-                                v-model="genderselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
+                              <select v-model="genderselected" name="type" id="type" class="form-control" required>
                                 <option v-bind:value="1">ذكر</option>
                                 <option v-bind:value="2">انثى</option>
                               </select>
@@ -322,13 +218,8 @@
 
                             <div class="form-group col-md-4">
                               <label for="inputZip">توع المؤظف </label>
-                              <select
-                                v-model="social_statusselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
+                              <select v-model="social_statusselected" name="type" id="type" class="form-control"
+                                required>
                                 <option v-bind:value="1">متعاقد</option>
                                 <option v-bind:value="2">رسمي</option>
                               </select>
@@ -336,28 +227,14 @@
 
                             <div class="form-group col-md-4">
                               <label for="inputZip">تاريخ المبلاد </label>
-                              <input
-                                v-model="barth_date"
-                                type="date"
-                                class="form-control"
-                                id="inputZip"
-                              />
+                              <input v-model="barth_date" type="date" class="form-control" id="inputZip" />
                             </div>
 
                             <hr />
                             <div class="form-group col-md-6">
                               <label for="inputZip">الديانه </label>
-                              <select
-                                v-model="religionselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
-                                <option
-                                  v-for="religion in religions"
-                                  v-bind:value="religion.id"
-                                >
+                              <select v-model="religionselected" name="type" id="type" class="form-control" required>
+                                <option v-for="religion in religions" v-bind:value="religion.id">
                                   {{ religion.name }}
                                 </option>
                               </select>
@@ -365,13 +242,8 @@
 
                             <div class="form-group col-md-2">
                               <label for="inputZip"> الحاله الاجتماعيه </label>
-                              <select
-                                v-model="staff_statusselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
+                              <select v-model="staff_statusselected" name="type" id="type" class="form-control"
+                                required>
                                 <option v-bind:value="1">عازب</option>
                                 <option v-bind:value="2">متزوج</option>
                               </select>
@@ -379,22 +251,12 @@
 
                             <div class="form-group col-md-4">
                               <label for="inputZip"> البريد الالكتروني</label>
-                              <input
-                                v-model="email"
-                                type="text"
-                                class="form-control"
-                                id="inputZip"
-                              />
+                              <input v-model="email" type="text" class="form-control" id="inputZip" />
                             </div>
 
                             <div class="form-group col-md-4">
                               <label for="inputZip"> الراتب الاساسي</label>
-                              <input
-                                v-model="salary"
-                                type="text"
-                                class="form-control"
-                                id="inputZip"
-                              />
+                              <input v-model="salary" type="text" class="form-control" id="inputZip" />
                             </div>
 
                           </div>
@@ -406,10 +268,7 @@
                         </div>
                       </div>
 
-                      <button
-                        type="submit"
-                        class="btn btn-primary btn-lg btn-block"
-                      >
+                      <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()">
                         حفظ
                       </button>
                     </form>
@@ -449,9 +308,11 @@ export default {
       card: 234242424,
       email: "muhib@gmail.com",
       name: "fsdfsfsf",
-      salary:'',
-      date: "asdadada",
-      barth_date: "asdadad",
+      salary: '',
+      // date: "asdadada",
+      date: new Date().toISOString().substr(0, 10),
+      // barth_date: "asdadad",
+      barth_date: new Date().toISOString().substr(0, 10),
       phone: 1231313,
       social_statusselected: 1,
       genderselected: 1,
@@ -549,7 +410,8 @@ export default {
         });
     },
     submitForm(e) {
-      e.preventDefault();
+      // e.preventDefault();
+      // console.log(this.name);
       let currentObj = this;
       const config = {
         headers: {
@@ -589,14 +451,14 @@ export default {
           currentObj.success = response.data.success;
           currentObj.filename = "";
 
-          e.preventDefault();
+          // e.preventDefault();
           toastMessage("تم الاضافه بنجاح");
         })
         .catch(function (error) {
           currentObj.output = error;
         });
 
-      //  this.$router.go(-1);
+       this.$router.go(0);
     },
   },
 };

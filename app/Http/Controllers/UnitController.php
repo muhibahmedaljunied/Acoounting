@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Absence;
-use App\Models\AbsenceType;
-use App\Models\Staff;
+
+use App\Models\Unit;
 use DB;
 use Illuminate\Http\Request;
 
-class AbsenceController extends Controller
+class UnitController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,16 +16,9 @@ class AbsenceController extends Controller
      */
     public function index()
     {
-        $absences = DB::table('absences')
-        ->join('absence_types','absence_types.id', '=', 'absences.absence_type_id')
-        ->join('staff','staff.id', '=', 'absences.staff_id')
 
-        ->select('absences.*','absence_types.name as absence','staff.name as staff')
-        ->paginate(10);
-
-        $absence_types = AbsenceType::all();
-        $staffs = Staff::all();
-        return response()->json(['absence_types'=>$absence_types,'staffs'=>$staffs,'absences'=>$absences]);
+        $units = Unit::all();
+        return response()->json(['units'=>$units]);
     }
 
     /**
@@ -47,13 +39,9 @@ class AbsenceController extends Controller
      */
     public function store(Request $request)
     {
-        $absence = new Absence();
-        $absence->staff_id = $request->post('staff');
-        $absence->absence_type_id = $request->post('absence_type');
-        $absence->date = $request->post('date');
-        $absence->note = $request->post('note');
-
-        $absence->save();
+        $unit = new Unit();
+        $unit->name = $request->post('unit');
+        $unit->save();
         return response()->json();
     }
 

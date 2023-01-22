@@ -3,44 +3,20 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
+        <div class="col-md-4">
+          <label for="status">اسم الموظف</label>
+          <select v-model="staffselected" name="type" id="type" class="form-control " required>
+            <option v-for="staff in staffs" v-bind:value="staff.id">
+              {{ staff.name }}
+            </option>
+          </select>
+        </div>
         <div class="card-header pb-0">
           <!-- <div class="d-flex justify-content-between">
             <span class="h2"> الخصميات</span>
           </div> -->
 
-          <div class="col-md-4" >
-            <label for="status">اسم الموظف</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-          <div class="col-md-4" >
-            <label for="status">الفرع</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-          <div class="col-md-4" >
-            <label for="status">نوع الوظيفه</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
+        
         </div>
         <div class="card-body" id="printme">
           <div class="table-responsive">
@@ -60,13 +36,13 @@
                 </tr>
               </thead>
               <tbody v-if="discounts && discounts.data.length > 0">
-                <tr v-for="(discount, index) in discounts.data" :key="index">
-
+                <tr   v-for="(discount, index) in discounts.data" :key="index"   >
+<!-- <div v-if="discount.discount"> -->
                   <td>{{ discount.name }}</td>
                  
                   <td>
                    
-                  <div v-for="(discount_names, index) in discount.discount" :key="index">
+                  <div   v-for="(discount_names, index) in discount.discount" :key="index">
                     {{ discount_names.discount_type.name }}
                   </div>
                   </td>
@@ -111,6 +87,7 @@
                       <i class="fa fa-eye"></i
                     ></router-link>
                   </td>
+                <!-- </div> -->
                 </tr>
               </tbody>
               <tbody v-else>

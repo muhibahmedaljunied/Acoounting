@@ -54,7 +54,8 @@
                   <th class="wd-15p border-bottom-0">البريد الالكتروني</th>
                   <th class="wd-15p border-bottom-0">العنوان</th>
                   <!-- <th class="wd-15p border-bottom-0">الحاله</th> -->
-
+                  <th class="wd-15p border-bottom-0">رقم الحساب</th>
+                  <th class="wd-15p border-bottom-0">الرصيد</th>
                   <th class="wd-15p border-bottom-0">العمليات</th>
                 </tr>
               </thead>
@@ -66,7 +67,8 @@
                   <td>{{ supplier.phone }}</td>
                   <td>{{ supplier.email }}</td>
                   <td>{{ supplier.address }}</td>
-
+                  <td></td>
+                  <td></td>
                   <!-- <td>{{ supplier.status }}</td> -->
                   <!-- <td v-if="supplier.status == 1">
                     <span class="badge badge-warning">مفعل</span>

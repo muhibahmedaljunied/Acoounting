@@ -3,47 +3,25 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
+        <div class="col-md-4" >
+            <label for="status">اسم الموظف</label>
+          <select v-model="staffselected" name="type" id="type" class="form-control " required>
+            <option v-for="staff in staffs" v-bind:value="staff.id">
+              {{ staff.name }}
+            </option>
+          </select>
+          </div>
         <div class="card-header pb-0">
           <!-- <div class="d-flex justify-content-between">
             <span class="h2">بيانات الراتب</span>
           </div> -->
 
-          <div class="col-md-4" >
-            <label for="status">اسم الموظف</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-
-          <div class="col-md-4" >
-            <label for="status">الفرع</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
+         
 
           
-          <div class="col-md-4" >
-            <label for="status">نوع الوظيفه</label>
-            <select name="status" id="status" class="form-control">
 
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
+          
+         
         </div>
         <div class="card-body" id="printme">
           <div class="table-responsive">

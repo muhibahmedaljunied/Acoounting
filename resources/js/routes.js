@@ -3,6 +3,7 @@ import Dashboard from './components/Dashboard'
 // import Category from './components/admin/category/Category'
 
 import AccountsGuide from './components/admin/FinancialAccounting/accounting/AccountsGuide'
+import AccountList from './components/admin/FinancialAccounting/accounting/AccountList'
 import DailyRestrictions from './components/admin/FinancialAccounting/operation/DailyRestrictions'
 // ------------------------------------------------------------------staff---------------------------------------------------------------------------
 import BasicData from './components/admin/staff/BasicData'
@@ -39,6 +40,16 @@ import Add from './components/admin/stock/transfer/Add'
 import Transfer from './components/admin/stock/transfer/Transfer'
 import TransferDetail from './components/admin/stock/transfer/TransferDetail'
 // ----------------------------------Store---------------------------------------------------------------------------------------------------
+// ----------------------------------Expence---------------------------------------------------------------------------------------------------
+import TemporaleExpence from './components/admin/FinancialAccounting/expence/TemporaleExpence'
+import Expence from './components/admin/FinancialAccounting/expence/Expence'
+import ExpenceList from './components/admin/FinancialAccounting/expence/ExpenceList'
+import ExpenceInvoice from './components/admin/FinancialAccounting/expence/ExpenceInvoice'
+// ----------------------------------Income---------------------------------------------------------------------------------------------------
+import TemporaleIncome from './components/admin/FinancialAccounting/income/TemporaleIncome'
+import Income from './components/admin/FinancialAccounting/income/Income'
+import IncomeList from './components/admin/FinancialAccounting/income/IncomeList'
+import IncomeInvoice from './components/admin/FinancialAccounting/income/IncomeInvoice'
 // ----------------------------------Supply---------------------------------------------------------------------------------------------------
 import TemporaleSupply from './components/admin/stock/TemporaleSupply'
 import Supply from './components/admin/stock/Supply'
@@ -115,6 +126,10 @@ import RepoSupplyReturn from './components/admin/report/RepoSupplyReturn'
     // -------------------------------------------------------------------------------------------------------------------------------------------
     path: '/accounts_guide',
     component: AccountsGuide
+  },
+  {
+    path: '/account_list',
+    component: AccountList
   },
   {
     path: '/daily_restrictions',
@@ -266,6 +281,42 @@ import RepoSupplyReturn from './components/admin/report/RepoSupplyReturn'
   path:'/return_cash_recive/:id',
   component:ReturnCashRecive
 },   // ----------------------------------Category---------------------------------------------------------------------------------------------------
+{ 
+  path: '/expence', 
+  component:Expence
+}, 
+{
+  path: '/temporale_expence',
+  component: TemporaleExpence
+},
+{ 
+  path: '/expencelist', 
+  component:ExpenceList
+},
+{ 
+  path: '/expence_invoice/:id', 
+  component:ExpenceInvoice
+},
+{ 
+  path: '/income', 
+  component:Income
+}, 
+{
+  path: '/temporale_income',
+  component: TemporaleIncome
+},
+{ 
+  path: '/incomelist', 
+  component:IncomeList
+},
+{ 
+  path: '/income_invoice/:id', 
+  component:IncomeInvoice
+},
+
+
+
+// ==========================================
   { 
     path: '/supply', 
     component:Supply

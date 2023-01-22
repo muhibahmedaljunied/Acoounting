@@ -19,224 +19,141 @@
               </div>
 
               <div class="card-body">
-                  <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <!-- <th>الرقم</th> -->
-                      <th>اسم المنتج</th>
-                      <th class="wd-15p border-bottom-0">كميه الشراء</th>
-                      <th class="wd-15p border-bottom-0">   سعر الحبه</th>
-                      <!-- <th class="wd-15p border-bottom-0">  الخصم</th> -->
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <!-- <th>الرقم</th> -->
+                        <th>اسم المنتج</th>
+                        <th class="wd-15p border-bottom-0">كميه الشراء</th>
+                        <th class="wd-15p border-bottom-0"> سعر الحبه</th>
+                        <!-- <th class="wd-15p border-bottom-0">  الخصم</th> -->
 
 
-                      <th>الكميه المتوفره</th>
-                      <th>الحاله</th>
-                           <th> المواصفات والطراز</th>
-                               <th>المخزن</th>
-                      <th>الكميه المسموح ارجاعها</th>
-                      
-                                 <th>اضافه</th>
-                    </tr>
-                  </thead>
-                  <tbody v-if="detail && detail.length > 0">
-                    <tr
-                      v-for="(purchase_details, index) in detail"
-                      :key="index"
-                    >
-                      <input
-                        v-model="id = purchase_details.purchase_id"
-                        readonly
-                        type="hidden"
-                        name="name"
-                        id="name"
-                        class="form-control"
-                      />
+                        <th>الكميه المتوفره</th>
+                        <th>الحاله</th>
+                        <th> المواصفات والطراز</th>
+                        <th>المخزن</th>
+                        <th>الكميه المسموح ارجاعها</th>
 
-                      <td>
-                        <div class="form-group">
-                          <input
-                       
-                            v-model="purchase_details.product"
-                            readonly
-                            type="text"
-                            name="name"
-                            id="name"
-                            class="form-control"
-                          />
+                        <th>اضافه</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="detail && detail.length > 0">
+                      <tr v-for="(purchase_details, index) in detail" :key="index">
+                        <input v-model="id = purchase_details.purchase_id" readonly type="hidden" name="name" id="name"
+                          class="form-control" />
+
+                        <td>
+                          <div class="form-group">
+                            <input v-model="purchase_details.product" readonly type="text" name="name" id="name"
+                              class="form-control" />
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <input v-model="purchase_details.qty" readonly type="text" name="name" id="name"
+                              class="form-control" />
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <input v-model="purchase_details.price" readonly type="text" name="name" id="name"
+                              class="form-control" />
+                          </div>
+
+
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <input v-model="purchase_details.avilable_qty" type="text" name="name" id="name"
+                              class="form-control" readonly />
+                          </div>
+                        </td>
+                        <td>{{ purchase_details.status }}</td>
+                        <td>{{ purchase_details.desc }}</td>
+                        <td>{{ purchase_details.store }}</td>
+
+                        <td>
+                          <div class="form-group">
+                            <input v-if="
+  purchase_details.avilable_qty >
+  purchase_details.qty_remain
+" v-model="purchase_details.qty_remain" type="number" min="1"
+                              :max="purchase_details.qty_remain" step="1" class="form-control" />
+
+                            <input v-else-if="
+  purchase_details.avilable_qty ==
+  purchase_details.qty_remain
+" v-model="purchase_details.qty_remain" type="number" min="1"
+                              :max="purchase_details.qty_remain" step="1" class="form-control" />
+                            <input v-else-if="
+  purchase_details.avilable_qty <
+  purchase_details.qty_remain
+" v-model="
+  purchase_details.qty_remain =
+  purchase_details.avilable_qty
+" type="number" min="1" :max="purchase_details.avilable_qty" step="1"
+                              class="form-control" />
+
+
+                          </div>
+
+                        </td>
+
+                        <td>
+                          <input v-if="
+  purchase_details.qty_return !=
+  purchase_details.quantity
+" v-model="check_state[index]" @change="
+  add_one_return(
+    purchase_details.qty_remain,
+    index,
+    purchase_details.product_id,
+    purchase_details.store_id,
+    purchase_details.status_id,
+    purchase_details.desc
+  )
+" type="checkbox" class="btn btn-info waves-effect">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="9">
+                          <div class="m-t-30 col-md-12">
+                            <label for="date">التاريخ</label><br />
+
+                            <input name="date" type="date" v-model="dateselected" class="form-control" />
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="9">
+                          <div class="m-t-30 col-md-12">
+                            <label for="date">ملاحظات</label><br />
+                            <input v-model="note" type="text" name="name" id="name" class="form-control" />
+                          </div>
+                        </td>
+                      </tr>
+
+                      <a v-if="not_qty" @click="refund()" class="btn btn-success"><span>تاكيد العمليه</span></a>
+
+                      <div>
+                        <div v-if="seen" class="alert alert-warning" role="alert">
+                          قم باضافه الكميه المرتجعه
                         </div>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <input
-                      
-                            v-model="purchase_details.qty"
-                            readonly
-                            type="text"
-                            name="name"
-                            id="name"
-                            class="form-control"
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <input
-                      
-                            v-model="purchase_details.price"
-                            readonly
-                            type="text"
-                            name="name"
-                            id="name"
-                            class="form-control"
-                          />
-                        </div>
-                     
-
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <input
-                   
-                            v-model="purchase_details.avilable_qty"
-                            type="text"
-                            name="name"
-                            id="name"
-                            class="form-control"
-                            readonly
-                          />
-                        </div>
-                      </td>
-                      <td>{{ purchase_details.status }}</td>
-                         <td>{{ purchase_details.desc }}</td>
-                         <td>{{ purchase_details.store }}</td>
-
-                      <td>
-                        <div class="form-group">
-                          <input
-                    
-                            v-if="
-                              purchase_details.avilable_qty >
-                              purchase_details.qty_remain
-                            "
-                            v-model="purchase_details.qty_remain"
-                            type="number"
-                            min="1"
-                            :max="purchase_details.qty_remain"
-                            step="1"
-                            class="form-control"
-                          />
-
-                          <input
-                 
-                            v-else-if="
-                              purchase_details.avilable_qty ==
-                              purchase_details.qty_remain
-                            "
-                            v-model="purchase_details.qty_remain"
-                            type="number"
-                            min="1"
-                            :max="purchase_details.qty_remain"
-                            step="1"
-                            class="form-control"
-                          />
-                          <input
-                     
-                            v-else-if="
-                              purchase_details.avilable_qty <
-                              purchase_details.qty_remain
-                            "
-                            v-model="
-                              purchase_details.qty_remain =
-                                purchase_details.avilable_qty
-                            "
-                            type="number"
-                            min="1"
-                            :max="purchase_details.avilable_qty"
-                            step="1"
-                            class="form-control"
-                          />
-
-                        
-                        </div>
-
-                      </td>
-
- <td>
-                      <input
- 
-                       v-if="
-                              purchase_details.qty_return !=
-                              purchase_details.quantity
-                            "
-                            v-model="check_state[index]"
-                            @change="
-                              add_one_return(
-                                purchase_details.qty_remain,
-                                index,
-                                purchase_details.product_id,
-                                purchase_details.store_id,
-                                purchase_details.status_id,
-                                purchase_details.desc
-                              )
-                            "
-                     type="checkbox"
-                       
-               
-                        class="btn btn-info waves-effect"
-                        >
-                    </td>
-                    </tr>
-                    <tr>
-                      <td colspan="9">
-                        <div class="m-t-30 col-md-12">
-                          <label for="date">التاريخ</label><br />
-
-                          <input
-                            name="date"
-                            type="date"
-                            v-model="dateselected"
-                            class="form-control"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="9">
-                        <div class="m-t-30 col-md-12">
-                          <label for="date">ملاحظات</label><br />
-                          <input
-                            v-model="note"
-                            type="text"
-                            name="name"
-                            id="name"
-                            class="form-control"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-
-                    <a v-if="not_qty" @click="refund()" class="btn btn-success"
-                      ><span>تاكيد العمليه</span></a
-                    >
-
-                    <div>
-                      <div v-if="seen" class="alert alert-warning" role="alert">
-                        قم باضافه الكميه المرتجعه
                       </div>
-                    </div>
-                  </tbody>
-                  <tbody v-else>
-                    <tr>
-                      <td align="center" colspan="3">
-                        <h3>
-                          لايوجد كمبه متوفره في المخزن او انه تم ارجاع الكميه
-                          المورده كامله.
-                        </h3>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td align="center" colspan="3">
+                          <h3>
+                            لايوجد كمبه متوفره في المخزن او انه تم ارجاع الكميه
+                            المورده كامله.
+                          </h3>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -249,29 +166,30 @@
 <script>
 export default {
   data() {
-    return data;
+    // return data;
 
-    // return {
-    //   purchase_detail: 0,
-    //   purchase_id: "",
-    //   dateselected: "2021-11-18",
-    //   note: "",
-    //   Total_quantity: 0,
-    //     check_state:[],
-    //   return_qty: [],
-    //   seen: false,
-    //   not_qty: true,
-    //   message_check: false,
-    //   text_message: 0,
-    // };
+    return {
+      purchase_detail: 0,
+      purchase_id: "",
+      dateselected: new Date().toISOString().substr(0, 10),
+      note: "",
+      detail:'',
+      Total_quantity: 0,
+        check_state:[],
+      return_qty: [],
+      seen: false,
+      not_qty: true,
+      message_check: false,
+      text_message: 0,
+    };
   },
   mounted() {
     let uri = `/purchase_details/${this.$route.params.id}`;
     this.axios.post(uri).then((response) => {
-      
+
       this.detail = response.data.purchase_details;
-console.log(this.detail);
-     
+      console.log(this.detail);
+
     });
   },
   methods: {
@@ -290,7 +208,7 @@ console.log(this.detail);
 
     //         total: this.Total_quantity,
     //         type:'return_purchase',
-            
+
     //       })
     //       .then((response) => {
     //         if (response.data.message != 0) {
@@ -313,10 +231,10 @@ console.log(this.detail);
     //   add_return(qty_return, index, product_id, store_id,status_id,desc) {
 
 
-    
+
     //  if(this.check_state[index] == true){
-      
-      
+
+
     //     this.Total_quantity =
     //     parseInt(this.Total_quantity) + parseInt(qty_return);
 
@@ -327,8 +245,8 @@ console.log(this.detail);
     //     desc: desc,
     //     qty: qty_return,
     //   };
-    
-      
+
+
     //     console.log(this.return_qty);
 
     //  } else if(this.check_state[index] == false){
@@ -340,15 +258,15 @@ console.log(this.detail);
 
     // },
     add_one_return() {
-   
-   // alert('ddddddddddd');
-Add_return(this)
 
-},
+      // alert('ddddddddddd');
+      Add_return(this)
+
+    },
 
 
   },
- 
+
 };
 </script>
 

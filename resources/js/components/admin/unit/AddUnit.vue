@@ -15,7 +15,7 @@
         <div class="card-body">
           <div class="form">
             <h3 class="text-center">اضافه وحده </h3>
-            <form method="post" @submit.prevent="adduser">
+            <form method="post" @submit.prevent="addunit">
               <div class="form-group">
                 <label for="name">الاسم</label>
                 <input
@@ -55,20 +55,20 @@ export default {
     };
   },
   created() {
-    let uri = `/create_user`;
+    let uri = `/create_unit`;
     this.axios.post(uri).then((response) => {
    console.log(response.data);
       this.role = response.data;
     });
   },
   methods: {
-    // adduser(event) {
-    //   this.axios.post(`/store_user`).then((response) => {
+    // addunit(event) {
+    //   this.axios.post(`/store_unit`).then((response) => {
     //     event.preventDefault();
-    //     this.$router.push("user");
+    //     this.$router.push("unit");
     //   });
     // },
-    adduser(event) {
+    addunit(event) {
       event.preventDefault();
       let currentObj = this;
       const config = {
@@ -80,16 +80,11 @@ export default {
       let formData = new FormData();
 
       formData.append("name", this.name);
-      formData.append("phone", this.phone);
-      formData.append("email", this.email);
-      formData.append("address", this.address);
-      formData.append("password", this.password);
-      formData.append("status", this.status);
-      formData.append("role_id", this.roleselected);
+
 
       // send upload request
       this.axios
-        .post("store_user", formData, config)
+        .post("store_unit", formData, config)
         .then(function (response) {
           currentObj.success = response.data.success;
           currentObj.filename = "";

@@ -329,33 +329,33 @@ class DatabaseSeeder extends Seeder
         ]);
         //   -----------------------units----------------------------------
 
-        DB::table('unit')->insert([
+        DB::table('units')->insert([
             'id'        => 1,
             'name'    => 'كرتون',
 
         ]);
-        DB::table('unit')->insert([
+        DB::table('units')->insert([
             'id'        => 2,
             'name'    => 'قطعه',
 
         ]);
 
-        DB::table('unit')->insert([
+        DB::table('units')->insert([
             'id'        => 3,
             'name'    => 'حبه',
 
         ]);
-        DB::table('unit')->insert([
+        DB::table('units')->insert([
             'id'        => 4,
             'name'    => 'كيلو',
 
         ]);
-        DB::table('unit')->insert([
+        DB::table('units')->insert([
             'id'        => 5,
             'name'    => 'جرام',
 
         ]);
-        DB::table('unit')->insert([
+        DB::table('units')->insert([
             'id'        => 6,
             'name'    => 'متر',
 
@@ -407,6 +407,38 @@ class DatabaseSeeder extends Seeder
             'name'    => 'مسيحي',
 
         ]);
+
+
+       
+        // --------------------------------------------------------------------
+        DB::table('expence_types')->insert([
+            'id'        => 1,
+            'name'    => 'كهرباء',
+
+        ]);
+
+        DB::table('expence_types')->insert([
+            'id'        => 2,
+            'name'    => 'ايجار',
+
+        ]);
+        // ---------------------------------------------------------------------------
+        DB::table('expences')->insert([
+            'id'        => 1,
+            'expence_type_id'    => '1',
+            'quantity'    => '200000',
+            
+
+        ]);
+
+        DB::table('expences')->insert([
+            'id'        => 2,
+            'expence_type_id'    => '2',
+            'quantity'    => '200000',
+
+        ]);
+       
+
         // --------------------------------------------products--------------------------------------------------
         // DB::table('products')->insert([
         //     'id'        => 1,

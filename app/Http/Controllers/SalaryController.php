@@ -7,7 +7,7 @@ use App\Models\Branch;
 use App\Models\Job;
 use App\Models\StaffType;
 use App\Models\Allowance;
-use App\Models\StaffAllowance;
+use App\Models\AllowanceType;
 use App\Models\Staff;
 use DB;
 use Illuminate\Http\Request;
@@ -22,14 +22,7 @@ class SalaryController extends Controller
         $staff_types = StaffType::all();
         $allowances = Allowance::all();
         $staffs = Staff::all();
-
-
-        // $staff_allowances = StaffAllowance::where('staff_allowances.checked', 1)
-        //     ->join('staff', 'staff.id', '=', 'staff_allowances.staff_id')
-        //     ->join('allowances', 'allowances.id', '=', 'staff_allowances.allowance_id')
-        //     ->select('staff.name as staff', 'staff_allowances.*', 'allowances.*', 'allowances.name as allowance')
-        //     ->paginate(10);
-
+        // $allowance_types = AllowanceType::all();
 
         $staff_allowances = DB::table('payrolls')
             ->join('staff', 'staff.id', '=', 'payrolls.staff_id')
@@ -38,7 +31,7 @@ class SalaryController extends Controller
 
 
 
-        return response()->json(['staff_allowances' => $staff_allowances, 'staffs' => $staffs, 'jobs' => $jobs, 'branches' => $branches, 'staff_types' => $staff_types, 'allowances' => $allowances]);
+        return response()->json(['staff_allowances' => $staff_allowances,'allowance_types' => $allowance_types, 'staffs' => $staffs, 'jobs' => $jobs, 'branches' => $branches, 'staff_types' => $staff_types, 'allowances' => $allowances]);
     }
 
     public function create()
@@ -159,9 +152,9 @@ class SalaryController extends Controller
 
 
 
-        
+            $staffs = Staff::all();
 
-        return response()->json(['salaries' => $salaries]);
+        return response()->json(['salaries' => $salaries,'staffs'=>$staffs]);
     }
 
 

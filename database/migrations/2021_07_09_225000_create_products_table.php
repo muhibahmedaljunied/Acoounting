@@ -25,11 +25,11 @@ class CreateProductsTable extends Migration
             $table->string('text');
             $table->integer('rank')->nullable();
 
-            // $table->integer('status');
             // $table->float('cost_rate')->nullable();
-            $table->float('sale_price')->nullable();
-            $table->float('sale_purchase')->nullable();
-            $table->integer('branch_master');
+            // $table->float('sale_price')->nullable();
+            $table->float('purchase_price')->nullable();
+            $table->integer('status');
+            $table->integer('product_minimum');
             $table->string('image')->nullable();
 
 

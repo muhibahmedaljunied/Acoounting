@@ -35,26 +35,26 @@
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
                                         {{ product.product
-                                        }}<input type="hidden" v-model="product.product_id" id="id" />
+}}<input type="hidden" v-model="product.product_id" id="id" />
                                     </div>
                                 </td>
 
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
                                         {{ product.status
-                                        }}<input type="hidden" v-model="product.status_id" id="id" />
+}}<input type="hidden" v-model="product.status_id" id="id" />
                                     </div>
                                 </td>
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
                                         {{ product.desc
-                                        }}<input type="hidden" v-model="product.desc" id="id" />
+}}<input type="hidden" v-model="product.desc" id="id" />
                                     </div>
                                 </td>
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
                                         {{ product.store
-                                        }}<input type="hidden" v-model="product.store_id" id="id" />
+}}<input type="hidden" v-model="product.store_id" id="id" />
                                     </div>
                                 </td>
 
@@ -76,18 +76,17 @@
                                 <td>
 
                                     <input @change="
-                                        add_one_cash(
-                                            product.product_id,
-                                            product.quantity,
-                                            product.desc,
-                                            product.availabe_qty,
-                                            product.product,
-                                            product.store_id,
-                                            product.status_id,
-                                            index
-                                        )
-                                    " type="checkbox" v-model="check_state[index]"
-                                        class="btn btn-info waves-effect" />
+    add_one_cash(
+        product.product_id,
+        product.quantity,
+        product.desc,
+        product.availabe_qty,
+        product.product,
+        product.store_id,
+        product.status_id,
+        index
+    )
+" type="checkbox" v-model="check_state[index]" class="btn btn-info waves-effect" />
 
 
                                 </td>
@@ -122,17 +121,50 @@ export default {
     data() {
 
         return {
+            text_message: '',
             type: '',
+            type_refresh: '',
             count: 1,
             counts: {},
+            intostore: [],
+            intostore_id: [],
+            product_name: [],
             product: [],
             products: '',
-            stores: '',
-            statuses: '',
-            status: [],
-            store: [],
+            word_search: '',
             check_state: [],
             qty: [],
+            availabe_qty: [],
+            price: [],
+            tax: [],
+            desc: [],
+            stores: '',
+            statuses: '',
+            total_quantity: 0,
+            grand_total: 0,
+            sub_total: 0,
+            To_pay: 0,
+            discount: 0,
+            total_tax: 0,
+            customer: [],
+            supplier: [],
+            suppliers: '',
+            customers: '',
+            date: new Date().toISOString().substr(0, 10),
+            status: [],
+            store: [],
+            temporale: 1,
+            type_payment: 0,
+            Way_to_pay_selected: 1,
+            show: false,
+            paid: 0,
+            remaining: 0,
+            return_qty: [],
+            note: '',
+            not_qty: true,
+            seen: false,
+            detail: '',
+            id: '',
         };
     },
 
@@ -224,14 +256,14 @@ export default {
 
 
             }
-            // console.log(this.counts);
-            // console.log(this.product);
-            // console.log(this.qty);
-            // console.log(this.desc);
-            // console.log(this.product_name);
-            // console.log(this.store);
-            // console.log(this.status);
-            // console.log(this.availabe_qty);
+            console.log(this.counts);
+            console.log(this.product);
+            console.log(this.qty);
+            console.log(this.desc);
+            console.log(this.product_name);
+            console.log(this.store);
+            console.log(this.status);
+            console.log(this.availabe_qty);
 
 
 
@@ -241,7 +273,7 @@ export default {
 
 
         Add_newcash() {
-            //    Add_new(this)
+            Add_new(this)
 
         }
 

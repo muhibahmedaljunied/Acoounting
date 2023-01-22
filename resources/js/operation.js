@@ -1,3 +1,5 @@
+
+
 data = {
 
   text_message: '',
@@ -26,8 +28,8 @@ data = {
   discount: 0,
   total_tax: 0,
   customer: [],
-  supplier: [],
-  suppliers: '',
+  // supplier: [],
+  // suppliers: '',
   customers: '',
   date: new Date().toISOString().substr(0, 10),
   status: [],
@@ -39,11 +41,11 @@ data = {
   paid: 0,
   remaining: 0,
   return_qty: [],
-  note:'',
+  note: '',
   not_qty: true,
   seen: false,
-  detail:'',
-  id:'',
+  detail: '',
+  id: '',
 
 
   // ----------------------------
@@ -66,13 +68,42 @@ data = {
 
 };
 
+// data_for_expence = {
+//   expence_type: vm.expence_type,
+//   expence_qty: vm.qty,
+// };
 
+// data_for_supply_and_cash = {
+//   type: vm.data_send.type,
+//   count: vm.data_send.counts,
+//   product: vm.data_send.product,
+//   store: vm.data_send.store,
+//   desc: vm.data_send.desc,
+//   qty: vm.data_send.qty,
+//   status: vm.data_send.status,
+
+// }
+
+// data_for_purchase_and_sale = {
+//   type: vm.type,
+//   count: vm.counts,
+//   product: vm.product,
+//   store: vm.store,
+//   desc: vm.desc,
+//   qty: vm.qty,
+//   status: vm.status,
+//   price: vm.price,
+//   tax: vm.tax,
+// }
 
 Add_new = function (vm) {
 
+  
+  
+
 
   vm.axios
-    .post(`/add_${vm.type}`, {
+    .post(`/add_${vm.type}`,{
       type: vm.type,
       count: vm.counts,
       product: vm.product,
@@ -88,7 +119,7 @@ Add_new = function (vm) {
       // ---------------------------------------------------------------
       console.log(response);
 
-      
+
       vm.temporale = response.data;
       vm.temporale.forEach((item) => {
         vm.total_quantity = item.tem_qty + vm.total_quantity;
@@ -106,7 +137,7 @@ Add_new = function (vm) {
       toastMessage("تم الاضافه بنجاح");
       // vm.$router.go(0);
     });
-  
+
   // }
 };
 
@@ -181,42 +212,42 @@ Add_return = function (vm) {
 
   // if (vm.return_qty.length != 0) {
 
-    this.axios
-      .post(`/${vm.type}return`, {
-        // old: vm.supply_detail,
-        old: vm.detail,
-        date: vm.date,
-        note: vm.note,
-        // supply_id: vm.supply_id,
-        id: vm.id,
-        return_qty: vm.return_qty,
-        total: vm.total_quantity,
-        type: vm.type,
-        type: vm.type_refresh,
+  this.axios
+    .post(`/${vm.type}return`, {
+      // old: vm.supply_detail,
+      old: vm.detail,
+      date: vm.date,
+      note: vm.note,
+      // supply_id: vm.supply_id,
+      id: vm.id,
+      return_qty: vm.return_qty,
+      total: vm.total_quantity,
+      type: vm.type,
+      type: vm.type_refresh,
 
-      })
-      .then((response) => {
-        console.log(response.data);
+    })
+    .then((response) => {
+      console.log(response.data);
 
-        if (response.data.message != 0) {
+      if (response.data.message != 0) {
 
-          // console.log(response)
+        // console.log(response)
 
-          this.seen = false;
-          toastMessage("تم الارجاع بنجاح");
-          this.$router.go(-1);
+        this.seen = false;
+        toastMessage("تم الارجاع بنجاح");
+        this.$router.go(-1);
 
-        } else {
+      } else {
 
-          toastMessage("فشل", response.data.text);
-
-
+        toastMessage("فشل", response.data.text);
 
 
-        }
 
 
-      });
+      }
+
+
+    });
   // }
 
 
@@ -349,3 +380,4 @@ showtree = function (vm) {
 
   });
 };
+

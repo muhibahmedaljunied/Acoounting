@@ -9,6 +9,7 @@ use App\Imports\StoreImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Storage;
 use DB;
+use Illuminate\Support\Facades\Validator;
 
 
 class StoreController extends Controller
@@ -55,6 +56,17 @@ class StoreController extends Controller
     public function store(Request $request)
     {
 
+
+        $validator = Validator::make($request->all(), [
+            'text' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+        
+        // -------------------------------------------------------
+
         $Store = new Store();
         $Store->text = $request->post('text');
         if($request->post('parent') != 0){
@@ -62,6 +74,7 @@ class StoreController extends Controller
         }
         $Store->id = $request->post('store_id');
         $Store->rank = $request->post('rank');
+        $Store->status = $request->post('status');
         $Store->save();
 
         return response()->json($request);

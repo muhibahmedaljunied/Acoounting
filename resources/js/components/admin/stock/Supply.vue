@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <!--
             *******************************************************************
@@ -35,7 +35,7 @@
                 
 
                   <div class="custom-search">
-                    <select v-model="supplier" id="supplier" class="custom-search-input">
+                    <select v-model="supplier" id="supplier" class="custom-search-input" >
                       <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name]">
                         {{ sup.name }}
                       </option>
@@ -43,7 +43,7 @@
 
 
                     <button class="custom-search-botton" type="button" data-toggle="modal"
-                      data-target="#exampleModalSupplier"> <i class="fa fa-plus-circle"></i></button>
+                      data-target="#exampleModalSupplier" > <i class="fa fa-plus-circle"></i></button>
 
 
                   </div>
@@ -52,24 +52,26 @@
 
                 </div>
 
-                <div class="m-t-30 col-md-6">
+                <div class="m-t-30 col-md-4">
                   <label for="date">التاريخ</label><br />
 
-                  <input name="date" type="date" v-model="date" />
+                  <input name="date" type="date" v-model="date" class="form-control"/>
                 </div>
 
-                <div class="col-md-2">
-                    <!-- <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-                      data-target=".bs-example-modal-lg">
-                      <i class="fa fa-plus-circle"></i></a> -->
+                
+
+
+
+                <div class="col-md-4">
+                   
 
                       <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"  id="agregar_productos"
-                      >
+                      data-toggle="tooltip" data-placement="top" title="اضافه" >
                       <i class="fa fa-plus-circle"></i></router-link>
                     <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
-                      data-target="#modal_vaciar">
+                      data-target="#modal_vaciar" >
                       <i class="fa fa-trash"></i></a>
-                      <router-link  to="/supplylist"  class="tn btn-info btn-sm waves-effect btn-agregar">
+                      <router-link  to="/supplylist"  class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="tooltip" data-placement="top" title="تفاصيل">
                           <i class="fa fa-eye"></i>
                         </router-link>
                  
@@ -359,7 +361,7 @@
                         <!-- <input type="number" v-model="product[index]" class="form-control input_cantidad"
                           onkeypress="return valida(event)" /> -->
                         <div id="factura_producto" class="input_nombre">
-                          <select v-model="product[index]" name="type" id="type" class="form-control" required>
+                          <select v-model="data_send.product[index]" name="type" id="type" class="form-control" required>
                             <option v-for="(product, sindex) in products" :key="sindex" v-bind:value="product.id">
                               {{ product.text }}
                             </option>
@@ -371,7 +373,7 @@
 
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          <select v-model="status[index]" name="type" id="type" class="form-control" required>
+                          <select v-model="data_send.status[index]" name="type" id="type" class="form-control" required>
                             <option v-for="status in statuses" v-bind:value="status.id" value="">
                               {{ status.name }}
                             </option>
@@ -379,7 +381,7 @@
                         </div>
                       </td>
                       <td>
-                        <input type="text" v-model="desc[index]" id="desc" class="form-control"
+                        <input type="text" v-model="data_send.desc[index]" id="desc" class="form-control"
                           onkeypress="return valida(event)" />
                       </td>
                       <td>
@@ -388,7 +390,7 @@
                           onkeypress="return valida(event)" /> -->
 
                         <div id="factura_producto" class="input_nombre">
-                          <select v-model="store[index]" name="type" id="type" class="form-control" required>
+                          <select v-model="data_send.store[index]" name="type" id="type" class="form-control" required>
                             <option v-for="store in stores" v-bind:value="store.id" value="">
                               {{ store.text }}
                             </option>
@@ -400,7 +402,7 @@
                       </td>
 
                       <td>
-                        <input type="number" v-model="qty[index]" id="qty" class="form-control input_cantidad"
+                        <input type="number" v-model="data_send.qty[index]" id="qty" class="form-control input_cantidad"
                           onkeypress="return valida(event)" />
                       </td>
 
@@ -627,6 +629,17 @@ export default {
 
     return {
 
+      data_send:{
+        product: [],
+        counts: {},
+        qty: [],
+        customer: [],
+      supplier: [],
+      status: [],
+      store: [],
+      return_qty: [],
+      desc:[],
+      },
       text_message: '',
       type: '',
       type_refresh: '',
@@ -641,8 +654,8 @@ export default {
       check_state: [],
       qty: [],
       availabe_qty: [],
-      price: [],
-      tax: [],
+      // price: [],
+      // tax: [],
       desc: [],
       stores: '',
       statuses: '',

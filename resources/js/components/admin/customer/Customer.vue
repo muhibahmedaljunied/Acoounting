@@ -53,6 +53,8 @@
                   <th class="wd-15p border-bottom-0">الهاتف</th>
                   <th class="wd-15p border-bottom-0">البريد الالكتروني</th>
                   <th class="wd-15p border-bottom-0">العنوان</th>
+                  <th class="wd-15p border-bottom-0">رقم الحساب</th>
+                  <th class="wd-15p border-bottom-0">الرصيد</th>
                   <th class="wd-15p border-bottom-0">كلمه السر</th>
                   <th class="wd-15p border-bottom-0">الصلاحيه</th>
                   <!-- <th class="wd-15p border-bottom-0">الحاله</th> -->
@@ -67,8 +69,10 @@
                   <td>{{ customer.phone }}</td>
                   <td>{{ customer.email }}</td>
                   <td>{{ customer.address }}</td>
-                  <td>{{ customer.password }}</td>
-                  <td>{{ customer.role_name }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <!-- <td>{{ customer.status }}</td> -->
                   <!-- <td v-if="customer.status == 1">
                     <span class="badge badge-warning">مفعل</span>

@@ -1,9 +1,9 @@
 initial = function () {
 
-// alert('sdsd');
+  // alert('sdsd');
   this.axios.post(`/tree_${localStorage.getItem('table')}`).then((response) => {
     this.trees = response.data.stores;
-    
+
     this.jsonTreeData = response.data.stores;
     this.last_nodes = response.data.last_nodes;
 
@@ -17,115 +17,136 @@ initial = function () {
   });
 }
 
-  addnode_first = function (node_first_level) {
+addnode_first = function (node_first_level) {
 
-    let currentObj = this;
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    // form data
-    let formData = new FormData();
-    formData.append("id", $(`#${localStorage.getItem('table')}_number_first_level`).val());
-    formData.append("parent", 0);
-
-    formData.append("rank", 1);
-    formData.append("text", node_first_level);
-
-    // send upload request
-    this.axios
-      .post(`${localStorage.getItem('table')}_store_first_level`, formData, config)
-      .then(function (response) {
-        currentObj.success = response.data.success;
-        currentObj.filename = "";
-
-        toastMessage("تم الاضافه بنجاح");
-
-      })
-      .catch(function (error) {
-        currentObj.output = error;
-      });
-      // this.$router.go(0);
-  }
-
-  
-   addnode =  function (text) {
- 
-    console.log(text)
-
-    let currentObj = this;
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    // form data
-    let formData = new FormData();
-    formData.append(`${localStorage.getItem('table')}_id`, $(`#${localStorage.getItem('table')}_number`).val());
-    formData.append("text", text);
-    formData.append(`${localStorage.getItem('table')}_name_en`, this.store_name_en);
-    formData.append("parent", $("#parent").val());
-    formData.append("rank", $("#rank").val());
- 
-      this.axios
-      .post(`store_${localStorage.getItem('table')}`, formData, config)
-      .then(function (response) {
-        console.log(response);
-        currentObj.success = response.data.success;
-        currentObj.filename = "";
-
-        toastMessage("تم الاضافه بنجاح");
-        console.log(1);
-      })
-      .catch(function (error) {
-        currentObj.output = error;
-      });
-
-
-
+  let currentObj = this;
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
   };
+  // form data
+  let formData = new FormData();
+  formData.append("id", $(`#${localStorage.getItem('table')}_number_first_level`).val());
+  formData.append("parent", 0);
 
-  updatenode = function (id, text) {
+  formData.append("rank", 1);
+  formData.append("text", node_first_level);
 
-    // alert(text);
+  // send upload request
+  this.axios
+    .post(`${localStorage.getItem('table')}_store_first_level`, formData, config)
+    .then(function (response) {
+      currentObj.success = response.data.success;
+      currentObj.filename = "";
 
-    let currentObj = this;
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    // form data
-    let formData = new FormData();
-    formData.append(`id`, $(`#${localStorage.getItem('table')}_number`).val());
-    formData.append("text", text);
-    // formData.append("store_name_en", this.store_name_en);
-    formData.append("parent_id", $("#update_parent").val());
-    formData.append("rank", $("#update_rank").val());
-    // if(file != 0){
-    //   formData.append("image", file);
-    // }
+      toastMessage("تم الاضافه بنجاح");
 
-    // send upload request
-    this.axios
-      .post(`${localStorage.getItem('table')}_update_node/${id}`, formData, config)
-      .then(function (response) {
-        currentObj.success = response.data.success;
-        currentObj.filename = "";
-
-        toastMessage("تم التعديل بنجاح");
-        this.$router.go(0);
-
-      })
-      .catch(function (error) {
-        currentObj.output = error;
-      });
+    })
+    .catch(function (error) {
+      currentObj.output = error;
+    });
+  // this.$router.go(0);
+}
 
 
+addnode = function (ofx) {
 
-    
+
+  // console.log(ofx.status_account);
+
+
+  let currentObj = this;
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  };
+  // form data
+  let formData = new FormData();
+  formData.append(`${localStorage.getItem('table')}_id`, $(`#${localStorage.getItem('table')}_number`).val());
+  formData.append("text", ofx.text);
+  formData.append(`${localStorage.getItem('table')}_name_en`, this.store_name_en);
+  formData.append("parent", $("#parent").val());
+  formData.append("rank", $("#rank").val());
+  if (localStorage.getItem('table') == 'product') {
+    formData.append("status", ofx.status);
+    formData.append("unit", ofx.unit);
+    formData.append("purchase_price", ofx.purchase_price);
+    formData.append("product_minimum", ofx.product_minimum);
+
+    formData.append("purchase_price_for_retail_unit", ofx.purchase_price_for_retail_unit);
+    formData.append("hash_rate", ofx.hash_rate);
+    formData.append("retail_unit", ofx.retail_unit);
+  } else {
+    formData.append("status", ofx.status);
+
   }
+
+  this.axios
+    .post(`store_${localStorage.getItem('table')}`, formData, config)
+    .then(function (response) {
+      console.log(response);
+      currentObj.success = response.data.success;
+      currentObj.filename = "";
+
+      toastMessage("تم الاضافه بنجاح");
+      // console.log(1);
+    })
+    .catch(error => {
+      console.error(error)
+
+      ofx.error_text = error.response.data.error.text
+      ofx.error_hash_rate = error.response.data.error.hash_rate
+      ofx.error_purchase_price = error.response.data.error.purchase_price
+
+
+    });
+
+
+
+};
+
+updatenode = function (id, text) {
+
+  // alert(text);
+
+  let currentObj = this;
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  };
+  // form data
+  let formData = new FormData();
+  formData.append(`id`, $(`#${localStorage.getItem('table')}_number`).val());
+  formData.append("text", text);
+  // formData.append("store_name_en", this.store_name_en);
+  formData.append("parent_id", $("#update_parent").val());
+  formData.append("rank", $("#update_rank").val());
+  // if(file != 0){
+  //   formData.append("image", file);
+  // }
+
+  // send upload request
+  this.axios
+    .post(`${localStorage.getItem('table')}_update_node/${id}`, formData, config)
+    .then(function (response) {
+      currentObj.success = response.data.success;
+      currentObj.filename = "";
+
+      toastMessage("تم التعديل بنجاح");
+      this.$router.go(0);
+
+    })
+    .catch(function (error) {
+      currentObj.output = error;
+    });
+
+
+
+
+}
 
 
 

@@ -18,7 +18,7 @@
             <form method="post" @submit.prevent="addsupplier">
               <div class="form-group">
                 <label for="name"> الاسم الاول</label>
-                <input v-model="name" type="text" name="name" id="name" class="form-control" required />
+                <input v-model="name" type="text" name="name" id="name" class="form-control" /><span style="color:red">{{ error_name[0] }}</span> 
               </div>
               <div class="form-group">
                 <label for="role">الاسم الاخير</label>
@@ -31,7 +31,7 @@
               </div>
               <div class="form-group">
                 <label for="name">البريد الالكتروني</label>
-                <input v-model="email" type="text" name="email" id="email" class="form-control" />
+                <input v-model="email" type="text" name="email" id="email" class="form-control" /><span style="color:red">{{ error_email[0] }}</span> 
               </div>
 
               <div class="form-group">
@@ -104,6 +104,8 @@
 export default {
   data() {
     return {
+      error_name:'',
+      error_email:'',
       name: "",
       phone: "",
       email: "",
@@ -140,15 +142,19 @@ export default {
         .then(function (response) {
           currentObj.success = response.data.success;
           currentObj.filename = "";
-
+          // console.log(response.error);
           event.preventDefault();
           toastMessage("تم الاضافه بنجاح");
         })
-        .catch(function (error) {
-          currentObj.output = error;
-        });
+        .catch(error => {
+                       console.error(error)
+                       
+                       this.error_name = error.response.data.error.name
+                       this.error_email = error.response.data.error.email
+                       
+                     });
 
-      this.$router.go(-1);
+      // this.$router.go(-1);
     },
     showtree() {
 

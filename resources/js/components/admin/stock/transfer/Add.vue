@@ -21,7 +21,7 @@
                         <label for="desde"> اسم المنتج</label>
                         
                         <div class="custom-search">
-                          <input id='product_tree' type="text" class="custom-search-input">
+                          <input id='product_tree' type="text" class="custom-search-input" readonly>
                           <button class="custom-search-botton" type="button" data-toggle="modal"
                             data-target="#exampleModalProduct"> <i class="fa fa-plus-circle"></i></button>
                         </div>

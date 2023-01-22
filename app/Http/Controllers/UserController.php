@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use DB;
+use Illuminate\Support\Facades\Validator;
+
 class UserController extends Controller
 {
 
@@ -41,6 +43,19 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
+
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:10',
+            'email' => 'required|email|unique:users',
+            'phone'=>'required'
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+
     	$user = new User();
         $user->name = $request->post('name');
         $user->phone = $request->post('phone');

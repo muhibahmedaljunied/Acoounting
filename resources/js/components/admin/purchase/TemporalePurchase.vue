@@ -2,8 +2,14 @@
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
-                <div class="modal-body">
-                    <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
+                
+                <div class="card text-right">
+  <div class="card-header">
+    Featured
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Special title treatment</h5>
+    <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
                         <thead>
                             <tr>
                                 <!-- <th>Code</th> -->
@@ -43,7 +49,7 @@
                                         <!-- <select v-model="product[index]" id="supplier" class="custom-search-input">
 
                                         </select> -->
-                                        <input :id="'purchase_tree' + index" type="text" readonly
+                                        <input  :id="'purchase_tree' + index" type="text" readonly
                                             class="custom-search-input">
                                         <input :id="'purchase_tree_id' + index" type="hidden" readonly
                                             class="custom-search-input">
@@ -57,7 +63,7 @@
                                 </td>
 
                                 <td>
-                                    <div id="factura_producto" class="input_nombre">
+                                    <div id="factura_producto">
                                         <select v-model="status[index]" name="type" id="type" class="form-control"
                                             required>
                                             <option v-for="status in statuses" v-bind:value="status.id" value="">
@@ -68,9 +74,9 @@
                                 </td>
 
                                 <td>
-                                    <div id="factura_producto" class="input_nombre">
+                                    <div id="factura_producto" >
                                         <input type="text" v-model="desc[index]" id="desc"
-                                            class="form-control input_cantidad" onkeypress="return valida(event)" />
+                                            class="form-control" onkeypress="return valida(event)" />
                                     </div>
                                 </td>
 
@@ -98,36 +104,21 @@
                                     </div>
                                 </td>
 
-                                <!-- <td>
-                                    <div id="factura_producto" class="input_nombre">
-                                        <select v-model="store[index]" name="type" id="type" class="form-control"
-                                            required>
-                                            <option v-for="store in stores" v-bind:value="store.id">
-                                                {{ store.text }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </td>
-
-
-                                <td>
-                                    <input type="number" v-model="price[index]" id="qty"
-                                        class="form-control input_cantidad" onkeypress="return valida(event)" />
-                                </td> -->
+                             
 
 
 
                                 <td>
                                     <input type="number" v-model="price[index]" id="qty"
-                                        class="form-control input_cantidad" onkeypress="return valida(event)" />
+                                        class="form-control" onkeypress="return valida(event)" />
                                 </td>
                                 <td>
                                     <input type="number" v-model="qty[index]" id="qty"
-                                        class="form-control input_cantidad" onkeypress="return valida(event)" />
+                                        class="form-control" onkeypress="return valida(event)" />
                                 </td>
                                 <td>
                                     <input type="number" v-model="tax[index]" id="tax"
-                                        class="form-control input_cantidad" onkeypress="return valida(event)" />
+                                        class="form-control" onkeypress="return valida(event)" />
                                 </td>
 
 
@@ -151,9 +142,17 @@
 
                         </tbody>
                     </table>
-                </div>
-                <a href="javascript:void" @click="Add_newpurchase()" class="btn btn-success"><span>تاكيد
+    <a href="javascript:void" @click="Add_newpurchase()" class="btn btn-primary"><span>تاكيد
                         العمليه</span></a>
+  </div>
+  <div class="card-footer text-muted">
+    2 days ago
+  </div>
+</div>
+
+                
+               
+          
                 <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">

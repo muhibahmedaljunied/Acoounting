@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\store;
+use App\Models\ProductUnit;
 use App\Exports\ProductExport;
 use App\Imports\ProductImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -11,6 +12,7 @@ use Storage;
 
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -156,6 +158,20 @@ class ProductController extends Controller
 
 
 
+        $validator = Validator::make($request->all(), [
+            'text' => 'required',
+            'hash_rate' => 'required',
+            'purchase_price' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        // -------------------------------------------------------
+
+
+
         $file_name = '';
         if ($request->file('image') != 0) {
 
@@ -174,10 +190,42 @@ class ProductController extends Controller
         }
         $product->id = $request->post('product_id');
         $product->rank = $request->post('rank');
-        $product->image = $file_name;
-        // $product->image = $generated_new_name;
+        $product->product_minimum = $request->post('product_minimum');
+        $product->status = $request->post('status');
 
+        $product->image = $file_name;
         $product->save();
+
+
+        // return response()->json($request->all());
+
+        if ($request->post('status') == 'false') {
+
+            $product_unit = new ProductUnit();
+            $product_unit->unit_id = $request->post('unit');
+            $product_unit->product_id = $product->id;
+            $product_unit->purchase_price = $request->post('purchase_price');
+            $product_unit->save();
+
+
+            if ($request->post('retail_unit')) {
+
+                $product_unit = new ProductUnit();
+                $product_unit->unit_id = $request->post('retail_unit');
+                $product_unit->product_id = $product->id;
+                $product_unit->purchase_price = $request->post('purchase_price_for_retail_unit');
+                $product_unit->rate = $request->post('hash_rate');
+                $product_unit->save();
+
+                // return response()->json($value);
+            }
+        }
+
+
+        // ------------this for ProductUnit--------------
+
+
+        // ------------------------
 
         return response()->json($request->file('image'));
     }

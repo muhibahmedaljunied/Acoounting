@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
 
         <div class="col-md-9">
@@ -76,7 +76,7 @@
                       </thead>
                       <tbody>
                         <tr v-for="temporales in temporale">
-                          <td style="width: 40px">{{ temporales.name }}</td>
+                          <td style="width: 40px">{{ temporales.product }}</td>
                           <td>{{ temporales.tem_qty }}</td>
                           <td>{{ temporales.price }}</td>
                           <td>{{ temporales.status }}</td>
@@ -88,19 +88,11 @@
                           <td>{{ temporales.sub_total }}<small> </small></td>
                           <td>{{ temporales.total }}</td>
                           <td>
-                    <button
-                      type="button"
-                  
-                      class="btn btn-danger"
-                    >
-                      <i class="fa fa-trash"></i>
-                    </button>
-                    <router-link
-                     
-                      class="btn btn-success"
-                      ><i class="fa fa-edit"></i
-                    ></router-link>
-                  </td>
+                            <button type="button" class="btn btn-danger">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                            <router-link class="btn btn-success"><i class="fa fa-edit"></i></router-link>
+                          </td>
 
                         </tr>
                       </tbody>
@@ -184,10 +176,10 @@
                 <input type="hidden" id="registros_totales" />
               </div>
 
-              <div class="col-md-12" >
+              <div class="col-md-12">
                 <label for="pagoPrevio">تاريخ الاستحقاق</label>
-                <input type="date"  id="remaining" class="form-control" v-model="remaining" />
-        
+                <input type="date" id="remaining" class="form-control" v-model="remaining" />
+
               </div>
               <div class="col-md-12">&nbsp;</div>
               <div class="col-md-12">
@@ -247,7 +239,7 @@
                 <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
                   <thead>
                     <tr>
-                      <!-- <th>Code</th> -->
+
                       <th>المنتج</th>
 
                       <th>المخزن</th>
@@ -261,13 +253,11 @@
                     </tr>
                   </thead>
                   <tbody v-if="products && products.data.length > 0">
-                    <!-- <tr v-for="(products, index) in product"> -->
                     <tr v-for="(product, index) in products.data" :key="index">
-                      <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
                       <td>
                         <div id="factura_producto" class="input_nombre">
                           {{ product.product
-                          }}<input type="hidden" v-model="product.id" id="id" />
+}}<input type="hidden" v-model="product.id" id="id" />
                         </div>
                       </td>
 
@@ -276,7 +266,7 @@
                       <td>
                         <div id="factura_producto" class="input_nombre">
                           {{ product.store
-                          }}<input type="hidden" v-model="product.store_id" id="id" />
+}}<input type="hidden" v-model="product.store_id" id="id" />
                         </div>
                       </td>
 
@@ -310,21 +300,21 @@
 
 
                       <input v-model="check_state[index]" @change="add_one_sale(
-                      
-                        product.product_id,
-                        qty[index],
-                        product.desc,
-                        product.availabe_qty,
-                        product.product,
-                        product.store_id,
-                        product.status_id,
-                        price[index],
-                        tax[index],
-                        index
-                      
-                      
-                      
-                      )" type="checkbox" class="btn btn-info waves-effect">
+
+  product.product_id,
+  qty[index],
+  product.desc,
+  product.availabe_qty,
+  product.product,
+  product.store_id,
+  product.status_id,
+  price[index],
+  tax[index],
+  index
+
+
+
+)" type="checkbox" class="btn btn-info waves-effect">
                       </td>
 
                     </tr>
@@ -528,7 +518,45 @@
 <script>
 export default {
   data() {
-    return data;
+    // return data;
+    return {
+      type: '',
+      count: 1,
+      counts: {},
+      product: [],
+      products: '',
+      all_products: '',
+      desc: [],
+      stores: '',
+      statuses: '',
+      status: [],
+      store: [],
+      check_state: [],
+      temporale: 1,
+      qty: [],
+      type: '',
+      availabe_qty: [],
+      price: [],
+      tax: [],
+      stores: '',
+      statuses: '',
+      supplier: [],
+      suppliers: '',
+
+      total_quantity: 0,
+      grand_total: 0,
+      sub_total: 0,
+      To_pay: 0,
+      discount: 0,
+      date: new Date().toISOString().substr(0, 10),
+      total_tax: 0,
+      type_payment: 0,
+      Way_to_pay_selected: 1,
+      show: false,
+      paid: 0,
+      remaining: 0,
+      return_qty: []
+    }
   },
   created() {
     // this.axios.post("/sale/newsale").then((response) => {
@@ -556,11 +584,11 @@ export default {
     // this.$store.dispatch("getAllnewsale");
     // this.$Progress.finish();
   },
-  computed: {
-    showNewsale() {
-      return this.$store.getters.getCartSubtotal;
-    },
-  },
+  // computed: {
+  //   showNewsale() {
+  //     return this.$store.getters.getCartSubtotal;
+  //   },
+  // },
   methods: {
     list(page = 1) {
       this.axios

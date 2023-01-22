@@ -3,73 +3,27 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
+        <div class="col-md-4">
+            <label for="status">اسم الموظف</label>
+            <select v-model="staffselected" name="type" id="type" class="form-control " required>
+              <option v-for="staff in staffs" v-bind:value="staff.id">
+                {{ staff.name }}
+              </option>
+            </select>
+          </div>
         <div class="card-header pb-0">
           <!-- <div class="d-flex justify-content-between">
             <span class="h2"> الاجازات</span>
           </div> -->
-          <div class="col-md-4" >
-            <label for="status">اسم الموظف</label>
-            <select name="status" id="status" class="form-control">
+        
 
 
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-
-          <div class="col-md-4" >
-            <label for="status">الفرع</label>
-            <select name="status" id="status" class="form-control">
 
 
-              <option >
-           muhib
-              </option>
 
-            </select>
-          </div>
+
 
           
-          <div class="col-md-4" >
-            <label for="status">نوع الوظيفه</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-
-
-          <!-- <div class="d-flex justify-content-right">
-            <a
-              class="tn btn-info btn-lg waves-effect btn-agregar"
-              data-toggle="modal"
-              id="agregar_productos"
-              data-target="#addholiday"
-            >
-              <i class="fa fa-plus-circle"></i
-            ></a>
-
-            <input
-              type="search"
-              autocomplete="on"
-              name="search"
-              data-toggle="dropdown"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="true"
-              placeholder="بحث عن صنف"
-              v-model="word_search"
-              @input="get_search()"
-            />
-
-            <div></div>
-          </div> -->
         </div>
         <div class="card-body" id="printme">
           <div class="table-responsive">
@@ -83,7 +37,7 @@
                   <th class="wd-15p border-bottom-0">عدد الايام</th>
                   <th class="wd-15p border-bottom-0">تاريخ بدء الاجازه</th>
                   <th class="wd-15p border-bottom-0">تاريخ انتهاء الاجازه</th>
-              
+
                   <th class="wd-15p border-bottom-0">العمليات</th>
                 </tr>
               </thead>
@@ -92,38 +46,38 @@
                   <td>{{ vacation.name }}</td>
 
                   <td>
-                   
-                   <div v-for="(vacation_names, index) in vacation.vacation" :key="index">
-                     {{ vacation_names.vacation_type.name }}
-                   </div>
-                   </td>
 
-                   <td>
-                   
-                   <div v-for="(vacation_number, index) in vacation.vacation" :key="index">
-                     {{ vacation_number.total_days }}
-                   </div>
-                   </td>
+                    <div v-for="(vacation_names, index) in vacation.vacation" :key="index">
+                      {{ vacation_names.vacation_type.name }}
+                    </div>
+                  </td>
 
-                   <td>
-                   
-                   <div v-for="(vacation_start_date, index) in vacation.vacation" :key="index">
-                     {{ vacation_start_date.start_date }}
-                   </div>
-                   </td>
+                  <td>
+
+                    <div v-for="(vacation_number, index) in vacation.vacation" :key="index">
+                      {{ vacation_number.total_days }}
+                    </div>
+                  </td>
+
+                  <td>
+
+                    <div v-for="(vacation_start_date, index) in vacation.vacation" :key="index">
+                      {{ vacation_start_date.start_date }}
+                    </div>
+                  </td>
 
 
-                   <td>
-                   
-                   <div v-for="(vacation_end_date, index) in vacation.vacation" :key="index">
-                     {{ vacation_end_date.end_date }}
-                   </div>
-                   </td>
+                  <td>
+
+                    <div v-for="(vacation_end_date, index) in vacation.vacation" :key="index">
+                      {{ vacation_end_date.end_date }}
+                    </div>
+                  </td>
 
 
 
                   <!-- <td>{{ vacation.type }}</td> -->
-<!--                 
+                  <!--                 
                   <td>{{ vacation.start_date }}</td>
                   <td>{{ vacation.end_date }}</td> -->
                   <!-- <td>{{ vacation.total_days }}</td> -->
@@ -138,9 +92,9 @@
                     </button>
 
                     <router-link :to="{
-                      name: 'edit_holiday',
-                      params: { id: vacation.id },
-                    }" class="edit btn btn-success">
+  name: 'edit_holiday',
+  params: { id: vacation.id },
+}" class="edit btn btn-success">
                       <i class="fa fa-edit"></i></router-link>
                   </td>
                 </tr>
@@ -509,16 +463,7 @@ export default {
       //  this.$router.go(-1);
     },
 
-    printDiv(printme) {
-      var printContents = document.getElementById(printme).innerHTML;
-      var originalContents = document.body.innerHTML;
 
-      document.body.innerHTML = printContents;
-
-      window.print();
-
-      document.body.innerHTML = originalContents;
-    },
   },
 };
 </script>

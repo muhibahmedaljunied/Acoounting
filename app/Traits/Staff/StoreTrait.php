@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Extra;
 use App\Models\Discount;
 use App\Models\Advance;
+use App\Models\Allowance;
 use App\Models\Payroll;
 use App\Models\Vacation;
 use App\Traits\Staff\TemporaleTrait;
@@ -22,6 +23,9 @@ trait StoreTrait
 
         // return response()->json(['message' => $request->all()]);
         foreach ($request->post('count') as $value) {
+
+
+
 
 
             $temporale_f = 0;
@@ -59,6 +63,14 @@ trait StoreTrait
                     ->get('id');
                 $this->refresh_payroll($request->all(), $value, $request->post('type'));
             }
+            if ($request->post('type') == 'allowance') {
+
+                $temporale_f = tap(Allowance::where(['staff_id' => $request['staff'][$value], 'allowance_type_id' => $request['allowance_type'][$value]]))
+                    ->update(['qty' => $request['qty'][$value]])
+                    ->get('id');
+                $this->refresh_payroll($request->all(), $value, $request->post('type'));
+            }
+
 
             if ($request->post('type') == 'advance') {
                 // return response()->json(['message' => $request->all()]);

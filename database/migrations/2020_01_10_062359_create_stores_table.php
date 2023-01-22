@@ -19,9 +19,8 @@ class CreateStoresTable extends Migration
             $table->unsignedInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('stores');
             $table->integer('rank')->nullable();
-            $table->integer('branch_master');
+            $table->integer('type_branch');
 
-            // $table->integer('status');
             $table->timestamps();
 
         });

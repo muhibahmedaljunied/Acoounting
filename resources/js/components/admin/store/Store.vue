@@ -68,7 +68,7 @@
                       </div>
                       <div class="form-group">
                         <label for="store">اسم المخزن</label>
-                        <input v-model="text" type="text" name="store" id="store" class="form-control" required />
+                        <input v-model="text" type="text" name="store" id="store" class="form-control" required /><span style="color:red">{{ error_text[0] }}</span>
 
                       </div>
 
@@ -77,7 +77,7 @@
                       <div class="form-group">
                         <label for="radio-example-one">متفرع </label>
 
-                        <input type="checkbox" name='fieldset2' id="attend" @change="check()" />
+                        <input type="checkbox" name='fieldset2' v-model="status"  id="status">
 
                         <input id='parent' type="hidden" />
 
@@ -297,7 +297,9 @@ export default {
 
     return {
       d: 0,
+      error_text:'',
       show: false,
+      status:false,
       id: 1,
       parent: 0,
       store_id: [],
@@ -305,6 +307,7 @@ export default {
       store_name_en: [],
       rank: [],
       store: '',
+      status_product:false,
       // store_first_level: '',
 
       tree: {
@@ -430,9 +433,9 @@ export default {
     add_store(e) {
 
 
-      addnode(this.text);
+      addnode(this);
 
-      this.$router.go(0);
+      // this.$router.go(0);
     },
 
     update_store(e) {

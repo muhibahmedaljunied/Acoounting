@@ -3,42 +3,40 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="col-md-4" >
-            <label for="status">اسم الموظف</label>
-            <select name="status" id="status" class="form-control">
+        <div class="col-md-4">
+          <label for="status">اسم الموظف</label>
+          <select v-model="staffselected" name="type" id="type" class="form-control " required>
+            <option v-for="staff in staffs" v-bind:value="staff.id">
+              {{ staff.name }}
+            </option>
+          </select>
+        </div>
+        <div class="card-header ">
 
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-          <div class="col-md-4" >
+          <!-- <div class="col-md-4">
             <label for="status">الفرع</label>
             <select name="status" id="status" class="form-control">
 
 
-              <option >
-           muhib
+              <option>
+                muhib
               </option>
 
             </select>
-          </div>
-          <div class="col-md-4" >
+          </div> -->
+          <!-- <div class="col-md-4">
             <label for="status">نوع الوظيفه</label>
             <select name="status" id="status" class="form-control">
 
 
-              <option >
-           muhib
+              <option>
+                muhib
               </option>
 
             </select>
-          </div>
+          </div> -->
         </div>
-        <div class="card-body" id="printme">
+        <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -46,7 +44,7 @@
 
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
                   <th class="wd-15p border-bottom-0"> نوع الاضافي</th>
-                  <th class="wd-15p border-bottom-0">  عدد الساعات</th>
+                  <th class="wd-15p border-bottom-0"> عدد الساعات</th>
                   <th class="wd-15p border-bottom-0">تاريخ البدء</th>
                   <th class="wd-15p border-bottom-0">تاريخ الانتهاء</th>
                   <th class="wd-15p border-bottom-0">وقت البدء</th>
@@ -62,49 +60,49 @@
                   <td>{{ extra.name }}</td>
 
                   <td>
-                   
-                   <div v-for="(extra_names, index) in extra.extra" :key="index">
-                     {{ extra_names.extra_type.name }}
-                   </div>
-                   </td>
 
-                       <td>
-                   
-                   <div v-for="(extra_number_hours, index) in extra.extra" :key="index">
-                     {{ extra_number_hours.number_hours }}
-                   </div>
-                   </td>
+                    <div v-for="(extra_names, index) in extra.extra" :key="index">
+                      {{ extra_names.extra_type.name }}
+                    </div>
+                  </td>
 
+                  <td>
 
-                   <td>
-                   
-                   <div v-for="(extra_start_date, index) in extra.extra" :key="index">
-                     {{ extra_start_date.start_date }}
-                   </div>
-                   </td>
+                    <div v-for="(extra_number_hours, index) in extra.extra" :key="index">
+                      {{ extra_number_hours.number_hours }}
+                    </div>
+                  </td>
 
 
-                   <td>
-                   
-                   <div v-for="(extra_end_date, index) in extra.extra" :key="index">
-                     {{ extra_end_date.end_date }}
-                   </div>
-                   </td>
+                  <td>
+
+                    <div v-for="(extra_start_date, index) in extra.extra" :key="index">
+                      {{ extra_start_date.start_date }}
+                    </div>
+                  </td>
 
 
-                   <td>
-                   
-                   <div v-for="(extra_start_time, index) in extra.extra" :key="index">
-                     {{ extra_start_time.start_time }}
-                   </div>
-                   </td>
+                  <td>
 
-                   <td>
-                   
-                   <div v-for="(extra_end_time, index) in extra.extra" :key="index">
-                     {{ extra_end_time.end_time }}
-                   </div>
-                   </td>
+                    <div v-for="(extra_end_date, index) in extra.extra" :key="index">
+                      {{ extra_end_date.end_date }}
+                    </div>
+                  </td>
+
+
+                  <td>
+
+                    <div v-for="(extra_start_time, index) in extra.extra" :key="index">
+                      {{ extra_start_time.start_time }}
+                    </div>
+                  </td>
+
+                  <td>
+
+                    <div v-for="(extra_end_time, index) in extra.extra" :key="index">
+                      {{ extra_end_time.end_time }}
+                    </div>
+                  </td>
 
 
 
@@ -125,9 +123,9 @@
                     </button>
 
                     <router-link :to="{
-                      name: 'edit_extra',
-                      params: { id: extra.id },
-                    }" class="edit btn btn-success">
+  name: 'edit_extra',
+  params: { id: extra.id },
+}" class="edit btn btn-success">
                       <i class="fa fa-edit"></i>
                     </router-link>
                   </td>
@@ -174,30 +172,31 @@
                           <a href="">Learn more</a>
                         </p> -->
                       </div>
-                      <div class="card-body">
+                      <!-- <div class="card-body">
                         <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
 
-                        <div class="table-responsive">
-                          <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
-                            <thead>
-                              <tr>
+                          <div class="table-responsive">
+                            <table class="table table-bordered text-right m-t-30"
+                              style="width: 100%; font-size: x-small">
+                              <thead>
+                                <tr>
 
-                                <th>اسم المؤظف</th>
+                                  <th>اسم المؤظف</th>
 
 
-                                <th>نوع الاضافي </th>
-                                <th> تاريخ اليدء </th>
+                                  <th>نوع الاضافي </th>
+                                  <th> تاريخ اليدء </th>
 
-                                <th>تاريخ الانتهاء</th>
+                                  <th>تاريخ الانتهاء</th>
 
-                                <th> وقت البدء</th>
-                                <th>وقت الانتهاء</th>
-                              </tr>
-                            </thead>
-                            <tbody>
+                                  <th> وقت البدء</th>
+                                  <th>وقت الانتهاء</th>
+                                </tr>
+                              </thead>
+                              <tbody>
                                 <tr>
                                   <td>
-                                    <select v-model="staffselected" name="type" id="type" class="form-control "
+                                    <select  name="type" id="type" class="form-control "
                                       required>
                                       <option v-for="staff in staffs" v-bind:value="staff.id">
                                         {{ staff.name }}
@@ -232,16 +231,16 @@
 
 
                                 </tr>
-                                  <button type="submit" class="btn btn-primary btn-lg btn-block">
-                                    حفظ
-                                  </button>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                  حفظ
+                                </button>
 
-                            </tbody>
-                          </table>
-                        </div>
-                      </form>
+                              </tbody>
+                            </table>
+                          </div>
+                        </form>
 
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                   <!--/div-->
@@ -354,7 +353,7 @@ export default {
         console.log(response.data.data);
       });
     },
-   
+
     get_search(word_search) {
       this.axios
         .post(`/extrasearch`, { word_search: this.word_search })
@@ -364,7 +363,7 @@ export default {
           // this.$root.logo = "Category";
         });
     },
-    
+
     list(page = 1) {
       this.axios
         .post(`/extra?page=${page}`)
@@ -377,9 +376,9 @@ export default {
           console.error(response);
         });
     },
-  
 
-    
+
+
   },
 };
 </script>

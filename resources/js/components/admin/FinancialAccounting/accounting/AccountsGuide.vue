@@ -4,25 +4,25 @@
     <div class="col-xl-6">
       <div class="card">
         <div class="card-header pb-0">
-            <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between">
 
-              <span style="font-size: x-large"> شجره الحسابات</span>
-              <!-- <router-link to="create_product" id="agregar_productos"
+            <span style="font-size: x-large"> شجره الحسابات</span>
+            <!-- <router-link to="create_product" id="agregar_productos"
                 class="tn btn-info btn-lg waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link> -->
 
-            </div>
-
           </div>
+
+        </div>
         <div class="card-body">
           <div class="container">
             <div class="row justify-content-left">
               <div class="col-md-6">
                 <div class="card">
-                
+
                   <div class="card-body">
                     <!-- <div class="container"> -->
-                      <!-- <button @click="prints()">click</button> -->
-                      <div class="well" id="treeview_json"></div>
+                    <!-- <button @click="prints()">click</button> -->
+                    <div class="well" id="treeview_json"></div>
 
                     <!-- </div> -->
                   </div>
@@ -48,52 +48,53 @@
 
                 <div class="card-body">
                   <div class="form">
-                <h3 class="text-center">اضافه حساب</h3>
+                    <h3 class="text-center">اضافه حساب</h3>
 
-                <div class="form-group">
-                  <ul>
-                    <div v-for="error in errors">
-                      <li>{{ error[0] }}</li>
+                    <div class="form-group">
+                      <ul>
+                        <div v-for="error in errors">
+                          <li>{{ error[0] }}</li>
+                        </div>
+                      </ul>
                     </div>
-                  </ul>
-                </div>
 
-                <div class="form-group">
-                  <label for="Product">رقم الحساب</label>
-                  <input id='account_number' type="text" class="form-control" required />
+                    <div class="form-group">
+                      <label for="Product">رقم الحساب</label>
+                      <input id='account_number' type="text" class="form-control" required />
 
-                </div>
+                    </div>
 
-                <div class="form-group">
-                  <label for="Product">اسم الحساب</label>
-                  <input v-model="text" type="text" name="Product" id="account_first_level"
-                    class="form-control" required />
+                    <div class="form-group">
+                      <label for="Product">اسم الحساب</label>
+                      <input v-model="text" type="text" name="Product" id="account_first_level" class="form-control"
+                        required />
 
-                </div>
+                    </div>
 
-                <div class="form-group">
-                  <label for="radio-example-one">متفرع </label>
+                    <div class="form-group">
+                      <label for="radio-example-one">متفرع </label>
 
-                  <input type="checkbox" name='fieldset2' id="attend" @change="check()" />
-                </div>
+                      <input type="checkbox" name='fieldset2' v-model="status"  id="status"
+                         />
+                    </div>
 
 
-                <div class="form-group">
-                  <label for="radio-example-one">مدين </label>
+                    <div class="form-group">
+                      <label for="radio-example-one">مدين </label>
 
-                  <input type="checkbox" name='field1' id="attend" @change="check()" />
+                      <input type="checkbox" name='field1' id="attend" @change="check()" />
 
-                  <label for="radio-example-one">داين </label>
+                      <label for="radio-example-one">داين </label>
 
-                  <input type="checkbox" name='field2' id="attend" @change="check()" />
+                      <input type="checkbox" name='field2' id="attend" @change="check()" />
 
-                </div>
+                    </div>
 
-                <input id='parent' type="hidden" />
+                    <input id='parent' type="hidden" />
 
-<input id='rank' type="hidden" />
+                    <input id='rank' type="hidden" />
 
-              </div>
+                  </div>
                 </div>
                 <div class="card-footer">
                   <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm"> حفظ </button>
@@ -106,7 +107,7 @@
 
     </div>
 
-<!-- 
+    <!-- 
     <div class="modal fade" id="account_main" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
       aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -338,7 +339,7 @@ export default {
       file: '',
       text: '',
       product: '',
-   
+      status:false,
       // product_first_level: '',
       last_nodes: '',
       rank: 1,
@@ -430,7 +431,7 @@ export default {
       });
     },
 
-   
+
 
     // first_level(e) {
     //   e.preventDefault();
@@ -451,7 +452,7 @@ export default {
     submitForm() {
 
       // e.preventDefault();
-      addnode(this.text);
+      addnode(this);
       // this.$router.go(0);
     },
 

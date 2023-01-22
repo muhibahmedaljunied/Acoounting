@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Foundation\Auth\Access\Store as s;
+use App\Traits\ConditionTrait;
 use App\Traits\TemporaleTrait;
 use Illuminate\Http\Request;
 use App\Models\Customer;
@@ -12,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\Foreach_;
 class SaleController extends Controller
 {
-    use TemporaleTrait;
+    use TemporaleTrait, ConditionTrait, s;
     public function index()
     {
 

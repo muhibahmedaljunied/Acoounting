@@ -129,6 +129,7 @@ class AccountController extends Controller
         }
 
         $account->rank = $request->post('rank');
+        $account->status = $request->post('status');
         // $account->account_type = $request->post('account_type');
         // $account->currency = $request->post('currency');
 

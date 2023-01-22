@@ -40,7 +40,7 @@
           >
         </li> -->
 
-        <!-- <li class="side-item side-item-category">Main</li>
+        <li class="side-item side-item-category">Main</li>
         <li class="slide">
           <router-link class="side-menu__item" to="dashboard"
             ><svg
@@ -63,7 +63,7 @@
 
           
 
-        <li class="side-item side-item-category">General</li> -->
+        <!--<li class="side-item side-item-category">General</li> -->
         <!-- 
         <li class="slide">
           <router-link class="side-menu__item" data-toggle="slide" to="/group"
@@ -250,6 +250,14 @@
             <li>
               <router-link class="slide-item" to="/user">المستخدمين</router-link>
             </li>
+
+            <li>
+              <router-link class="slide-item" to="/user">الخزن</router-link>
+            </li>
+
+            <li>
+              <router-link class="slide-item" to="/user">اعدادات النظام</router-link>
+            </li>
           </ul>
          
         </li>
@@ -270,12 +278,20 @@
               <router-link class="slide-item" to="daily_restrictions">
                 قيود اليوميه</router-link>
             </li>
+          
+            <li>
+              <router-link class="slide-item" to="/expence">المصروفات النقديه</router-link>
+            </li>
+            <li>
+              <router-link class="slide-item" to="/income">الواردات النقديه</router-link>
+            </li>
+
             <li class="slide">
               <router-link class="slide-item" to="auditBalance">
                 ميزان المراجعه</router-link>
             </li>
             <li class="slide">
-              <router-link class="slide-item" to="accountList">
+              <router-link class="slide-item" to="/account_list">
                 كشف حساب</router-link>
             </li>
           </ul>
@@ -332,11 +348,11 @@
             </li>
           </ul>
 
-          <!-- <ul class="slide-menu">
+          <ul class="slide-menu">
             <li>
               <router-link class="slide-item" to="/unit">الوحدات</router-link>
             </li>
-          </ul> -->
+          </ul>
 
             <ul class="slide-menu">
             <li>
@@ -422,6 +438,9 @@
             <li>
               <router-link class="slide-item" to="/supplier">الموردين</router-link>
             </li>
+            <li>
+              <router-link class="slide-item" to="/supplier">حساب الموردين</router-link>
+            </li>
        
             <li>
               <router-link class="slide-item" to="/supply">وارد</router-link>
@@ -457,6 +476,9 @@
          
             <li>
               <router-link class="slide-item" to="/customer">العملاء</router-link>
+            </li>
+            <li>
+              <router-link class="slide-item" to="/supplier">حساب العملاء</router-link>
             </li>
        
             <li>

@@ -115,6 +115,36 @@ Route::post('/reposupplyreturn_by_supplier', 'SupplyReturnController@reposupplyr
 
 Route::post('/repo_movement', 'SupplyController@repo_movement');
 Route::post('/repo_stock', 'SupplyController@repo_stock');
+################################################expence##################################
+Route::post('/expence/newexpence', 'ExpenceController@index');
+
+Route::post('/expence/delete', 'ExpenceController@destroy');
+
+// Route::post('/add_supply/{id}', 'SupplyController@store');
+
+Route::post('/store_expence', 'ExpenceController@store');
+
+Route::post('/payexpence', 'ExpenceController@payment');
+
+Route::post('/expences', 'ExpenceController@show');
+Route::post('/expence/newexpencesearch', 'ExpenceController@search_new');
+
+Route::post('/listexpence', 'ExpenceController@show');
+
+Route::post('/listexpencesearch', 'ExpenceController@search');
+
+Route::post('/expence_details/{id}', 'ExpenceController@details_supply');
+Route::post('/invoice_expence/{id}', 'ExpenceController@invoice_supply');
+Route::post('/recive_expence/{id}', 'ExpenceController@recive_supply');
+
+// Route::post('/Repoexpence', 'ExpenceController@get_data_for_report');
+// Route::post('/repoexpence_by_supplier', 'ExpenceController@reposupply_by_supplier');
+// Route::post('/Repoexpencereturn', 'SupplyReturnController@get_data_for_report');
+// Route::post('/repoexpencereturn_by_supplier', 'SupplyReturnController@reposupplyreturn_by_supplier');
+
+
+// Route::post('/repo_movement', 'SupplyController@repo_movement');
+// Route::post('/repo_stock', 'SupplyController@repo_stock');
 
 ################################################sale##################################
 Route::post('/sale/newsale', 'SaleController@index');
@@ -296,12 +326,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/productsearch', 'ProductController@search');
     ######################################################################
-    // Route::post('/unit', 'UnitController@index');
-    // Route::post('/create_unit', 'UnitController@create');
-    // Route::post('/store_unit', 'UnitController@store');
-    // Route::post('/update_unit/{id}', 'UnitController@upate');
-    // Route::post('/unit/{id}', 'UnitrController@edit');
-    // Route::post('/delete_unit/{id}', 'UnitController@destroy');
+    Route::post('/unit', 'UnitController@index');
+    Route::post('/create_unit', 'UnitController@create');
+    Route::post('/store_unit', 'UnitController@store');
+    Route::post('/update_unit/{id}', 'UnitController@upate');
+    Route::post('/unit/{id}', 'UnitrController@edit');
+    Route::post('/delete_unit/{id}', 'UnitController@destroy');
 
     ########################################################################
     Route::post('/supply', 'SupplyController@index');
@@ -551,7 +581,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/absence_typesearch', 'AbsenceController@search');
     // --------------------------------------------------------------------------------
     //  ---------------------------------------allowance_type-----------------------------
-    Route::post('/allowance_type', 'AllowanceController@index');
+    Route::post('/allowance', 'AllowanceController@index');
+    Route::post('/allowance_type', 'AllowanceTypeController@index');
     Route::post('/create_allowance_type', 'AllowanceController@create');
     Route::post('/storeallowance_type', 'AllowanceController@store');
     Route::post('/update_allowance_type/{id}', 'AllowanceController@update');

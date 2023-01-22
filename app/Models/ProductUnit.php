@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +16,7 @@ class ProductUnit extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email','product_id','unit_id','status',
+       'product_id','unit_id','rate_convert',
     ];
 
 

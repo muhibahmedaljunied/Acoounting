@@ -91,6 +91,13 @@ trait TemporaleTrait
 
 
             //     break;
+            case ($type == 'expence'):
+                $temporale->expence_id =  $request['expence_type'][$value];
+                $temporale->qty = $request['qty'][$value];
+   
+
+                break;
+
             case ($type == 'supply' || $type == 'cash'):
                 $temporale->product_id =  $request['product'][$value];
                 // $temporale->product_name =$request['product_name'][$value];

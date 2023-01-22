@@ -17,7 +17,9 @@
 
                 <th>تاريخ السند</th>
                 <th>الحساب</th>
-                <th>المبلغ</th>
+                <th>المبلغ المطلوب</th>
+                <th>المدفوع</th>
+                <th>المتبقي</th>
 
                 <th>اضافه</th>
               </tr>
@@ -68,6 +70,22 @@
                   <select name="" id="">
                     <option value=""></option>
                   </select>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="price"
+                    class="form-control input_cantidad"
+                    onkeypress="return valida(event)"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="price"
+                    class="form-control input_cantidad"
+                    onkeypress="return valida(event)"
+                  />
                 </td>
                 <td>
                   <input

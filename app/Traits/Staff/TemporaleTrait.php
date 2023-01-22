@@ -3,6 +3,7 @@
 namespace App\Traits\Staff;
 
 use App\Models\Advance;
+use App\Models\Allowance;
 use App\Models\Attendance;
 use App\Models\Extra;
 use App\Models\Discount;
@@ -53,6 +54,15 @@ trait TemporaleTrait
                 $temporale->quantity = $request['qty'][$value];
                 $temporale->date = $request['date'][$value];
                 break;
+
+            case 'allowance':
+                $temporale = new Allowance();
+                $temporale->staff_id = $request['staff'][$value];
+                $temporale->name = $request['allow'][$value];
+                $temporale->allowance_type_id = $request['allowance_type'][$value];
+                $temporale->qty = $request['qty'][$value];
+                // $temporale->date = $request['date'][$value];
+                break;
             case 'advance':
                 $temporale = new Advance();
                 $temporale->staff_id = $request['staff'][$value];
@@ -100,7 +110,7 @@ trait TemporaleTrait
 
             case 'allowance':
                 $payroll = DB::table('allowances')->where('staff_id', $request['staff'][$value])->sum('qty');
-                $data = ['total_allowance' => $payroll,'net_salary' => $request['salary'][$value]];
+                $data = ['total_allowance' => $payroll];
                 break;    
             default:
                 return;

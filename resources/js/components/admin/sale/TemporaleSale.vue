@@ -2,124 +2,140 @@
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
-                <div class="modal-body">
-                    <div class="custom-search">
-                        <!-- <select v-model="product[index]" id="supplier" class="custom-search-input">
 
-                                        </select> -->
-                        <input :id="'purchase_tree' + index" type="text" readonly class="custom-search-input">
-                        <input :id="'purchase_tree_id' + index" type="hidden" readonly class="custom-search-input">
-
-                        <button class="custom-search-botton" type="button" data-toggle="modal"
-                            data-target="#exampleModalProduct" @click="detect_index(index)"> <i
-                                class="fa fa-plus-circle"></i></button>
+                <div class="card text-right">
+                    <div class="card-header">
+                        Featured
                     </div>
-                    <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
-                        <thead>
-                            <tr>
-                                <!-- <th>Code</th> -->
-                                <th>المنتج</th>
+                    <div class="card-body">
+                        <h5 class="card-title">Special title treatment</h5>
+                        <div class="custom-search">
 
-                                <th>المخزن</th>
-                                <th>الحاله</th>
-                                <th> المواصفات والطراز</th>
-                                <th>الكميه المنوفره</th>
-                                <!-- <th>الوحده</th> -->
-                                <th>السعر</th>
-                                <th>الكميه</th>
-                                <th>الضريبه</th>
-                                <th>اضافه</th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="all_products && all_products.data.length > 0">
-                            <!-- <tr v-for="(products, index) in product"> -->
-                            <tr v-for="(product, index) in all_products.data" :key="index">
-                                <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
-                                <td>
-                                    <div id="factura_producto" class="input_nombre">
-                                        {{ product.product
-                                        }}<input type="hidden" v-model="product.id" id="id" />
-                                    </div>
-                                </td>
+                            <input :id="'purchase_tree' + index" type="text" readonly class="custom-search-input">
+                            <input :id="'purchase_tree_id' + index" type="hidden" readonly class="custom-search-input">
 
+                            <button class="custom-search-botton" type="button" data-toggle="modal"
+                                data-target="#exampleModalProduct" @click="detect_index(index)"> <i
+                                    class="fa fa-plus-circle"></i></button>
+                        </div>
+                        <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <!-- <th>Code</th> -->
+                                    <th>المنتج</th>
 
-
-                                <td>
-                                    <div id="factura_producto" class="input_nombre">
-                                        {{ product.store
-                                        }}<input type="hidden" v-model="product.store_id" id="id" />
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div id="factura_producto" class="input_nombre">
-                                        {{ product.status }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="factura_producto" class="input_nombre">
-                                        {{ product.desc }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="factura_producto" class="input_nombre">
-                                        {{ product.availabe_qty }}
-                                    </div>
-                                </td>
-                                <!-- <td>
-                                    <div id="factura_producto" class="input_nombre">
-                                        <select v-model="status[index]" name="type" id="type" class="form-control"
-                                            required>
-                                            <option v-for="status in statuses" v-bind:value="status.id" value="">
-                                                {{ status.name }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </td> -->
-                                <td>
-                                    <input type="number" v-model="price[index]" id="price"
-                                        class="form-control input_cantidad" onkeypress="return " />
-                                </td>
-                                <td>
-                                    <input type="number" @input="on_input(qty[index], product.availabe_qty)"
-                                        v-model="qty[index]" id="qty" class="form-control input_cantidad"
-                                        onkeypress="return " />
-                                </td>
-                                <td>
-                                    <input type="number" v-model="tax[index]" id="qty"
-                                        class="form-control input_cantidad" onkeypress="return " />
-                                </td>
-
-                                <td>
-                                    <input v-model="check_state[index]" @change="add_one_sale(
-                                    
-                                        product.product_id,
-                                        qty[index],
-                                        product.desc,
-                                        product.availabe_qty,
-                                        product.product,
-                                        product.store_id,
-                                        product.status_id,
-                                        price[index],
-                                        tax[index],
-                                        index
-                                    
-                                    
-                                    
-                                    )" type="checkbox" class="btn btn-info waves-effect">
-                                </td>
-
-                            </tr>
+                                    <th>المخزن</th>
+                                    <th>الحاله</th>
+                                    <th> المواصفات والطراز</th>
+                                    <th>الكميه المنوفره</th>
+                                    <!-- <th>الوحده</th> -->
+                                    <th>السعر</th>
+                                    <th>الكميه</th>
+                                    <th>الضريبه</th>
+                                    <th>اضافه</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="all_products && all_products.data.length > 0">
+                                <!-- <tr v-for="(products, index) in product"> -->
+                                <tr v-for="(product, index) in all_products.data" :key="index">
+                                    <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
+                                    <td>
+                                        <div id="factura_producto" class="input_nombre">
+                                            {{
+                                                product.product
+                                            }}<input type="hidden" v-model="product.id" id="id" />
+                                        </div>
+                                    </td>
 
 
 
-                        </tbody>
+                                    <td>
+                                        <div id="factura_producto" class="input_nombre">
+                                            {{
+                                                product.store
+                                            }}<input type="hidden" v-model="product.store_id" id="id" />
+                                        </div>
+                                    </td>
 
-                    </table>
+                                    <td>
+                                        <div id="factura_producto" class="input_nombre">
+                                            {{ product.status }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="factura_producto" class="input_nombre">
+                                            {{ product.desc }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="factura_producto" class="input_nombre">
+                                            {{ product.availabe_qty }}
+                                        </div>
+                                    </td>
+                                    <!-- <td>
+                                <div id="factura_producto" class="input_nombre">
+                                    <select v-model="status[index]" name="type" id="type" class="form-control"
+                                        required>
+                                        <option v-for="status in statuses" v-bind:value="status.id" value="">
+                                            {{ status.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td> -->
+                                    <td>
+                                        <input type="number" v-model="price[index]" id="price"
+                                            class="form-control input_cantidad" onkeypress="return " />
+                                    </td>
+                                    <td>
+                                        <input type="number" @input="on_input(qty[index], product.availabe_qty)"
+                                            v-model="qty[index]" id="qty" class="form-control input_cantidad"
+                                            onkeypress="return " />
+                                    </td>
+                                    <td>
+                                        <input type="number" v-model="tax[index]" id="qty"
+                                            class="form-control input_cantidad" onkeypress="return " />
+                                    </td>
 
-                </div>
-                <a href="javascript:void" @click="Add_newsale()" class="btn btn-success"><span>تاكيد
+                                    <td>
+                                        <input v-model="check_state[index]" @change="add_one_sale(
+                                        
+                                            product.product_id,
+                                            qty[index],
+                                            product.desc,
+                                            product.availabe_qty,
+                                        
+                                            product.store_id,
+                                            product.status_id,
+                                            price[index],
+                                            tax[index],
+                                            index
+                                        
+                                        
+                                        
+                                        )" type="checkbox" class="btn btn-info waves-effect">
+                                    </td>
+
+                                </tr>
+
+
+
+                            </tbody>
+
+                        </table>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                        <a href="javascript:void" @click="Add_newsale()" class="btn btn-primary"><span>تاكيد
                         العمليه</span></a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        2 days ago
+                    </div>
+                </div>
+
+
+
+
+
+              
                 <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -151,8 +167,9 @@ export default {
             count: 1,
             counts: {},
             product: [],
-            products:'',
+            products: '',
             all_products: '',
+            desc: [],
             stores: '',
             statuses: '',
             status: [],
@@ -187,78 +204,78 @@ export default {
     methods: {
         showtree() {
 
-let gf = this;
-this.axios.post(`/tree_product`).then((response) => {
-    this.jsonTreeDataProduct = response.data.products;
+            let gf = this;
+            this.axios.post(`/tree_product`).then((response) => {
+                this.jsonTreeDataProduct = response.data.products;
 
 
-    $('#treeview_json_product').jstree({
-        core: {
-            themes: {
-                responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataProduct,
+                $('#treeview_json_product').jstree({
+                    core: {
+                        themes: {
+                            responsive: false,
+                        },
+                        // so that create works
+                        check_callback: true,
+                        data: this.jsonTreeDataProduct,
+                    },
+                    types: {
+                        default: {
+                            icon: "fa fa-folder text-primary",
+                        },
+                        file: {
+                            icon: "fa fa-file  text-primary",
+                        },
+                    },
+                    checkbox: {
+                        three_state: false,
+
+                    },
+                    state: {
+                        key: "demo2"
+                    },
+                    search: {
+                        case_insensitive: true,
+                        show_only_matches: true
+                    },
+                    plugins: ["checkbox",
+                        "contextmenu",
+                        "dnd",
+                        "massload",
+                        "search",
+                        "sort",
+                        "state",
+                        "types",
+                        "unique",
+                        "wholerow",
+                        "changed",
+                        "conditionalselect"],
+                    contextmenu: {
+                        items: contextmenu
+                    },
+
+
+
+
+
+
+                }).on("changed.jstree", function (e, data) {
+
+                    console.log(data.node.id);
+
+                    //  modal-title-store
+
+                    $(`#purchase_tree${gf.indexselected}`).val(data.node.text);
+                    $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
+
+                    gf.product[gf.indexselected] = data.node.id;
+
+
+
+                });
+
+            });
+
         },
-        types: {
-            default: {
-                icon: "fa fa-folder text-primary",
-            },
-            file: {
-                icon: "fa fa-file  text-primary",
-            },
-        },
-        checkbox: {
-            three_state: false,
-
-        },
-        state: {
-            key: "demo2"
-        },
-        search: {
-            case_insensitive: true,
-            show_only_matches: true
-        },
-        plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-        contextmenu: {
-            items: contextmenu
-        },
-
-
-
-
-
-
-    }).on("changed.jstree", function (e, data) {
-
-        console.log(data.node.id);
-
-        //  modal-title-store
-
-        $(`#purchase_tree${gf.indexselected}`).val(data.node.text);
-        $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
-
-        gf.product[gf.indexselected] = data.node.id;
-
-
-
-    });
-
-});
-
-},
         list(page = 1) {
 
             this.axios.post(`/purchase/newpurchase?page=${page}`).then(({ data }) => {
@@ -312,7 +329,7 @@ this.axios.post(`/tree_product`).then((response) => {
             qty,
             desc,
             availabe_qty,
-            product_name,
+
             store,
             status,
             price,
@@ -341,7 +358,7 @@ this.axios.post(`/tree_product`).then((response) => {
                         this.counts[index] = index;
                         this.product[index] = product_id;
                         this.qty[index] = qty;
-                        this.product_name[index] = product_name;
+                        // this.product_name[index] = product_name;
                         this.tax[index] = tax;
                         this.price[index] = price;
                         this.desc[index] = desc;
@@ -359,7 +376,7 @@ this.axios.post(`/tree_product`).then((response) => {
                 this.$delete(this.product, index);
                 this.$delete(this.qty, index);
                 this.$delete(this.desc, index);
-                this.$delete(this.product_name, index);
+                // this.$delete(this.product_name, index);
                 this.$delete(this.store, index);
                 this.$delete(this.status, index);
                 this.$delete(this.availabe_qty, index);
@@ -419,12 +436,11 @@ this.axios.post(`/tree_product`).then((response) => {
     z-index: 2;
 }
 </style>
-    
+  
 <style scoped>
 th,
 td {
     text-align: center;
 }
 </style>
-  
-  
+
