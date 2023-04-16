@@ -13,15 +13,22 @@ class AdvanceController extends Controller
    use StoreTrait;
     public function index()
     {
-         $advances = DB::table('advances')
-        ->join('staff','staff.id', '=', 'advances.staff_id')
-        ->select('advances.*','staff.*')
-        ->paginate(10);
+        
 
-    
+        $advances = staff::with(['advance'])->paginate(10);
         $staffs = Staff::all();
-        return response()->json(['staffs'=>$staffs,'advances'=>$advances]);
+        return response()->json(['staffs'=>$staffs,'list'=>$advances]);
     }
+
+    public function select_staff(Request $request){
+
+        $staffs = staff::where('id', $request->id)->with(['advance'])->paginate(10);
+
+        return response()->json(['list'=>$staffs]);
+    
+    
+        }
+
 
     /**
      * Show the form for creating a new resource.

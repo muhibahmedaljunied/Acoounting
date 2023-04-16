@@ -38,11 +38,17 @@
                     <td>{{ purchase.supplier_name }}</td>
                     <!-- <td>{{ purchase.quantity }}</td>
                   <td>{{ purchase.qty_return }}</td> -->
-                    <td>{{ purchase.purchase_date }}</td>
+                    <td>{{ purchase.date }}</td>
                     <td>{{ purchase.paid }}</td>
                     <td>{{ purchase.remaining }}</td>
                     <td>{{ purchase.grand_total }}</td>
-                    <td>{{ purchase.status }}</td>
+                    <td>
+
+                      <span class="badge bg-warning" v-if="purchase.payment_status == 'pendding'">معلقه</span>
+                      <span class="badge bg-success" v-if="purchase.payment_status == 'paiding'">مدفوعه</span>
+                      <span class="badge bg-info" v-if="purchase.payment_status == 'Partially'">مدفوعه جزئيا</span>
+
+                    </td>
 
                     <td>
                       <div class="optionbox">
@@ -77,7 +83,7 @@
                           ]">
                             عرض الفاتوره
                           </option>
-                          <option class="btn btn-success"
+                          <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
                             v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
                             دفع
                           </option>
@@ -145,6 +151,7 @@
                     <th>المخزن</th>
 
                     <th class="wd-15p border-bottom-0"> كميه الشراء</th>
+                    <!-- <th>الوحده</th> -->
                     <th class="wd-15p border-bottom-0"> السعر </th>
                     <th class="wd-15p border-bottom-0"> الاجمالي </th>
 
@@ -160,7 +167,44 @@
                     <td>{{ purchase_details.desc }}</td>
                     <td>{{ purchase_details.status }}</td>
                     <td>{{ purchase_details.store }}</td>
-                    <td>{{ purchase_details.qty }}</td>
+                    <!-- <td>{{ purchase_details.qty }} {{ purchase_details.unit }}</td> -->
+                    <td>
+
+                      <div v-for="temx in purchase_details.units">
+
+                        <span v-if="temx.name == purchase_details.unit">
+
+                          <span v-if="temx.unit_type == 1">
+
+                            {{ purchase_details.qty }} {{ temx.name }}
+
+                          </span>
+
+                          <span v-if="temx.unit_type == 0">
+
+                            <span v-if="purchase_details.qty / purchase_details.rate >= 1">
+                              {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
+                                purchase_details.units[0].name
+                              }}
+                            </span>
+
+                            <span v-if="purchase_details.qty % purchase_details.rate >= 1">
+                              و
+                              {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
+                                purchase_details.units[1].name
+                              }}
+                            </span>
+                          </span>
+
+                        </span>
+
+
+
+                      </div>
+
+                    </td>
+
+                    <!-- <td>{{ purchase_details.unit }}</td> -->
                     <td>{{ purchase_details.price }}</td>
                     <td>{{ purchase_details.total }}</td>
                     <!-- <td>{{ purchase_details.qty_return }}</td> -->
@@ -189,6 +233,7 @@
   </div>
 </template>
 <script>
+
 import pagination from "laravel-vue-pagination";
 export default {
   components: {
@@ -204,6 +249,7 @@ export default {
       operationselected: [],
       total: 0,
       word_search: "",
+      table: 'purchase_details',
     };
   },
   mounted() {
@@ -221,9 +267,9 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1])
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
           .then((response) => {
-
+            console.log(response);
             this.purchase_detail = response.data.purchase_details;
 
             this.purchase_detail.forEach((item) => {

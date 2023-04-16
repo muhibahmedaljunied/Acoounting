@@ -1,18 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Traits\Staff\BasicData\StoreTrait;
 use App\Models\Branch;
 use DB;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    use StoreTrait;
+   
     public function index()
     {
         $branches = DB::table('branches')

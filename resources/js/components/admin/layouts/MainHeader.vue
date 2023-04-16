@@ -17,19 +17,19 @@
 					<input class="form-control" placeholder="Search for anything..." type="search"> <button
 						class="btn"><i class="fas fa-search d-none d-md-block"></i></button>
 				</div>
+
+				
+				
 			</div>
 			<div class="col-md-4 logo_agile">
-				<h1 class="text-center">
-					<!-- <a href="customer/home"
-                                    class="font-weight-slim font-italic">
-                                    <img src="" alt=""
-                                        class="img-fluid">Electro Store
-                                </a> -->
+				<h3 class="text-center" style="color:blue">
+					
 
-					<a href="#" class="font-weight-slim font-italic">
-						<img src="" alt="" class="img-fluid">نظام اداره المخازن الالكتروني
-					</a>
-				</h1>
+				
+						<img src="" alt="" class="img-fluid">النظام المحاسبي الحديث
+						<!-- نظام اداره المخازن الالكتروني -->
+			
+				</h3>
 			</div>
 			<div class="main-header-right">
 				<div class="nav nav-item  navbar-nav-right ml-auto">

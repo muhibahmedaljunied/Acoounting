@@ -25,9 +25,10 @@ class CreateProductUnitsTable extends Migration
             $table->unsignedInteger('unit_id')->nullable();
             $table->foreign('unit_id')->references('id')->on('units');
             // ------------------------------------------------------------------------------
-            $table->float('rate');
+            $table->integer('purchase_price');
+
             // $table->float('cost')->nullable();
-            $table->integer('status');
+            $table->integer('unit_type')->default(1)->nullable();
     
 
 

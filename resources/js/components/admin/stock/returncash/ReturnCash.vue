@@ -187,7 +187,9 @@
   </div>
 </template>
 <script>
+import operation from '../../../../../js/operation.js';
 export default {
+  mixins: [operation],
   data() {
 
     return data;
@@ -212,7 +214,7 @@ export default {
       console.log(response.data);
       this.detail = response.data.cash_details;
 
-      this.type = 'return_cash';
+      this.type = 'CashReturn';
     this.type_refresh = 'increment';
 
      
@@ -324,14 +326,6 @@ if (this.check_state[index] == true) {
   console.log(this.status);
 
 },
-
-Add_return() {
-
-// alert('ddddddddddd');
-Add_return(this)
-
-},
-
 
   },
   

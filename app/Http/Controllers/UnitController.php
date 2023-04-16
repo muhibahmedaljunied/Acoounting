@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Unit;
+use App\Models\Product;
 use DB;
 use Illuminate\Http\Request;
 
@@ -37,13 +38,13 @@ class UnitController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $unit = new Unit();
-        $unit->name = $request->post('unit');
-        $unit->save();
-        return response()->json();
-    }
+    // public function store(Request $request)
+    // {
+    //     $unit = new Unit();
+    //     $unit->name = $request->post('unit');
+    //     $unit->save();
+    //     return response()->json();
+    // }
 
     /**
      * Display the specified resource.
@@ -51,9 +52,17 @@ class UnitController extends Controller
      * @param  \App\Absence  $absence
      * @return \Illuminate\Http\Response
      */
-    public function show(Absence $absence)
+    public function show(Request $request)
     {
-        //
+        $units = Unit::where('product_units.product_id',$request->id)
+            ->join('product_units', 'units.id', '=', 'product_units.unit_id')
+            ->join('products', 'product_units.product_id', '=', 'products.id')
+            ->select('units.*','product_units.unit_type','products.rate')
+            ->get();
+
+
+        return response()->json(['units'=>$units]);
+
     }
 
     /**
@@ -62,7 +71,7 @@ class UnitController extends Controller
      * @param  \App\Absence  $absence
      * @return \Illuminate\Http\Response
      */
-    public function edit(Absence $absence)
+    public function edit()
     {
         //
     }

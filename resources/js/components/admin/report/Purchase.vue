@@ -291,6 +291,7 @@
   
   
 <script>
+
 export default {
   data() {
     return {
@@ -308,26 +309,26 @@ export default {
    
 
       ],
-      showstore: false,
-      showproduct: false,
-      showstatus: false,
-      showdesc: false,
-      showdate: false,
-      showoperation: false,
+      // showstore: false,
+      // showproduct: false,
+      // showstatus: false,
+      // showdesc: false,
+      // showdate: false,
+      // showoperation: false,
 
-      statusselected: 0,
+      // statusselected: 0,
 
-      productselected: 0,
-      productselectedname: "",
-      storeselectedname: "",
-      storeselected: 0,
-      descselected: "",
-      operationselected: 0,
-      dateselected: 0,
-      typeselected: [],
-      checkselected: '',
-      moveselected: 0,
-      moveselected: [],
+      // productselected: 0,
+      // productselectedname: "",
+      // storeselectedname: "",
+      // storeselected: 0,
+      // descselected: "",
+      // operationselected: 0,
+      // dateselected: 0,
+      // typeselected: [],
+      // checkselected: '',
+      // moveselected: 0,
+      // moveselected: [],
       type_report: 0,
       from_date: "2021-11-24",
       to_date: new Date().toISOString().substr(0, 10),
@@ -371,140 +372,7 @@ export default {
       const dateTime = date + " " + time;
       this.timestamp = dateTime;
     },
-    showtree() {
-
-
-      this.axios.post(`/tree_product`).then((response) => {
-        this.jsonTreeDataProduct = response.data.products;
-        let gf_product = this;
-
-
-        $('#treeview_json_product').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataProduct,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-
-
-
-
-
-
-
-        }).on("changed.jstree", function (e, data) {
-
-          console.log(data.node.id);
-          $(`#product_tree`).val(data.node.id)
-          gf_product.set_product(gf_product, data.node.id, data.node.text);
-
-          //  modal-title-store
-          // this.productselected = data.node.id;
-        });
-
-
-      });
-      this.axios.post(`/tree_store`).then((response) => {
-        this.jsonTreeDataStore = response.data.stores;
-        let gf_store = this;
-
-
-        $('#treeview_json_store').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataStore,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-          contextmenu: {
-            items: contextmenu
-          },
-
-
-
-
-
-
-        }).on("changed.jstree", function (e, data) {
-
-          console.log(data.node.id);
-          $(`#store_tree`).val(data.node.id)
-          gf_store.set_store(gf_store, data.node.id, data.node.text);
-
-          // this.storeselected = data.node.id;
-          //  modal-title-store
-        });
-
-
-      });
-    },
+  
 
     onreportchange() {
 
@@ -550,37 +418,7 @@ export default {
   },
 };
 </script>
-<style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
 
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style>
   <!-- <style scoped>
   .card-header {
   

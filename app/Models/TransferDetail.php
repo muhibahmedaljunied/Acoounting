@@ -22,7 +22,8 @@ class TransferDetail extends Model
 
         return $query->join('products', 'transfer_details.product_id', '=', 'products.id')
             ->join('statuses', 'transfer_details.status_id', '=', 'statuses.id')
-            ->join('stores', 'transfer_details.store_id', '=', 'stores.id');
+            ->join('stores', 'transfer_details.store_id', '=', 'stores.id')
+            ->join('units', 'transfer_details.unit_id', '=', 'units.id');
     }
 
     public function scopeWhereall($query, $request, $value)
@@ -32,7 +33,7 @@ class TransferDetail extends Model
         return $query->where([
             'product_id' => $request['product_id'][$value],
             'store_id' => $request['store_id'][$value],
-            // 'shelve_id' => $value['shelve'], 
+            'unit_id' => $value['unit_id'], 
             'status_id' => $request['status_id'][$value],
             'desc' => $request['desc'][$value]
         ]);

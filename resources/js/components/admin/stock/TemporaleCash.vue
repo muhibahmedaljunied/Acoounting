@@ -9,6 +9,20 @@
                     <span class="h2">المصروفات</span>
 
                 </div>
+                <h5 class="card-title">اختر المنتج</h5>
+                <div class="custom-search">
+
+
+                    <input :id="'Cash_product_tree' + index" type="text" readonly class="custom-search-input">
+                    <input :id="'Cash_product_tree_id' + index" type="hidden" v-model="product[index]"
+                        class="custom-search-input">
+
+
+
+                    <button class="custom-search-botton" type="button" data-toggle="modal"
+                        data-target="#exampleModalProduct" @click="detect_index(index)"> <i
+                            class="fa fa-plus-circle"></i></button>
+                </div>
                 <div class="card-body">
                     <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
                         <thead>
@@ -16,15 +30,17 @@
                                 <th>#</th>
                                 <th>المنتج</th>
                                 <!-- <th>المجموعه</th>
-                    <th>الصنف</th> -->
+                  <th>الصنف</th> -->
                                 <th>الحاله</th>
                                 <th>المواصفات والطراز</th>
                                 <th>المخزن</th>
                                 <!-- <th> الرف</th> -->
                                 <th>الكميه المنوفره</th>
-                                <th>كميه الصرف</th>
+                                <th>الوحده</th>
+                                <th>التكلفه</th>
+                                                                <th>كميه الصرف</th>
 
-
+                                <th>الاجمالي</th>
                                 <th>اضافه</th>
                             </tr>
                         </thead>
@@ -34,59 +50,119 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
-                                        {{ product.product
-}}<input type="hidden" v-model="product.product_id" id="id" />
+                                        {{
+                                            product.product
+                                        }}<input type="hidden" v-model="product.product_id" id="id" />
                                     </div>
                                 </td>
 
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
-                                        {{ product.status
-}}<input type="hidden" v-model="product.status_id" id="id" />
+                                        {{
+                                            product.status
+                                        }}<input type="hidden" v-model="product.status_id" id="id" />
                                     </div>
                                 </td>
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
-                                        {{ product.desc
-}}<input type="hidden" v-model="product.desc" id="id" />
+                                        {{
+                                            product.desc
+                                        }}<input type="hidden" v-model="product.desc" id="id" />
                                     </div>
                                 </td>
                                 <td>
                                     <div id="factura_producto" class="input_nombre">
-                                        {{ product.store
-}}<input type="hidden" v-model="product.store_id" id="id" />
+                                        {{
+                                            product.store
+                                        }}<input type="hidden" v-model="product.store_id" id="id" />
                                     </div>
                                 </td>
-
-
-
                                 <td>
-                                    <div id="factura_producto" class="input_nombre">
+                                    <!-- <div id="factura_producto" class="input_nombre">
                                         {{ product.availabe_qty }}
+                                    </div> -->
+                                    <div v-for="temx in product.units">
+
+                                        <span v-if="temx.unit_type == 1">
+                                            {{ parseInt(product.quantity / product.rate) }} {{ temx.name }}
+                                        </span>
+                                        <span v-if="temx.unit_type == 0">
+                                            <span
+                                                v-if="Math.round(((product.quantity / product.rate) - parseInt(product.quantity / product.rate)) * product.rate) != 0">
+                                                و
+                                                {{
+                                                    Math.round(((product.quantity / product.rate) -
+                                                        parseInt(product.quantity / product.rate)) * product.rate)
+                                                }}{{
+    temx.name
+}}
+                                            </span>
+
+                                        </span>
                                     </div>
+                                </td>
+                                <td>
+                                    <div id="factura_producto" class="input_nombre">
+
+
+
+
+
+                                        <select :id="'select_unit' + index" v-model="unit[index]" name="type"
+                                            class="form-control" required>
+
+                                            <option v-for="unit in product.units"
+                                                v-bind:value='[unit.id, unit.rate, unit.unit_type]'>
+                                                {{ unit.name }}
+                                            </option>
+                                        </select>
+
+
+
+
+
+                                    </div>
+                                </td>
+                                    
+                                <td>
+                                    <!-- <input type="number" v-model="product.quantity" min="1" :max="product.availabe_qty"
+                                        step="1" class="form-control input_cantidad" /> -->
+
+                                    <input type="number" v-model="price[index]" step="1"
+                                        class="form-control input_cantidad" />
+
                                 </td>
 
                                 <td>
-                                    <input type="number" v-model="product.quantity" min="1" :max="product.availabe_qty"
-                                        step="1" class="form-control input_cantidad"
-                                        onkeypress="return valida(event)" />
-                                    <!-- @input="check_qty(qty[index], product.id)" -->
+                                    <input type="number"
+                                        @input="on_input(qty[index], product.availabe_qty), calculate_price(price[index], qty[index], index)"
+                                        v-model="qty[index]" id="qty" class="form-control input_cantidad"
+                                        onkeypress="return " />
                                 </td>
+                            
+                           
+
+                         
+                                <td>
+                                    <input type="number" v-model="total[index]" class="form-control input_cantidad"
+                                        onkeypress="return " />
+                                </td>
+
 
                                 <td>
 
                                     <input @change="
-    add_one_cash(
-        product.product_id,
-        product.quantity,
-        product.desc,
-        product.availabe_qty,
-        product.product,
-        product.store_id,
-        product.status_id,
-        index
-    )
-" type="checkbox" v-model="check_state[index]" class="btn btn-info waves-effect" />
+                                        add_one_cash(
+                                            product.product_id,
+                                            qty[index],
+                                            product.desc,
+                                            product.availabe_qty,
+                                            product.store_id,
+                                            product.status_id,
+                                            index,
+                                            total[index]
+                                        )
+                                    " type="checkbox" v-model="check_state[index]" class="btn btn-info waves-effect" />
 
 
                                 </td>
@@ -106,40 +182,46 @@
 
 
             </div>
+            <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="well" id="treeview_json_product"></div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
 
 
 
     </div>
 </template>
+
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../js/operation.js';
+import tree from '../../../../js/tree/tree.js';
 export default {
     components: {
         pagination,
     },
+    mixins: [operation, tree],
     data() {
 
         return {
             text_message: '',
-            type: '',
-            type_refresh: '',
-            count: 1,
-            counts: {},
-            intostore: [],
-            intostore_id: [],
-            product_name: [],
-            product: [],
-            products: '',
-            word_search: '',
-            check_state: [],
-            qty: [],
-            availabe_qty: [],
-            price: [],
-            tax: [],
-            desc: [],
-            stores: '',
-            statuses: '',
+           
             total_quantity: 0,
             grand_total: 0,
             sub_total: 0,
@@ -150,34 +232,58 @@ export default {
             supplier: [],
             suppliers: '',
             customers: '',
-            date: new Date().toISOString().substr(0, 10),
-            status: [],
-            store: [],
+
             temporale: 1,
             type_payment: 0,
             Way_to_pay_selected: 1,
             show: false,
             paid: 0,
             remaining: 0,
-            return_qty: [],
+
             note: '',
             not_qty: true,
             seen: false,
-            detail: '',
+
             id: '',
+
+
         };
     },
 
     mounted() {
+        this.type_of_tree = 1;
         this.list();
-        this.type = 'cash';
+        this.type = 'Cash';
+        this.showtree('product');
         this.type_refresh = 'decrement';
 
     },
     methods: {
 
 
+         calculate_price(price, qty, index) {
+            // console.log(this.unit[index][2]);
 
+            if (this.unit[index][2] == 0) {
+
+                this.total[index] = price * qty;
+
+            }
+
+            if (this.unit[index][2] == 1) {
+
+                this.total[index] = price * this.unit[index][1] * qty;
+
+            }
+
+        },
+        on_input(qty, availabe_qty) {
+            if (qty <= availabe_qty) {
+
+                this.text_message = 'هذه الكميه غير متوفره ';
+            }
+
+        },
 
         get_search(word_search) {
             this.axios
@@ -202,18 +308,16 @@ export default {
                 });
         },
 
-
-
-
         add_one_cash(
             product_id,
             qty = 0,
             desc,
             availabe_qty,
-            product_name,
+    
             store,
             status,
-            index
+            index,
+            total
         ) {
 
 
@@ -231,12 +335,13 @@ export default {
                         this.product[index] = product_id;
                         this.qty[index] = qty;
                         this.desc[index] = desc;
-                        this.product_name[index] = product_name;
+                   
 
                         this.store[index] = store;
                         this.status[index] = status;
 
                         this.availabe_qty[index] = availabe_qty;
+                        this.total[index] = total;
 
 
                     }
@@ -253,6 +358,7 @@ export default {
                 this.$delete(this.store, index);
                 this.$delete(this.status, index);
                 this.$delete(this.availabe_qty, index);
+                this.$delete(this.total, index);
 
 
             }
@@ -264,6 +370,7 @@ export default {
             console.log(this.store);
             console.log(this.status);
             console.log(this.availabe_qty);
+            console.log(this.total);
 
 
 
@@ -272,13 +379,9 @@ export default {
         },
 
 
-        Add_newcash() {
-            Add_new(this)
 
-        }
 
     },
 };
 </script>
-  
-  
+

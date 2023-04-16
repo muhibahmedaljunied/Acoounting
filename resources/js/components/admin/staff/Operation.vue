@@ -30,9 +30,9 @@
                         <li class="nav-item">
                           <a href="#tab4" class="nav-link" data-toggle="tab"> الخصم</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                           <a href="#tab5" class="nav-link" data-toggle="tab">القرض</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                           <a href="#tab6" class="nav-link" data-toggle="tab">السلف</a>
                         </li>
@@ -61,6 +61,29 @@
                           <a href="#tab11" class="nav-link" data-toggle="tab"> اضافه موظف </a>
                         </li>
 
+                        <li class="nav-item">
+                          <a href="#tab12" class="nav-link" data-toggle="tab"> جزاءات الغياب</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#tab13" class="nav-link" data-toggle="tab"> جزاءات التأخير</a>
+                        </li>
+
+
+                        <li class="nav-item">
+                          <a href="#tab14" class="nav-link" data-toggle="tab"> جزاءات الاضافي</a>
+                        </li>
+
+                        <li class="nav-item">
+                          <a href="#tab15" class="nav-link" data-toggle="tab"> جزاءات الانصراف المبكر</a>
+                        </li>
+
+                        <li class="nav-item">
+                          <a href="#tab16" class="nav-link" data-toggle="tab"> طلب اجازه </a>
+                        </li>
+
+                    
+
+
                         <!-- <li class="nav-item">
                           <a href="#tab12" class="nav-link" data-toggle="tab"> الرواتب والبدلات </a>
                         </li> -->
@@ -69,11 +92,11 @@
                     </div>
                   </div>
                   <div class="
-                      panel-body
-                      tabs-menu-body
-                      main-content-body-right
-                      border-top-0 border
-                    ">
+                          panel-body
+                          tabs-menu-body
+                          main-content-body-right
+                          border-top-0 border
+                        ">
                     <div class="tab-content">
 
                       <!-- <div class="tab-pane active" id="tab1">
@@ -90,9 +113,9 @@
                       <div class="tab-pane" id="tab4">
                         <discount></discount>
                       </div>
-                      <div class="tab-pane" id="tab5">
+                      <!-- <div class="tab-pane" id="tab5">
                         <loan></loan>
-                      </div>
+                      </div> -->
                       <div class="tab-pane" id="tab6">
                         <advance></advance>
                       </div>
@@ -112,7 +135,30 @@
                       <div class="tab-pane" id="tab11">
                         <personal-information></personal-information>
                       </div>
-<!-- 
+
+                      <div class="tab-pane" id="tab12">
+                        <absence-sanction></absence-sanction>
+                      </div>
+
+                      <div class="tab-pane" id="tab13">
+                        <delay-sanction></delay-sanction>
+                      </div> 
+
+
+
+
+                      <div class="tab-pane" id="tab14">
+                        <extra-sanction></extra-sanction>
+                      </div>
+
+                      <div class="tab-pane" id="tab15">
+                        <leave-sanction></leave-sanction>
+                      </div>
+
+                     <!-- <div class="tab-pane" id="tab16">
+                        <leave-sanction></leave-sanction>
+                      </div>  -->
+                      <!-- 
                       <div class="tab-pane active" id="tab12">
                         <salary-allowance></salary-allowance>
                       </div> -->
@@ -150,6 +196,12 @@ import TransferBranch from "./Operation/TransferBranch";
 import PersonalInformation from "./Operation/PersonalInformation";
 import SalaryAllowance from "./Operation/SalaryAllowance";
 
+import DelaySanction from "./Operation/DelaySanction";
+import AbsenceSanction from "./Operation/AbsenceSanction";
+import ExtraSanction from "./Operation/ExtraSanction";
+import LeaveSanction from "./Operation/LeaveSanction";
+
+
 
 export default {
   components: {
@@ -164,7 +216,11 @@ export default {
     TransferBranch,
     Allowance,
     PersonalInformation,
-    SalaryAllowance
+    SalaryAllowance,
+    DelaySanction,
+    AbsenceSanction,
+    ExtraSanction,
+    LeaveSanction
 
 
   },

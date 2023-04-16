@@ -18,6 +18,7 @@ class PurchaseDetail extends Model
         return $query->where('product_id', $value['product_id'])
                       ->where('status_id', $value['status_id'])
                       ->where('store_id', $value['store_id'])
+                      ->where('unit_id', $value['unit_id'])
                       ->where('purchase_id', $value['purchase_id']);
 
     }
@@ -29,7 +30,8 @@ class PurchaseDetail extends Model
 
         return $query->join('products', 'purchase_details.product_id', '=', 'products.id')
         ->join('statuses', 'purchase_details.status_id', '=', 'statuses.id')
-        ->join('stores', 'purchase_details.store_id', '=', 'stores.id');
+        ->join('stores', 'purchase_details.store_id', '=', 'stores.id')
+        ->join('units', 'purchase_details.unit_id', '=', 'units.id');
     
 
     }

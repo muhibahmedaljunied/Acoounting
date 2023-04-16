@@ -35,6 +35,11 @@ class CreateCashReturnDetailsTable extends Migration
 
             $table->unsignedInteger('status_id')->unsigned()->nullable();
             $table->foreign('status_id')->references('id')->on('statuses');
+            
+            $table->unsignedInteger('unit_id')->unsigned()->nullable();
+            $table->foreign('unit_id')->references('id')->on('units');
+
+
 
             $table->string('desc')->nullable();
             $table->integer('qty')->nullable();

@@ -5,14 +5,15 @@
 
                 <div class="card text-right">
                     <div class="card-header">
-                        Featured
+                        <h1 class="card-title"> المبيعات</h1>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
+                        <h5 class="card-title">اختر المنتج</h5>
                         <div class="custom-search">
 
-                            <input :id="'purchase_tree' + index" type="text" readonly class="custom-search-input">
-                            <input :id="'purchase_tree_id' + index" type="hidden" readonly class="custom-search-input">
+                            <input :id="'Sale_product_tree' + index" type="text" readonly class="custom-search-input">
+                            <input :id="'Sale_product_tree_id' + index" type="hidden" readonly
+                                class="custom-search-input">
 
                             <button class="custom-search-botton" type="button" data-toggle="modal"
                                 data-target="#exampleModalProduct" @click="detect_index(index)"> <i
@@ -28,16 +29,17 @@
                                     <th>الحاله</th>
                                     <th> المواصفات والطراز</th>
                                     <th>الكميه المنوفره</th>
-                                    <!-- <th>الوحده</th> -->
+                                    <th>الوحده</th>
                                     <th>السعر</th>
                                     <th>الكميه</th>
                                     <th>الضريبه</th>
+                                    <th>الاجمالي</th>
                                     <th>اضافه</th>
                                 </tr>
                             </thead>
-                            <tbody v-if="all_products && all_products.data.length > 0">
+                            <tbody>
                                 <!-- <tr v-for="(products, index) in product"> -->
-                                <tr v-for="(product, index) in all_products.data" :key="index">
+                                <tr v-for="(product, index) in all_products" :key="index">
                                     <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
                                     <td>
                                         <div id="factura_producto" class="input_nombre">
@@ -68,26 +70,71 @@
                                         </div>
                                     </td>
                                     <td>
+                                        <div id="factura_producto" class="input_nombre" v-if="product.availabe_qty">
+
+
+                                       
+
+
+
+
+                                            <div v-for="temx in product.units">
+
+
+
+                                                <span v-if="temx.unit_type == 0">
+
+                                                    <span v-if="product.quantity / product.rate >= 1">
+                                                        {{ Math.floor((product.quantity / product.rate)) }}{{
+                                                            product.units[0].name
+                                                        }}
+                                                    </span>
+
+                                                    <span v-if="product.quantity % product.rate >= 1">
+                                                        {{ Math.floor((product.quantity % product.rate)) }}{{
+                                                            product.units[1].name
+                                                        }}
+                                                    </span>
+                                                </span>
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
                                         <div id="factura_producto" class="input_nombre">
-                                            {{ product.availabe_qty }}
+
+
+
+
+
+                                            <select :id="'select_unit' + index" v-model="unit[index]" name="type"
+                                                class="form-control" required>
+
+                                                <option v-for="unit in product.units"
+                                                    v-bind:value="[unit.id, unit.rate, unit.unit_type]">
+                                                    {{ unit.name }}
+                                                </option>
+                                            </select>
+
+
+
+
+
                                         </div>
                                     </td>
-                                    <!-- <td>
-                                <div id="factura_producto" class="input_nombre">
-                                    <select v-model="status[index]" name="type" id="type" class="form-control"
-                                        required>
-                                        <option v-for="status in statuses" v-bind:value="status.id" value="">
-                                            {{ status.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </td> -->
                                     <td>
                                         <input type="number" v-model="price[index]" id="price"
                                             class="form-control input_cantidad" onkeypress="return " />
                                     </td>
                                     <td>
-                                        <input type="number" @input="on_input(qty[index], product.availabe_qty)"
+                                        <input type="number"
+                                            @input="on_input(qty[index], product.availabe_qty), calculate_price(price[index], qty[index], index)"
                                             v-model="qty[index]" id="qty" class="form-control input_cantidad"
                                             onkeypress="return " />
                                     </td>
@@ -97,18 +144,24 @@
                                     </td>
 
                                     <td>
+                                        <input type="number" v-model="total[index]" id="qty"
+                                            class="form-control input_cantidad" onkeypress="return " readonly />
+                                    </td>
+
+                                    <td>
                                         <input v-model="check_state[index]" @change="add_one_sale(
                                         
                                             product.product_id,
                                             qty[index],
                                             product.desc,
                                             product.availabe_qty,
-                                        
+                                            unit[index],
                                             product.store_id,
                                             product.status_id,
                                             price[index],
                                             tax[index],
-                                            index
+                                            index,
+                                            total
                                         
                                         
                                         
@@ -123,8 +176,8 @@
 
                         </table>
                         <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                        <a href="javascript:void" @click="Add_newsale()" class="btn btn-primary"><span>تاكيد
-                        العمليه</span></a>
+                        <a href="javascript:void" @click="Add_new()" class="btn btn-primary"><span>تاكيد
+                                العمليه</span></a>
                     </div>
                     <div class="card-footer text-muted">
                         2 days ago
@@ -135,7 +188,7 @@
 
 
 
-              
+
                 <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -160,143 +213,90 @@
     </div>
 </template>
 <script>
+import operation from '../../../../js/operation.js';
+import tree from '../../../../js/tree/tree.js';
 export default {
+    mixins: [
+        operation,
+        tree
+    ],
     data() {
         return {
-            type: '',
-            count: 1,
-            counts: {},
-            product: [],
-            products: '',
-            all_products: '',
-            desc: [],
-            stores: '',
-            statuses: '',
-            status: [],
-            store: [],
-            check_state: [],
-            qty: [],
-            type: '',
-            availabe_qty: [],
-            price: [],
-            tax: [],
-            stores: '',
-            statuses: '',
+            index: 0,
+            // indexselectedproduct: '',
+            // type: '',
+            // count: 1,
+            // counts: {},
+            // product: [],
+            // products: '',
+            // stores: '',
+            // statuses: '',
+            // stores: '',
+            // statuses: '',
+            // units: '',
+            // desc: [],
+            // status: [],
+            // store: [],
+            // check_state: [],
+            // qty: [],
+            // type: '',
+            // price: [],
+            // tax: [],
+            // unit: [],
+            // rate: [],
+            // unit_type: [],
+            // availabe_qty: [],
+            // all_products: '',
+            // jsonTreeData: '',
+            // type_of_tree: 1,
+            // total: [],
+
 
 
         };
     },
 
     mounted() {
+        this.type_of_tree = 1;
         this.list();
-        this.showtree();
-        this.type = 'sale';
-        this.type_refresh = 'decrement';
+        this.showtree('product');
+        this.type = 'Sale';
+        this.type_refresh = 'increment';
         // this.$Progress.start();
         // this.$store.dispatch("getAllnewsale");
         // this.$Progress.finish();
     },
-    computed: {
-        showNewsale() {
-            return this.$store.getters.getCartSubtotal;
-        },
-    },
+
     methods: {
-        showtree() {
-
-            let gf = this;
-            this.axios.post(`/tree_product`).then((response) => {
-                this.jsonTreeDataProduct = response.data.products;
 
 
-                $('#treeview_json_product').jstree({
-                    core: {
-                        themes: {
-                            responsive: false,
-                        },
-                        // so that create works
-                        check_callback: true,
-                        data: this.jsonTreeDataProduct,
-                    },
-                    types: {
-                        default: {
-                            icon: "fa fa-folder text-primary",
-                        },
-                        file: {
-                            icon: "fa fa-file  text-primary",
-                        },
-                    },
-                    checkbox: {
-                        three_state: false,
+        // calculate_price(price, qty, index) {
+        //     // console.log(this.unit[index][2]);
 
-                    },
-                    state: {
-                        key: "demo2"
-                    },
-                    search: {
-                        case_insensitive: true,
-                        show_only_matches: true
-                    },
-                    plugins: ["checkbox",
-                        "contextmenu",
-                        "dnd",
-                        "massload",
-                        "search",
-                        "sort",
-                        "state",
-                        "types",
-                        "unique",
-                        "wholerow",
-                        "changed",
-                        "conditionalselect"],
-                    contextmenu: {
-                        items: contextmenu
-                    },
+        //     if (this.unit[index][2] == 0) {
 
+        //         this.total[index] = price * qty;
 
+        //     }
 
+        //     if (this.unit[index][2] == 1) {
 
+        //         this.total[index] = price * this.unit[index][1] * qty;
 
+        //     }
 
-                }).on("changed.jstree", function (e, data) {
-
-                    console.log(data.node.id);
-
-                    //  modal-title-store
-
-                    $(`#purchase_tree${gf.indexselected}`).val(data.node.text);
-                    $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
-
-                    gf.product[gf.indexselected] = data.node.id;
-
-
-
-                });
-
-            });
-
-        },
+        // },
         list(page = 1) {
 
-            this.axios.post(`/purchase/newpurchase?page=${page}`).then(({ data }) => {
+            this.axios.post(`/sale/newsale?page=${page}`).then((responce) => {
 
 
-                console.log(data.products);
-                this.products = data.products;
-                this.stores = data.stores;
-                this.statuses = data.statuses;
+                console.log(responce.data);
+                this.all_products = responce.data.products.data;
+
             });
 
-            this.axios
-                .post(`/sale/newsale?page=${page}`)
-                .then(({ data }) => {
 
-                    this.all_products = data.products;
-
-                })
-                .catch(({ response }) => {
-                    console.error(response);
-                });
         },
 
         take_discount() {
@@ -324,29 +324,32 @@ export default {
             this.remaining = this.sub_total - this.paid;
             this.To_pay = this.paid;
         },
+
         add_one_sale(
-            product_id,
+            product,
             qty,
             desc,
             availabe_qty,
-
+            unit,
             store,
             status,
             price,
             tax,
-            index
+            index,
+            total
         ) {
 
-
-            // console.log(product_id, index);
-            // console.log(qty, index);
-            // console.log(desc, index);
-            // console.log(product_name, index);
-            // console.log(store, index);
-            // console.log(status, index);
-            // console.log(availabe_qty, index);
-            // console.log(price, price);
-            // console.log(tax, tax);
+            console.log(this.counts, index);
+            console.log(product, index);
+            console.log(qty, index);
+            console.log(unit, index);
+            console.log(desc, index);
+            console.log(store, index);
+            console.log(status, index);
+            console.log(availabe_qty, index);
+            console.log(price, index);
+            console.log(tax, index);
+            console.log(total, index);
 
             if (this.check_state[index] == true) {
 
@@ -356,86 +359,56 @@ export default {
                     if (qty <= availabe_qty) {
 
                         this.counts[index] = index;
-                        this.product[index] = product_id;
+                        this.product[index] = product;
                         this.qty[index] = qty;
-                        // this.product_name[index] = product_name;
+                        this.unit[index] = unit;
                         this.tax[index] = tax;
                         this.price[index] = price;
                         this.desc[index] = desc;
                         this.store[index] = store;
                         this.status[index] = status;
+                        // this.total[index] = total
                         this.availabe_qty[index] = availabe_qty;
                     }
                 }
 
 
 
-            } else if (this.check_state[index] == false) {
+            }
+            else if (this.check_state[index] == false) {
 
                 this.$delete(this.counts, index);
-                this.$delete(this.product, index);
-                this.$delete(this.qty, index);
-                this.$delete(this.desc, index);
-                // this.$delete(this.product_name, index);
-                this.$delete(this.store, index);
-                this.$delete(this.status, index);
-                this.$delete(this.availabe_qty, index);
-                this.$delete(this.price, price);
-                this.$delete(this.tax, tax);
+                // this.$delete(this.product, index);
+                // this.$delete(this.qty, index);
+                // this.$delete(this.unit, index);
+                // this.$delete(this.desc, index);
+                // this.$delete(this.store, index);
+                // this.$delete(this.status, index);
+                // this.$delete(this.availabe_qty, index);
+                // this.$delete(this.price, index);
+                // this.$delete(this.tax, index);
+                // this.$delete(this.total, index);
 
             }
-            // console.log(this.counts, index);
-            // console.log(this.product, index);
-            // console.log(this.qty, index);
-            // console.log(this.desc, index);
-            // console.log(this.product_name, index);
-            // console.log(this.store, index);
-            // console.log(this.status, index);
-            // console.log(this.availabe_qty, index);
-            // console.log(this.price, price);
-            // console.log(this.tax, tax);
+            console.log(this.counts, index);
+            console.log(this.product, index);
+            console.log(this.qty, index);
+            console.log(this.desc, index);
+            console.log(this.unit, index);
+            console.log(this.store, index);
+            console.log(this.status, index);
+            console.log(this.availabe_qty, index);
+            console.log(this.price, index);
+            console.log(this.tax, index);
+            console.log(this.total, index);
         },
 
 
-        Add_newsale() {
-            Add_new(this);
 
-        },
 
     },
 };
 </script>
-<style scoped>
-.custom-search {
-    position: relative;
-    width: 300px;
-}
-
-.custom-search-input {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 100px;
-    padding: 10px 100px 10px 20px;
-    line-height: 1;
-    box-sizing: border-box;
-    outline: none;
-}
-
-.custom-search-botton {
-    position: absolute;
-    right: 3px;
-    top: 3px;
-    bottom: 3px;
-    border: 0;
-    background: #d1095e;
-    color: #fff;
-    outline: none;
-    margin: 0;
-    padding: 0 10px;
-    border-radius: 100px;
-    z-index: 2;
-}
-</style>
   
 <style scoped>
 th,

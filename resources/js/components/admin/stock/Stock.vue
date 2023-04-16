@@ -39,24 +39,37 @@
                   <td>{{ stock.product }}</td>
                   <td>{{ stock.status }}</td>
                   <td>{{ stock.desc }}</td>
-                  <td>{{ stock.quantity }}</td>
-                  <td>{{ stock.store }}</td>
-                  <!-- <td>{{ stock.shelve_name }}</td> -->
+                  <!-- <td>{{ stock.quantity }} {{ stock.unit }}</td> -->
 
-                  <!-- <td>
-                    <button
-                      type="button"
-    
-                      class="btn btn-danger"
-                    >
-                      <i class="mdi mdi-account-minus"></i>
-                    </button>
-                    <router-link
-                      :to="{ name: 'edit_supply', params: { id: stock.id } }"
-                      class="btn btn-success"
-                      ><i class="mdi mdi-account-minus"></i
-                    ></router-link>
-                  </td> -->
+
+                  <td>
+
+                    <div v-for="temx in stock.units">
+
+
+
+                      <span v-if="temx.unit_type == 0">
+
+                        <span v-if="stock.quantity / stock.rate >= 1">
+                          {{ Math.floor((stock.quantity / stock.rate)) }}{{
+                            stock.units[0].name
+                          }}
+                        </span>
+
+                        <span v-if="stock.quantity % stock.rate >= 1">
+                          {{ Math.floor((stock.quantity % stock.rate)) }}{{
+                            stock.units[1].name
+                          }}
+                        </span>
+                      </span>
+
+                    </div>
+
+                  </td>
+
+            
+                  <td>{{ stock.store }}</td>
+
                 </tr>
               </tbody>
               <tbody v-else>
@@ -84,8 +97,6 @@ export default {
   },
   data() {
     return {
-      // stock:'yes',
-
       stocks: {
         type: Object,
         default: null,
@@ -107,7 +118,6 @@ export default {
 
         this.stocks = data;
 
-        // this.$root.logo = "Category";
       });
     },
     list(page = 1) {
@@ -121,38 +131,7 @@ export default {
           console.error(response);
         });
     },
-    // delete_supply(id){
 
-    //     this.axios.post(`delete_supply/${id}`).then(response => {
-
-    // 		toast.fire({
-    //                           title: "Deleted!",
-    //                           text: "Your category has been deleted.",
-    //                           button: "Close", // Text on button
-    //                           icon: "success", //built in icons: success, warning, error, info
-    //                           timer: 3000, //timeOut for auto-close
-    //                           buttons: {
-    //                               confirm: {
-    //                               text: "OK",
-    //                               value: true,
-    //                               visible: true,
-    //                               className: "",
-    //                               closeModal: true
-    //                               },
-    //                               cancel: {
-    //                               text: "Cancel",
-    //                               value: false,
-    //                               visible: true,
-    //                               className: "",
-    //                               closeModal: true,
-    //                               }
-    //                           }
-    //                       })
-
-    //               // this.$router.push('category')
-
-    // 	})
-    // }
   }
 }
 </script>

@@ -38,15 +38,15 @@ class ExpenceController extends Controller
     {
 
 
-        $validator = Validator::make($request->all(), [
-            'expence_type' => 'required',
-            'qty' => 'required',
+        // $validator = Validator::make($request->all(), [
+        //     'expence_type' => 'required',
+        //     'qty' => 'required',
             
-        ]);
+        // ]);
 
-        if($validator->fails()){
-            return response()->json(['error' => $validator->errors()], 401);
-        }
+        // if($validator->fails()){
+        //     return response()->json(['error' => $validator->errors()], 401);
+        // }
 
         foreach ($request->post('count') as $value) {
      

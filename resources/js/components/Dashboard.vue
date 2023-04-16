@@ -6,7 +6,7 @@
 						<div class="card overflow-hidden sales-card bg-primary-gradient">
 							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 								<div class="">
-									<h6 class="mb-3 tx-12 text-white">TODAY ORDERS</h6>
+									<h6 class="mb-3 tx-12 text-white">العملاء</h6>
 								</div>
 								<div class="pb-0 mt-0">
 									<div class="d-flex">
@@ -27,7 +27,7 @@
 						<div class="card overflow-hidden sales-card bg-danger-gradient">
 							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 								<div class="">
-									<h6 class="mb-3 tx-12 text-white">categorys</h6>
+									<h6 class="mb-3 tx-12 text-white">الموردين</h6>
 								</div>
 								<div class="pb-0 mt-0">
 									<div class="d-flex">
@@ -48,7 +48,7 @@
 						<div class="card overflow-hidden sales-card bg-success-gradient">
 							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 								<div class="">
-									<h6 class="mb-3 tx-12 text-white">TOTAL EARNINGS</h6>
+									<h6 class="mb-3 tx-12 text-white">المخزون</h6>
 								</div>
 								<div class="pb-0 mt-0">
 									<div class="d-flex">
@@ -69,7 +69,7 @@
 						<div class="card overflow-hidden sales-card bg-warning-gradient">
 							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 								<div class="">
-									<h6 class="mb-3 tx-12 text-white">PRODUCT</h6>
+									<h6 class="mb-3 tx-12 text-white">الاصناف</h6>
 								</div>
 								<div class="pb-0 mt-0">
 									<div class="d-flex">
@@ -93,7 +93,7 @@
 						<div class="card overflow-hidden sales-card bg-primary-gradient">
 							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 								<div class="">
-									<h6 class="mb-3 tx-12 text-white">TODAY ORDERS</h6>
+									<h6 class="mb-3 tx-12 text-white">المبيعات</h6>
 								</div>
 								<div class="pb-0 mt-0">
 									<div class="d-flex">
@@ -114,7 +114,7 @@
 						<div class="card overflow-hidden sales-card bg-danger-gradient">
 							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 								<div class="">
-									<h6 class="mb-3 tx-12 text-white">categorys</h6>
+									<h6 class="mb-3 tx-12 text-white">المشتريات</h6>
 								</div>
 								<div class="pb-0 mt-0">
 									<div class="d-flex">
@@ -135,7 +135,7 @@
 						<div class="card overflow-hidden sales-card bg-success-gradient">
 							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 								<div class="">
-									<h6 class="mb-3 tx-12 text-white">TOTAL EARNINGS</h6>
+									<h6 class="mb-3 tx-12 text-white">المصروفات</h6>
 								</div>
 								<div class="pb-0 mt-0">
 									<div class="d-flex">

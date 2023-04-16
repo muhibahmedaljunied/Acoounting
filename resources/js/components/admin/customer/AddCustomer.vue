@@ -18,73 +18,37 @@
             <form method="post" @submit.prevent="addcustomer">
               <div class="form-group">
                 <label for="name">الاسم</label>
-                <input
-                  v-model="name"
-                  type="text"
-                  name="name"
-                  id="name"
-                  class="form-control"
-                     required
-                />
+                <input v-model="name" type="text" name="name" id="name" class="form-control" required />
               </div>
               <div class="form-group">
                 <label for="phone">الهاتف</label>
-                <input
-                  v-model="phone"
-                  type="text"
-                  name="phone"
-                  id="phone"
-                  class="form-control"
-                />
+                <input v-model="phone" type="text" name="phone" id="phone" class="form-control" />
               </div>
               <div class="form-group">
                 <label for="name">البريد الالكتروني</label>
-                <input
-                  v-model="email"
-                  type="text"
-                  name="email"
-                  id="email"
-                  class="form-control"
-                />
+                <input v-model="email" type="text" name="email" id="email" class="form-control" />
               </div>
-               <div class="form-group">
+              <div class="form-group">
                 <label for="password">كلمه السر</label>
-                <input
-                  v-model="password"
-                  type="text"
-                  name="password"
-                  id="password"
-                  class="form-control"
-                     required
-                />
+                <input v-model="password" type="text" name="password" id="password" class="form-control" required />
               </div>
               <div class="form-group">
                 <label for="address">العنوان</label>
-                <input
-                  v-model="address"
-                  type="text"
-                  name="address"
-                  id="address"
-                  class="form-control"
-                />
+                <input v-model="address" type="text" name="address" id="address" class="form-control" />
               </div>
-               <!-- = -->
+              <!-- = -->
               <!-- <div class="m-t-20 col-md-6 col-xs-6"> -->
-                <div class="form-group">
+              <div class="form-group">
                 <label for="cliente">رقم الحساب</label>
 
 
                 <div class="custom-search">
-                  <select v-model="supplier" id="supplier" class="custom-search-input">
-                    <!-- <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name]">
-                      {{ sup.name }}
-                    </option> -->
-                  </select>
 
 
-                  <!-- <input id='product_tree' type="text" class="custom-search-input"> -->
+
+                  <input :id="'Customer_account_tree_id'+indexselected" type="text" class="custom-search-input">
                   <button class="custom-search-botton" type="button" data-toggle="modal"
-                    data-target="#exampleModalProduct"> <i class="fa fa-plus-circle"></i></button>
+                    data-target="#exampleModalaccount"> <i class="fa fa-plus-circle"></i></button>
                 </div>
 
 
@@ -92,19 +56,13 @@
               </div>
               <div class="form-group">
                 <label for="status">اسم الحساب</label>
-                <input v-model="status" type="text" name="status" id="status" class="form-control" />
+                <input :id="'Customer_account_tree'+indexselected" v-model="account_name" type="text" name="status" class="form-control" />
               </div>
               <!-- = -->
 
               <div class="form-group">
                 <label for="role">الصلاحيه</label>
-                <select
-                  v-model="roleselected"
-                  name="role"
-                  id="role"
-                  class="form-control"
-                     
-                >
+                <select v-model="roleselected" name="role" id="role" class="form-control">
                   <option value="">select</option>
                   <option v-for="roles in role" v-bind:value="roles.id">
                     {{ roles.name }}
@@ -114,13 +72,7 @@
 
               <div class="form-group">
                 <label for="status">الحاله</label>
-                <input
-                  v-model="status"
-                  type="text"
-                  name="status"
-                  id="status"
-                  class="form-control"
-                />
+                <input v-model="status" type="text" name="status" id="status" class="form-control" />
               </div>
               <button type="submit" class="btn btn-primary btn-lg btn-block">
                 اضافه
@@ -128,25 +80,25 @@
             </form>
           </div>
         </div>
-        <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
+        <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
 
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-
-                      <div class="well" id="treeview_json_product"></div>
-
-                    </div>
-
-                  </div>
-                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
+              <div class="modal-body">
+
+                <div class="well" id="treeview_json_account"></div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!--/div-->
@@ -154,36 +106,46 @@
   <!-- /row -->
 </template>
 <script>
+import operation from '../../../../js/operation.js';
+import tree from '../../../../js/tree/tree.js';
 export default {
+  mixins: [
+        operation,
+        tree
+    ],
   data() {
+    
     return {
+  
+      indexselected:0,
+      account_name:'',
+      type: '',
       name: "",
       phone: "",
       email: "",
       address: "",
       password: 123,
       status: 1,
-      role:'',
-      roleselected:1,
+      role: '',
+      roleselected: 1,
+      type_of_tree:0,
+      jsonTreeData:'',
     };
   },
-  created() {
-    let uri = `/create_customer`;
-    this.axios.post(uri).then((response) => {
-   console.log(response.data);
-      this.role = response.data;
-    });
-  },
-  created() {
-    this.showtree();
+  // created() {
+  //   let uri = `/create_customer`;
+  //   this.axios.post(uri).then((response) => {
+  //     console.log(response.data);
+  //     this.role = response.data;
+  //   });
+  // },
+
+  mounted() {
+    this.type = 'Customer';
+    this.showtree('account');
   },
   methods: {
-    // addcustomer(event) {
-    //   this.axios.post(`/store_customer`).then((response) => {
-    //     event.preventDefault();
-    //     this.$router.push("customer");
-    //   });
-    // },
+
     addcustomer(event) {
       event.preventDefault();
       let currentObj = this;
@@ -212,177 +174,146 @@ export default {
 
           event.preventDefault();
           toastMessage("تم الاضافه بنجاح");
-         
+
         })
         .catch(function (error) {
           currentObj.output = error;
         });
 
-                this.$router.go(-1);
+      this.$router.go(-1);
 
     },
-    showtree() {
+    // showtree() {
 
 
-this.axios.post(`/tree_product`).then((response) => {
-  this.jsonTreeDataProduct = response.data.products;
+    //   this.axios.post(`/tree_product`).then((response) => {
+    //     this.jsonTreeDataProduct = response.data.products;
 
 
-  $('#treeview_json_product').jstree({
-    core: {
-      themes: {
-        responsive: false,
-      },
-      // so that create works
-      check_callback: true,
-      data: this.jsonTreeDataProduct,
-    },
-    types: {
-      default: {
-        icon: "fa fa-folder text-primary",
-      },
-      file: {
-        icon: "fa fa-file  text-primary",
-      },
-    },
-    checkbox: {
-      three_state: false,
+    //     $('#treeview_json_product').jstree({
+    //       core: {
+    //         themes: {
+    //           responsive: false,
+    //         },
+    //         // so that create works
+    //         check_callback: true,
+    //         data: this.jsonTreeDataProduct,
+    //       },
+    //       types: {
+    //         default: {
+    //           icon: "fa fa-folder text-primary",
+    //         },
+    //         file: {
+    //           icon: "fa fa-file  text-primary",
+    //         },
+    //       },
+    //       checkbox: {
+    //         three_state: false,
 
-    },
-    state: {
-      key: "demo2"
-    },
-    search: {
-      case_insensitive: true,
-      show_only_matches: true
-    },
-    plugins: ["checkbox",
-      "contextmenu",
-      "dnd",
-      "massload",
-      "search",
-      "sort",
-      "state",
-      "types",
-      "unique",
-      "wholerow",
-      "changed",
-      "conditionalselect"],
-    contextmenu: {
-      items: contextmenu
-    },
-
-
-
-
-
-
-  }).on("changed.jstree", function (e, data) {
-
-    console.log(data.node.id);
-    $(`.modal-title-product`).val(data.node.id)
-    //  modal-title-store
-
-  });
-
-});
-this.axios.post(`/tree_store`).then((response) => {
-  this.jsonTreeDataStore = response.data.stores;
-
-
-  $('#treeview_json_store').jstree({
-    core: {
-      themes: {
-        responsive: false,
-      },
-      // so that create works
-      check_callback: true,
-      data: this.jsonTreeDataStore,
-    },
-    types: {
-      default: {
-        icon: "fa fa-folder text-primary",
-      },
-      file: {
-        icon: "fa fa-file  text-primary",
-      },
-    },
-    checkbox: {
-      three_state: false,
-
-    },
-    state: {
-      key: "demo2"
-    },
-    search: {
-      case_insensitive: true,
-      show_only_matches: true
-    },
-    plugins: ["checkbox",
-      "contextmenu",
-      "dnd",
-      "massload",
-      "search",
-      "sort",
-      "state",
-      "types",
-      "unique",
-      "wholerow",
-      "changed",
-      "conditionalselect"],
-    contextmenu: {
-      items: contextmenu
-    },
+    //       },
+    //       state: {
+    //         key: "demo2"
+    //       },
+    //       search: {
+    //         case_insensitive: true,
+    //         show_only_matches: true
+    //       },
+    //       plugins: ["checkbox",
+    //         "contextmenu",
+    //         "dnd",
+    //         "massload",
+    //         "search",
+    //         "sort",
+    //         "state",
+    //         "types",
+    //         "unique",
+    //         "wholerow",
+    //         "changed",
+    //         "conditionalselect"],
+    //       contextmenu: {
+    //         items: contextmenu
+    //       },
 
 
 
 
 
 
-  }).on("changed.jstree", function (e, data) {
+    //     }).on("changed.jstree", function (e, data) {
 
-    console.log(data.node.id);
-    $(`.modal-title-store`).val(data.node.id)
-    //  modal-title-store
-  });
+    //       console.log(data.node.id);
+    //       $(`.modal-title-product`).val(data.node.id)
+    //       //  modal-title-store
 
-});
-},
+    //     });
+
+    //   });
+    //   this.axios.post(`/tree_store`).then((response) => {
+    //     this.jsonTreeDataStore = response.data.stores;
+
+
+    //     $('#treeview_json_store').jstree({
+    //       core: {
+    //         themes: {
+    //           responsive: false,
+    //         },
+    //         // so that create works
+    //         check_callback: true,
+    //         data: this.jsonTreeDataStore,
+    //       },
+    //       types: {
+    //         default: {
+    //           icon: "fa fa-folder text-primary",
+    //         },
+    //         file: {
+    //           icon: "fa fa-file  text-primary",
+    //         },
+    //       },
+    //       checkbox: {
+    //         three_state: false,
+
+    //       },
+    //       state: {
+    //         key: "demo2"
+    //       },
+    //       search: {
+    //         case_insensitive: true,
+    //         show_only_matches: true
+    //       },
+    //       plugins: ["checkbox",
+    //         "contextmenu",
+    //         "dnd",
+    //         "massload",
+    //         "search",
+    //         "sort",
+    //         "state",
+    //         "types",
+    //         "unique",
+    //         "wholerow",
+    //         "changed",
+    //         "conditionalselect"],
+    //       contextmenu: {
+    //         items: contextmenu
+    //       },
+
+
+
+
+
+
+    //     }).on("changed.jstree", function (e, data) {
+
+    //       console.log(data.node.id);
+    //       $(`.modal-title-store`).val(data.node.id)
+    //       //  modal-title-store
+    //     });
+
+    //   });
+    // },
   },
 };
 </script>
-<style scoped>
-  .custom-search {
-    position: relative;
-    width: 300px;
-  }
-  
-  .custom-search-input {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 100px;
-    padding: 10px 100px 10px 20px;
-    line-height: 1;
-    box-sizing: border-box;
-    outline: none;
-  }
-  
-  .custom-search-botton {
-    position: absolute;
-    right: 3px;
-    top: 3px;
-    bottom: 3px;
-    border: 0;
-    background: #d1095e;
-    color: #fff;
-    outline: none;
-    margin: 0;
-    padding: 0 10px;
-    border-radius: 100px;
-    z-index: 2;
-  }
-  </style>
-  
+
 <style scoped>
 th,
 td {

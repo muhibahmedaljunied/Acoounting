@@ -2,157 +2,184 @@
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
-                
+
                 <div class="card text-right">
-  <div class="card-header">
-    Featured
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
-                        <thead>
-                            <tr>
-                                <!-- <th>Code</th> -->
-                                <th>المنتج</th>
-                                <!-- <th>المجموعه</th> -->
+                    <div class="card-header">
 
-                                <th>الحاله</th>
-                                <th>الموصفات والطراز</th>
-                                <th>المخزن</th>
-                                <!-- <th>الوحده</th>
-                                <th>التكلفه</th> -->
+                        <h1 class="card-title"> المشتريات</h1>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Special title treatment</h5>
+                        <div class="table-responsive">
+                        <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <!-- <th>Code</th> -->
+                                    <th>المنتج</th>
+                                    <!-- <th>المجموعه</th> -->
 
-                                <th>السعر</th>
-                                <th>الكميه</th>
-                                <th>الضريبه</th>
-                                <th>اضافه</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="index in count" :key="index">
-                                <!-- <tr v-for="(products, index) in product"> -->
-                                <!-- <tr v-for="(products, index) in product" :key="index"> -->
-                                <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
-                                <td>
+                                    <th>الحاله</th>
+                                    <th>الموصفات والطراز</th>
+                                    <th>المخزن</th>
+                                    <th>الوحده</th>
+                                    <!--<th>التكلفه</th> -->
+
+                                    <th>السعر</th>
+                                    <th>الكميه</th>
+                                    <th>الضريبه</th>
+                                    <th>الاجمالي</th>
+                                    <th>تاريخ الانتهاء</th>
 
 
-
-                                    <!-- <div id="factura_producto" class="input_nombre">
-                          <select v-model="product[index - 1]" name="type" id="type" class="form-control" required>
-                            <option v-for="(product, sindex) in products" :key="sindex" v-bind:value="product.id">
-                              {{ product.text }}
-                            </option>
-                          </select>
-                        </div> -->
-
-                                    <div class="custom-search">
-                                        <!-- <select v-model="product[index]" id="supplier" class="custom-search-input">
-
-                                        </select> -->
-                                        <input  :id="'purchase_tree' + index" type="text" readonly
-                                            class="custom-search-input">
-                                        <input :id="'purchase_tree_id' + index" type="hidden" readonly
-                                            class="custom-search-input">
-
-                                        <button class="custom-search-botton" type="button" data-toggle="modal"
-                                            data-target="#exampleModalProduct" @click="detect_index(index)"> <i
-                                                class="fa fa-plus-circle"></i></button>
-                                    </div>
-
-
-                                </td>
-
-                                <td>
-                                    <div id="factura_producto">
-                                        <select v-model="status[index]" name="type" id="type" class="form-control"
-                                            required>
-                                            <option v-for="status in statuses" v-bind:value="status.id" value="">
-                                                {{ status.name }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div id="factura_producto" >
-                                        <input type="text" v-model="desc[index]" id="desc"
-                                            class="form-control" onkeypress="return valida(event)" />
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <!-- <div id="factura_producto" class="input_nombre">
-                                        <select v-model="store[index]" name="type" id="type" class="form-control"
-                                            required>
-                                            <option v-for="store in stores" v-bind:value="store.id">
-                                                {{ store.text }}
-                                            </option>
-                                        </select>
-                                    </div> -->
-
-
-                                    <div class="custom-search">
-
-                                        <input :id="'purchase_store_tree' + index" type="text" readonly
-                                            class="custom-search-input">
-                                        <input :id="'purchase_store_tree_id' + index" type="hidden" readonly
-                                            class="custom-search-input">
-
-                                        <button class="custom-search-botton" type="button" data-toggle="modal"
-                                            data-target="#exampleModalStore" @click="detect_index_store(index)"> <i
-                                                class="fa fa-plus-circle"></i></button>
-                                    </div>
-                                </td>
-
-                             
+                                    <th>اضافه</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="index in count" :key="index">
+                                    <!-- <tr v-for="(products, index) in product"> -->
+                                    <!-- <tr v-for="(products, index) in product" :key="index"> -->
+                                    <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
+                                    <td>
 
 
 
-                                <td>
-                                    <input type="number" v-model="price[index]" id="qty"
-                                        class="form-control" onkeypress="return valida(event)" />
-                                </td>
-                                <td>
-                                    <input type="number" v-model="qty[index]" id="qty"
-                                        class="form-control" onkeypress="return valida(event)" />
-                                </td>
-                                <td>
-                                    <input type="number" v-model="tax[index]" id="tax"
-                                        class="form-control" onkeypress="return valida(event)" />
-                                </td>
+                                        <!-- <div id="factura_producto" class="input_nombre">
+                        <select v-model="product[index - 1]" name="type" id="type" class="form-control" required>
+                          <option v-for="(product, sindex) in products" :key="sindex" v-bind:value="product.id">
+                            {{ product.text }}
+                          </option>
+                        </select>
+                      </div> -->
+
+                                        <div class="custom-search">
+                                            <!-- <select v-model="product[index]" id="supplier" class="custom-search-input">
+
+                                      </select> -->
+                                            <input :id="'Purchase_product_tree' + index" type="text" readonly
+                                                class="custom-search-input">
+                                            <input :id="'Purchase_product_tree_id' + index" type="hidden" readonly
+                                                class="custom-search-input">
+
+                                            <button class="custom-search-botton" type="button" data-toggle="modal"
+                                                data-target="#exampleModalProduct" @click="detect_index(index)"> <i
+                                                    class="fa fa-plus-circle"></i></button>
+                                        </div>
+
+
+                                    </td>
+
+                                    <td>
+                                        <div id="factura_producto">
+                                            <select v-model="status[index]" name="type" id="type" class="form-control"
+                                                required>
+
+                                                <option v-for="status in statuses" v-bind:value="status.id">
+                                                    {{ status.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div id="factura_producto">
+                                            <input type="text" v-model="desc[index]" id="desc" class="form-control" />
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <!-- <div id="factura_producto" class="input_nombre">
+                                      <select v-model="store[index]" name="type" id="type" class="form-control"
+                                          required>
+                                          <option v-for="store in stores" v-bind:value="store.id">
+                                              {{ store.text }}
+                                          </option>
+                                      </select>
+                                  </div> -->
+
+
+                                        <div class="custom-search">
+
+                                            <input :id="'Purchase_store_tree' + index" type="text" readonly
+                                                class="custom-search-input">
+                                            <input :id="'Purchase_store_tree_id' + index" type="hidden" readonly
+                                                class="custom-search-input">
+
+                                            <button class="custom-search-botton" type="button" data-toggle="modal"
+                                                data-target="#exampleModalStore" @click="detect_index_store(index)"> <i
+                                                    class="fa fa-plus-circle"></i></button>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+                                        <div id="factura_producto">
+                                            <!-- <input v-model="unit_type[index]" :id="'unit_type' + index" type="hidden" readonly> -->
+
+                                            <select v-model="unit[index]" name="type" :id="'select_unit' + index"
+                                                class="form-control" required>
+
+                                            </select>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+                                        <input type="number" v-model="price[index]" id="qty" class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input @input="calculate_price(price[index], qty[index], index)" type="number"
+                                            v-model="qty[index]" id="qty" class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="number" v-model="tax[index]" id="tax" class="form-control" />
+                                    </td>
+
+                                    <td>
+                                        <input type="number" v-model="total[index]" id="tax" class="form-control"
+                                            readonly />
+
+
+                                    </td>
+
+                                    <td>
+                                        <input name="expiry_date" type="date" v-model="expiry_date"
+                                            class="form-control" />
+
+                                    </td>
 
 
 
 
-                                <td v-if="index == 1">
+                                    <td v-if="index == 1">
 
-                                    <button class="tn btn-info btn-sm waves-effect btn-agregar"
-                                        v-on:click="addComponent">
-                                        <i class="fa fa-plus-circle"></i></button>
+                                        <button class="tn btn-info btn-sm waves-effect btn-agregar"
+                                            v-on:click="addComponent">
+                                            <i class="fa fa-plus-circle"></i></button>
 
-                                    <button class="tn btn-info btn-sm waves-effect btn-agregar"
-                                        v-on:click="disComponent">
-                                        <i class="fa fa-minus-circle"></i></button>
-
-
-
-                                </td>
-                            </tr>
+                                        <button class="tn btn-info btn-sm waves-effect btn-agregar"
+                                            v-on:click="disComponent">
+                                            <i class="fa fa-minus-circle"></i></button>
 
 
-                        </tbody>
-                    </table>
-    <a href="javascript:void" @click="Add_newpurchase()" class="btn btn-primary"><span>تاكيد
-                        العمليه</span></a>
-  </div>
-  <div class="card-footer text-muted">
-    2 days ago
-  </div>
-</div>
 
-                
-               
-          
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                        <a href="javascript:void" @click="Add_new()" class="btn btn-primary"><span>تاكيد
+                                العمليه</span></a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        2 days ago
+                    </div>
+                </div>
+
+
+
+
                 <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -198,386 +225,67 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../js/operation.js';
+import tree from '../../../../js/tree/tree.js';
 export default {
 
     components: {
         pagination,
     },
+    // mixins: [operation],
+    mixins: [tree, operation],
     data() {
         return {
-            indexselected: '',
-            indexselectedstore: '',
+            status_tree: 1,
             text_message: '',
-            type: '',
-            type_refresh: '',
-            count: 1,
-            counts: {},
-
-            product_name: [],
-            product: [],
-            store: [],
-            products: '',
-            word_search: '',
-            check_state: [],
-            qty: [],
-            availabe_qty: [],
-            price: [],
-            tax: [],
-            desc: [],
-            stores: '',
-            statuses: '',
+            indexselectedproduct: '',
+            indexselectedstore: '',
             total_quantity: 0,
             grand_total: 0,
             sub_total: 0,
             discount: 0,
-
-            status: [],
-            store: [],
+            expiry_date: [],
             temporale: 1,
             type_payment: 0,
-
             show: false,
-
-
-            return_qty: [],
-            note: '',
             not_qty: true,
             seen: false,
-            detail: '',
             id: '',
-
-
-
-
-
-
         }
-        // return data;
+      
     },
 
     mounted() {
         this.list();
-        this.showtree();
-        this.showtreestore();
+        this.type_of_tree= 1;
+        this.showtree('product');
+        this.showtree('store');
         this.counts[0] = 1;
-        this.type = 'purchase';
+        this.type = 'Purchase';
         this.type_refresh = 'increment';
 
 
     },
 
     methods: {
+        calculate_price(price, qty, index) {
+            var unit=JSON.parse($(`#select_unit${index}`).val());
+            if (unit[2] == 0) {
 
-        detect_index(index) {
+                this.total[index] = price * qty;
+            }
 
-            this.indexselected = index;
-        },
-        detect_index_store(index) {
+            if (unit[2] == 1) {
 
-            this.indexselectedstore = index;
-        },
+                this.total[index] = price * unit[1] * qty;
 
-        showtree() {
-
-            let gf = this;
-            this.axios.post(`/tree_product`).then((response) => {
-                this.jsonTreeDataProduct = response.data.products;
-
-
-                $('#treeview_json_product').jstree({
-                    core: {
-                        themes: {
-                            responsive: false,
-                        },
-                        // so that create works
-                        check_callback: true,
-                        data: this.jsonTreeDataProduct,
-                    },
-                    types: {
-                        default: {
-                            icon: "fa fa-folder text-primary",
-                        },
-                        file: {
-                            icon: "fa fa-file  text-primary",
-                        },
-                    },
-                    checkbox: {
-                        three_state: false,
-
-                    },
-                    state: {
-                        key: "demo2"
-                    },
-                    search: {
-                        case_insensitive: true,
-                        show_only_matches: true
-                    },
-                    plugins: ["checkbox",
-                        "contextmenu",
-                        "dnd",
-                        "massload",
-                        "search",
-                        "sort",
-                        "state",
-                        "types",
-                        "unique",
-                        "wholerow",
-                        "changed",
-                        "conditionalselect"],
-                    contextmenu: {
-                        items: contextmenu
-                    },
-
-
-
-
-
-
-                }).on("changed.jstree", function (e, data) {
-
-                    console.log(data.node.id);
-
-                    //  modal-title-store
-
-                    $(`#purchase_tree${gf.indexselected}`).val(data.node.text);
-                    $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
-
-                    gf.product[gf.indexselected] = data.node.id;
-
-
-
-                });
-
-            });
-            // this.axios.post(`/tree_store`).then((response) => {
-            //     this.jsonTreeDataStore = response.data.stores;
-
-
-            //     $('#treeview_json_store').jstree({
-            //         core: {
-            //             themes: {
-            //                 responsive: false,
-            //             },
-            //             // so that create works
-            //             check_callback: true,
-            //             data: this.jsonTreeDataStore,
-            //         },
-            //         types: {
-            //             default: {
-            //                 icon: "fa fa-folder text-primary",
-            //             },
-            //             file: {
-            //                 icon: "fa fa-file  text-primary",
-            //             },
-            //         },
-            //         checkbox: {
-            //             three_state: false,
-
-            //         },
-            //         state: {
-            //             key: "demo2"
-            //         },
-            //         search: {
-            //             case_insensitive: true,
-            //             show_only_matches: true
-            //         },
-            //         plugins: ["checkbox",
-            //             "contextmenu",
-            //             "dnd",
-            //             "massload",
-            //             "search",
-            //             "sort",
-            //             "state",
-            //             "types",
-            //             "unique",
-            //             "wholerow",
-            //             "changed",
-            //             "conditionalselect"],
-            //         contextmenu: {
-            //             items: contextmenu
-            //         },
-
-
-
-
-
-
-            //     }).on("changed.jstree", function (e, data) {
-
-            //         // console.log(data.node.id);
-            //         $(`#purchase_tree${gf.indexselected}`).val(data.node.text);
-            //         $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
-
-            //         // gf.intostore[gf.indexselected] = $(`#supply_tree${gf.indexselected}`).val(data.node.text);
-            //         //  modal-title-store
-            //         // gf.get_store(data.node.id);
-
-
-            //     });
-
-            // });
-        },
-        showtreestore() {
-
-            let gf = this;
-            this.axios.post(`/tree_store`).then((response) => {
-                this.jsonTreeDataStore = response.data.stores;
-
-
-                $('#treeview_json_store').jstree({
-                    core: {
-                        themes: {
-                            responsive: false,
-                        },
-                        // so that create works
-                        check_callback: true,
-                        data: this.jsonTreeDataStore,
-                    },
-                    types: {
-                        default: {
-                            icon: "fa fa-folder text-primary",
-                        },
-                        file: {
-                            icon: "fa fa-file  text-primary",
-                        },
-                    },
-                    checkbox: {
-                        three_state: false,
-
-                    },
-                    state: {
-                        key: "demo2"
-                    },
-                    search: {
-                        case_insensitive: true,
-                        show_only_matches: true
-                    },
-                    plugins: ["checkbox",
-                        "contextmenu",
-                        "dnd",
-                        "massload",
-                        "search",
-                        "sort",
-                        "state",
-                        "types",
-                        "unique",
-                        "wholerow",
-                        "changed",
-                        "conditionalselect"],
-                    contextmenu: {
-                        items: contextmenu
-                    },
-
-
-
-
-
-
-                }).on("changed.jstree", function (e, data) {
-
-                    console.log(data.node.id);
-
-                    //  modal-title-store
-
-                    $(`#purchase_store_tree${gf.indexselectedstore}`).val(data.node.text);
-                    $(`#purchase_store_tree_id${gf.indexselectedstore}`).val(data.node.id);
-
-                    gf.store[gf.indexselectedstore] = data.node.id;
-
-
-
-                });
-
-            });
-            // this.axios.post(`/tree_store`).then((response) => {
-            //     this.jsonTreeDataStore = response.data.stores;
-
-
-            //     $('#treeview_json_store').jstree({
-            //         core: {
-            //             themes: {
-            //                 responsive: false,
-            //             },
-            //             // so that create works
-            //             check_callback: true,
-            //             data: this.jsonTreeDataStore,
-            //         },
-            //         types: {
-            //             default: {
-            //                 icon: "fa fa-folder text-primary",
-            //             },
-            //             file: {
-            //                 icon: "fa fa-file  text-primary",
-            //             },
-            //         },
-            //         checkbox: {
-            //             three_state: false,
-
-            //         },
-            //         state: {
-            //             key: "demo2"
-            //         },
-            //         search: {
-            //             case_insensitive: true,
-            //             show_only_matches: true
-            //         },
-            //         plugins: ["checkbox",
-            //             "contextmenu",
-            //             "dnd",
-            //             "massload",
-            //             "search",
-            //             "sort",
-            //             "state",
-            //             "types",
-            //             "unique",
-            //             "wholerow",
-            //             "changed",
-            //             "conditionalselect"],
-            //         contextmenu: {
-            //             items: contextmenu
-            //         },
-
-
-
-
-
-
-            //     }).on("changed.jstree", function (e, data) {
-
-            //         // console.log(data.node.id);
-            //         $(`#purchase_tree${gf.indexselected}`).val(data.node.text);
-            //         $(`#purchase_tree_id${gf.indexselected}`).val(data.node.id);
-
-            //         // gf.intostore[gf.indexselected] = $(`#supply_tree${gf.indexselected}`).val(data.node.text);
-            //         //  modal-title-store
-            //         // gf.get_store(data.node.id);
-
-
-            //     });
-
-            // });
-        },
-
-        addComponent(index) {
-            this.count += 1;
-            this.counts[index] = this.count;
-
-        },
-        disComponent(index) {
-            this.count -= 1;
-            this.$delete(this.counts, index);
+            }
 
         },
 
-        // take_discount() {
+       
 
-        //     if (this.discount != 0) {
-
-        //         this.sub_total = (parseInt(this.discount) * this.sub_total) / 100;
-        //     }
-
-
-        // },
+      
 
         get_search() {
             this.axios
@@ -591,75 +299,25 @@ export default {
             this.axios.post(`/purchase/newpurchase?page=${page}`).then(({ data }) => {
 
 
-                console.log(data.products);
+                console.log(data);
                 this.products = data.products;
                 this.stores = data.stores;
                 this.statuses = data.statuses;
+                // this.units = data.units;
             });
 
         },
 
-        // onwaychange(e) {
-        //     let input = e.target;
-        //     this.type_payment = input.value;
-        //     if (input.value == 2) {
-        //         this.show = true;
-        //     } else {
-        //         this.show = false;
-        //     }
-        // },
-        // credit(e) {
-        //     this.remaining = this.grand_total - this.paid;
-        //     this.To_pay = this.paid;
-        // },
-
-        Add_newpurchase() {
-
-            Add_new(this)
-            this.$router.go(-1);
-        },
-
+       
     },
 };
 </script>
-<style scoped>
-.custom-search {
-    position: relative;
-    width: 300px;
-}
-
-.custom-search-input {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 100px;
-    padding: 10px 100px 10px 20px;
-    line-height: 1;
-    box-sizing: border-box;
-    outline: none;
-}
-
-.custom-search-botton {
-    position: absolute;
-    right: 3px;
-    top: 3px;
-    bottom: 3px;
-    border: 0;
-    background: #d1095e;
-    color: #fff;
-    outline: none;
-    margin: 0;
-    padding: 0 10px;
-    border-radius: 100px;
-    z-index: 2;
-}
-</style>
-    
+  
 <style scoped>
 th,
 td {
     text-align: center;
 }
 </style>
-  
-  
-  
+
+

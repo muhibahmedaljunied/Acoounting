@@ -4,7 +4,7 @@
     <div class="col-xl-12">
       <div class="card">
         <div class="card-header">
-          <span class="h2"> الرواتب والبدلات</span>
+          <span class="h2"> البدلات</span>
           <div style="display: flex;float: left; margin: 5px">
 
 
@@ -27,23 +27,59 @@
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
                   <!-- <th class="wd-15p border-bottom-0">الفرع</th>
                   <th class="wd-15p border-bottom-0">القسم</th> -->
-                  <th class="wd-15p border-bottom-0">الراتب الاساسي</th>
+                  <!-- <th class="wd-15p border-bottom-0">الراتب الاساسي</th> -->
 
-                  <th class="wd-15p border-bottom-0"> البدلات</th>
+                  <th class="wd-15p border-bottom-0"> البدل</th>
+                  <th class="wd-15p border-bottom-0"> نوع البدل</th>
+                  <th class="wd-15p border-bottom-0"> المبلغ</th>
                   <th class="wd-15p border-bottom-0">العمليات</th>
                 </tr>
               </thead>
-              <tbody v-if="staff_allowances && staff_allowances.data.length > 0">
-                <tr v-for="(staff_allowance, index) in staff_allowances.data" :key="index">
+              <tbody v-if="value_list && value_list.data.length > 0">
+                <tr v-for="(staff_allowance, index) in value_list.data" :key="index">
 
 
-                  <td>{{ staff_allowance.staff }}</td>
+                  <td>{{ staff_allowance.name }}</td>
                   <!-- <td>{{ staff_allowance.personal_card }}</td>
                   <td>{{ staff_allowance.job }}</td> -->
-                  <td>{{ staff_allowance.salary }}</td>
-                  <td>{{ staff_allowance.allowance }}</td>
+                  <!-- <td>{{ staff_allowance.salary }}</td>
+                  <td>{{ staff_allowance.name }}</td> -->
+
                   <td>
-                    <button type="button" class="btn btn-danger">
+
+                    <div v-for="(allowance, index) in staff_allowance.allowance" :key="index" style="color:green;">
+
+
+
+
+                      {{ allowance.allowance_type.name }}
+                      <hr>
+                    </div>
+                  </td>
+
+                  <td>
+
+                    <div v-for="(allowance, index) in staff_allowance.allowance" :key="index" style="color:green;">
+
+
+                      <span v-if="allowance.status == 1">شهري</span>
+                      <span v-else>غير شهري</span>
+
+
+
+                      <hr>
+                    </div>
+                  </td>
+                  <td>
+
+                    <div v-for="(allowance, index) in staff_allowance.allowance" :key="index" style="color:red;">
+                      {{ allowance.qty }}
+                      <hr>
+                    </div>
+                  </td>
+
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm waves-effect">
                       <i class="fa fa-trash"></i>
                     </button>
 
@@ -67,6 +103,7 @@
             </table>
           </div>
         </div>
+      
       </div>
 
 
@@ -85,7 +122,7 @@
 
 
 
-      <pagination align="center" :data="staff_allowances" @pagination-change-page="list"></pagination>
+      <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
 
       <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" style="display: none" id="addsalary">
@@ -153,8 +190,9 @@
                                   <tr>
 
                                     <th>اسم المؤظف</th>
-                                    <th>اسم البدل</th>
                                     <th>نوع البدل</th>
+                                    <th> البدل</th>
+
                                     <th>المبلغ</th>
                                     <th>اضافه</th>
 
@@ -167,27 +205,37 @@
                                   <tr v-for="index in count" :key="index">
 
                                     <td>
-                                    <select v-model="staffselected[index]" id="inputState" class="form-control">
-                              <option v-for="staff in staffs" v-bind:value="staff.id">
-                                {{ staff.name }}
-                              </option>
-                            </select>
-                          </td>
+                                      <select v-model="staffselected[index]" id="inputState" class="form-control">
+                                        <option v-for="staff in staffs" v-bind:value="staff.id">
+                                          {{ staff.name }}
+                                        </option>
+                                      </select>
+                                    </td>
 
-                                    <td>
+                                    <!-- <td>
 
                                       <input v-model="allow[index]" type="text" name="name" id="name"
                                         class="form-control" />
 
-                                    </td>
+                                    </td> -->
+
+                                    <td> <select v-model="allowance_status[index]" id="inputState" class="form-control">
+                                        <option v-bind:value="1">
+                                          بدلات شهريه
+                                        </option>
+                                        <option v-bind:value="2">
+                                          بدلات غير شهريه
+                                        </option>
+                                      </select></td>
 
                                     <td> <select v-model="allowance_type[index]" id="inputState" class="form-control">
-                                        <option v-for="allowance_type in allowance_types" v-bind:value="allowance_type.id">
+                                        <option v-for="allowance_type in allowance_types"
+                                          v-bind:value="allowance_type.id">
                                           {{ allowance_type.name }}
                                         </option>
                                       </select></td>
-                                    <td><input v-model="qty[index]" type="number"
-                                        class="form-control input_cantidad"></td>
+                                    <td><input v-model="qty[index]" type="number" class="form-control input_cantidad">
+                                    </td>
 
                                     <td v-if="index == 1">
 
@@ -216,8 +264,10 @@
                         </div>
                       </div>
                     </div>
-                    <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
-                        العمليه</span></a>
+                    <div class="modal-footer">
+                <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
+                    العمليه</span></a>
+              </div>
                   </form>
                 </div>
                 <!--/div-->
@@ -237,22 +287,21 @@
     <!-- ================================== -->
 
   </div>
-
 </template>
 
 <script>
 import pagination from "laravel-vue-pagination";
-
+// import operation from '../../../../../js/staff/operation/operation.js';
 export default {
   components: {
     pagination,
   },
-
+  // mixins: [operation],
   data() {
     return {
       // category: "yes",
 
-      staff_allowances: {
+      value_list: {
         type: Object,
         default: null,
       },
@@ -271,7 +320,10 @@ export default {
       date: "",
       allowances: "",
       allowance_type: [],
+      allowance_status: [],
       allowance: [],
+
+
       checkselected: [],
       staffselected: [],
       jobselected: 1,
@@ -292,16 +344,22 @@ export default {
     this.list();
     this.counts[0] = 1;
     this.type = 'allowance';
-    
-   
+
+
 
   },
   methods: {
-    addComponent(index) {
-      addComponent(this,index);
-    },
-    disComponent(index) {
-      disComponent(this,index);
+    data_list() {
+
+      return {
+        type: this.type,
+        staff: this.staffselected,
+        allowance_type: this.allowance_type,
+        // salary: this.salaryselected,
+        count: this.counts,
+        allow: this.allow,
+        qty: this.qty,
+      }
     },
     get_search(word_search) {
       this.axios
@@ -312,15 +370,16 @@ export default {
           // this.$root.logo = "Category";
         });
     },
-    Add_new(vm) {
+    Add_new() {
 
 
       axios
         .post(`/store_allowance`, {
           type: this.type,
           staff: this.staffselected,
+          allowance_status: this.allowance_status,
           allowance_type: this.allowance_type,
-          // salary: this.salaryselected,
+
           count: this.counts,
           allow: this.allow,
           qty: this.qty,
@@ -329,13 +388,6 @@ export default {
         .then((response) => {
           // ---------------------------------------------------------------
           console.log(response);
-
-
-          // this.temporale = response.data;
-          // this.temporale.forEach((item) => {
-          //   this.total_quantity = item.tem_qty + this.total_quantity;
-          // });
-
           toastMessage("تم الاضافه بنجاح");
           vm.$router.go(0);
         });
@@ -350,25 +402,16 @@ export default {
         .then(({ data }) => {
           console.log(data);
           this.staffs = data.staffs;
+          // this.value_list = data.list;
           this.allowance_types = data.allowance_types
-          this.staff_allowances = data.staff_allowances
-  
+          this.value_list = data.list
+
         })
         .catch(({ response }) => {
           console.error(response);
         });
     },
-    // handleAllowance(index, valueselected, allowance_id) {
-    //   this.allowance[index] = {
-    //     id: allowance_id,
-    //     qty: 1,
-    //     check: valueselected,
-    //     name: this.staffselected,
 
-    //   };
-
-    //   console.log(this.allowance);
-    // },
 
 
   },

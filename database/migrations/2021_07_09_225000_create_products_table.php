@@ -28,8 +28,10 @@ class CreateProductsTable extends Migration
             // $table->float('cost_rate')->nullable();
             // $table->float('sale_price')->nullable();
             $table->float('purchase_price')->nullable();
-            $table->integer('status');
-            $table->integer('product_minimum');
+            $table->string('status')->nullable();
+            $table->integer('rate')->nullable();
+
+            $table->integer('product_minimum')->nullable();
             $table->string('image')->nullable();
 
 

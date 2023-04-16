@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Sale;
+
 use DB;
 use Illuminate\Http\Request;
 
@@ -36,7 +38,32 @@ class CustomerController extends Controller
     
     }
 
+    public function show(Request $request)
+    {
+        // return response()->json(['sales' => $request->all()]);
 
+        $sales =  Sale::where('customer_id', $request->id)->with([
+            'payment_sales' => function ($query) {
+                $query->select('*');
+            },
+            'sale_returns' => function ($query) {
+                $query->select('*');
+            }
+            // ,
+            // 'receivable_notes' => function ($query) {
+            //     $query->select('*');
+            // }
+          
+        ])->paginate(10);
+
+
+             
+
+        
+        return response()->json(['sales' => $sales]);
+    }
+
+    
     // public function Export( )      
     // {      
     //     $filename = '-customers.xlsx';
@@ -75,10 +102,7 @@ class CustomerController extends Controller
     }
 
 
-    public function show($id)
-    {
-        //
-    }
+  
 
     public function edit($id)
     {

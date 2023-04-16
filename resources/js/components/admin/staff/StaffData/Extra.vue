@@ -3,40 +3,35 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="col-md-4">
-          <label for="status">اسم الموظف</label>
-          <select v-model="staffselected" name="type" id="type" class="form-control " required>
-            <option v-for="staff in staffs" v-bind:value="staff.id">
-              {{ staff.name }}
-            </option>
-          </select>
-        </div>
+
         <div class="card-header ">
 
-          <!-- <div class="col-md-4">
-            <label for="status">الفرع</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option>
-                muhib
-              </option>
-
-            </select>
-          </div> -->
-          <!-- <div class="col-md-4">
-            <label for="status">نوع الوظيفه</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option>
-                muhib
-              </option>
-
-            </select>
-          </div> -->
+          <h2>الاضافي</h2>
         </div>
         <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="status">اسم الموظف</label>
+              <select @change="select_staff" v-model="staff_selected" name="type" id="type" class="form-control "
+                required>
+                <option v-for="staff in staffs" v-bind:value="staff.id">
+                  {{ staff.name }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="status"> من تأريخ</label>
+             <input v-model="from_date" type="date" name="" id="" class="form-control">
+            </div>
+
+            <div class="col-md-2">
+              <label for="status">الي تأريخ</label>
+              <input v-model="from_date" type="date" name="" id="" class="form-control">
+            </div>
+            <div class="col-sm-6 col-md-3" style="margin-top: auto;">
+              <a href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -45,18 +40,18 @@
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
                   <th class="wd-15p border-bottom-0"> نوع الاضافي</th>
                   <th class="wd-15p border-bottom-0"> عدد الساعات</th>
-                  <th class="wd-15p border-bottom-0">تاريخ البدء</th>
-                  <th class="wd-15p border-bottom-0">تاريخ الانتهاء</th>
+        
+                  <th class="wd-15p border-bottom-0">التأريخ </th>
                   <th class="wd-15p border-bottom-0">وقت البدء</th>
                   <th class="wd-15p border-bottom-0">وقت الانتعاء</th>
                   <th class="wd-15p border-bottom-0"> ملاجظه</th>
 
 
-                  <th class="wd-15p border-bottom-0">العمليات</th>
+                  <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
                 </tr>
               </thead>
-              <tbody v-if="extras && extras.data.length > 0">
-                <tr v-for="(extra, index) in extras.data" :key="index">
+              <tbody v-if="list_data && list_data.data.length > 0">
+                <tr v-for="(extra, index) in list_data.data" :key="index">
                   <td>{{ extra.name }}</td>
 
                   <td>
@@ -77,17 +72,12 @@
                   <td>
 
                     <div v-for="(extra_start_date, index) in extra.extra" :key="index">
-                      {{ extra_start_date.start_date }}
+                      {{ extra_start_date.date }}
                     </div>
                   </td>
 
 
-                  <td>
-
-                    <div v-for="(extra_end_date, index) in extra.extra" :key="index">
-                      {{ extra_end_date.end_date }}
-                    </div>
-                  </td>
+               
 
 
                   <td>
@@ -116,19 +106,18 @@
                   <td>{{ extra.note }}</td>
 
 
-                  <td>
-                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
+                  <!-- <td>
                     <button type="button" @click="delete_extra(extra.id)" class="btn btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
 
                     <router-link :to="{
-  name: 'edit_extra',
-  params: { id: extra.id },
-}" class="edit btn btn-success">
+                      name: 'edit_extra',
+                      params: { id: extra.id },
+                    }" class="edit btn btn-success">
                       <i class="fa fa-edit"></i>
                     </router-link>
-                  </td>
+                  </td> -->
                 </tr>
               </tbody>
               <tbody v-else>
@@ -138,7 +127,7 @@
               </tbody>
             </table>
           </div>
-          <pagination align="center" :data="extras" @pagination-change-page="list"></pagination>
+          <pagination align="center" :data="list_data" @pagination-change-page="list"></pagination>
         </div>
         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
           aria-hidden="true" style="display: none" id="addExtra">
@@ -263,12 +252,12 @@
 
 <script>
 import pagination from "laravel-vue-pagination";
-
+import operation from '../../../../../js/staff/StaffData/staff_data.js';
 export default {
   components: {
     pagination,
   },
-
+  mixins: [operation],
   data() {
     return {
       count: 1,
@@ -282,13 +271,15 @@ export default {
       end_time: '',
       note: '',
       name: '',
-
-      extras: {
+      staff_selected: 1,
+      list_data: {
         type: Object,
         default: null,
       },
-
+      table: 'extra',
       word_search: "",
+      from_date: new Date().toISOString().substr(0, 10),
+      into_date: new Date().toISOString().substr(0, 10),
     };
   },
   mounted() {
@@ -368,7 +359,7 @@ export default {
       this.axios
         .post(`/extra?page=${page}`)
         .then(({ data }) => {
-          this.extras = data.extras;
+          this.list_data = data.list;
           this.extra_types = data.extra_types;
           this.staffs = data.staffs;
         })

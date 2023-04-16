@@ -12,7 +12,7 @@
                   <span></span>
                 </div>
                 <div class="pull-right">
-                  <h1>المبيعات # 202110-5 <span id="codigo"></span></h1>
+                  <h1>المبيعات  <span id="codigo"></span></h1>
                 </div>
               </div>
               <hr />
@@ -77,7 +77,7 @@
                       <tbody>
                         <tr v-for="temporales in temporale">
                           <td style="width: 40px">{{ temporales.product }}</td>
-                          <td>{{ temporales.tem_qty }}</td>
+                          <td>{{ temporales.tem_qty }} {{ temporales.unit }}</td>
                           <td>{{ temporales.price }}</td>
                           <td>{{ temporales.status }}</td>
                           <td>{{ temporales.desc }}</td>
@@ -88,10 +88,16 @@
                           <td>{{ temporales.sub_total }}<small> </small></td>
                           <td>{{ temporales.total }}</td>
                           <td>
-                            <button type="button" class="btn btn-danger">
-                              <i class="fa fa-trash"></i>
-                            </button>
-                            <router-link class="btn btn-success"><i class="fa fa-edit"></i></router-link>
+                            <button data-toggle="modal" data-target="#modal_vaciar1"
+                              @click="show_modal(temporales.product_id)"
+                              class="tn btn-danger btn-sm waves-effect btn-agregar">
+                              <i class="fa fa-trash"></i></button>
+                            <!-- <button data-toggle="modal"
+                            data-target="#modal_update"   @click="show_modal(temporales.product_id)" class="tn btn-danger btn-sm waves-effect btn-agregar">
+                              <i class="fa fa-edit"></i></button> -->
+                            <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"
+                              data-toggle="tooltip" title="تعديل">
+                              <i class="fa fa-edit"></i></router-link>
                           </td>
 
                         </tr>
@@ -136,6 +142,14 @@
                     <input type="hidden" id="subtotal_general_sf" name="subtotal_general_sf" class="form-control"
                       value="0.00" />
                   </div>
+                  <div class="col-md-12">  <label for="pagoPrevio">نوع العمله</label>
+                    <select name="forma_pago" class="form-control" id="forma_pago" 
+                      >
+                      <option v-bind:value="2">ريال يمني  </option>
+                      <option v-bind:value="1">دولار امريكي</option>
+                      <option v-bind:value="2">ريال سعودي </option>
+                    </select>
+                    </div>
                   <div class="col-md-12">&nbsp;</div>
                   <div class="col-md-12">
                     <label for="pagoPrevio">الخصم (%)</label>
@@ -149,8 +163,10 @@
                     <select name="forma_pago" class="form-control" id="forma_pago" v-model="Way_to_pay_selected"
                       v-on:change="onwaychange">
                       text
-                      <option v-bind:value="1">cash Money</option>
-                      <option v-bind:value="2">Credit</option>
+                      <!-- <option v-bind:value="1">cash Money</option>
+                      <option v-bind:value="2">Credit</option> -->
+                      <option v-bind:value="1">نقد</option>
+                      <option v-bind:value="2">أجل</option>
                     </select>
                   </div>
                   <br />
@@ -256,8 +272,9 @@
                     <tr v-for="(product, index) in products.data" :key="index">
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          {{ product.product
-}}<input type="hidden" v-model="product.id" id="id" />
+                          {{
+                            product.product
+                          }}<input type="hidden" v-model="product.id" id="id" />
                         </div>
                       </td>
 
@@ -265,8 +282,9 @@
 
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          {{ product.store
-}}<input type="hidden" v-model="product.store_id" id="id" />
+                          {{
+                            product.store
+                          }}<input type="hidden" v-model="product.store_id" id="id" />
                         </div>
                       </td>
 
@@ -300,21 +318,21 @@
 
 
                       <input v-model="check_state[index]" @change="add_one_sale(
-
-  product.product_id,
-  qty[index],
-  product.desc,
-  product.availabe_qty,
-  product.product,
-  product.store_id,
-  product.status_id,
-  price[index],
-  tax[index],
-  index
-
-
-
-)" type="checkbox" class="btn btn-info waves-effect">
+                      
+                        product.product_id,
+                        qty[index],
+                        product.desc,
+                        product.availabe_qty,
+                        product.product,
+                        product.store_id,
+                        product.status_id,
+                        price[index],
+                        tax[index],
+                        index
+                      
+                      
+                      
+                      )" type="checkbox" class="btn btn-info waves-effect">
                       </td>
 
                     </tr>
@@ -458,7 +476,8 @@
               <button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 12pt">
                 <i class="fa fa-thumbs-down"></i>
               </button>
-              <button type="button" class="btn btn-success" id="confirmar_vaciar" style="font-size: 12pt">
+              <button @click="delete_temporale" type="button" class="btn btn-success" id="confirmar_vaciar"
+                style="font-size: 12pt">
                 <i class="fa fa-thumbs-up"></i>
               </button>
             </div>
@@ -467,6 +486,33 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
+
+      <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true" style="display: none" id="modal_vaciar1">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                هل انت متاكد انك تريد الحذف x
+              </button>
+              <h2 class="modal-title" id="mySmallModalLabel"></h2>
+            </div>
+            <div class="modal-body text-center">
+              <input type="hidden" id="vaciar1">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 12pt">
+                <i class="fa fa-thumbs-down"></i>
+              </button>
+              <button type="button" class="btn btn-success" id="confirmar_vaciar" style="font-size: 12pt"
+                @click="delete_one_temporale()">
+                <i class="fa fa-thumbs-up"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
       <!-- /.modal -->
 
 
@@ -516,39 +562,40 @@
 
 
 <script>
+import operation from '../../../../js/operation.js';
 export default {
+  mixins: [operation],
   data() {
     // return data;
     return {
-      type: '',
-      count: 1,
-      counts: {},
-      product: [],
-      products: '',
+      // type: '',
+      // count: 1,
+      // counts: {},
+      // product: [],
+      // products: '',
+      // desc: [],
+      // stores: '',
+      // statuses: '',
+      // status: [],
+      // store: [],
+      // check_state: [],
+        // qty: [],
+      // type: '',
+      // availabe_qty: [],
+      // price: [],
+      // tax: [],
+      // stores: '',
+      // statuses: '',
+      // date: new Date().toISOString().substr(0, 10),
       all_products: '',
-      desc: [],
-      stores: '',
-      statuses: '',
-      status: [],
-      store: [],
-      check_state: [],
       temporale: 1,
-      qty: [],
-      type: '',
-      availabe_qty: [],
-      price: [],
-      tax: [],
-      stores: '',
-      statuses: '',
       supplier: [],
       suppliers: '',
-
       total_quantity: 0,
       grand_total: 0,
       sub_total: 0,
       To_pay: 0,
       discount: 0,
-      date: new Date().toISOString().substr(0, 10),
       total_tax: 0,
       type_payment: 0,
       Way_to_pay_selected: 1,
@@ -559,37 +606,20 @@ export default {
     }
   },
   created() {
-    // this.axios.post("/sale/newsale").then((response) => {
-    //   this.temporale = response.data.temporales;
 
-    //   this.temporale.forEach((item) => {
-    //     this.Total_quantity = item.tem_qty + this.Total_quantity;
-    //     this.sub_total = item.sub_total + this.sub_total;
-    //     this.Total = item.total + this.Total;
-    //     this.To_pay = item.sub_total + this.To_pay;
-    //     this.total_tax = item.tax + this.total_tax;
-    //   });
-
-    //   console.log(response);
-
-    //   this.products = response.data.products;
-    //   this.customer = response.data.customers;
-    // });
   },
   mounted() {
     this.list();
-    this.type = 'sale';
+    this.type = 'Sale';
     this.type_refresh = 'decrement';
-    // this.$Progress.start();
-    // this.$store.dispatch("getAllnewsale");
-    // this.$Progress.finish();
+
   },
-  // computed: {
-  //   showNewsale() {
-  //     return this.$store.getters.getCartSubtotal;
-  //   },
-  // },
+
   methods: {
+    show_modal(id) {
+      $("#vaciar1").val(id);
+    },
+
     list(page = 1) {
       this.axios
         .post(`/sale/newsale?page=${page}`)
@@ -642,89 +672,8 @@ export default {
     credit(e) {
       this.remaining = this.sub_total - this.paid;
       this.To_pay = this.paid;
-    },
-    add_one_sale(
-      product_id,
-      qty,
-      desc,
-      availabe_qty,
-      product_name,
-      store,
-      status,
-      price,
-      tax,
-      index
-    ) {
+    }
 
-
-      // console.log(product_id, index);
-      // console.log(qty, index);
-      // console.log(desc, index);
-      // console.log(product_name, index);
-      // console.log(store, index);
-      // console.log(status, index);
-      // console.log(availabe_qty, index);
-      // console.log(price, price);
-      // console.log(tax, tax);
-
-      if (this.check_state[index] == true) {
-
-
-        if (qty != 0) {
-
-          if (qty <= availabe_qty) {
-
-            this.counts[index] = index;
-            this.product[index] = product_id;
-            this.qty[index] = qty;
-            this.product_name[index] = product_name;
-            this.tax[index] = tax;
-            this.price[index] = price;
-            this.desc[index] = desc;
-            this.store[index] = store;
-            this.status[index] = status;
-            this.availabe_qty[index] = availabe_qty;
-          }
-        }
-
-
-
-      } else if (this.check_state[index] == false) {
-
-        this.$delete(this.counts, index);
-        this.$delete(this.product, index);
-        this.$delete(this.qty, index);
-        this.$delete(this.desc, index);
-        this.$delete(this.product_name, index);
-        this.$delete(this.store, index);
-        this.$delete(this.status, index);
-        this.$delete(this.availabe_qty, index);
-        this.$delete(this.price, price);
-        this.$delete(this.tax, tax);
-
-      }
-      // console.log(this.counts, index);
-      // console.log(this.product, index);
-      // console.log(this.qty, index);
-      // console.log(this.desc, index);
-      // console.log(this.product_name, index);
-      // console.log(this.store, index);
-      // console.log(this.status, index);
-      // console.log(this.availabe_qty, index);
-      // console.log(this.price, price);
-      // console.log(this.tax, tax);
-    },
-
-
-    Add_newsale() {
-      Add_new(this);
-
-    },
-    payment() {
-
-      payment(this)
-
-    },
   },
 };
 </script>

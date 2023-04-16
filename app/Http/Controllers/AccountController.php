@@ -22,18 +22,18 @@ class AccountController extends Controller
     public function create()
     {
     }
-    public function account_store_first_level(Request $request)
-    {
+    // public function account_store_first_level(Request $request)
+    // {
 
-        $account = new Account();
-        $account->text = $request->post('text');
-        $account->id = $request->post('id');
-        $account->parent_id = null;
-        $account->rank = 1;
-        $account->save();
+    //     $account = new Account();
+    //     $account->text = $request->post('text');
+    //     $account->id = $request->post('id');
+    //     $account->parent_id = null;
+    //     $account->rank = 1;
+    //     $account->save();
 
-        return response()->json();
-    }
+    //     return response()->json();
+    // }
 
 
     public function Export()
@@ -96,21 +96,21 @@ class AccountController extends Controller
 
    
 
-    public function store_first_level(Request $request){
+    // public function store_first_level(Request $request){
 
 
-        $product = new Account();
-        $product->text = $request->post('text');
-        if($request->post('parent') != 0){
-            $product->parent_id= $request->post('parent');
-        }
-        $product->id = $request->post('id');
-        $product->rank = $request->post('rank');
-        $product->save();
+    //     $product = new Account();
+    //     $product->text = $request->post('text');
+    //     if($request->post('parent') != 0){
+    //         $product->parent_id= $request->post('parent');
+    //     }
+    //     $product->id = $request->post('id');
+    //     $product->rank = $request->post('rank');
+    //     $product->save();
 
-        return response()->json();
+    //     return response()->json();
 
-     }
+    //  }
 
 
 
@@ -129,7 +129,7 @@ class AccountController extends Controller
         }
 
         $account->rank = $request->post('rank');
-        $account->status = $request->post('status');
+        $account->status_account = $request->post('status');
         // $account->account_type = $request->post('account_type');
         // $account->currency = $request->post('currency');
 
@@ -211,7 +211,7 @@ class AccountController extends Controller
 
         $accounts = Account::where('parent_id', null)->with('children')->get();
         $last_nodes = Account::where('parent_id', null)->select('accounts.*')->max('id');
-        return response()->json(['accounts' => $accounts,'last_nodes' => $last_nodes]);
+        return response()->json(['trees' => $accounts,'last_nodes' => $last_nodes]);
 
 
 
@@ -279,7 +279,11 @@ class AccountController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy(Account $account)
+    public function destroy($id)
     {
+
+        $product = Account::find($id);
+
+        $product->delete();
     }
 }

@@ -14,7 +14,7 @@ class VacationTypeController extends Controller
         $vacation_types = DB::table('vacation_types')
         ->select('vacation_types.*')
         ->paginate(10);
-    return response()->json($vacation_types);
+    return response()->json( ['vacation_types'=>$vacation_types]);
     }
 
 
@@ -24,10 +24,10 @@ class VacationTypeController extends Controller
     }
 
 
-    public function store(Request $request)
-    {
-        //
-    }
+    // public function store(Request $request)
+    // {
+    //     //
+    // }
 
 
     public function show(VacationType $vacationType)

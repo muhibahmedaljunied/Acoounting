@@ -22,7 +22,7 @@ class CreateCashesTable extends Migration
             $table->foreign('customer_id')->references('id')->on('customers');
 
             $table->string('customer_name')->nullable();
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->integer('qty_return')->default(0);
             $table->date('date');
             

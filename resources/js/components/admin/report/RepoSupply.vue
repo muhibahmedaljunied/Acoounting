@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12">
           <div class="page-title-box">
@@ -251,23 +251,23 @@ export default {
 
 
       ],
-      showstore: false,
-      showproduct: false,
-      showstatus: false,
-      showdesc: false,
-      showsupplier: false,
+      // showstore: false,
+      // showproduct: false,
+      // showstatus: false,
+      // showdesc: false,
+      // showsupplier: false,
 
-      user: "",
-      statusselected: 0,
-      supplierselected: 0,
-      productselected: 0,
-      productselectedname: "",
-      storeselectedname: "",
-      statusselectedname: "",
-      storeselected: 0,
-      descselected: "",
-      typeselected: [],
-      moveselected: 0,
+      // user: "",
+      // statusselected: 0,
+      // supplierselected: 0,
+      // productselected: 0,
+      // productselectedname: "",
+      // storeselectedname: "",
+      // statusselectedname: "",
+      // storeselected: 0,
+      // descselected: "",
+      // typeselected: [],
+      // moveselected: 0,
       type_report: 0,
       from_date: "2021-11-24",
       to_date: "2021-11-24",

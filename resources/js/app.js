@@ -1,20 +1,9 @@
 require('./bootstrap');
-require('./report');
 require('./operation');
 require('./staff/operation');
-
-// require('D:/xampp/htdocs/Warehouse_v_1.0.2 - Copy/resources/js/contextmenu.js');
-// require('D:/xampp/htdocs/Warehouse_v_1.0.2 - Copy/resources/js/tree.js');
-// require('D:/xampp/htdocs/Warehouse_v_1.0.2 - Copy/resources/js/jtree.js');
-
 require('./contextmenu.js');
-require('./tree.js');
-require('./jtree.js');
+// require('./tree.js');
 
-
-
-
-// alert(location.host);
 
 window.Vue = require('vue');			//import vue same as(import Vue from 'vue')
 
@@ -66,7 +55,7 @@ window.toastMessage = function (title=null,text=null){
 }
 
 // ----------------------------------------------------------------------------------------------
-window.printDiv = printDiv;
+// window.printDiv = printDiv;
 // window.treefunc = treefunc;
 // ------------------------------------------------------------------------------------------------
 Vue.use(VueAxios, axios);
@@ -94,6 +83,13 @@ import storeData from './store/store.js'
 const store = new Vuex.Store(
   storeData
 )
+
+
+
+
+
+
+
 // -------------------------------------------------------------------------------------------------
 Vue.component('footer-section', require('./components/admin/layouts/Footer.vue').default);
 Vue.component('main-header', require('./components/admin/layouts/MainHeader.vue').default);
@@ -150,9 +146,12 @@ const app = new Vue({
     },
     
     router,
-    store
+    store,
+
+
 });
-// window.Laravel.csrfToken = {{ csrf_token() }};
+
+
 
 
 

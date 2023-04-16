@@ -157,25 +157,25 @@ class SupplyReturnController extends Controller
     }
 
 
-    public function return_supply_detail($id)
-    {
+    // public function return_supply_detail($id)
+    // {
 
 
-        $return_details = DB::table('supplies')->where('supply_return_details.supply_return_id', $id)
+    //     $return_details = DB::table('supplies')->where('supply_return_details.supply_return_id', $id)
 
 
-            ->join('supply_returns', 'supply_returns.supply_id', '=', 'supplies.id')
-            ->join('supply_return_details', 'supply_returns.id', '=', 'supply_return_details.supply_return_id')
+    //         ->join('supply_returns', 'supply_returns.supply_id', '=', 'supplies.id')
+    //         ->join('supply_return_details', 'supply_returns.id', '=', 'supply_return_details.supply_return_id')
 
-            // ->join('store_products', 'store_products.id', '=', 'supply_return_details.store_product_id')
-            ->join('products', 'supply_return_details.product_id', '=', 'products.id')
-            ->join('statuses', 'supply_return_details.status_id', '=', 'statuses.id')
-            ->join('stores', 'supply_return_details.store_id', '=', 'stores.id')
-            ->select('supply_return_details.*', 'supply_return_details.quantity as qty_return', 'supply_returns.*', 'statuses.*', 'statuses.name as status', 'stores.*','stores.text as store', 'products.text as product')
-            ->get();
+    //         // ->join('store_products', 'store_products.id', '=', 'supply_return_details.store_product_id')
+    //         ->join('products', 'supply_return_details.product_id', '=', 'products.id')
+    //         ->join('statuses', 'supply_return_details.status_id', '=', 'statuses.id')
+    //         ->join('stores', 'supply_return_details.store_id', '=', 'stores.id')
+    //         ->select('supply_return_details.*', 'supply_return_details.quantity as qty_return', 'supply_returns.*', 'statuses.*', 'statuses.name as status', 'stores.*','stores.text as store', 'products.text as product')
+    //         ->get();
 
-        return response()->json(['return_details' => $return_details]);
-    }
+    //     return response()->json(['return_details' => $return_details]);
+    // }
 
 
     public function return_invoice($id)
@@ -201,6 +201,15 @@ class SupplyReturnController extends Controller
             ->join('stores', 'supply_return_details.store_id', '=', 'stores.id')
             ->select('supply_return_details.*', 'supply_return_details.quantity as qty_return', 'supply_returns.*', 'statuses.*', 'statuses.name as status', 'stores.*','stores.text as store', 'products.text as product')
             ->get();
+
+            
+
+       
+
+
+
+
+
 
         $users = Auth::user();
 

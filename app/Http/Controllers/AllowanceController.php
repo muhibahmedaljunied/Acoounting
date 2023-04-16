@@ -17,15 +17,30 @@ class AllowanceController extends Controller
     {
         
         $staffs = Staff::all();
-        $staff_allowances = DB::table('allowances')
-        ->join('staff', 'staff.id', '=', 'allowances.staff_id')
-        ->join('allowance_types', 'allowances.allowance_type_id', '=', 'allowance_types.id')
-        ->select('staff.*', 'allowance_types.name as type','allowances.*')
-        ->paginate(10);
+        // $staff_allowances = DB::table('allowances')
+        // ->join('staff', 'staff.id', '=', 'allowances.staff_id')
+        // ->join('allowance_types', 'allowances.allowance_type_id', '=', 'allowance_types.id')
+        // ->select('staff.*', 'allowance_types.name as type','allowances.*')
+        // ->paginate(10);
+
+        $staff_allowances =  staff::with([
+            
+            'allowance' => function ($query) {
+                $query->select('*');
+            },
+        
+            'allowance.allowance_type' => function ($query) {
+                $query->select('*');
+            },
+         
+        ])
+            ->paginate(10);
+
+
       
 
         $allowance_types = AllowanceType::all();
-        return response()->json(['allowance_types' => $allowance_types,'staffs' => $staffs,'staff_allowances' => $staff_allowances]);
+        return response()->json(['allowance_types' => $allowance_types,'staffs' => $staffs,'list' => $staff_allowances]);
     }
 
     /**

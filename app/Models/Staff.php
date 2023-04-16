@@ -43,11 +43,81 @@ class Staff extends Model
     {
         return $this->hasMany(Extra::class);
     }
+    public function advance()
+    {
+        return $this->hasMany(Advance::class);
+    }
 
     public function vacation()
     {
         return $this->hasMany(Vacation::class);
     }
+
+
+    public function department()
+
+    {
+
+        return $this->belongsTo(AdministrativeStructure::class);
+    }
+
+    public function job()
+
+    {
+
+        return $this->belongsTo(AdministrativeStructure::class, 'job_id');
+    }
+
+    public function qualification()
+
+    {
+
+        return $this->belongsTo(Qualification::class);
+    }
+
+
+    public function branch()
+
+    {
+
+        return $this->belongsTo(Branch::class);
+    }
+
+
+    public function staff_type()
+
+    {
+
+        return $this->belongsTo(StaffType::class);
+    }
+
+
+
+    public function work_type()
+
+    {
+
+        return $this->belongsTo(WorkType::class);
+    }
+
+
+
+
+
+    public function staff_religion()
+
+    {
+
+        return $this->belongsTo(StaffReligion::class);
+    }
+
+    public function nationality()
+
+    {
+
+        return $this->belongsTo(Nationality::class);
+    }
+
 
 
 }

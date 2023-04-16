@@ -16,10 +16,10 @@ class CreateCurrenciesTable extends Migration
         Schema::create('currencies', function (Blueprint $table) {
             $table->Increments('id');
 
-            $table->string('currency_name');
+            $table->string('name');
 
-            $table->string('symbol');
-            $table->integer('exchange_rate');  //سعر الصرف
+            $table->string('symbole');
+            $table->integer('rate');  //سعر الصرف
 
             $table->integer('type')->nullable();
 

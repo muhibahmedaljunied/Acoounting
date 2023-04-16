@@ -76,6 +76,7 @@
     </div>
   </template>
   <script>
+
   import pagination from "laravel-vue-pagination";
   export default {
   
@@ -107,7 +108,6 @@
   
           this.stocks = data;
   
-          // this.$root.logo = "Category";
         });
       },
       list(page = 1) {
@@ -121,38 +121,7 @@
             console.error(response);
           });
       },
-      // delete_supply(id){
-  
-      //     this.axios.post(`delete_supply/${id}`).then(response => {
-  
-      // 		toast.fire({
-      //                           title: "Deleted!",
-      //                           text: "Your category has been deleted.",
-      //                           button: "Close", // Text on button
-      //                           icon: "success", //built in icons: success, warning, error, info
-      //                           timer: 3000, //timeOut for auto-close
-      //                           buttons: {
-      //                               confirm: {
-      //                               text: "OK",
-      //                               value: true,
-      //                               visible: true,
-      //                               className: "",
-      //                               closeModal: true
-      //                               },
-      //                               cancel: {
-      //                               text: "Cancel",
-      //                               value: false,
-      //                               visible: true,
-      //                               className: "",
-      //                               closeModal: true,
-      //                               }
-      //                           }
-      //                       })
-  
-      //               // this.$router.push('category')
-  
-      // 	})
-      // }
+     
     }
   }
   </script>

@@ -15,8 +15,8 @@ class ExpenceTypeController extends Controller
      */
     public function index()
     {
-        $expences = DB::table('expences')
-        ->select('expences.*')
+        $expences = DB::table('expence_types')
+        ->select('expence_types.*')
         ->paginate(10);
     return response()->json($expences);
     }
@@ -50,7 +50,9 @@ class ExpenceTypeController extends Controller
      */
     public function show(ExpenceType $ExpenceType)
     {
-        //
+        $expence_types = ExpenceType::all();
+      
+        return response()->json(['expence_types'=>$expence_types]);
     }
 
     /**

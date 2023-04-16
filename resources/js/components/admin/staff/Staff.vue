@@ -17,17 +17,18 @@
                     <div class="tabs-menu1">
                       <!-- Tabs -->
                       <ul class="nav panel-tabs main-nav-line">
-                         <li class="nav-item">
-                       <a href="#tab1" class="nav-link" data-toggle="tab"
-                            >بيانات الراتب</a
-                          >
-                        
-                        </li>
                         <li class="nav-item">
                       <a href="#tab2" class="nav-link" data-toggle="tab"
                             >البيانات الشخصيه</a
                           >
                         </li>
+                         <li class="nav-item">
+                       <a href="#tab1" class="nav-link" data-toggle="tab"
+                            > السلف</a
+                          >
+                        
+                        </li>
+                    
                      
                         <li class="nav-item">
                         <a href="#tab3" class="nav-link" data-toggle="tab"
@@ -54,9 +55,9 @@
                         <li class="nav-item">
                           <a href="#tab7" class="nav-link" data-toggle="tab"> الخصم</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                           <a href="#tab8" class="nav-link" data-toggle="tab">القرض</a>
-                        </li>
+                        </li> -->
 
                       
                       
@@ -72,7 +73,7 @@
                     "
                   >
                     <div class="tab-content">
-                      <div class="tab-pane active" id="tab1"> <salary></salary></div>
+                      <div class="tab-pane active" id="tab1"> <advance></advance></div>
                     
                       <div class="tab-pane" id="tab2">
                              <personal-information></personal-information>
@@ -98,9 +99,9 @@
                       <div class="tab-pane" id="tab7">
                         <discount></discount>
                       </div>
-                      <div class="tab-pane" id="tab8">
+                      <!-- <div class="tab-pane" id="tab8">
                         <loan></loan>
-                      </div>
+                      </div> -->
                 
                     
                   </div>
@@ -126,7 +127,7 @@
   </div>
 </template>
 <script>
-import Salary from "./StaffData/Salary";
+import Advance from "./StaffData/Advance";
 
 import Holiday from "./StaffData/Holiday";
 
@@ -146,7 +147,7 @@ import Loan from "./StaffData/Loan";
 
 export default {
   components: {
-    Salary,
+    Advance,
     Holiday,
     PersonalInformation,
     SalaryDetails,

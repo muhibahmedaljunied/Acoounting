@@ -20,7 +20,8 @@ class Stock extends Model
 
         return $query->join('products', 'products.id', '=', 'stocks.product_id')
         ->join('statuses', 'statuses.id', '=', 'stocks.status_id')
-        ->join('stores', 'stores.id', '=', 'stocks.store_id');
+        ->join('stores', 'stores.id', '=', 'stocks.store_id')
+        ->join('units', 'units.id', '=', 'stocks.unit_id');
       
 
     }

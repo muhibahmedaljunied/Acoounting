@@ -16,8 +16,17 @@ class CreateStaffTable extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->Increments('id');
+
             $table->string('name');
             $table->string('register')->nullable();
+
+           
+
+            $table->unsignedInteger('work_id');
+            $table->foreign('work_id')->references('id')->on('work_systems');
+
+
+
             $table->integer('phone');
             $table->string('email');
             $table->integer('salary')->default(0);
@@ -37,10 +46,10 @@ class CreateStaffTable extends Migration
             $table->foreign('branch_id')->references('id')->on('branches');
 
             $table->unsignedInteger('department_id');
-            $table->foreign('department_id')->references('id')->on('departments');
+            $table->foreign('department_id')->references('id')->on('administrative_structures');
 
             $table->unsignedInteger('job_id');
-            $table->foreign('job_id')->references('id')->on('jobs');
+            $table->foreign('job_id')->references('id')->on('administrative_structures');
 
             $table->unsignedInteger('staff_type_id');
             $table->foreign('staff_type_id')->references('id')->on('staff_types');

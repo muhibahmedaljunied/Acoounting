@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TestEvent;
 use App\Models\Absence;
 use App\Models\AbsenceType;
 use App\Models\Staff;
+use App\Models\SanctionDiscount;
 use DB;
 use Illuminate\Http\Request;
 
@@ -15,18 +17,23 @@ class AbsenceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function test()
+ {
+           event(new TestEvent('One Click'));
+     return response()->json(['absence_types'=>'Hooray!!! You have fired your Event successfully']);
+
+ }
+
+
     public function index()
     {
-        $absences = DB::table('absences')
-        ->join('absence_types','absence_types.id', '=', 'absences.absence_type_id')
-        ->join('staff','staff.id', '=', 'absences.staff_id')
-
-        ->select('absences.*','absence_types.name as absence','staff.name as staff')
-        ->paginate(10);
-
+        
         $absence_types = AbsenceType::all();
+        $discount_types = SanctionDiscount::all();
         $staffs = Staff::all();
-        return response()->json(['absence_types'=>$absence_types,'staffs'=>$staffs,'absences'=>$absences]);
+
+        return response()->json(['absence_types'=>$absence_types,'staffs'=>$staffs,'discount_types'=>$discount_types]);
     }
 
     /**
@@ -39,12 +46,7 @@ class AbsenceController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+  
     public function store(Request $request)
     {
         $absence = new Absence();
@@ -57,46 +59,25 @@ class AbsenceController extends Controller
         return response()->json();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Absence  $absence
-     * @return \Illuminate\Http\Response
-     */
+  
     public function show(Absence $absence)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Absence  $absence
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Absence $absence)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Absence  $absence
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function update(Request $request, Absence $absence)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Absence  $absence
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Absence $absence)
     {
         //

@@ -61,7 +61,7 @@
                 <div class="col-md-2">
              
 
-                  <router-link to="/temporale_expence" class="tn btn-info btn-sm waves-effect btn-agregar"
+                  <router-link to="/temporale_income" class="tn btn-info btn-sm waves-effect btn-agregar"
                     id="agregar_productos">
                     <i class="fa fa-plus-circle"></i></router-link>
                   <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
@@ -87,7 +87,7 @@
                       <thead>
                         <tr>
                           <th style="width: 60px">#</th>
-                          <th style="width: 60px">المصروف</th>
+                          <th style="width: 60px">الايراد</th>
                           <!-- <th style="width: 60px">المجموعه</th> -->
                           <!-- <th style="width: 60px">الصنف</th> -->
                           <!-- <th style="width: 60px">المخزن</th> -->
@@ -96,6 +96,7 @@
                           <th style="width: 60px">المواصفات والطراز</th> -->
 
                           <th style="width: 60px">المبلغ</th>
+                          
                           <th style="width: 60px">التاريخ</th>
                           <th style="width: 60px">العمليات</th>
                         </tr>
@@ -235,7 +236,7 @@
                 x
               </button>
               <div class="col-md-8">
-                <h4 class="modal-title" id="myLargeModalLabel">المصروف</h4>
+                <h4 class="modal-title" id="myLargeModalLabel">الايراد</h4>
               </div>
               <div class="col-md-4">
                 <div class="col-sm-12">

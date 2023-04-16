@@ -12,5 +12,22 @@ class Sale extends Model
     ];
 
 
+    
+    public function sale_returns()
+    {
+        return $this->hasMany(SaleReturn::class);
+    }
+
+    public function receivable_notes()
+    {
+        return $this->hasMany(PayableNote::class);
+    }
+
+    public function payment_sales()
+    {
+        return $this->hasMany(PaymentSale::class);
+    }
+
+
 
 }

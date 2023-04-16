@@ -70,54 +70,12 @@ contextmenu = function (node) {
           });
 
 
-        // $('#exampleModalTree_add').modal({
-        //   show: true
-        // });
+     
 
 
       },
     },
-    // updateItem: {
-    //   // The "delete" menu item
-    //   label: "تعديل",
-    //   action: function (data) {
-
-
-
-    //     var id = $.jstree.reference(data.reference).get_node(data.reference).id
-
-
-    //     // ---------------------------------------------------------------------------------------------------------------
-
-    //     axios.post(`/${localStorage.getItem('table')}_edit_node/${id}`).then(function (response) {
-
-    //       // console.log(response.data.childs);
-
-    //       $(`#${localStorage.getItem('table')}_number`).val(id);
-    //       $(`#${localStorage.getItem('table')}`).val(response.data.data.text);
-
-    //       if (response.data.data.parent_id) {
-    //         $(`#parent`).val(response.data.data.parent_id);
-    //       } else {
-    //         $(`#parent`).val(0);
-    //       }
-
-
-
-    //       $(`#rank`).val(response.data.data.rank);
-
-    //     })
-    //       .catch(function (error) {
-    //         // currentObj.output = error;
-    //       });
-
-
-    //     // $('#exampleModal_update').modal({
-    //     //   show: true
-    //     // });
-
-    //   },
-    // },
+   
   };
 
   if ($(node).hasClass("folder")) {

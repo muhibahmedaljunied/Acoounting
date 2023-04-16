@@ -15,7 +15,11 @@ class CreateVacationTypesTable extends Migration
     {
         Schema::create('vacation_types', function (Blueprint $table) {
             $table->Increments('id');
+
             $table->string('name');
+            $table->integer('duration');
+            // $table->int('number_of_days');
+
             $table->timestamps();
         });
     }

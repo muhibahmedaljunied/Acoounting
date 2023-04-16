@@ -42,8 +42,7 @@
 
                                                     <div class="form-group col-md-2">
                                                         <label for="inputState">الوظيفه</label>
-                                                        <select v-model="jobselected" id="inputState"
-                                                            class="form-control">
+                                                        <select v-model="jobselected" id="inputState" class="form-control">
                                                             <option v-for="job in jobs" v-bind:value="job.id">
                                                                 {{ job.name }}
                                                             </option>
@@ -68,8 +67,8 @@
 
                                                     <div class="form-group col-md-2">
                                                         <label for="exampleRadios">الراتب</label><br />
-                                                        <input v-model="salaryselected" class="form-control"
-                                                            type="number" name="exampleRadios" />
+                                                        <input v-model="salaryselected" class="form-control" type="number"
+                                                            name="exampleRadios" />
                                                     </div>
                                                     <!-- <div class="form-group col-md-2">
                               <label for="exampleRadios">البدلات</label><br />
@@ -97,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                   
+
                 </div>
 
             </div>
@@ -190,24 +189,21 @@
                                                                 </tr>
                                                              -->
 
-                                                             <tr class="form-check">
-                                                                   
-                                                                        <td> <input 
-                                                                                
-                                                                                 class="form-check-input" type="checkbox" name="exampleRadios"
-                                                                                id="exampleRadios1" /></td>
+                                                                <tr class="form-check">
 
-                                                                        <td>
-                                                                            <div class="form-group">
-                                                                                <input  readonly
-                                                                                    type="text" name="name" id="name"
-                                                                                    class="form-control" />
-                                                                            </div>
-                                                                        </td>
-                                                                        <td><input type="number" 
-                                                                                class="form-control input_cantidad">
-                                                                        </td>
-                                                                   
+                                                                    <td> <input class="form-check-input" type="checkbox"
+                                                                            name="exampleRadios" id="exampleRadios1" /></td>
+
+                                                                    <td>
+                                                                        <div class="form-group">
+                                                                            <input readonly type="text" name="name"
+                                                                                id="name" class="form-control" />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><input type="number"
+                                                                            class="form-control input_cantidad">
+                                                                    </td>
+
                                                                 </tr>
 
                                                             </tbody>
@@ -247,17 +243,17 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr v-for="(allowance, index) in allowances"
-                                                                    :key="index" class="form-check">
+                                                                <tr v-for="(allowance, index) in allowances" :key="index"
+                                                                    class="form-check">
                                                                     <div v-if="allowance.allowance_type_id == 2">
-                                                                        <td> <input v-model="checkselected[index]"
-                                                                                @change="
-                                                                                    handleAllowance(
-                                                                                        index,
-                                                                                        checkselected[index],
-                                                                                        allowance.id
-                                                                                    )
-                                                                                " class="form-check-input" type="checkbox" name="exampleRadios">
+                                                                        <td> <input v-model="checkselected[index]" @change="
+                                                                            handleAllowance(
+                                                                                index,
+                                                                                checkselected[index],
+                                                                                allowance.id
+                                                                            )
+                                                                        " class="form-check-input"
+                                                                                type="checkbox" name="exampleRadios">
                                                                         </td>
 
                                                                         <td>
@@ -289,19 +285,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer"><button type="submit" class="btn btn-primary btn-flat pull-right"><i class="fa fa-edit"></i> Update Details</button></div>
+                <div class="card-footer"><button type="submit" class="btn btn-primary btn-flat pull-right"><i
+                            class="fa fa-edit"></i> Update Details</button></div>
             </div>
         </div>
     </div>
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-
+import operation from '../../../../../js/staff/operation/operation.js';
 export default {
     components: {
         pagination,
     },
-
+    mixins: [operation],
     data() {
         return {
             // category: "yes",
@@ -337,64 +334,7 @@ export default {
         this.list();
     },
     methods: {
-        Import() {
-            this.axios.post(`/CategoryImport`).then(({ data }) => {
-                console.log(data);
 
-                this.list();
-                toast.fire({
-                    title: "تم الاستيراد بنجاح",
-                    text: "Products are successfully exported.",
-                    button: "Close", // Text on button
-                    icon: "success", //built in icons: success, warning, error, info
-                    timer: 3000, //timeOut for auto-close
-                    buttons: {
-                        confirm: {
-                            text: "OK",
-                            value: true,
-                            visible: true,
-                            className: "",
-                            closeModal: true,
-                        },
-                        cancel: {
-                            text: "Cancel",
-                            value: false,
-                            visible: true,
-                            className: "",
-                            closeModal: true,
-                        },
-                    },
-                });
-            });
-        },
-        Export() {
-            this.axios.post(`/CategoryExport`).then((response) => {
-                toast.fire({
-                    title: "تم التصدير بنجاح",
-                    text: "Products are successfully exported.",
-                    button: "Close", // Text on button
-                    icon: "success", //built in icons: success, warning, error, info
-                    timer: 3000, //timeOut for auto-close
-                    buttons: {
-                        confirm: {
-                            text: "OK",
-                            value: true,
-                            visible: true,
-                            className: "",
-                            closeModal: true,
-                        },
-                        cancel: {
-                            text: "Cancel",
-                            value: false,
-                            visible: true,
-                            className: "",
-                            closeModal: true,
-                        },
-                    },
-                });
-                console.log(response.data.data);
-            });
-        },
         get_search(word_search) {
             this.axios
                 .post(`/salarysearch`, { word_search: this.word_search })
@@ -404,61 +344,61 @@ export default {
                     // this.$root.logo = "Category";
                 });
         },
-        delete_salary(id) {
-            this.axios
-                .post(`delete_salary/${id}`)
-                .then((response) => {
-                    toastMessage("تم الحذف بنجاح");
+        // delete_salary(id) {
+        //     this.axios
+        //         .post(`delete_salary/${id}`)
+        //         .then((response) => {
+        //             toastMessage("تم الحذف بنجاح");
 
-                    this.list();
-                    // this.$router.push('category')
-                })
-                .catch((error) => {
-                    console.log(error.response);
+        //             this.list();
+        //             // this.$router.push('category')
+        //         })
+        //         .catch((error) => {
+        //             console.log(error.response);
 
-                    if (error.response.status == 500) {
-                        toast.fire({
-                            title: " فشل",
-                            text: error.response.data.message,
-                            button: "Close", // Text on button
-                            icon: "error", //built in icons: success, warning, error, info
-                            timer: 5000, //timeOut for auto-close
-                            buttons: {
-                                confirm: {
-                                    text: "OK",
-                                    value: true,
-                                    visible: true,
-                                    className: "",
-                                    closeModal: true,
-                                },
-                                cancel: {
-                                    text: "Cancel",
-                                    value: false,
-                                    visible: true,
-                                    className: "",
-                                    closeModal: true,
-                                },
-                            },
-                        });
-                    }
-                });
-        },
-        list(page = 1) {
-            this.axios
-                .post(`/salary?page=${page}`)
-                .then(({ data }) => {
-                    this.staffs = data.staffs;
-                    // this.salarys = data;
-                    this.jobs = data.jobs;
-                    this.branches = data.branches;
-                    this.staff_types = data.staff_types;
-                    this.allowances = data.allowances;
-                    this.staff_allowances = data.staff_allowances;
-                })
-                .catch(({ response }) => {
-                    console.error(response);
-                });
-        },
+        //             if (error.response.status == 500) {
+        //                 toast.fire({
+        //                     title: " فشل",
+        //                     text: error.response.data.message,
+        //                     button: "Close", // Text on button
+        //                     icon: "error", //built in icons: success, warning, error, info
+        //                     timer: 5000, //timeOut for auto-close
+        //                     buttons: {
+        //                         confirm: {
+        //                             text: "OK",
+        //                             value: true,
+        //                             visible: true,
+        //                             className: "",
+        //                             closeModal: true,
+        //                         },
+        //                         cancel: {
+        //                             text: "Cancel",
+        //                             value: false,
+        //                             visible: true,
+        //                             className: "",
+        //                             closeModal: true,
+        //                         },
+        //                     },
+        //                 });
+        //             }
+        //         });
+        // },
+        // list(page = 1) {
+        //     this.axios
+        //         .post(`/salary?page=${page}`)
+        //         .then(({ data }) => {
+        //             this.staffs = data.staffs;
+        //             // this.salarys = data;
+        //             this.jobs = data.jobs;
+        //             this.branches = data.branches;
+        //             this.staff_types = data.staff_types;
+        //             this.allowances = data.allowances;
+        //             this.staff_allowances = data.staff_allowances;
+        //         })
+        //         .catch(({ response }) => {
+        //             console.error(response);
+        //         });
+        // },
         handleAllowance(index, valueselected, allowance_id) {
             this.allowance[index] = {
                 id: allowance_id,
@@ -489,16 +429,7 @@ export default {
 
             //  this.$router.go(-1);
         },
-        printDiv(printme) {
-            var printContents = document.getElementById(printme).innerHTML;
-            var originalContents = document.body.innerHTML;
 
-            document.body.innerHTML = printContents;
-
-            window.print();
-
-            document.body.innerHTML = originalContents;
-        },
     },
 };
 

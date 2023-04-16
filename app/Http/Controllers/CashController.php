@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\Store as s;
+// use Illuminate\Foundation\Auth\Access\Store as s;
 use App\Traits\ConditionTrait;
-use App\Traits\TemporaleTrait;
+use App\Traits\Temporale\TemporaleTrait;
 use App\Models\Cash;
 use App\Models\CashDetail;
 use App\Models\Customer;
@@ -19,14 +19,30 @@ use DB;
 
 class CashController extends Controller
 {
-    use TemporaleTrait, ConditionTrait, s;
+    use TemporaleTrait, ConditionTrait;
     public function index()
     {
-        $products = StoreProduct::where('store_products.quantity', '!=', '0')
-            ->joinall()
+        $products = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type','==',0)
+            ->join('products', 'store_products.product_id', '=', 'products.id')
+            ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
+            ->join('stores', 'store_products.store_id', '=', 'stores.id')
+            ->join('product_units', 'product_units.product_id', '=', 'products.id')
+            ->join('units', 'units.id', '=', 'product_units.unit_id')
             // ->where('products.notes',0)
-            ->select('products.*', 'products.text as product', 'stores.text as store', 'statuses.name as status', 'store_products.quantity as availabe_qty', 'store_products.*')
+            ->select('products.*', 'products.text as product','products.rate', 'stores.text as store', 'statuses.name as status', 'store_products.quantity as availabe_qty', 'store_products.*')
             ->paginate(100);
+
+        foreach ($products as $value) {
+
+            $units = DB::table('product_units')
+                ->join('units', 'units.id', '=', 'product_units.unit_id')
+                ->join('products', 'products.id', '=', 'product_units.product_id')
+                ->where('product_units.product_id', $value->product_id)
+                ->select('units.*','products.rate','product_units.unit_type')
+                ->get();
+
+            $value->units = $units;
+        }     
 
         $statuses = Status::all();
         // ----------------------------------------------------------------------------------------------
@@ -92,39 +108,18 @@ class CashController extends Controller
         return response()->json(['cashes' => $cashes]);
     }
 
-    public function details_cash($id)
+    public function invoice_cash(Request $request,$id)
     {
 
-        // $cash_details = CashDetail::where('cash_details.cash_id', $id)
-        $cash_details = StoreProduct::where('cash_details.cash_id', $id)
-
-            ->join('cash_details', 'store_products.id', '=', 'cash_details.store_product_id')
-            ->joinall()
-            ->select('products.*', 'products.text as product', 'cash_details.*', 'statuses.*', 'statuses.name as status', 'stores.*', 'stores.text as store', DB::raw('cash_details.qty-cash_details.qty_return AS qty_remain'))
-            ->get();
-
-
-
-
-        return response()->json(['cash_details' => $cash_details]);
-    }
-
-    public function invoice_cash($id)
-    {
-
+        $table = $request->post('table');
         $cashes = Cash::where('cashes.id', $id)
             ->join('customers', 'customers.id', '=', 'cashes.customer_id')
             ->select('cashes.*', 'cashes.id as cash_id', 'customers.*')
             ->get();
-        // $cash_details = CashDetail::where('cash_details.cash_id', $id)
-        $cash_details = StoreProduct::where('cash_details.cash_id', $id)
-            ->join('cash_details', 'store_products.id', '=', 'cash_details.store_product_id')
-            ->joinall()
-            ->select('products.*', 'products.text as product', 'cash_details.*', 'statuses.*', 'statuses.name as status', 'stores.*', 'stores.text as store', DB::raw('cash_details.qty-cash_details.qty_return AS qty_remain'))
-            ->get();
+        $details = $this->invoice($id,$table);
 
         $users = Auth::user();
-        return response()->json(['cash_details' => $cash_details, 'cashes' => $cashes, 'users' => $users]);
+        return response()->json([$table => $details, 'cashes' => $cashes, 'users' => $users]);
     }
 
 

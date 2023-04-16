@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12">
           <div class="page-title-box">
@@ -251,23 +251,23 @@ export default {
 
 
       ],
-      showstore: false,
-      showproduct: false,
-      showstatus: false,
-      showdesc: false,
-      showcustomer: false,
+      // showstore: false,
+      // showproduct: false,
+      // showstatus: false,
+      // showdesc: false,
+      // showcustomer: false,
 
-      user: "",
-      statusselected: 0,
-      customerselected: 0,
-      productselected: 0,
-      productselectedname: "",
-      storeselectedname: "",
-      statusselectedname: "",
-      storeselected: 0,
-      descselected: "",
-      typeselected: [],
-      moveselected: 0,
+      // user: "",
+      // statusselected: 0,
+      // customerselected: 0,
+      // productselected: 0,
+      // productselectedname: "",
+      // storeselectedname: "",
+      // statusselectedname: "",
+      // storeselected: 0,
+      // descselected: "",
+      // typeselected: [],
+      // moveselected: 0,
       type_report: 0,
       from_date: "2021-11-24",
       to_date: "2021-11-24",
@@ -311,133 +311,7 @@ export default {
       const dateTime = date + " " + time;
       this.timestamp = dateTime;
     },
-        showtree() {
-
-
-      this.axios.post(`/tree_product`).then((response) => {
-        this.jsonTreeDataProduct = response.data.products;
-
-
-        $('#treeview_json_product').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataProduct,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-          contextmenu: {
-            items: contextmenu
-          },
-
-
-
-
-
-
-        }).on("changed.jstree", function (e, data) {
-
-             console.log(data.node.id);
-             $(`.modal-title-product`).val(data.node.id)
-            //  modal-title-store
-
-        });
-
-      });
-      this.axios.post(`/tree_store`).then((response) => {
-        this.jsonTreeDataStore = response.data.stores;
-
-
-        $('#treeview_json_store').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataStore,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-          contextmenu: {
-            items: contextmenu
-          },
-
-
-
-
-
-
-        }).on("changed.jstree", function (e, data) {
-  
-             console.log(data.node.id);
-                   $(`.modal-title-store`).val(data.node.id)
-            //  modal-title-store
-        });
-
-      });
-    },
+   
     onreportchange() {
 
       (this.typeselected[0] == true) ? this.showstore = true : this.showstore = false;
@@ -448,46 +322,7 @@ export default {
 
 
     },
-    // onreportchange(e) {
-    //   let input = e.target;
-    //   // alert(input.value);
-    //   this.type_report = input.value;
-
-    //   if (input.value == 1) {
-    //     this.showcustomer = true;
-    //     (this.customerselected = 1),
-    //       // -------------------------------------
-    //       (this.productselected = 0),
-    //        this.storeselected=0,
-    //       // -------------------------------------
-
-    //       (this.showproduct = false);
-    //      this.showstore = false;
-    //   }
-
-    //   if (input.value == 2) {
-    //     this.showproduct = true;
-    //     (this.productselected = 1),
-    //       // -------------------------------------
-    //       (this.customerselected = 0),
-    //        this.storeselected=0,
-    //       // -------------------------------------
-
-    //       (this.showcustomer = false);
-    //      this.showstore = false;
-    //   }
-
-    //   if (input.value == 3) {
-    //     this.showstore = true;
-    //      this.storeselected=1,
-    //     // -------------------------------------
-    //     (this.customerselected = 0),
-    //       (this.productselected = 0),
-    //       // -------------------------------------
-    //       (this.showcustomer = false);
-    //     this.showproduct = false;
-    //   }
-    // },
+    
     Search() {
 
       this.axios
@@ -516,37 +351,7 @@ export default {
   },
 };
 </script>
-<style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
 
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style>
 <style scoped>
 h2,
 .h2 {

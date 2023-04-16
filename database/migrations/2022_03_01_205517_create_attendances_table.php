@@ -15,13 +15,14 @@ class CreateAttendancesTable extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->Increments('id');
-
+             
+         
             $table->unsignedInteger('staff_id');
             $table->foreign('staff_id')->references('id')->on('staff');
             $table->date('attendance_date');
-            $table->string('attendance_status');
-            $table->time('check_in');
-            $table->time('check_out');
+            // $table->string('attendance_status');
+            // $table->time('check_in')->nullable();
+            // $table->time('check_out')->nullable();
             $table->timestamps();
         });
     }

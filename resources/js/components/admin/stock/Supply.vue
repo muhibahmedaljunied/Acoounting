@@ -2,13 +2,7 @@
   <div class="wrapper">
     <div class="container-fluid">
       <div class="row">
-        <!--
-            *******************************************************************
-            *******************************************************************
-                                LISTA PRODUCTOS PRINCIPAL
-            *******************************************************************
-            *******************************************************************
-            -->
+
         <div class="col-md-10">
           <div class="panel panel-default sombra_caja_producto">
             <div class="panel-body">
@@ -23,27 +17,27 @@
               </div>
               <hr />
               <div class="row">
-                
 
-               
+
+
 
 
                 <!-- <div class="m-t-20"></div> -->
                 <div class="m-t-20 col-md-4">
                   <label for="cliente">اختر مورد</label>
 
-                
+
 
                   <div class="custom-search">
-                    <select v-model="supplier" id="supplier" class="custom-search-input" >
+                    <select v-model="supplier" id="supplier" class="custom-search-input">
                       <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name]">
                         {{ sup.name }}
                       </option>
                     </select>
 
 
-                    <button class="custom-search-botton" type="button" data-toggle="modal"
-                      data-target="#exampleModalSupplier" > <i class="fa fa-plus-circle"></i></button>
+                    <!-- <button class="custom-search-botton" type="button" data-toggle="modal"
+                      data-target="#exampleModalSupplier"> <i class="fa fa-plus-circle"></i></button> -->
 
 
                   </div>
@@ -55,31 +49,32 @@
                 <div class="m-t-30 col-md-4">
                   <label for="date">التاريخ</label><br />
 
-                  <input name="date" type="date" v-model="date" class="form-control"/>
+                  <input name="date" type="date" v-model="date" class="form-control" />
                 </div>
 
-                
+
 
 
 
                 <div class="col-md-4">
-                   
 
-                      <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"  id="agregar_productos"
-                      data-toggle="tooltip" data-placement="top" title="اضافه" >
-                      <i class="fa fa-plus-circle"></i></router-link>
-                    <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
-                      data-target="#modal_vaciar" >
-                      <i class="fa fa-trash"></i></a>
-                      <router-link  to="/supplylist"  class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="tooltip" data-placement="top" title="تفاصيل">
-                          <i class="fa fa-eye"></i>
-                        </router-link>
-                 
+
+                  <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"
+                    id="agregar_productos" data-toggle="tooltip" data-placement="top" title="اضافه">
+                    <i class="fa fa-plus-circle"></i></router-link>
+                  <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
+                    data-target="#modal_vaciar">
+                    <i class="fa fa-trash"></i></a>
+                  <router-link to="/supplylist" class="tn btn-info btn-sm waves-effect btn-agregar"
+                    data-toggle="tooltip" data-placement="top" title="تفاصيل">
+                    <i class="fa fa-eye"></i>
+                  </router-link>
+
                 </div>
               </div>
 
 
-              <div class="modal fade" id="exampleModalSupplier" tabindex="-1" role="dialog"
+              <!-- <div class="modal fade" id="exampleModalSupplier" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -118,21 +113,17 @@
                               <label for="address">العنوان</label>
                               <input v-model="address" type="text" name="address" id="address" class="form-control" />
                             </div>
-                            <!-- = -->
-                            <!-- <div class="m-t-20 col-md-6 col-xs-6"> -->
+
                             <div class="form-group">
                               <label for="cliente">رقم الحساب</label>
 
 
                               <div class="custom-search">
                                 <select v-model="supplier" id="supplier" class="custom-search-input">
-                                  <!-- <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name]">
-                      {{ sup.name }}
-                    </option> -->
+
                                 </select>
 
 
-                                <!-- <input id='product_tree' type="text" class="custom-search-input"> -->
 
                               </div>
 
@@ -143,7 +134,7 @@
                               <label for="status">اسم الحساب</label>
                               <input v-model="status" type="text" name="status" id="status" class="form-control" />
                             </div>
-                            <!-- = -->
+                       
                             <div class="form-group">
                               <label for="status">الحاله</label>
                               <input v-model="status" type="text" name="status" id="status" class="form-control" />
@@ -159,7 +150,7 @@
 
                   </div>
                 </div>
-              </div>
+              </div> -->
 
 
               <!-- end row -->
@@ -180,6 +171,7 @@
                           <th style="width: 60px">المواصفات والطراز</th>
 
                           <th style="width: 60px">الكميه الوارده</th>
+                          <th style="width: 60px">التكلفه</th>
                           <th style="width: 60px">العمليات</th>
                         </tr>
                       </thead>
@@ -202,22 +194,21 @@
                           <td style="width: 40px">{{ temporales.status }}</td>
                           <td style="width: 40px">{{ temporales.desc }}</td>
 
-                          <td>{{ temporales.tem_qty }}</td>
+                          <td>{{ temporales.tem_qty }} {{ temporales.unit }}</td>
+                          <td></td>
 
                           <td>
-                    <button
-                      type="button"
-                  
-                      class="btn btn-danger"
-                    >
-                      <i class="fa fa-trash"></i>
-                    </button>
-                    <router-link
-                     
-                      class="btn btn-success"
-                      ><i class="fa fa-edit"></i
-                    ></router-link>
-                  </td>
+                            <button data-toggle="modal" data-target="#modal_vaciar1"
+                              @click="show_modal(temporales.product_id)"
+                              class="tn btn-danger btn-sm waves-effect btn-agregar">
+                              <i class="fa fa-trash"></i></button>
+                            <!-- <button data-toggle="modal"
+                            data-target="#modal_update"   @click="show_modal(temporales.product_id)" class="tn btn-danger btn-sm waves-effect btn-agregar">
+                              <i class="fa fa-edit"></i></button> -->
+                            <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"
+                              data-toggle="tooltip" title="تعديل">
+                              <i class="fa fa-edit"></i></router-link>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -248,13 +239,14 @@
                       width: 100%;
                       padding-top: 0.5em;
                       padding-bottom: 0.5em;
-                      font-size: 18pt;
-                    " href="javascript:void" @click="payment(supplier)" class="btn btn-info waves-effect waves-light"
-                    id="pagar">
+                      font-size: 18pt;" href="javascript:void" @click="payment(supplier)"
+                    class="btn btn-info waves-effect waves-light" id="pagar">
                     حفظ
                   </a>
 
                 </div>
+
+
               </div>
             </div>
           </div>
@@ -263,59 +255,7 @@
 
 
       </div>
-      <!-- modal for tree -->
-      <!-- <div class="modal fade" id="exampleModal_tree_product" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <form method="post" @submit.prevent="add_store">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">شجره الاصناف</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
 
-
-                <div class="well" id="treeview_json_product"></div>
-              </div>
-
-              <div class="modal-footer">
-                <input class="modal-title-product" type="button" value="">
-              </div>
-
-
-            </div>
-          </form>
-        </div>
-      </div> -->
-
-      <!-- <div class="modal fade" id="exampleModal_tree_store" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <form method="post" @submit.prevent="add_store">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">شجره المخازن</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-
-                <div class="well" id="treeview_json_store"></div>
-
-              </div>
-              <div class="modal-footer">
-                <input class="modal-title-store" type="button" value="">
-              </div>
-
-            </div>
-          </form>
-        </div>
-      </div> -->
-      <!--  -->
       <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" style="display: none">
         <div class="modal-dialog modal-lg" style="width: 100%">
@@ -361,7 +301,7 @@
                         <!-- <input type="number" v-model="product[index]" class="form-control input_cantidad"
                           onkeypress="return valida(event)" /> -->
                         <div id="factura_producto" class="input_nombre">
-                          <select v-model="data_send.product[index]" name="type" id="type" class="form-control" required>
+                          <select v-model="product[index]" name="type" id="type" class="form-control" required>
                             <option v-for="(product, sindex) in products" :key="sindex" v-bind:value="product.id">
                               {{ product.text }}
                             </option>
@@ -373,7 +313,7 @@
 
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          <select v-model="data_send.status[index]" name="type" id="type" class="form-control" required>
+                          <select v-model="status[index]" name="type" id="type" class="form-control" required>
                             <option v-for="status in statuses" v-bind:value="status.id" value="">
                               {{ status.name }}
                             </option>
@@ -381,7 +321,7 @@
                         </div>
                       </td>
                       <td>
-                        <input type="text" v-model="data_send.desc[index]" id="desc" class="form-control"
+                        <input type="text" v-model="desc[index]" id="desc" class="form-control"
                           onkeypress="return valida(event)" />
                       </td>
                       <td>
@@ -390,7 +330,7 @@
                           onkeypress="return valida(event)" /> -->
 
                         <div id="factura_producto" class="input_nombre">
-                          <select v-model="data_send.store[index]" name="type" id="type" class="form-control" required>
+                          <select v-model="store[index]" name="type" id="type" class="form-control" required>
                             <option v-for="store in stores" v-bind:value="store.id" value="">
                               {{ store.text }}
                             </option>
@@ -402,7 +342,7 @@
                       </td>
 
                       <td>
-                        <input type="number" v-model="data_send.qty[index]" id="qty" class="form-control input_cantidad"
+                        <input type="number" v-model="qty[index]" id="qty" class="form-control input_cantidad"
                           onkeypress="return valida(event)" />
                       </td>
 
@@ -415,7 +355,7 @@
                         <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
                           <i class="fa fa-minus-circle"></i></button>
 
-                       
+
 
 
                         <!-- <input @change="
@@ -435,7 +375,7 @@
                   </tbody>
                 </table>
               </div>
-              <a href="javascript:void" @click="Add_newsupply()" class="btn btn-success"><span>تاكيد العمليه</span></a>
+              <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد العمليه</span></a>
             </div>
 
             <pagination align="center" :data="products" @pagination-change-page="list"></pagination>
@@ -578,6 +518,32 @@
         <!-- /.modal-dialog -->
       </div>
 
+      <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true" style="display: none" id="modal_vaciar1">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                هل انت متاكد انك تريد الحذف x
+              </button>
+              <h2 class="modal-title" id="mySmallModalLabel"></h2>
+            </div>
+            <div class="modal-body text-center">
+              <input type="hidden" id="vaciar1">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 12pt">
+                <i class="fa fa-thumbs-down"></i>
+              </button>
+              <button type="button" class="btn btn-success" id="confirmar_vaciar" style="font-size: 12pt"
+                @click="delete_one_temporale()">
+                <i class="fa fa-thumbs-up"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
 
       <div id="proceso_exitoso" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true" style="display: none">
@@ -621,82 +587,82 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../js/operation.js';
 export default {
   components: {
     pagination,
   },
+  mixins: [operation],
   data() {
 
     return {
 
-      data_send:{
-        product: [],
-        counts: {},
-        qty: [],
-        customer: [],
-      supplier: [],
-      status: [],
-      store: [],
-      return_qty: [],
-      desc:[],
-      },
-      text_message: '',
-      type: '',
-      type_refresh: '',
-      count: 1,
-      counts: {},
-      intostore: [],
-      intostore_id: [],
-      product_name: [],
-      product: [],
-      products: '',
-      word_search: '',
-      check_state: [],
-      qty: [],
-      availabe_qty: [],
+
+      // count: 1,
+      // counts: {},
+      // intostore: [],
+      // intostore_id: [],
+      // product_name: [],
+      // product: [],
+      // products: '',
+      // word_search: '',
+      // check_state: [],
+      // qty: [],
+      // availabe_qty: [],
       // price: [],
       // tax: [],
-      desc: [],
-      stores: '',
-      statuses: '',
+      // desc: [],
+      // stores: '',
+      // statuses: '',
+      // status: [],
+      // store: [],
+      // return_qty: [],
+      // detail: '',
+      // date: new Date().toISOString().substr(0, 10),
+      // customer: [],
+      // supplier: [],
+      // suppliers: '',
+      // customers: '',
+      // type_refresh: '',
+      remove: false,
+      text_message: '',
+      // type: '',
       total_quantity: 0,
       grand_total: 0,
       sub_total: 0,
       To_pay: 0,
       discount: 0,
       total_tax: 0,
-      customer: [],
-      supplier: [],
-      suppliers: '',
-      customers: '',
-      date: new Date().toISOString().substr(0, 10),
-      status: [],
-      store: [],
       temporale: 1,
       type_payment: 0,
       Way_to_pay_selected: 1,
       show: false,
       paid: 0,
       remaining: 0,
-      return_qty: [],
       note: '',
       not_qty: true,
       seen: false,
-      detail: '',
+
       id: '',
 
     }
     // return data;
   },
   mounted() {
+
+    // jtree.muhib();
     this.list();
     this.counts[0] = 1;
-    this.type = 'supply';
+    this.type = 'Supply';
     this.type_refresh = 'increment';
 
   },
 
   methods: {
+
+    show_modal(id) {
+      $("#vaciar1").val(id);
+    },
     addsupplier(event) {
       event.preventDefault();
       let currentObj = this;
@@ -731,22 +697,7 @@ export default {
 
       this.$router.go(-1);
     },
-    addComponent(index) {
-      // alert(index);
-      this.count += 1;
-      this.counts[index] = this.count;
-    },
-    disComponent(index) {
-      this.count -= 1;
-      this.$delete(this.counts, index);
-    },
-    delete_temporale() {
-      this.axios.post(`/supply/delete`).then((response) => {
-        toastMessage("تم الحذف بنجاح");
 
-        this.$router.go(0);
-      });
-    },
     get_search() {
       // alert(typeof(this.word_search));
       // alert(this.word_search);
@@ -778,11 +729,11 @@ export default {
             this.total_quantity = item.tem_qty + this.total_quantity;
           });
 
-          this.products = data.products;
+          // this.products = data.products;
           this.suppliers = data.suppliers;
 
-          this.stores = data.stores;
-          this.statuses = data.statuses;
+          // this.stores = data.stores;
+          // this.statuses = data.statuses;
 
           console.log(this.stores);
 
@@ -792,50 +743,11 @@ export default {
           console.error(response);
         });
     },
-    Add_newsupply() {
 
-      Add_new(this);
-      // this.$router.go(0);
-
-    },
-    payment() {
-      // console.log(product_name);
-      payment(this)
-    },
   },
 };
 </script>
-<style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
 
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style>
   
 <style scoped>
 th,

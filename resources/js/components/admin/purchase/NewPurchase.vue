@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="container-fluid">
       <div class="row">
-       
+
         <div class="col-md-9">
           <div class="panel panel-default sombra_caja_producto">
             <div class="panel-body">
@@ -17,10 +17,10 @@
               </div>
               <hr />
               <div class="row">
-              
+
 
                 <div class="col-md-4">
-                  <label for="cliente">اختار مورد</label>
+                  <label for="cliente">اختر مورد</label>
 
                   <select v-model="supplier" id="supplier" class="form-control">
                     <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name]">
@@ -32,28 +32,28 @@
                 <div class="col-md-4">
                   <label for="date">التاريخ</label><br />
 
-                  <input name="date" type="date" v-model="date" class="form-control"/>
+                  <input name="date" type="date" v-model="date" class="form-control" />
                 </div>
                 <div class="col-md-4">
-                  
 
-                    <!-- <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+
+                  <!-- <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
                       data-target=".bs-example-modal-lg">
                       <i class="fa fa-plus-circle"></i></a> -->
 
-                      <router-link to="/temporale_purchase" class="tn btn-info btn-sm waves-effect btn-agregar"  id="agregar_productos"
-                     >
-                      <i class="fa fa-plus-circle"></i></router-link>
+                  <router-link to="/temporale_purchase" class="tn btn-info btn-sm waves-effect btn-agregar"
+                    id="agregar_productos">
+                    <i class="fa fa-plus-circle"></i></router-link>
 
-                    <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
-                      data-target="#modal_vaciar">
-                      <i class="fa fa-trash"></i></a>
+                  <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
+                    data-target="#modal_vaciar">
+                    <i class="fa fa-trash"></i></a>
 
-                      <router-link  to="/listpurchase"  class="tn btn-info btn-sm waves-effect btn-agregar">
-                          <i class="fa fa-eye"></i>
-                        </router-link>
+                  <router-link to="/listpurchase" class="tn btn-info btn-sm waves-effect btn-agregar">
+                    <i class="fa fa-eye"></i>
+                  </router-link>
 
-             
+
                 </div>
               </div>
               <!-- end row -->
@@ -68,6 +68,8 @@
                       <thead>
                         <tr>
                           <th style="width: 40px">المنتج</th>
+
+
                           <th>الكميه</th>
                           <th>السعر</th>
                           <th>الحاله</th>
@@ -84,7 +86,8 @@
                       <tbody>
                         <tr v-for="temporales in temporale">
                           <td style="width: 40px">{{ temporales.product }}</td>
-                          <td>{{ temporales.tem_qty }}</td>
+
+                          <td>{{ temporales.tem_qty }} {{ temporales.unit }}</td>
                           <td>{{ temporales.price }}</td>
                           <td>{{ temporales.status }}</td>
                           <td>{{ temporales.store }}</td>
@@ -96,19 +99,17 @@
                             {{ temporales.total }}<small> </small>
                           </td> -->
                           <td>
-                    <button
-                      type="button"
-                  
-                      class="btn btn-danger"
-                    >
-                      <i class="fa fa-trash"></i>
-                    </button>
-                    <router-link
-                     
-                      class="btn btn-success"
-                      ><i class="fa fa-edit"></i
-                    ></router-link>
-                  </td>
+                            <button data-toggle="modal" data-target="#modal_vaciar1"
+                              @click="show_modal(temporales.product_id)"
+                              class="tn btn-danger btn-sm waves-effect btn-agregar">
+                              <i class="fa fa-trash"></i></button>
+                            <!-- <button data-toggle="modal"
+                            data-target="#modal_update"   @click="show_modal(temporales.product_id)" class="tn btn-danger btn-sm waves-effect btn-agregar">
+                              <i class="fa fa-edit"></i></button> -->
+                            <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"
+                              data-toggle="tooltip" title="تعديل">
+                              <i class="fa fa-edit"></i></router-link>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -118,7 +119,7 @@
             </div>
           </div>
         </div>
-       
+
         <div class="col-md-3">
           <div class="panel panel-default sombra_caja_producto">
             <!-- <div class="panel-heading">
@@ -149,6 +150,14 @@
                     <input type="hidden" id="subtotal_general_sf" name="subtotal_general_sf" class="form-control"
                       value="0.00" />
                   </div>
+                  <div class="col-md-12">  <label for="pagoPrevio">نوع العمله</label>
+                    <select name="forma_pago" class="form-control" id="forma_pago" 
+                      >
+                      <option v-bind:value="2">ريال يمني  </option>
+                      <option v-bind:value="1">دولار امريكي</option>
+                      <option v-bind:value="2">ريال سعودي </option>
+                    </select>
+                    </div>
                   <div class="col-md-12">&nbsp;</div>
                   <div class="col-md-12">
                     <label for="pagoPrevio">الخصم (%)</label>
@@ -157,14 +166,24 @@
                       onkeypress="return valida(event)" />
 
                   </div>
+                  <div class="col-md-12">
+                    <label for="pagoPrevio">مصروفات مباشره</label>
+                    <input type="number" :min="0" :max="99" :step="1"
+                      oninput="validity.valid||(value='');" class="form-control input_cantidad"
+                      onkeypress="return valida(event)" />
+
+                  </div>
+
                   <div class="col-md-12">&nbsp;</div>
                   <div class="col-md-12">
                     <label for="FormaPago">طريقه الدفع</label>
                     <select name="forma_pago" class="form-control" id="forma_pago" v-model="Way_to_pay_selected"
                       v-on:change="onwaychange">
                       text
-                      <option v-bind:value="1">cash Money</option>
-                      <option v-bind:value="2">Credit</option>
+                      <!-- <option v-bind:value="1">cash Money</option>
+                      <option v-bind:value="2">Credit</option> -->
+                      <option v-bind:value="1">نقد</option>
+                      <option v-bind:value="2">أجل</option>
                     </select>
                   </div>
                   <br />
@@ -178,9 +197,18 @@
                 <input type="hidden" id="items_totales" />
                 <input type="hidden" id="registros_totales" />
               </div>
+              <div class="col-md-12" >
+                <label for="pagoPrevio">الصندوق</label>
+                <select name="forma_pago" class="form-control" id="forma_pago" v-model="Way_to_pay_selected"
+                      v-on:change="onwaychange">
+                      <option ></option>
+                    </select>
+         
+              </div>
+
               <div class="col-md-12" v-show="show">
                 <label for="pagoPrevio">المدفوع</label>
-                <input type="text" id="paid" v-on:input="credit" class="form-control" v-model="(paid = To_pay)"
+                <input type="text" id="paid" v-on:input="credit" class="form-control" v-model="(paid = grand_total)"
                   style="color: red" />
                 <input type="hidden" id="items_totales" />
                 <input type="hidden" id="registros_totales" />
@@ -192,18 +220,18 @@
                 <input type="hidden" id="items_totales" />
                 <input type="hidden" id="registros_totales" />
               </div>
-              <div class="col-md-12" >
+              <div class="col-md-12">
                 <label for="pagoPrevio">تاريخ الاستحقاق</label>
-                <input type="date"  id="remaining" class="form-control" v-model="remaining" />
-        
+                <input type="date" id="remaining" class="form-control" v-model="remaining" />
+
               </div>
               <div class="col-md-12">&nbsp;</div>
               <div class="col-md-12">
                 <label for="total" class="text-left">TO PAY (USD):</label>
                 <div class="col-md-12 letra_calculator_total text-center" id="div_total">
-                  {{ To_pay }}
+                  {{ grand_total }}
                 </div>
-                <input type="hidden" name="total" id="total" v-model="To_pay" />
+                <input type="hidden" name="total" id="total" v-model="grand_total" />
               </div>
               <div class="col-md-12">
                 <div class="text-center">
@@ -212,8 +240,8 @@
                       padding-top: 0.5em;
                       padding-bottom: 0.5em;
                       font-size: 18pt;
-                    " href="javascript:void" @click="payment(supplier)"
-                    class="btn btn-info waves-effect waves-light" id="pagar">
+                    " href="javascript:void" @click="payment(supplier)" class="btn btn-info waves-effect waves-light"
+                    id="pagar">
                     <i class="fa fa-credit-card"></i></a>
                 </div>
               </div>
@@ -221,12 +249,12 @@
             </div>
           </div>
         </div>
-   
+
       </div>
 
-    
 
-      <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+
+      <!-- <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" style="display: none">
         <div class="modal-dialog modal-lg" style="max-width:1000px">
           <div class="modal-content">
@@ -234,14 +262,7 @@
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                 x
               </button>
-              <!-- <div class="col-md-8">
-                <h4 class="modal-title" id="myLargeModalLabel">Products</h4>
-                <small
-                  >The list shows the last
-                  <code style="font-size: 12pt">10</code> products registered in
-                  the system.</small
-                >
-              </div> -->
+           
               <div class="col-md-4">
                 <div class="col-sm-12">
 
@@ -256,9 +277,9 @@
                 <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
                   <thead>
                     <tr>
-                      <!-- <th>Code</th> -->
+                   
                       <th>المنتج</th>
-                      <!-- <th>المجموعه</th> -->
+                    
 
                       <th>الحاله</th>
                       <th>الموصفات والطراز</th>
@@ -272,9 +293,7 @@
                   </thead>
                   <tbody>
                     <tr v-for="index in count" :key="index">
-                      <!-- <tr v-for="(products, index) in product"> -->
-                      <!-- <tr v-for="(products, index) in product" :key="index"> -->
-                      <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
+                     
                       <td>
 
 
@@ -333,18 +352,7 @@
 
 
 
-                      <!-- <input v-model="check_state[index]" @change="add_one_purchase(
-                        index,
-                        products.id,
-                        qty[index],
-                        desc[index],
-                        products.price,
-                        products.name,
-                        storeselected[index],
-                        statusselected[index],
-                        tax[index]
-                      )" type="checkbox" class="btn btn-info waves-effect">
-                    -->
+             
                       <td v-if="index == 1">
 
                         <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent">
@@ -354,41 +362,28 @@
                           <i class="fa fa-minus-circle"></i></button>
 
 
-                        <!-- <input @change="
-                          add_one_supply(
-                            index,
-                            product.id,
-                            qty[index],
-                            desc[index],
-                            product.name,
-                            storeselected[index],
-                            statusselected[index],
-                            product
-                          )
-                        " type="checkbox" v-model="check_state[index]" class="btn btn-info waves-effect" /> -->
+                     
                       </td>
                     </tr>
 
 
 
 
-                    <!-- <a @click="$router.go(0)" class="btn btn-success"
-                    ><span> تراجع</span></a
-                  > -->
+                
                   </tbody>
                 </table>
               </div>
-              <a href="javascript:void" @click="Add_newpurchase()" class="btn btn-success"><span>تاكيد
+              <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
                   العمليه</span></a>
             </div>
             <pagination align="center" :data="products" @pagination-change-page="list"></pagination>
           </div>
-          <!-- /.modal-content -->
+       
         </div>
 
-        <!-- /.modal-dialog -->
-      </div>
-      <!-- /.modal -->
+
+      </div> -->
+
 
 
       <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -477,7 +472,7 @@
           </div>
         </div>
       </div>
-    
+
 
       <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true" style="display: none" id="modal_cero">
@@ -495,7 +490,7 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-      
+
 
       <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true" style="display: none" id="modal_vaciar">
@@ -511,7 +506,8 @@
               <button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 12pt">
                 <i class="fa fa-thumbs-down"></i>
               </button>
-              <button type="button" class="btn btn-success" id="confirmar_vaciar" style="font-size: 12pt">
+              <button @click="delete_temporale()" type="button" class="btn btn-success" id="confirmar_vaciar"
+                style="font-size: 12pt">
                 <i class="fa fa-thumbs-up"></i>
               </button>
             </div>
@@ -520,7 +516,32 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-     
+
+      <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true" style="display: none" id="modal_vaciar1">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                هل انت متاكد انك تريد الحذف x
+              </button>
+              <h2 class="modal-title" id="mySmallModalLabel"></h2>
+            </div>
+            <div class="modal-body text-center">
+              <input type="hidden" id="vaciar1">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 12pt">
+                <i class="fa fa-thumbs-down"></i>
+              </button>
+              <button type="button" class="btn btn-success" id="confirmar_vaciar" style="font-size: 12pt"
+                @click="delete_one_temporale()">
+                <i class="fa fa-thumbs-up"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
 
       <div id="proceso_exitoso" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true" style="display: none">
@@ -558,108 +579,105 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-     
+
     </div>
   </div>
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../js/operation.js';
 export default {
 
   components: {
     pagination,
   },
+  mixins: [operation],
   data() {
-   return  {
+    return {
 
-text_message: '',
-type: '',
-type_refresh: '',
-count: 1,
-counts: {},
-intostore: [],
-intostore_id: [],
-product_name: [],
-product: [],
-products: '',
-word_search: '',
-check_state: [],
-qty: [],
-availabe_qty: [],
-price: [],
-tax: [],
-desc: [],
-stores: '',
-statuses: '',
-total_quantity: 0,
-grand_total: 0,
-sub_total: 0,
-To_pay: 0,
-discount: 0,
-total_tax: 0,
-customer: [],
-supplier: [],
-suppliers: '',
-customers: '',
-date: new Date().toISOString().substr(0, 10),
-status: [],
-store: [],
-temporale: 1,
-type_payment: 0,
-Way_to_pay_selected: 1,
-show: false,
-paid: 0,
-remaining: 0,
-return_qty: [],
-note:'',
-not_qty: true,
-seen: false,
-detail:'',
-id:'',
-
-
-// ----------------------------
-// supply_detail: "",
-// supply_id: "",
-//---------------------------- 
-// cash_detail: 0,
-// cash_id: "",
-// ---------------------------------------------------
-// purchase_detail: 0,
-// purchase_id: "",
-// -----------------------------------
-// sale_detail: 0,
-// sale_id: "",
-// ---------------------------------
-
-// dateselected: new Date().toISOString().substr(0, 10),
+      text_message: '',
+      // type: '',
+      // type_refresh: '',
+      // count: 1,
+      // counts: {},
+      // product: [],
+      // products: '',
+      // word_search: '',
+      // check_state: [],
+      // qty: [],
+      // availabe_qty: [],
+      // price: [],
+      // tax: [],
+      // desc: [],
+      // stores: '',
+      // statuses: '',
+      // date: new Date().toISOString().substr(0, 10),
+      // status: [],
+      // store: [],
+      intostore: [],
+      intostore_id: [],
+    
+      total_quantity: 0,
+      grand_total: 0,
+      sub_total: 0,
+      To_pay: 0,
+      discount: 0,
+      total_tax: 0,
+      customer: [],
+      supplier: [],
+      suppliers: '',
+      customers: '',
+    
+      temporale: 1,
+      type_payment: 0,
+      Way_to_pay_selected: 1,
+      show: false,
+      paid: 0,
+      remaining: 0,
+      return_qty: [],
+      note: '',
+      not_qty: true,
+      seen: false,
+      // detail: '',
+      id: '',
 
 
+      // ----------------------------
+      // supply_detail: "",
+      // supply_id: "",
+      //---------------------------- 
+      // cash_detail: 0,
+      // cash_id: "",
+      // ---------------------------------------------------
+      // purchase_detail: 0,
+      // purchase_id: "",
+      // -----------------------------------
+      // sale_detail: 0,
+      // sale_id: "",
+      // ---------------------------------
 
-}
+      // dateselected: new Date().toISOString().substr(0, 10),
+
+
+
+    }
     // return data;
   },
 
   mounted() {
     this.list();
-    this.counts[0]=0;
-    this.type = 'purchase';
+    this.counts[0] = 0;
+    this.type = 'Purchase';
     this.type_refresh = 'increment';
 
 
   },
 
   methods: {
-    addComponent() {
-      this.count += 1;
-      this.counts[index]=this.count;
-
+    show_modal(id) {
+      $("#vaciar1").val(id);
     },
-    disComponent() {
-      this.count -= 1;
-      this.$delete(this.counts, index);
 
-    },
 
     take_discount() {
 
@@ -670,13 +688,7 @@ id:'',
 
 
     },
-    delete_temporale() {
-      this.axios.post(`/purchase/delete`).then((response) => {
-        toastMessage("تم الحذف بنجاح");
 
-        this.$router.go(0);
-      });
-    },
     get_search() {
       this.axios
         .post(`/purchase/newpurchasesearch`, { word_search: this.word_search })
@@ -732,16 +744,8 @@ id:'',
       this.To_pay = this.paid;
     },
 
-    Add_newpurchase() {
-
-      Add_new(this)
-
-    },
-    payment() {
-      payment(this)
 
 
-    },
   },
 };
 </script>

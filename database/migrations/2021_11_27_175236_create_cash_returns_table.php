@@ -20,7 +20,7 @@ class CreateCashReturnsTable extends Migration
             $table->foreign('cash_id')->references('id')->on('cashes');
 
            
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->date('date')->nullable();
             $table->string('note')->nullable();
 

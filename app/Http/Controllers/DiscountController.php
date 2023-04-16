@@ -32,8 +32,18 @@ class DiscountController extends Controller
 
         $discount_types = DiscountType::all();
         $staffs = Staff::all();
-        return response()->json(['discount_types' => $discount_types, 'staffs' => $staffs, 'discounts' => $discounts]);
+        return response()->json(['discount_types' => $discount_types, 'staffs' => $staffs, 'list' => $discounts]);
     }
+
+    public function select_staff(Request $request){
+
+        $staffs = staff::where('id', $request->id)->with(['discount','discount.discount_type'])->paginate(10);
+
+        return response()->json(['list'=>$staffs]);
+    
+    
+        }
+
 
     /**
      * Show the form for creating a new resource.

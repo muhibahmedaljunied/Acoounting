@@ -93,7 +93,7 @@ export default {
       supply_detail: 0,
       timestamp: "",
       user: "",
-
+      table:'supply_details',
       data_style: {
         'right': 'اسم المورد',
         'left': 0,
@@ -114,8 +114,8 @@ export default {
   },
   mounted() {
     let uri = `/invoice_supply/${this.$route.params.id}`;
-    this.axios.post(uri).then((response) => {
-      console.log(response.data.users.name);
+    this.axios.post(uri,{ table: this.table }).then((response) => {
+      console.log(response);
       this.user = response.data.users.name;
       this.supply_detail = response.data.supply_details;
       this.supplies = response.data.supplies;

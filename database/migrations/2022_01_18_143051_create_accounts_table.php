@@ -31,8 +31,8 @@ class CreateAccountsTable extends Migration
             $table->string('account_type')->nullable();
 
             $table->string('currency')->nullable();
-            $table->integer('type_branch');
-            $table->integer('status_account');
+            $table->integer('type_branch')->nullable();
+            $table->string('status_account');
             $table->timestamps();
             
             

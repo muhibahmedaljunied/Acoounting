@@ -3,29 +3,36 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="col-md-4">
-            <label for="status">اسم الموظف</label>
-            <select v-model="staffselected" name="type" id="type" class="form-control " required>
-              <option v-for="staff in staffs" v-bind:value="staff.id">
-                {{ staff.name }}
-              </option>
-            </select>
-          </div>
+
         <div class="card-header pb-0">
-          <!-- <div class="d-flex justify-content-between">
-            <span class="h2"> الاجازات</span>
-          </div> -->
-        
 
+          <h2> الاجازات</h2>
 
-
-
-
-
-
-          
         </div>
         <div class="card-body" id="printme">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="status">اسم الموظف</label>
+              <select @change="select_staff" v-model="staff_selected" name="type" id="type" class="form-control "
+                required>
+                <option v-for="staff in staffs" v-bind:value="staff.id">
+                  {{ staff.name }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="status"> من تأريخ</label>
+             <input v-model="from_date" type="date" name="" id="" class="form-control">
+            </div>
+
+            <div class="col-md-2">
+              <label for="status">الي تأريخ</label>
+              <input v-model="from_date" type="date" name="" id="" class="form-control">
+            </div>
+            <div class="col-sm-6 col-md-3" style="margin-top: auto;">
+              <a href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -38,11 +45,11 @@
                   <th class="wd-15p border-bottom-0">تاريخ بدء الاجازه</th>
                   <th class="wd-15p border-bottom-0">تاريخ انتهاء الاجازه</th>
 
-                  <th class="wd-15p border-bottom-0">العمليات</th>
+                  <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
                 </tr>
               </thead>
-              <tbody v-if="vacations && vacations.data.length > 0">
-                <tr v-for="(vacation, index) in vacations.data" :key="index">
+              <tbody v-if="list_data && list_data.data.length > 0">
+                <tr v-for="(vacation, index) in list_data.data" :key="index">
                   <td>{{ vacation.name }}</td>
 
                   <td>
@@ -85,18 +92,13 @@
 
 
 
-                  <td>
-                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
+                  <!-- <td>
                     <button type="button" @click="delete_holiday(vacation.id)" class="btn btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
 
-                    <router-link :to="{
-  name: 'edit_holiday',
-  params: { id: vacation.id },
-}" class="edit btn btn-success">
-                      <i class="fa fa-edit"></i></router-link>
-                  </td>
+
+                  </td> -->
                 </tr>
               </tbody>
               <tbody v-else>
@@ -106,144 +108,9 @@
               </tbody>
             </table>
           </div>
-          <pagination align="center" :data="vacations" @pagination-change-page="list"></pagination>
+          <pagination align="center" :data="list_data" @pagination-change-page="list"></pagination>
         </div>
-        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-          aria-hidden="true" style="display: none" id="addholiday">
-          <div class="modal-dialog modal-lg" style="max-width: 600%">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                  x
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="row row-sm">
-                  <div class="col-xl-12">
-                    <form method="post" @submit.prevent="submitForm">
-                      <div class="card">
-                        <div class="card-header pb-0">
-                          <div class="d-flex justify-content-between">
-                            <h4 class="card-title mg-b-0">
-                              <span class="h2"> الاجازات</span>
-                            </h4>
-                            <i class="mdi mdi-dots-horizontal text-gray"></i>
-                          </div>
-                        </div>
 
-                        <div class="card-body">
-                          <form>
-                            <div class="form-row">
-                              <div class="form-group col-md-2">
-                                <label for="inputState">الفرع</label>
-                                <select v-model="branchselected" id="inputState" class="form-control">
-                                  <option v-for="branch in branches" v-bind:value="branch.id">
-                                    {{ branch.name }}
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div class="form-group col-md-2">
-                                <label for="inputState">نوع المؤظف</label>
-                                <select v-model="staff_typeselected" id="inputState" class="form-control">
-                                  <option v-for="staff_type in staff_types" v-bind:value="staff_type.id">
-                                    {{ staff_type.name }}
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div class="form-group col-md-2">
-                                <label for="inputState">الوظيفه</label>
-                                <select @change="select_staff" v-model="jobselected" id="inputState"
-                                  class="form-control">
-                                  <option v-for="job in jobs" v-bind:value="job.id">
-                                    {{ job.name }}
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div class="form-group col-md-4">
-                                <label for="inputState">اسم المؤظف</label>
-                                <select v-model="staff_selected" id="inputState" class="form-control">
-                                  <option v-for="staff in staffs" v-bind:value="staff.id">
-                                    {{ staff.name }}
-                                  </option>
-                                </select>
-                              </div>
-
-                              <div class="form-group col-md-2">
-                                <label for="inputState">نوع الاجازه</label>
-                                <select v-model="vacation_typeselected" id="inputState" class="form-control">
-                                  <option v-for="vacation_type in vacation_types" v-bind:value="vacation_type.id">
-                                    {{ vacation_type.name }}
-                                  </option>
-                                </select>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                      <div class="card">
-                        <div class="card-body">
-                          <div class="form-row">
-                            <div class="form-group col-md-4" style="text-align: center">
-                              <div class="form-check">
-                                <div>
-                                  <label class="form-check-label" for="exampleRadios1">
-                                    تاريخ بدء الاجازه
-                                  </label>
-                                  <input v-model="start_date" type="date" class="form-control" name="exampleRadios" />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="form-group col-md-4" style="text-align: center">
-                              <div class="form-check">
-                                <div>
-                                  <label class="form-check-label" for="exampleRadios1">
-                                    تاريخ اتتها الاجازه
-                                  </label>
-                                  <input v-model="end_date" type="date" name="exampleRadios" class="form-control" />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="form-group col-md-4" style="text-align: center">
-                              <div class="form-check">
-                                <div>
-                                  <label class="form-check-label" for="exampleRadios1">
-                                    عدد الايام
-                                  </label>
-                                  <input v-model="days" type="number" name="exampleRadios" class="form-control" />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="form-group col-md-4" style="text-align: center">
-                              <div class="form-check">
-                                <div>
-                                  <label class="form-check-label" for="exampleRadios1">
-                                    رصيد الاجازات
-                                  </label>
-                                  <input v-model="days" type="number" name="exampleRadios" class="form-control" />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <button type="submit" class="btn btn-primary btn-lg btn-block">
-                        حفظ
-                      </button>
-                    </form>
-                  </div>
-                  <!--/div-->
-                </div>
-              </div>
-            </div>
-            <!-- /.modal-content -->
-          </div>
-
-          <!-- /.modal-dialog -->
-        </div>
       </div>
     </div>
     <!--/div-->
@@ -253,17 +120,18 @@
 
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../../js/staff/StaffData/staff_data.js';
 
 export default {
   components: {
     pagination,
   },
-
+  mixins: [operation],
   data() {
     return {
       // category: "yes",
 
-      vacations: {
+      list_data: {
         type: Object,
         default: null,
       },
@@ -280,7 +148,7 @@ export default {
       staff_typeselected: 1,
       vacation_typeselected: 1,
       staffselected: 1,
-
+      table: 'vacation',
       staff_on_change: "",
       vactions: "",
       jobs: "",
@@ -288,135 +156,31 @@ export default {
       staff_types: "",
       vacation_types: "",
       word_search: "",
+      from_date: new Date().toISOString().substr(0, 10),
+      into_date: new Date().toISOString().substr(0, 10),
     };
   },
   mounted() {
     this.list();
   },
   methods: {
-    Import() {
-      this.axios.post(`/CategoryImport`).then(({ data }) => {
-        console.log(data);
 
-        this.list();
-        toast.fire({
-          title: "تم الاستيراد بنجاح",
-          text: "Products are successfully exported.",
-          button: "Close", // Text on button
-          icon: "success", //built in icons: success, warning, error, info
-          timer: 3000, //timeOut for auto-close
-          buttons: {
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-            cancel: {
-              text: "Cancel",
-              value: false,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-          },
-        });
-      });
-    },
-    Export() {
-      this.axios.post(`/CategoryExport`).then((response) => {
-        toast.fire({
-          title: "تم التصدير بنجاح",
-          text: "Products are successfully exported.",
-          button: "Close", // Text on button
-          icon: "success", //built in icons: success, warning, error, info
-          timer: 3000, //timeOut for auto-close
-          buttons: {
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-            cancel: {
-              text: "Cancel",
-              value: false,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-          },
-        });
-        console.log(response.data.data);
-      });
-    },
     get_search(word_search) {
       this.axios
         .post(`/vacationsearch`, { word_search: this.word_search })
         .then(({ data }) => {
-          this.vacations = data;
+          this.list_data = data;
 
           // this.$root.logo = "Category";
         });
     },
-    delete_vaction(id) {
-      this.axios
-        .post(`delete_vacation/${id}`)
-        .then((response) => {
-          toastMessage("تم الحذف بنجاح");
 
-          this.list();
-          // this.$router.push('category')
-        })
-        .catch((error) => {
-          console.log(error.response);
 
-          if (error.response.status == 500) {
-            toast.fire({
-              title: " فشل",
-              text: error.response.data.message,
-              button: "Close", // Text on button
-              icon: "error", //built in icons: success, warning, error, info
-              timer: 5000, //timeOut for auto-close
-              buttons: {
-                confirm: {
-                  text: "OK",
-                  value: true,
-                  visible: true,
-                  className: "",
-                  closeModal: true,
-                },
-                cancel: {
-                  text: "Cancel",
-                  value: false,
-                  visible: true,
-                  className: "",
-                  closeModal: true,
-                },
-              },
-            });
-          }
-        });
-    },
-    select_staff() {
-      this.axios
-        .post(`/select_staff`, {
-          branch: this.branchselected,
-          staff_type: this.staff_typeselected,
-          job: this.jobselected,
-        })
-        .then((response) => {
-          console.log(response);
-          this.staff_on_change = response;
-        });
-    },
     list(page = 1) {
       this.axios
         .post(`/vacation?page=${page}`)
         .then(({ data }) => {
-          this.vacations = data.vacations;
+          this.list_data = data.list;
           this.vacation_types = data.vacation_types;
           this.staffs = data.staffs;
           this.jobs = data.jobs;
@@ -427,41 +191,7 @@ export default {
           console.error(response);
         });
     },
-    submitForm(e) {
-      e.preventDefault();
-      let currentObj = this;
-      const config = {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      };
-      // form data
-      let formData = new FormData();
 
-      formData.append("name", this.staff_selected);
-      formData.append("vacation_type", this.vacation_typeselected);
-      formData.append("start_date", this.start_date);
-      formData.append("end_date", this.end_date);
-      formData.append("days", this.days);
-
-      // send upload request
-      this.axios
-        .post("/store_vacation", formData, config)
-        .then(function (response) {
-          console.log("hhhhhhhhhhhhhhhhhhhhhhh");
-          console.log(response);
-          currentObj.success = response.data.success;
-          currentObj.filename = "";
-
-          e.preventDefault();
-          toastMessage("تم الاضافه بنجاح");
-        })
-        .catch(function (error) {
-          currentObj.output = error;
-        });
-
-      //  this.$router.go(-1);
-    },
 
 
   },

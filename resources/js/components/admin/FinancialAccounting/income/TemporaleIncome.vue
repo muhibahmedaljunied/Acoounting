@@ -7,7 +7,7 @@
                         <thead>
                             <tr>
 
-                                <th>المصروف</th>
+                                <th>الايراد</th>
 
 
                                 <!-- <th>الحاله</th>
@@ -34,7 +34,7 @@
                                                 {{ type.name }}
                                             </option>
                                         </select>
-                                      
+
                                     </div>
 
 
@@ -98,9 +98,25 @@
 
                                 <td>
                                     <input type="number" id="qty" v-model="qty[index]"
-                                        class="form-control input_cantidad" onkeypress="return valida(event)" /><span style="color:red;font-size: 15px;">{{ error_qty[0] }}</span> 
+                                        class="form-control input_cantidad" onkeypress="return valida(event)" /><span
+                                        style="color:red;font-size: 15px;">{{ error_qty[0] }}</span>
                                 </td>
+                                <td>
 
+
+                                    <div id="factura_producto" class="input_nombre">
+                                        <select v-model="expence_type[index]" name="type" id="type" class="form-control"
+                                            required>
+                                            <option v-for="(type, sindex) in expence_types" :key="sindex"
+                                                v-bind:value="type.id">
+                                                {{ type.name }}
+                                            </option>
+                                        </select>
+
+                                    </div>
+
+
+                                </td>
 
                                 <td v-if="index == 1">
 
@@ -115,6 +131,16 @@
 
 
 
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="10">
+                                    <div class="m-t-30 col-md-12">
+                                        <label for="date">الاجمالي</label><br />
+
+                                        <input name="date" type="number" v-model="total" class="form-control" readonly/>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -175,8 +201,8 @@ export default {
 
         return {
 
-            error_qty:'',
-    //   error_expence_type:'',
+            error_qty: '',
+            //   error_expence_type:'',
             expence_type: [],
             qty: [],
             counts: {},
@@ -223,7 +249,7 @@ export default {
     },
 
     methods: {
-       
+
 
 
         list(page = 1) {
@@ -261,7 +287,7 @@ export default {
 
                 })
                 .then(function (response) {
-                 
+
                     // if (response.data.message != 0) {
                     //     toastMessage("تم التحويل بنجاح");
                     //     this.$router.go(0);
@@ -275,11 +301,11 @@ export default {
                 })
                 .catch(error => {
                     //    console.error(error)
-                       
+
                     //    this.error_expence_type = error.response.data.error.expence_type
-                       this.error_qty = error.response.data.error.qty
-                       
-                     });
+                    this.error_qty = error.response.data.error.qty
+
+                });
 
             // this.$router.go(-1);
         },

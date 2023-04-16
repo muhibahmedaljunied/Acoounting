@@ -138,94 +138,8 @@
           </div>
         </div>
 
-        <!-- <div class="col-md-2">
-          <div class="panel panel-default sombra_caja_producto">
-            <div class="panel-body">
-              <div class="m-h-50"></div>
-
-              <div class="col-md-12">&nbsp;</div>
-              <div class="col-md-12">
-                <label for="pagoPrevio">اجمالي الكميه</label>
-                <input type="text" readonly="readonly" id="cantidad_total" class="form-control"
-                  v-model="total_quantity" />
-                <input type="hidden" id="items_totales" />
-                <input type="hidden" id="registros_totales" />
-              </div>
-
-              <div class="col-md-12">
-                <div class="text-center">
-                  <a style="
-                      width: 100%;
-                      padding-top: 0.5em;
-                      padding-bottom: 0.5em;
-                      font-size: 18pt;
-                    " href="javascript:void" @click="payment(supplier)" class="btn btn-info waves-effect waves-light"
-                    id="pagar">
-                    حفظ
-                  </a>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-
-
-
       </div>
-      <!-- modal for tree -->
-      <!-- <div class="modal fade" id="exampleModal_tree_product" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <form method="post" @submit.prevent="add_store">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">شجره الاصناف</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-
-
-                <div class="well" id="treeview_json_product"></div>
-              </div>
-
-              <div class="modal-footer">
-                <input class="modal-title-product" type="button" value="">
-              </div>
-
-
-            </div>
-          </form>
-        </div>
-      </div> -->
-
-      <!-- <div class="modal fade" id="exampleModal_tree_store" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <form method="post" @submit.prevent="add_store">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">شجره المخازن</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-
-                <div class="well" id="treeview_json_store"></div>
-
-              </div>
-              <div class="modal-footer">
-                <input class="modal-title-store" type="button" value="">
-              </div>
-
-            </div>
-          </form>
-        </div>
-      </div> -->
-      <!--  -->
+     
       <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" style="display: none">
         <div class="modal-dialog modal-lg" style="width: 100%">
@@ -254,96 +168,6 @@
 
 
       </div>
-
-      <!-- <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                x
-              </button>
-              <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="numeroProceso" class="control-label"></label>
-                    <input type="text" readonly="readonly" class="form-control" id="codigo_proceso" value="" />
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="cantidadProductos" class="control-label"></label>
-                    <input type="text" readonly="readonly" class="form-control" id="modal_cantidad_productos" />
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="descuento" class="control-label"></label>
-                    <input type="text" readonly="readonly" class="form-control" id="modal_descuento" />
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="formaPago" class="control-label">)</label>
-                    <input type="text" readonly="readonly" class="form-control" id="modal_forma_pago" />
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="subtotal" class="control-label">Total <small></small></label>
-                    <input type="text" readonly="readonly" class="form-control" id="modal_subtotal_cf" />
-                    <input type="hidden" readonly="readonly" class="form-control" id="modal_subtotal_sf" />
-                  </div>
-                </div>
-              </div>
-              <hr />
-              <div class="row text-center">
-                <div class="col-md-12">
-                  <label for="total" class="text-left">
-                    <h2>)</h2>
-                  </label>
-                  <div class="col-md-12 letra_calculator_total text-center" id="modal_div_total_modal_cf">
-                    0.00
-                  </div>
-                  <input type="hidden" id="modal_total_sf" />
-                </div>
-              </div>
-
-              <hr />
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group no-margin">
-                    <label for="comentario" class="control-label"></label>
-                    <textarea class="form-control autogrow" id="modal_comentario" style="
-                        overflow: hidden;
-                        word-wrap: break-word;
-                        resize: horizontal;
-                        height: 104px;
-                        resize: none;
-                      "></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal"></button>
-              <button type="button" class="btn btn-success waves-effect waves-light" id="procesarAhora">
-                <span id="loading_modal"></span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-
-
 
       <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true" style="display: none" id="modal_cero">
@@ -427,10 +251,12 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../../js/operation.js';
 export default {
     components: {
         pagination,
     },
+    mixins: [operation],
     data() {
 
         return {
@@ -454,25 +280,6 @@ export default {
          
        
 
-        // get_search() {
-        //     // alert(typeof(this.word_search));
-        //     // alert(this.word_search);
-        //     this.axios
-        //         .post(`/supply/newsupplysearch`, { word_search: this.word_search })
-        //         .then(({ data }) => {
-        //             console.log(data.products);
-        //             this.temporales = data.temporales;
-
-        //             this.temporale.forEach((item) => {
-        //                 this.total_quantity = item.tem_qty + this.total_quantity;
-        //             });
-
-        //             this.products = data.products;
-        //             this.suppliers = data.suppliers;
-
-        //             // this.stores = data;
-        //         });
-        // },
         list(page = 1) {
             this.axios
                 .post(`/expences?page=${page}`)
@@ -484,9 +291,6 @@ export default {
                     this.expences = data.expences;
                    
 
-                    // console.log(this.stores);
-
-                    // this.stores = data;
                 })
                 .catch(({ response }) => {
                     console.error(response);
@@ -497,37 +301,6 @@ export default {
     },
 };
 </script>
-<style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
-
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style>
   
 <style scoped>
 th,

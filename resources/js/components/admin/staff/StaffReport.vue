@@ -19,30 +19,30 @@
                       <ul class="nav panel-tabs main-nav-line">
                          <li class="nav-item">
                        <a href="#tab1" class="nav-link" data-toggle="tab"
-                            >بيانات الراتب</a
+                            > الحضور والغياب</a
                           >
                         
                         </li>
-                        <li class="nav-item">
+                      <li class="nav-item">
                       <a href="#tab2" class="nav-link" data-toggle="tab"
-                            >البيانات الشخصيه</a
+                            > التأخير والاتصراف المبكر</a
                           >
                         </li>
                      
                         <li class="nav-item">
                         <a href="#tab3" class="nav-link" data-toggle="tab"
-                            >الاجازات</a
+                            >البدلات</a
                           >
                         </li>
                      
 
-                         <li class="nav-item">
+                      <li class="nav-item">
                         <a href="#tab4" class="nav-link" data-toggle="tab"
-                            >كشف الرواتب</a
+                            >الاضافي</a
                           >
                         </li>
 
-                        <li class="nav-item">
+                             <!-- <li class="nav-item">
                         <a href="#tab5" class="nav-link" data-toggle="tab"
                             >الحضور والغياب</a
                           >
@@ -56,7 +56,7 @@
                         </li>
                         <li class="nav-item">
                           <a href="#tab8" class="nav-link" data-toggle="tab">القرض</a>
-                        </li>
+                        </li> -->
 
                       
                       
@@ -72,22 +72,22 @@
                     "
                   >
                     <div class="tab-content">
-                      <div class="tab-pane active" id="tab1"> <salary></salary></div>
+                      <div class="tab-pane active" id="tab1"> <attendance-report></attendance-report></div>
                     
-                      <div class="tab-pane" id="tab2">
-                             <personal-information></personal-information>
+                  <div class="tab-pane" id="tab2">
+                             <leave-report></leave-report>
                       </div>
-                        <div class="tab-pane" id="tab3">
-                             <holiday></holiday>
+                         <div class="tab-pane" id="tab3">
+                          <allowance-report></allowance-report>
              
                       </div>
 
-                         <div class="tab-pane" id="tab4">
-                             <salary-details></salary-details>
+                          <div class="tab-pane" id="tab4">
+                             <extra-report></extra-report>
              
                       </div>
 
-                      <div class="tab-pane" id="tab5">
+                         <!--<div class="tab-pane" id="tab5">
                              <attendance></attendance>
              
                       </div>
@@ -100,7 +100,7 @@
                       </div>
                       <div class="tab-pane" id="tab8">
                         <loan></loan>
-                      </div>
+                      </div> -->
                 
                     
                   </div>
@@ -126,34 +126,46 @@
   </div>
 </template>
 <script>
-import Salary from "./StaffData/Salary";
 
-import Holiday from "./StaffData/Holiday";
+import AttendanceReport from "./Report/AttendanceReport";
+import LeaveReport from "./Report/LeaveReport";
+import AllowanceReport from "./Report/AllowanceReport";
+import ExtraReport from "./Report/ExtraReport";
+// -------------
 
-import PersonalInformation from "./StaffData/PersonalInformation";
+// import Salary from "./StaffData/Salary";
 
-import SalaryDetails from "./StaffData/SalaryDetails";
-import Attendance from "./StaffData/Attendance";
+// import Holiday from "./StaffData/Holiday";
 
-import Extra from "./StaffData/Extra";
+// import PersonalInformation from "./StaffData/PersonalInformation";
 
-import Discount from "./StaffData/Discount";
+// import SalaryDetails from "./StaffData/SalaryDetails";
+// import Attendance from "./StaffData/Attendance";
 
-import Loan from "./StaffData/Loan";
+// import Extra from "./StaffData/Extra";
+
+// import Discount from "./StaffData/Discount";
+
+// import Loan from "./StaffData/Loan";
 
 
 
 
 export default {
   components: {
-    Salary,
-    Holiday,
-    PersonalInformation,
-    SalaryDetails,
-    Attendance,
-    Extra,
-    Discount,
-    Loan
+    AttendanceReport,
+    LeaveReport,
+    AllowanceReport,
+    ExtraReport,
+    // ---------------------
+    // Salary,
+    // Holiday,
+    // PersonalInformation,
+    // SalaryDetails,
+    // Attendance,
+    // Extra,
+    // Discount,
+    // Loan
   
   
 

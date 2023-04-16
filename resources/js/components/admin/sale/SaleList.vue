@@ -42,7 +42,14 @@
                     <td>{{ sale.paid }}</td>
                     <td>{{ sale.remaining }}</td>
                     <td>{{ sale.grand_total }}</td>
-                    <td>{{ sale.sale_status }}</td>
+                    <!-- <td>{{ sale.sale_status }}</td> -->
+                    <td>
+
+                      <span class="badge bg-warning" v-if="sale.payment_status == 'pendding'">معلقه</span>
+                      <span class="badge bg-success" v-if="sale.payment_status == 'paiding'">مدفوعه</span>
+                      <span class="badge bg-info" v-if="sale.payment_status == 'Partially'">مدفوعه جزئيا</span>
+
+                    </td>
 
                     <td>
 
@@ -143,7 +150,8 @@
                     <td>{{ sale_details.status }}</td>
                     <td>{{ sale_details.store }}</td>
 
-                    <td>{{ sale_details.qty }}</td>
+                    <!-- <td>{{ sale_details.qty }}</td>  -->
+                    <td>{{ sale_details.qty }} {{ sale_details.unit }}</td>
                     <td>{{ sale_details.price }}</td>
                     <td>{{ sale_details.total }}</td>
                     <!-- <td>{{ sale_details.qty_return }}</td> -->
@@ -187,9 +195,11 @@ export default {
       sale_detail: '',
       total: 0,
       word_search: "",
+      table: '',
     };
   },
   mounted() {
+    this.table = 'sale_details';
     this.list();
 
   },
@@ -200,7 +210,7 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1])
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
           .then((response) => {
 
             console.log(response.data);

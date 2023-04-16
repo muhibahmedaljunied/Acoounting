@@ -1,131 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=1">
+<title>Home</title>
+<link rel="stylesheet" type="text/css" href="css/virtual-select.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
+
+<style>
+    *,*:after,*:before{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body{
+	font-family: arial;
+	font-size: 16px;
+	margin: 0;
+	background: #0f4dff;
+	background: #003ce9;
+	background: #0276ad;
+
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+#multi_option{
+	max-width: 100%;
+	width: 350px;
+}
+label{
+	display:block;
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 5px;
+}
+.vscomp-toggle-button{
+	padding: 10px 30px 10px 10px;
+	border-radius: 5px;
+}
+
+</style>
 </head>
-
 <body>
-    muhib
-    <script>
-        // ===============================without calback=======================================================================================
-        // const movies = [
-        //         { title: `A New Hope`, body:`After Princess Leia, the leader of the Rebel Alliance, is held hostage by Darth Vader, Luke and Han Solo must free her and destroy the powerful weapon created by the Galactic Empire.`},
-        //         { title: `The Empire Strikes Back`, body: `Darth Vader is adamant about turning Luke Skywalker to the dark side. Master Yoda trains Luke to become a Jedi Knight while his friends try to fend off the Imperial fleet.` }
-        //     ]
 
-        // function getMovies(){
-        //     setTimeout(() => {
-        //         movies.forEach((movie, index) => {
-        //             console.log(movie.title)
-        //         })
-        //     }, 1000);
-        // }
-
-        // function createMovies(movie){
-        //     setTimeout(() => {
-        //         movies.push(movie)
-        //     }, 2000);
-        // }
-
-        // getMovies();
+<div>
+	<label>Multiple Select</label>
+	<select id="multi_option" multiple name="native-select" placeholder="Native Select" data-silent-initial-value-set="false">
+	  <option value="1">HTML</option>
+	  <option value="2">CSS</option>
+	  <option value="3">JavaScript</option>
+	  <option value="4">Python</option>
+	  <option value="5">JAVA</option>
+	  <option value="6">PHP</option>
+	</select>
+</div>
 
 
-        // createMovies({ title: `Return of the Jedi`, body:`Luke Skywalker attempts to bring his father back to the light side of the Force. At the same time, the rebels hatch a plan to destroy the second Death Star.` });
-
-
-        // ========================================with calback======================================================
-        // const movies = [
-        //     { title: `A New Hope` },
-        //     { title: `The Empire Strikes Back` }
-        // ]
-        // function getMovies() {
-        //     setTimeout(() => {
-        //         movies.forEach((movie, index) => {
-        //             console.log(movie.title)
-        //         })
-        //     }, 1000);
-        // }
-
-        // function createMovies(movie, callback) {
-        //     setTimeout(() => {
-        //         movies.push(movie);
-        //         callback();
-        //     }, 2000);
-        // }
-
-        // createMovies({
-        //     title: `Return of the Jedi`,
-        // }, getMovies);
-        // ==============================================with Promise =========================================================================
-        // const movies = [
-        //     { title: `A New Hope`, body: `After Princess Leia, the leader of the Rebel Alliance, is held hostage by Darth Vader, Luke and Han Solo must free her and destroy the powerful weapon created by the Galactic Empire.` },
-        //     { title: `The Empire Strikes Back`, body: `Darth Vader is adamant about turning Luke Skywalker to the dark side. Master Yoda trains Luke to become a Jedi Knight while his friends try to fend off the Imperial fleet.` }
-        // ]
-
-        // function getMovies() {
-        //     setTimeout(() => {
-        //         movies.forEach((movie, index) => {
-        //             console.log(movie.title)
-        //         })
-        //     }, 1000);
-        // }
-
-        // function createMovies(movie) {
-        //     return new Promise((resolve, reject) => {
-        //         setTimeout(() => {
-        //             movies.push(movie);
-
-        //             const error = false;
-
-        //             if (!error) {
-        //                 resolve();
-        //             }
-        //             else {
-        //                 reject('Error: Something went wrong!')
-        //             }
-        //         }, 2000);
-        //     })
-        // }
-
-        // createMovies({ title: `Return of the Jedi`, body: `Luke Skywalker attempts to bring his father back to the light side of the Force. At the same time, the rebels hatch a plan to destroy the second Death Star.` })
-        //     .then(getMovies);
-
-        // ========================================================================================
-        function f() {
-
-
-            console.log("Data driven successfully");
-
-
-
-        }
-        function request() {
-            console.log("muhib");
-            return 1;
-        }
-        function one(apioptions, callback) {
-
-            let res = 0;
-            setTimeout(() => {
-                res = request()
-
-                callback();
-
-            }, 2000);
-
-
-
-        }
-
-
-        one({ url: "http://localhost:8000", method: "GET" }, f)
-        // f()
-
-    </script>
+<script type="text/javascript" src="js/virtual-select.min.js"></script>
+<script type="text/javascript">
+	VirtualSelect.init({ 
+	  ele: '#multi_option' 
+	});
+</script>
 </body>
-
 </html>

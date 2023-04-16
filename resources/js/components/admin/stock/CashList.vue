@@ -216,6 +216,7 @@
         operationselected: [],
         word_search: "",
         cash_detail: "",
+        table:'cash_details',
       };
     },
     mounted() {
@@ -232,7 +233,7 @@
 
         this.axios
           .post(
-            this.operationselected[index][0] + this.operationselected[index][1]
+            this.operationselected[index][0] + this.operationselected[index][1],{ table: this.table }
           )
           .then((response) => {
             this.cash_detail = response.data.cash_details;

@@ -45,16 +45,11 @@
 
 
                 <div class="custom-search">
-                  <select v-model="supplier" id="supplier" class="custom-search-input">
-                    <!-- <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name]">
-                      {{ sup.name }}
-                    </option> -->
-                  </select>
 
+                  <input :id="'Supplier_account_tree_id'+indexselected" type="text" class="custom-search-input">
+                  <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(indexselected)"
+                    data-target="#exampleModalaccount"> <i class="fa fa-plus-circle"></i></button>
 
-                  <!-- <input id='product_tree' type="text" class="custom-search-input"> -->
-                  <button class="custom-search-botton" type="button" data-toggle="modal"
-                    data-target="#exampleModalProduct"> <i class="fa fa-plus-circle"></i></button>
                 </div>
 
 
@@ -62,7 +57,7 @@
               </div>
               <div class="form-group">
                 <label for="status">اسم الحساب</label>
-                <input v-model="status" type="text" name="status" id="status" class="form-control" />
+                <input :id = "'Supplier_account_tree'+indexselected" v-model="status" type="text" name="status"  class="form-control" />
               </div>
               <!-- = -->
               <div class="form-group">
@@ -75,7 +70,7 @@
             </form>
           </div>
         </div>
-        <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -87,7 +82,7 @@
               </div>
               <div class="modal-body">
 
-                <div class="well" id="treeview_json_product"></div>
+                <div class="well" id="treeview_json_account"></div>
 
               </div>
 
@@ -101,9 +96,18 @@
   <!-- /row -->
 </template>
 <script>
+import operation from '../../../../js/operation.js';
+import tree from '../../../../js/tree/tree.js';
 export default {
+  mixins: [
+        operation,
+        tree
+    ],
   data() {
     return {
+  
+      indexselected:0,
+      type:'',
       error_name:'',
       error_email:'',
       name: "",
@@ -112,10 +116,15 @@ export default {
       address: "",
       last_name: "",
       status: "",
+      type_of_tree:0,
+      jsonTreeData:'',
     };
   },
-  created() {
-    this.showtree();
+ 
+  mounted() {
+    this.type =  'Supplier';
+    this.showtree('account');
+   
   },
   methods: {
     addsupplier(event) {
@@ -156,167 +165,76 @@ export default {
 
       // this.$router.go(-1);
     },
-    showtree() {
+    // showtree() {
 
 
-      this.axios.post(`/tree_product`).then((response) => {
-        this.jsonTreeDataProduct = response.data.products;
+    //   this.axios.post(`/tree_account`).then((response) => {
+    //     this.jsonTreeDataProduct = response.data.products;
 
 
-        $('#treeview_json_product').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataProduct,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
+    //     $('#treeview_json_account').jstree({
+    //       core: {
+    //         themes: {
+    //           responsive: false,
+    //         },
+    //         // so that create works
+    //         check_callback: true,
+    //         data: this.jsonTreeDataaccount,
+    //       },
+    //       types: {
+    //         default: {
+    //           icon: "fa fa-folder text-primary",
+    //         },
+    //         file: {
+    //           icon: "fa fa-file  text-primary",
+    //         },
+    //       },
+    //       checkbox: {
+    //         three_state: false,
 
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-          contextmenu: {
-            items: contextmenu
-          },
-
-
-
-
-
-
-        }).on("changed.jstree", function (e, data) {
-
-          console.log(data.node.id);
-          $(`.modal-title-product`).val(data.node.id)
-          //  modal-title-store
-
-        });
-
-      });
-      this.axios.post(`/tree_store`).then((response) => {
-        this.jsonTreeDataStore = response.data.stores;
-
-
-        $('#treeview_json_store').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataStore,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-          contextmenu: {
-            items: contextmenu
-          },
+    //       },
+    //       state: {
+    //         key: "demo2"
+    //       },
+    //       search: {
+    //         case_insensitive: true,
+    //         show_only_matches: true
+    //       },
+    //       plugins: ["checkbox",
+    //         "contextmenu",
+    //         "dnd",
+    //         "massload",
+    //         "search",
+    //         "sort",
+    //         "state",
+    //         "types",
+    //         "unique",
+    //         "wholerow",
+    //         "changed",
+    //         "conditionalselect"],
+    //       contextmenu: {
+    //         items: contextmenu
+    //       },
 
 
 
 
 
 
-        }).on("changed.jstree", function (e, data) {
+    //     }).on("changed.jstree", function (e, data) {
 
-          console.log(data.node.id);
-          $(`.modal-title-store`).val(data.node.id)
-          //  modal-title-store
-        });
+    //       console.log(data.node.id);
+    //       $(`.modal-title-product`).val(data.node.id)
+    //       //  modal-title-store
 
-      });
-    },
+    //     });
+
+    //   });
+     
+    // },
   },
 };
 </script>
-<style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
-
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style>
   
 <style scoped>
 th,

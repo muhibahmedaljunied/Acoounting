@@ -14,4 +14,23 @@ class Product extends Model
 
 
     }
+
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class);
+    // }
+
+    public function units()
+    {
+
+        return $this->belongsToMany(Unit::class,'product_units', 'product_id', 'unit_id');
+
+    }
+
+
+    // public function unit()
+    // {
+    //     return $this->belongsTo(Unit::class);
+    // }
+
 }

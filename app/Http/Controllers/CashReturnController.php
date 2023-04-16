@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\TemporaleTrait;
-use App\Traits\ReturnTrait;
-use App\Traits\StoreTrait;
-use App\Traits\StockTrait;
-use App\Traits\StoreProductTrait;
+use App\Traits\Temporale\TemporaleTrait;
+use App\Traits\Return\ReturnTrait;
+use App\Traits\StoreProduct\StoreTrait;
+use App\Traits\Stock\StockTrait;
+use App\Traits\StoreProduct\StoreProductTrait;
 use Illuminate\Http\Request;
 use App\Models\CashReturn;
 use App\Models\CashReturnDetail;
@@ -135,25 +135,36 @@ class CashReturnController extends Controller
     }
 
 
-    public function return_cash_detail($id)
-    {
+    // public function return_detail($id)
+    // {
 
 
-        $return_details = DB::table('cashes')->where('cash_return_details.cash_return_id',$id)
+    //     $return_details = DB::table('cashes')->where('cash_return_details.cash_return_id',$id)
             
-            ->join('cash_returns', 'cash_returns.cash_id', '=', 'cashes.id')
-            ->join('cash_return_details', 'cash_returns.id', '=', 'cash_return_details.cash_return_id')
-           
+    //         ->join('cash_returns', 'cash_returns.cash_id', '=', 'cashes.id')
+    //         ->join('cash_return_details', 'cash_returns.id', '=', 'cash_return_details.cash_return_id')
+    //         ->join('products', 'cash_return_details.product_id', '=', 'products.id')
+    //         ->join('statuses', 'cash_return_details.status_id', '=', 'statuses.id')
+    //         ->join('stores', 'cash_return_details.store_id', '=', 'stores.id')            
+    //         ->select('cash_return_details.*', 'cash_return_details.quantity as qty_return', 'cash_returns.*','statuses.*', 'statuses.name as status', 'stores.*','stores.text as store', 'products.text as product')
+    //         ->get();
 
-            ->join('products', 'cash_return_details.product_id', '=', 'products.id')
-            ->join('statuses', 'cash_return_details.status_id', '=', 'statuses.id')
-            ->join('stores', 'cash_return_details.store_id', '=', 'stores.id')            
-            ->select('cash_return_details.*', 'cash_return_details.quantity as qty_return', 'cash_returns.*','statuses.*', 'statuses.name as status', 'stores.*','stores.text as store', 'products.text as product')
-            ->get();
 
-        return response()->json(['return_details' => $return_details]);
+    //         foreach ($return_details as $value) {
+
+    //             $units = DB::table('product_units')
+    //                 ->join('units', 'units.id', '=', 'product_units.unit_id')
+    //                 ->join('products', 'products.id', '=', 'product_units.product_id')
+    //                 ->where('product_units.product_id', $value->product_id)
+    //                 ->select('units.*','products.rate','product_units.unit_type')
+    //                 ->get();
+    
+    //             $value->units = $units;
+    //         } 
+
+    //     return response()->json(['return_details' => $return_details]);
         
-    }
+    // }
 
     public function return_invoice($id)
     {

@@ -187,7 +187,9 @@
   </div>
 </template>
 <script>
+import operation from '../../../../../js/operation.js';
 export default {
+  mixins: [operation],
   data() {
 
     return data;
@@ -216,7 +218,7 @@ export default {
       // this.$root.logo = "SupplyDetails";
 
 
-    this.type = 'return_supply';
+    this.type = 'SupplyReturn';
     this.type_refresh = 'decrement';
 
 
@@ -283,12 +285,6 @@ export default {
     
     },
 
-    Add_return() {
-   
-      // alert('ddddddddddd');
-   Add_return(this)
-
- },
 
   },
 };

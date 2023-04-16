@@ -231,6 +231,7 @@ export default {
 
       operationselected: [],
       word_search: "",
+      table:'supply_details',
     };
   },
   mounted() {
@@ -248,7 +249,7 @@ export default {
       if (this.operationselected[index][2] == 0 || this.operationselected[index][2] == 5 ) {
         this.axios
           .post(
-            this.operationselected[index][0] + this.operationselected[index][1]
+            this.operationselected[index][0] + this.operationselected[index][1],{ table: this.table }
           )
           .then((response) => {
             this.supply_detail = response.data.supply_details;

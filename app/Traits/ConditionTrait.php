@@ -13,7 +13,6 @@ trait ConditionTrait{
         $all[0] = $s1;
     }
   
-  
 
     if ($request->post('product_id') != 0) {
 
@@ -32,6 +31,12 @@ trait ConditionTrait{
 
         $s4 = ["$table.desc", $request->post('desc')];
         $all[3] = $s4;
+    }
+      
+    if ($request->post('unit_id') != 0) {
+
+        $s5 = ["$table.unit_id", $request->post('unit_id')];
+        $all[4] = $s5;
     }
 
 return $all;

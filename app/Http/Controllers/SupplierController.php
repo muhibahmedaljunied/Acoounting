@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use App\Models\Purchase;
 use App\Exports\SupplierExport;
 use App\Imports\SupplierImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -110,9 +111,27 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $purchases =  Purchase::where('supplier_id', $request->id)->with([
+            'payment_purchases' => function ($query) {
+                $query->select('*');
+            },
+            'purchase_returns' => function ($query) {
+                $query->select('*');
+            },
+            'payable_notes' => function ($query) {
+                $query->select('*');
+            }
+          
+        ])
+            ->paginate(10);
+
+
+             
+
+        
+        return response()->json(['purchases' => $purchases]);
     }
 
     /**

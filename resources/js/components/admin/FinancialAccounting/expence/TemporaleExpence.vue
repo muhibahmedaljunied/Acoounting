@@ -16,6 +16,7 @@
                                 <th>المخزن</th> -->
 
                                 <th> المبلغ</th>
+                                <th> طريقه الدفع</th>
                                 <th>اضافه</th>
                             </tr>
                         </thead>
@@ -24,8 +25,7 @@
 
                                 <td>
 
-                                    <!-- <input type="number" v-model="product[index]" class="form-control input_cantidad"
-    onkeypress="return valida(event)" />  -->
+
                                     <div id="factura_producto" class="input_nombre">
                                         <select v-model="expence_type[index]" name="type" id="type" class="form-control"
                                             required>
@@ -34,33 +34,8 @@
                                                 {{ type.name }}
                                             </option>
                                         </select>
-                                      
+
                                     </div>
-
-
-
-
-
-                                    <!-- <div class="custom-search">
-                               
-
-                                        <input :id="'supply_tree' + index" type="text" readonly
-                                            class="custom-search-input">
-                                        <input :id="'supply_tree_id' + index" type="hidden" v-model="product[index]"
-                                            class="custom-search-input">
-
-
-
-                                        <button class="custom-search-botton" type="button" data-toggle="modal"
-                                            data-target="#exampleModalProduct" @click="detect_index(index)"> <i
-                                                class="fa fa-plus-circle"></i></button>
-                                    </div> -->
-
-
-
-
-
-
 
 
                                 </td>
@@ -98,10 +73,25 @@
 
                                 <td>
                                     <input type="number" id="qty" v-model="qty[index]"
-                                        class="form-control input_cantidad" onkeypress="return valida(event)" /><span style="color:red;font-size: 15px;">{{ error_qty[0] }}</span> 
+                                        class="form-control input_cantidad" onkeypress="return valida(event)" /><span
+                                        style="color:red;font-size: 15px;">{{ error_qty[0] }}</span>
                                 </td>
 
+                                <td>
 
+
+                                    <div id="factura_producto" class="input_nombre">
+                                        <select v-model="paid_type[index]" name="type" id="type" class="form-control"
+                                            required>
+                                            <option>شيك</option>
+                                            <option>نقد</option>
+
+                                        </select>
+
+                                    </div>
+
+
+                                </td>
                                 <td v-if="index == 1">
 
                                     <button class="tn btn-info btn-sm waves-effect btn-agregar"
@@ -115,6 +105,18 @@
 
 
 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="m-t-30 col-md-12" >
+                                        <label for="date">الاجمالي</label><br />
+
+                                        <input style="text-align: center;color:red" v-model="total" name="date" type="number" class="form-control"
+                                            readonly />
+                                        <!-- {{ showshowOrderDetailsOrderDetails }} -->
+                                 
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -165,18 +167,19 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-
-// D:\xampp\htdocs\Warehouse_v_1.0.2 - Copy\resources\js\operation.js
+import operation from '../../../../../js/operation.js';
 export default {
     components: {
         pagination,
     },
+    mixins: [operation],
     data() {
 
         return {
-
-            error_qty:'',
-    //   error_expence_type:'',
+            paid_type: [],
+            total: 0,
+            error_qty: '',
+            //   error_expence_type:'',
             expence_type: [],
             qty: [],
             counts: {},
@@ -221,9 +224,41 @@ export default {
         this.type_refresh = 'increment';
 
     },
+    computed: {
 
+        showshowOrderDetailsOrderDetails: function () {
+
+            //     for (let [key, value] of Object.entries(this.counts)) {
+            //        console.log(key, value);
+            //        this.total = value;
+            //        // hg = value;
+            //    }
+
+            for (let index = 1; index <= this.count; index++) {
+
+                // this.total = this.qty[index];
+                if (this.qty[index]) {
+                    this.total = parseInt(this.qty[index]);
+                    if (index == 2) {
+                        this.total = parseInt(this.total) + parseInt(this.qty[index]);
+                    }
+                }
+
+
+
+            }
+
+
+
+
+
+
+
+            return this.total;;
+        },
+
+    },
     methods: {
-       
 
 
         list(page = 1) {
@@ -261,25 +296,15 @@ export default {
 
                 })
                 .then(function (response) {
-                 
-                    // if (response.data.message != 0) {
-                    //     toastMessage("تم التحويل بنجاح");
-                    //     this.$router.go(0);
-                    // } else {
-                    //     toastMessage("فشل", response.data.text);
-                    // }
-
-
-
 
                 })
                 .catch(error => {
                     //    console.error(error)
-                       
+
                     //    this.error_expence_type = error.response.data.error.expence_type
-                       this.error_qty = error.response.data.error.qty
-                       
-                     });
+                    this.error_qty = error.response.data.error.qty
+
+                });
 
             // this.$router.go(-1);
         },

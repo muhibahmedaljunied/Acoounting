@@ -3,42 +3,24 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="col-md-4" >
-            <label for="status">اسم الموظف</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-          <div class="col-md-4" >
-            <label for="status">الفرع</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
-          <div class="col-md-4" >
-            <label for="status">نوع الوظيفه</label>
-            <select name="status" id="status" class="form-control">
-
-
-              <option >
-           muhib
-              </option>
-
-            </select>
-          </div>
+        <div class="card-header">
+      
+          <h2>القرض</h2>
         </div>
         <div class="card-body" id="printme">
+          <div class="row">
+            <div class="col-md-4" >
+            <label for="status">اسم الموظف</label>
+          <select @change="select_staff" v-model="staff_selected" name="type" id="type" class="form-control " required>
+            <option v-for="staff in staffs" v-bind:value="staff.id">
+              {{ staff.name }}
+            </option>
+          </select>
+          </div>
+            <div class="col-sm-6 col-md-3" style="margin-top: auto;">
+              <a href="#" ><img src="/assets/img/search.png" alt="" style="width: 10%;">  </a>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -261,26 +243,26 @@
 
 <script>
 import pagination from "laravel-vue-pagination";
-
+import operation from '../../../../../js/staff/StaffData/staff_data.js';
 export default {
   components: {
     pagination,
   },
-
+  mixins: [operation],
   data() {
     return {
       // category: "yes",
 
-      loans: {
+      list_data: {
         type: Object,
         default: null,
       },
 
       staffs: "",
       staffselected: "",
-
+      staff_selected: 1,
       number_premium: "",
-     
+      table:'loan',
       date: "",
       quantity: "",
       value_premium: "",
@@ -302,45 +284,7 @@ export default {
           // this.$root.logo = "Category";
         });
     },
-    delete_loan(id) {
-      this.axios
-        .post(`delete_loan/${id}`)
-        .then((response) => {
-          toastMessage("تم الحذف بنجاح");
-
-          this.list();
-          // this.$router.push('category')
-        })
-        .catch((error) => {
-          console.log(error.response);
-
-          if (error.response.status == 500) {
-            toast.fire({
-              title: " فشل",
-              text: error.response.data.message,
-              button: "Close", // Text on button
-              icon: "error", //built in icons: success, warning, error, info
-              timer: 5000, //timeOut for auto-close
-              buttons: {
-                confirm: {
-                  text: "OK",
-                  value: true,
-                  visible: true,
-                  className: "",
-                  closeModal: true,
-                },
-                cancel: {
-                  text: "Cancel",
-                  value: false,
-                  visible: true,
-                  className: "",
-                  closeModal: true,
-                },
-              },
-            });
-          }
-        });
-    },
+ 
     list(page = 1) {
       this.axios
         .post(`/loan?page=${page}`)
@@ -352,46 +296,7 @@ export default {
           console.error(response);
         });
     },
-    submitForm(e) {
-      e.preventDefault();
-      let currentObj = this;
-      const config = {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      };
-      // form data
-      let formData = new FormData();
-      formData.append("date", this.date);
-      formData.append("staff", this.staffselected);
-      formData.append("quantity", this.quantity);
-      formData.append("value_premium", this.value_premium);
-       formData.append("number_premium", this.number_premium);
-      formData.append("note", this.note);
-
-
-     
-     
-  
-  
-
-    //   // send upload request
-      this.axios
-        .post("/store_loan", formData, config)
-        .then(function (response) {
-          currentObj.success = response.data.success;
-          currentObj.filename = "";
-
-          e.preventDefault();
-
-          toastMessage("تم الاضافه بنجاح");
-        })
-        .catch(function (error) {
-          currentObj.output = error;
-        });
-
-      this.$router.go(-1);
-    },
+ 
 
  
   },

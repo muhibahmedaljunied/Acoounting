@@ -83,39 +83,12 @@ export default {
             this.total =parseInt(item.total) + parseInt(this.total);
           });
 
-    //   this.$root.logo = "SupplyDetails";
     });
   },
   methods: {
-    // refund(e) {
-    //   this.axios.post("/order/refund",this.showOrderDetailsP).then((response) => {
-    //   //  console.log(response.data);
-    //   });
-    // },
+  
   },
-  computed: {
-    // showshowOrderDetailsOrderDetails() {
-    //   this.showOrderDetailsP = this.$store.getters.getProductInformation;
-    //   this.showOrderDetailsP.forEach((item) => {
-    //         // this.Total_quantity = item.total + this.Total;
-    //         this.Total = item.total + this.Total;
-    //         this.NET_TO_PAY = item.total + this.NET_TO_PAY;
-    //       });
-    //   return this.showOrderDetailsP;
-    // },
-    // showProductInformation() {
-    //   return this.$store.getters.getProductInformation;
-    // },
-    // showCustomerInformation() {
-    //   return this.$store.getters.getCustomerInformation;
-    // },
-    // showorderInformation() {
-    //   return this.$store.getters.getOrderInformation;
-    // },
-    // showpaymentInformation() {
-    //   return this.$store.getters.getPaymentInformation;
-    // },
-  },
+
 };
 </script>
 

@@ -25,7 +25,7 @@ class CreateSuppliesTable extends Migration
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
             $table->string('supplier_name')->nullable();
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->integer('qty_return')->default(0);
             $table->date('date');
 

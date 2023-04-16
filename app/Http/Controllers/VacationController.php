@@ -35,23 +35,18 @@ class VacationController extends Controller
 
 
 
-        $jobs = Job::all();
+        // $jobs = Job::all();
         $branches = Branch::all();
         $staff_types = StaffType::all();
         $staffs = Staff::all();
         $vacation_types = VacationType::all();
-        return response()->json(['vacations'=>$vacations,'branches'=>$branches,'staff_types'=>$staff_types,'jobs'=>$jobs,'staffs'=>$staffs,'vacation_types'=>$vacation_types]);
+        return response()->json(['list'=>$vacations,'branches'=>$branches,'staff_types'=>$staff_types,'staffs'=>$staffs,'vacation_types'=>$vacation_types]);
     }
 
    public function select_staff(Request $request){
 
-
-    $staff_selected = Staff::where([['staff.branch_id', $request->post('branch')],
-                             ['staff.staff_type_id',$request->post('staff_type')],
-                             ['staff.job_id', $request->post('job')]])
-    ->select('staff.name as staff','staff.id as staff_id')
-    ->get();
-    return response()->json($staff_selected);
+    $staffs = staff::where('id', $request->id)->with(['vacation','vacation.vacation_type'])->paginate(10);
+    return response()->json(['list'=>$staffs]);
 
 
     }

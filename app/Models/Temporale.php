@@ -17,18 +17,19 @@ class Temporale extends Model
 
   {
 
+    $array_unit_after_decode = $request['unit'][$value];
+    // return $array_unit_after_decode;
 
-    // return $request['product'];
 
 
-
-    if ($type == 'supply' || $type == 'purchase') {
-
+    if ($type == 'Supply' || $type == 'Purchase' || $type == 'Transfer' ) {
+      $array_unit_after_decode = json_decode($request['unit'][$value]);
       return $query->where([
         'product_id' => $request['product'][$value],
         'type_process' => $type,
         'store_id' => $request['store'][$value],
         'status_id' => $request['status'][$value],
+        'unit_id' => $array_unit_after_decode[0],
         'desc' => $request['desc'][$value]
       ]);
     } else {
@@ -37,7 +38,7 @@ class Temporale extends Model
         'product_id' => $request['product'][$value],
         'type_process' => $type,
         'store_id' => $request['store'][$value],
-        // 'shelve_id' => $value['shelve'], 
+        'unit_id' => $array_unit_after_decode[0],
         'status_id' => $request['status'][$value],
         'desc' => $request['desc'][$value]
       ]);

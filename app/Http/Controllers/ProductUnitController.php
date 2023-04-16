@@ -8,7 +8,7 @@ use App\Models\Staff;
 use DB;
 use Illuminate\Http\Request;
 
-class AbsenceController extends Controller
+class ProductUnitController extends Controller
 {
     /**
      * Display a listing of the resource.

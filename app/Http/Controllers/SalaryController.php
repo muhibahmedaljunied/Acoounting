@@ -31,7 +31,7 @@ class SalaryController extends Controller
 
 
 
-        return response()->json(['staff_allowances' => $staff_allowances,'allowance_types' => $allowance_types, 'staffs' => $staffs, 'jobs' => $jobs, 'branches' => $branches, 'staff_types' => $staff_types, 'allowances' => $allowances]);
+        return response()->json(['staff_allowances' => $staff_allowances, 'allowance_types' => $allowance_types, 'staffs' => $staffs, 'jobs' => $jobs, 'branches' => $branches, 'staff_types' => $staff_types, 'allowances' => $allowances]);
     }
 
     public function create()
@@ -39,13 +39,44 @@ class SalaryController extends Controller
         //
     }
 
+    public function select_staff(Request $request)
+    {
+
+        $salaries =  staff::where('id', $request->id)->with([
+            'payroll' => function ($query) {
+                $query->select('*');
+            },
+            'extra' => function ($query) {
+                $query->select('*');
+            },
+            'allowance' => function ($query) {
+                $query->select('*');
+            },
+            'discount' => function ($query) {
+                $query->select('*');
+            },
+            'extra.extra_type' => function ($query) {
+                $query->select('*');
+            },
+            'allowance.allowance_type' => function ($query) {
+                $query->select('*');
+            },
+            'discount.discount_type' => function ($query) {
+                $query->select('*');
+            }
+        ])
+            ->paginate(10);
+
+        return response()->json(['list' => $salaries]);
+    }
+
 
     public function store(Request $request)
     {
 
-        return response()->json($request->all());
+        // return response()->json($request->all());
 
-        
+
 
 
 
@@ -107,25 +138,14 @@ class SalaryController extends Controller
         return response()->json($request->all());
     }
 
-    public function salary_details()
+    public function salary_details(Request $request)
     {
 
-        // $salaries =  staff::with([
-        //     'extra' => function ($query) {
-        //         $query->join('extra_types', 'extras.extra_type_id', '=', 'extra_types.id')->select('*',DB::raw('sum(number_hours) as muh1'))->groupBy('extras.*');
-        //     },
-        //     'allowance' => function ($query) {
-        //         $query->join('allowance_types', 'allowances.allowance_type_id', '=', 'allowance_types.id')->select('*',DB::raw('sum(qty) as muh2')->groupBy('allowances.*'));
-        //     },
-        //     'discount' => function ($query) {
-        //         $query->join('discount_types', 'discounts.discount_type_id', '=', 'discount_types.id')->select('*',DB::raw('sum(quantity) as muh3')->groupBy('discounts.*'));
-        //     }
-        // ])
-        // ->paginate(10);
 
 
 
-        $salaries =  staff::with([
+
+        $salaries =  staff::where('id', $request->id)->with([
             'payroll' => function ($query) {
                 $query->select('*');
             },
@@ -138,6 +158,9 @@ class SalaryController extends Controller
             'discount' => function ($query) {
                 $query->select('*');
             },
+            'advance' => function ($query) {
+                $query->select('*');
+            },
             'extra.extra_type' => function ($query) {
                 $query->select('*');
             },
@@ -146,15 +169,40 @@ class SalaryController extends Controller
             },
             'discount.discount_type' => function ($query) {
                 $query->select('*');
-            }
+            },
+
         ])
             ->paginate(10);
 
 
 
-            $staffs = Staff::all();
+        $staffs = Staff::all();
 
-        return response()->json(['salaries' => $salaries,'staffs'=>$staffs]);
+        return response()->json(['list' => $salaries, 'staffs' => $staffs]);
+    }
+
+    public function salary()
+    {
+
+      
+
+        $salaries = DB::table('staff')
+            ->join('payrolls', 'payrolls.staff_id', '=', 'staff.id')
+            ->select('payrolls.*', 'staff.*')
+            ->paginate(100);
+
+        foreach ($salaries as $value) {
+
+
+
+            $value->total = ($value->salary + $value->total_allowance + $value->total_extra) - ($value->total_advance + $value->total_discount);
+        }
+
+
+
+
+
+        return response()->json(['list' => $salaries]);
     }
 
 

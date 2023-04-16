@@ -16,7 +16,7 @@ class CreateSalesTable extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->Increments('id');
             $table->unsignedInteger('customer_id');
-            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->text('customer_name')->nullable();
             $table->date('date')->nullable();
             // $table->text('total');
@@ -28,7 +28,7 @@ class CreateSalesTable extends Migration
        
             $table->integer('grand_total');
             
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->integer('qty_return')->default(0);
             $table->timestamps();
         });

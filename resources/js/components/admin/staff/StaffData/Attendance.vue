@@ -1,83 +1,76 @@
 <template>
-
     <div class="page-wrapper">
+        <div>
+
+
+            <h2>الحضور والغياب</h2>
+        </div>
         <div class="content container-fluid">
 
 
 
             <!-- Search Filter -->
             <div class="row filter-row">
-                <!-- <div class="col-sm-6 col-md-3">
-                        <div class="form-group form-focus">
-                            <input type="text" class="form-control floating">
-                            <label class="focus-label">Employee Name</label>
-                        </div>
-                    </div> -->
+
 
                 <div class="col-sm-6 col-md-3">
-                    <div class="form-group form-focus">
-                        <label class="focus-label">Employee Name</label>
-                        <input type="text" class="form-control floating">
 
-                    </div>
-                </div>
-
-
-                <!-- <div class="col-md-2">
-                    <label for="status">اسم الموظف</label>
-                    <select v-model="staffselected" name="type" id="type" class="form-control " required>
+                    <label class="focus-label">الموظف</label>
+                    <select @change="select_staff" v-model="staff_selected" name="type" id="type"
+                        class="select floating form-control " required>
+                        <option>-</option>
                         <option v-for="staff in staffs" v-bind:value="staff.id">
                             {{ staff.name }}
                         </option>
                     </select>
+
                 </div>
 
-                <div class="col-md-2">
-                    <label for="status">اسم الموظف</label>
-                    <select v-model="staffselected" name="type" id="type" class="form-control " required>
-                        <option v-for="staff in staffs" v-bind:value="staff.id">
-                            {{ staff.name }}
-                        </option>
+
+                <div class="col-sm-6 col-md-3">
+                    <label class="focus-label">الشهر</label>
+
+                    <select v-model="month_selected" class="select floating form-control">
+                        <option>-</option>
+                        <option v-bind:value="1">Jan</option>
+                        <option v-bind:value="2">Feb</option>
+                        <option v-bind:value="3">Mar</option>
+                        <option v-bind:value="4">Apr</option>
+                        <option v-bind:value="5">May</option>
+                        <option v-bind:value="6">Jun</option>
+                        <option v-bind:value="7">Jul</option>
+                        <option v-bind:value="8">Aug</option>
+                        <option v-bind:value="9">Sep</option>
+                        <option v-bind:value="10">Oct</option>
+                        <option v-bind:value="11">Nov</option>
+                        <option v-bind:value="12">Dec</option>
                     </select>
-                </div> -->
 
-                <div class="col-sm-6 col-md-3">
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating">
-                            <option>-</option>
-                            <option>Jan</option>
-                            <option>Feb</option>
-                            <option>Mar</option>
-                            <option>Apr</option>
-                            <option>May</option>
-                            <option>Jun</option>
-                            <option>Jul</option>
-                            <option>Aug</option>
-                            <option>Sep</option>
-                            <option>Oct</option>
-                            <option>Nov</option>
-                            <option>Dec</option>
-                        </select>
-                        <label class="focus-label">Select Month</label>
-                    </div>
                 </div>
                 <div class="col-sm-6 col-md-3">
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating">
-                            <option>-</option>
-                            <option>2019</option>
-                            <option>2018</option>
-                            <option>2017</option>
-                            <option>2016</option>
-                            <option>2015</option>
-                        </select>
-                        <label class="focus-label">Select Year</label>
-                    </div>
+                    <label class="focus-label">السنه</label>
+                    <select v-model="year_selected" class="select floating form-control">
+                        <option>-</option>
+                        <option v-bind:value="9">2023</option>
+                        <option v-bind:value="8">2022</option>
+                        <option v-bind:value="7">2021</option>
+                        <option v-bind:value="6">2020</option>
+                        <option v-bind:value="5">2019</option>
+                        <option v-bind:value="4">2018</option>
+                        <option v-bind:value="3">2017</option>
+                        <option v-bind:value="2">2016</option>
+                        <option v-bind:value="1">2015</option>
+                    </select>
+
                 </div>
-                <div class="col-sm-6 col-md-3">
-                    <a href="#" class="btn btn-success btn-block"> Search </a>
+                <div class="col-sm-6 col-md-3" style="margin-top: auto;">
+                    <a href="#" @click="search()"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
                 </div>
+
+
             </div>
+            <hr>
+            <hr>
             <!-- /Search Filter -->
 
             <div class="row">
@@ -85,163 +78,65 @@
                     <div class="table-responsive">
                         <table class="table table-striped custom-table table-nowrap mb-0">
                             <thead>
-                                <tr>
-                                    <th>Employee</th>
-                                    <th>1</th>
-                                    <th>2</th>
-                                    <th>3</th>
-                                    <th>4</th>
-                                    <th>5</th>
-                                    <th>6</th>
-                                    <th>7</th>
-                                    <th>8</th>
-                                    <th>9</th>
-                                    <th>10</th>
-                                    <th>11</th>
-                                    <th>12</th>
-                                    <th>13</th>
-                                    <th>14</th>
-                                    <th>15</th>
-                                    <th>16</th>
-                                    <th>17</th>
-                                    <th>18</th>
-                                    <th>19</th>
-                                    <th>20</th>
-                                    <th>22</th>
-                                    <th>23</th>
-                                    <th>24</th>
-                                    <th>25</th>
-                                    <th>26</th>
-                                    <th>27</th>
-                                    <th>28</th>
-                                    <th>29</th>
-                                    <th>30</th>
-                                    <th>31</th>
+                                <tr id="name_day">
+                                    <!-- <th>الموظف</th>
+                                    <th v-for="days in number_of_days">{{days}}</th>
+                                    -->
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(attendance, index) in attendances.data" :key="index">
+                                <tr v-for="(attendance, index) in list_data.data" :key="index">
                                     <td>
                                         <h5 class="table-avatar">
-                                            <a class="avatar avatar-xs" ><img alt=""
-                                                    src="assets/img/ecommerce/01.jpg"></a>
-                                            <a >{{ attendance.name }}</a>
+                                            <!-- <a class="avatar avatar-xs"><img alt="" src="assets/img/ecommerce/01.jpg"></a> -->
+                                            <a>{{ attendance.name }}</a>
                                         </h5>
                                     </td>
 
                                     <td v-for="attends in attendance.attendance">
-                                        <a href="javascript:void(0);" data-toggle="modal"
-                                            data-target="#attendance_info">{{ attends.attendance_status }}</a>
+
+                                        <a class="btn btn-info" v-if="attends.attendance_status == 1"
+                                            href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info">P
+                                        </a>
+
+                                        <a class="btn btn-danger" v-if="attends.attendance_status == 0"
+                                            href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info">A
+                                        </a>
+
+
+                                        <a class="btn btn-warning" v-if="attends.attendance_status == 2"
+                                            href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info">H
+                                        </a>
                                     </td>
 
 
-                                    <!-- <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td> -->
-                                    <!-- <td>
-                                           
-                                            <a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info">A</a>
-                                        </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td>
-                                            <div class="half-day">
-                                                <span class="first-off"><i class="fa fa-close text-danger"></i></span>
-                                                <span class="first-off"><a href="javascript:void(0);"
-                                                        data-toggle="modal" data-target="#attendance_info"><i
-                                                            class="fa fa-check text-success"></i></a></span>
-                                            </div>
-                                        </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td> -->
+
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <pagination align="center" :data="attendances" @pagination-change-page="list"></pagination>
+                    <pagination align="center" :data="list_data" @pagination-change-page="list"></pagination>
 
                 </div>
             </div>
         </div>
     </div>
 </template>
-  
+
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../../js/staff/StaffData/staff_data.js';
 
 export default {
     components: {
         pagination,
     },
-
+    mixins: [operation],
     data() {
         return {
             // category: "yes",
 
-            attendances: {
+            list_data: {
                 type: Object,
                 default: null,
             },
@@ -251,14 +146,14 @@ export default {
             end_date: "",
             days: 2,
             name: "",
-
+            table: 'attendance',
             staffs: "",
             jobselected: 1,
             branchselected: 1,
             staff_typeselected: 1,
             vacation_typeselected: 1,
             staffselected: 1,
-
+         
             staff_on_change: "",
             vactions: "",
             jobs: "",
@@ -270,21 +165,89 @@ export default {
     },
     mounted() {
         this.list();
+
+        // var days = function (month, year) {
+        //     return new Date(year, month, 0).getDate();
+        // };
+        // console.log("Days in July: " + days(7, 2012)); // July month
+        // console.log("<br>Days in September: " + days(9, 2012)); // September Month
+
+
+        // // -----------------
+
+        // const date_str = "07/20/2021";
+        // const date = new Date(date_str);
+        // const full_day_name = date.toLocaleDateString('default', { weekday: 'long' });
+        // // -> to get full day name e.g. Tuesday
+        // console.log(full_day_name);
+        // const short_day_name = date.toLocaleDateString('default', { weekday: 'short' });
+        // console.log(short_day_name);
+        // -> TO get the short day name e.g. Tue
+
     },
     methods: {
 
+        search() {
 
+            // axios.post(`/attendance/get_period/${id}`).then((response) => {
+
+            //     var arrayLength = response.data.attendance.length
+
+
+             this.get_day_name();
+
+            // });
+
+
+
+        },
+        get_day_name() {
+
+            var date_obj =new Date();
+            
+            var month =   date_obj.getMonth();
+            var year =   date_obj.getFullYear();
+
+            var html_head = `<th>الموظف</th>`;
+
+
+
+            for (var i = 1; i <= new Date(year, month, 0).getDate(); i++) {
+
+
+                const date_str = `${month}/${i}/${year}`
+                const date = new Date(date_str);
+                const full_day_name = date.toLocaleDateString('default', { weekday: 'short' });
+
+                if (full_day_name == 'Fri') {
+                    html_head = html_head + `<th>
+                                                <span>${i}</span> <hr> 
+                                                <span style='color:red'>${full_day_name}</span>
+                                                     
+                                            </th>`
+                } else {
+                    html_head = html_head + `<th>
+                                                <span>${i}</span> <hr> 
+                                                <span>${full_day_name}</span>
+                                                     
+                                            </th>`
+                }
+
+
+            }
+            $(`#name_day`).html(html_head);
+
+        },
         list(page = 1) {
+
+          this.get_day_name();
             this.axios
                 .post(`/attendance?page=${page}`)
                 .then(({ data }) => {
                     console.log(data.attendance)
-                    this.attendances = data.attendances;
-
-                    // this.staffs = data.staffs;
-                    // this.jobs = data.jobs;
-                    // this.branches = data.branches;
-                    // this.staff_types = data.staff_types;
+                    this.list_data = data.list;
+                    this.staffs = data.staffs;
+                   
                 })
                 .catch(({ response }) => {
                     console.error(response);
@@ -294,5 +257,4 @@ export default {
     },
 };
 </script>
-  
-  
+

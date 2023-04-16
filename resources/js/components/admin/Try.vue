@@ -1,213 +1,111 @@
 <template>
-
-
-     
-       
-        <div class="page-wrapper">
-            <div class="content container-fluid">
-
-              
-
-                <!-- Search Filter -->
-                <div class="row filter-row">
-                    <div class="col-sm-6 col-md-3">
-                        <div class="form-group form-focus">
-                            <input type="text" class="form-control floating">
-                            <label class="focus-label">Employee Name</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="form-group form-focus select-focus">
-                            <select class="select floating">
-                                <option>-</option>
-                                <option>Jan</option>
-                                <option>Feb</option>
-                                <option>Mar</option>
-                                <option>Apr</option>
-                                <option>May</option>
-                                <option>Jun</option>
-                                <option>Jul</option>
-                                <option>Aug</option>
-                                <option>Sep</option>
-                                <option>Oct</option>
-                                <option>Nov</option>
-                                <option>Dec</option>
-                            </select>
-                            <label class="focus-label">Select Month</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="form-group form-focus select-focus">
-                            <select class="select floating">
-                                <option>-</option>
-                                <option>2019</option>
-                                <option>2018</option>
-                                <option>2017</option>
-                                <option>2016</option>
-                                <option>2015</option>
-                            </select>
-                            <label class="focus-label">Select Year</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <a href="#" class="btn btn-success btn-block"> Search </a>
-                    </div>
-                </div>
-                <!-- /Search Filter -->
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped custom-table table-nowrap mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Employee</th>
-                                        <th>1</th>
-                                        <th>2</th>
-                                        <th>3</th>
-                                        <th>4</th>
-                                        <th>5</th>
-                                        <th>6</th>
-                                        <th>7</th>
-                                        <th>8</th>
-                                        <th>9</th>
-                                        <th>10</th>
-                                        <th>11</th>
-                                        <th>12</th>
-                                        <th>13</th>
-                                        <th>14</th>
-                                        <th>15</th>
-                                        <th>16</th>
-                                        <th>17</th>
-                                        <th>18</th>
-                                        <th>19</th>
-                                        <th>20</th>
-                                        <th>22</th>
-                                        <th>23</th>
-                                        <th>24</th>
-                                        <th>25</th>
-                                        <th>26</th>
-                                        <th>27</th>
-                                        <th>28</th>
-                                        <th>29</th>
-                                        <th>30</th>
-                                        <th>31</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a class="avatar avatar-xs" href="profile.html"><img alt=""
-                                                        src="assets/img/profiles/avatar-09.jpg"></a>
-                                                <a href="profile.html">John Doe</a>
-                                            </h2>
-                                        </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info">P</a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td>
-                                            <!-- <div class="half-day">
-                                                <span class="first-off"><a href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info"><i class="fa fa-check text-success"></i></a></span> 
-                                                <span class="first-off"><i class="fa fa-close text-danger"></i></span>
-                                            </div> -->
-                                            <a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info">A</a>
-                                        </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td>
-                                            <div class="half-day">
-                                                <span class="first-off"><i class="fa fa-close text-danger"></i></span>
-                                                <span class="first-off"><a href="javascript:void(0);"
-                                                        data-toggle="modal" data-target="#attendance_info"><i
-                                                            class="fa fa-check text-success"></i></a></span>
-                                            </div>
-                                        </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                        <td><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#attendance_info"><i
-                                                    class="fa fa-check text-success"></i></a></td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Page Content -->
-
-    
-
-        </div>
-    
-
-
-
+    <div>
+        <select name="basic[]" multiple="multiple" class="3col active">
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+        </select>
+    </div>
 </template>
+
+<script>
+export default {
+
+    data() {
+
+        return {
+
+
+
+        }
+
+    },
+    mounted() {
+
+        this.list();
+
+
+
+
+
+    },
+
+    methods: {
+
+
+
+
+
+        list() {
+
+            $('select[multiple].active.3col').multiselect({
+                columns: 3,
+                placeholder: 'Select States',
+                search: true,
+                searchOptions: {
+                    'default': 'Search States'
+                },
+                selectAll: true
+            });
+        },
+
+
+    },
+
+}
+</script>
+
+
+
+
+
 
 
 

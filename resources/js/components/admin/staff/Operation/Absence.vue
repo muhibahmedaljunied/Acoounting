@@ -19,9 +19,8 @@
               data-target="#addAb">
               <i class="fa fa-plus-circle"></i></a>
 
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="true" placeholder="بحث عن صنف" v-model="word_search"
-              @input="get_search()" />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="true" placeholder="بحث عن صنف" v-model="word_search" @input="get_search()" />
 
             <div></div>
           </div>
@@ -89,8 +88,8 @@
                 </div>
                 <div class="col-md-4">
                   <div class="col-sm-12">
-                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto"
-                      id="buscar_producto" v-model="word_search" @input="get_search()" />
+                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto" id="buscar_producto"
+                      v-model="word_search" @input="get_search()" />
                   </div>
                 </div>
               </div>
@@ -99,22 +98,14 @@
                   <div class="col-xl-12">
                     <div class="card">
                       <div class="card-header pb-0">
-                        <!-- <div class="d-flex justify-content-between">
-                          <h4 class="card-title mg-b-0">SIMPLE TABLE</h4>
-                          <i class="mdi mdi-dots-horizontal text-gray"></i>
-                        </div>
-                        <p class="tx-12 tx-gray-500 mb-2">
-                          Example of Valex Simple Table.
-                          <a href="">Learn more</a>
-                        </p> -->
+
                       </div>
                       <div class="card-body">
 
                         <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
 
                           <div class="table-responsive">
-                            <table class="table table-bordered text-right m-t-30"
-                              style="width: 100%; font-size: x-small">
+                            <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
                               <thead>
                                 <tr>
 
@@ -159,9 +150,7 @@
 
 
                                 </tr>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">
-                                  حفظ
-                                </button>
+
 
                               </tbody>
                             </table>
@@ -173,6 +162,10 @@
                   </div>
                   <!--/div-->
                 </div>
+              </div>
+              <div class="modal-footer">
+                <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
+                    العمليه</span></a>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -197,7 +190,6 @@ export default {
 
   data() {
     return {
-      // sportsData: ['Badminton', 'Cricket', 'Football', 'Golf', 'Tennis','muhib', 'ali', 'tamer', 'muhamed', 'basher'],
 
       absence_types: "",
       staffs: '',
@@ -240,64 +232,7 @@ export default {
     //           e.updateData(searchData, query);
     //       }
     //   },
-    Import() {
-      this.axios.post(`/CategoryImport`).then(({ data }) => {
-        console.log(data);
 
-        this.list();
-        toast.fire({
-          title: "تم الاستيراد بنجاح",
-          text: "Products are successfully exported.",
-          button: "Close", // Text on button
-          icon: "success", //built in icons: success, warning, error, info
-          timer: 3000, //timeOut for auto-close
-          buttons: {
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-            cancel: {
-              text: "Cancel",
-              value: false,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-          },
-        });
-      });
-    },
-    Export() {
-      this.axios.post(`/CategoryExport`).then((response) => {
-        toast.fire({
-          title: "تم التصدير بنجاح",
-          text: "Products are successfully exported.",
-          button: "Close", // Text on button
-          icon: "success", //built in icons: success, warning, error, info
-          timer: 3000, //timeOut for auto-close
-          buttons: {
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-            cancel: {
-              text: "Cancel",
-              value: false,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-          },
-        });
-        console.log(response.data.data);
-      });
-    },
 
     submitForm(e) {
       e.preventDefault();
@@ -331,7 +266,7 @@ export default {
         })
         .catch(function (error) {
           currentObj.output = error;
-        });
+        }); ث
 
       // this.$router.go(-1);
     },

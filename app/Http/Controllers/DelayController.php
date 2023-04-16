@@ -17,15 +17,15 @@ class DelayController extends Controller
      */
     public function index()
     {
-        $delays = DB::table('delays')
-        ->join('delay_types','delay_types.id', '=', 'delays.delay_type_id')
-        ->join('staff','staff.id', '=', 'delays.staff_id')
-        ->select('delays.*','delay_types.name as delay','staff.*')
-        ->paginate(10);
+        // $delays = DB::table('delays')
+        // ->join('delay_types','delay_types.id', '=', 'delays.delay_type_id')
+        // ->join('staff','staff.id', '=', 'delays.staff_id')
+        // ->select('delays.*','delay_types.name as delay','staff.*')
+        // ->paginate(10);
 
         $delay_types = DelayType::all();
         $staffs = Staff::all();
-        return response()->json(['delay_types'=>$delay_types,'staffs'=>$staffs,'delays'=>$delays]);
+        return response()->json(['delay_types'=>$delay_types,'staffs'=>$staffs]);
     }
 
     /**

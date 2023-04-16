@@ -14,8 +14,11 @@ class CreateAbsenceTypesTable extends Migration
     public function up()
     {
         Schema::create('absence_types', function (Blueprint $table) {
+
             $table->Increments('id');
+
             $table->string('name');
+            
             $table->timestamps();
         });
     }

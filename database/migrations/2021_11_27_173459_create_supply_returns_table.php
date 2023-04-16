@@ -20,7 +20,7 @@ class CreateSupplyReturnsTable extends Migration
             $table->foreign('supply_id')->references('id')->on('supplies');
 
            
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->date('date')->nullable();
             $table->string('note')->nullable();
 

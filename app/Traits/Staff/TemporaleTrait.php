@@ -5,10 +5,16 @@ namespace App\Traits\Staff;
 use App\Models\Advance;
 use App\Models\Allowance;
 use App\Models\Attendance;
+use App\Models\AbsenceSanction;
+use App\Models\DelaySanction;
+use App\Models\ExtraSanction;
+use App\Models\LeaveSanction;
 use App\Models\Extra;
+use App\Models\AttendanceDetail;
 use App\Models\Discount;
 use App\Models\Payroll;
 use App\Models\Vacation;
+use App\Models\Staff;
 use DB;
 
 trait TemporaleTrait
@@ -16,17 +22,11 @@ trait TemporaleTrait
 
     function add($request, $value, $type)
     {
+        $attendance_id  = 0 ;
+        // return $attendance_id;
         switch ($type) {
 
-
-            case 'attendance':
-                $temporale = new Attendance();
-                $temporale->staff_id =  $request['staff'][$value];
-                $temporale->attendance_date = $request['attendance_date'][$value];
-                $temporale->attendance_status =  $request['status_attendance'][$value];
-                $temporale->check_in =  $request['time_in'][$value];
-                $temporale->check_out =  $request['time_out'][$value];
-                break;
+            
 
             case 'extra':
                 $date1 = $request['start_time'][$value];
@@ -34,17 +34,18 @@ trait TemporaleTrait
                 $timestamp1 = strtotime($date1);
                 $timestamp2 = strtotime($date2);
                 $hour = abs($timestamp2 - $timestamp1) / (60 * 60) . " hour(s)";
-                $quantity = intval($hour)*intval(1000);
+                // $quantity = intval($hour)*intval(1000);
                 // -----------------------------------------------------------------------------------------------------------
                 $temporale = new Extra();
                 $temporale->staff_id = $request['staff'][$value];
                 $temporale->extra_type_id = $request['extra_type'][$value];
-                $temporale->start_date = $request['start_date'][$value];
-                $temporale->end_date = $request['end_date'][$value];
+                $temporale->date = $request['date'][$value];
+                // $temporale->start_date = $request['start_date'][$value];
+                // $temporale->end_date = $request['end_date'][$value];
                 $temporale->start_time = $request['start_time'][$value];
                 $temporale->end_time = $request['end_time'][$value];
                 $temporale->number_hours = intval($hour);
-                $temporale->quantity = $quantity;
+                // $temporale->quantity = $quantity;
                 // $temporale->note = $request['note'][$value];
                 break;
             case 'discount':
@@ -58,7 +59,7 @@ trait TemporaleTrait
             case 'allowance':
                 $temporale = new Allowance();
                 $temporale->staff_id = $request['staff'][$value];
-                $temporale->name = $request['allow'][$value];
+                $temporale->status = $request['allowance_status'][$value];
                 $temporale->allowance_type_id = $request['allowance_type'][$value];
                 $temporale->qty = $request['qty'][$value];
                 // $temporale->date = $request['date'][$value];
@@ -79,6 +80,48 @@ trait TemporaleTrait
                 $temporale->total_days = $request['days'];
                 // $temporale->total_days = $request->post('days')[$value];
                 break;
+            case 'absence_sanction':
+                $temporale = new AbsenceSanction();
+                $temporale->staff_id = $request['staff'][$value];
+                $temporale->absence_type_id = $request['absence'][$value];
+                $temporale->iteration = $request['iteration'][$value];
+                $temporale->sanction_discount_id = $request['discount_type'][$value];
+                $temporale->discount = $request['discount'][$value];
+                $temporale->sanctions = $request['sanction'][$value];
+                // $temporale->total_days = $request->post('days')[$value];
+                break; 
+            case 'delay_sanction':
+                $temporale = new DelaySanction();
+                $temporale->staff_id = $request['staff'][$value];
+                $temporale->delay_type_id = $request['delay'][$value];
+                $temporale->delay_part_id = $request['delay_part'][$value];
+                $temporale->iteration = $request['iteration'][$value];
+                $temporale->sanction_discount_id = $request['discount_type'][$value];
+                $temporale->discount = $request['discount'][$value];
+                $temporale->sanctions = $request['sanction'][$value];
+                break;    
+            case 'extra_sanction':
+                $temporale = new ExtraSanction();
+                $temporale->staff_id = $request['staff'][$value];
+                $temporale->extra_type_id = $request['extra'][$value];
+                $temporale->extra_part_id = $request['extra_part'][$value];
+
+                $temporale->iteration = $request['iteration'][$value];
+                $temporale->sanction_discount_id = $request['discount_type'][$value];
+                $temporale->sanctions = $request['sanction'][$value];
+                // $temporale->total_days = $request->post('days')[$value];
+                break;  
+            case 'leave_sanction':
+                $temporale = new LeaveSanction();
+                $temporale->staff_id = $request['staff'][$value];
+                $temporale->leave_type_id = $request['leave'][$value];
+                $temporale->leave_part_id = $request['leave_part'][$value];
+                $temporale->iteration = $request['iteration'][$value];
+                $temporale->sanction_discount_id = $request['discount_type'][$value];
+                $temporale->discount = $request['discount'][$value];
+                $temporale->sanctions = $request['sanction'][$value];
+                // $temporale->total_days = $request->post('days')[$value];
+                break;              
         }
 
 
@@ -97,11 +140,11 @@ trait TemporaleTrait
                 $data = ['total_discount' =>$payroll];
 
                 break;
-            case 'extra':
+            // case 'extra':
 
-                $payroll = DB::table('extras')->where('staff_id', $request['staff'][$value])->sum('quantity');
-                $data = ['total_extra' => $payroll];
-                break;
+            //     $payroll = DB::table('extras')->where('staff_id', $request['staff'][$value])->sum('quantity');
+            //     $data = ['total_extra' => $payroll];
+            //     break;
 
             case 'advance':
                 $payroll = DB::table('advances')->where('staff_id', $request['staff'][$value])->sum('quantity');

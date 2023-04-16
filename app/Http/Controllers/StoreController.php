@@ -38,7 +38,7 @@ class StoreController extends Controller
 
         $stores = Store::where('parent_id', null)->with('children')->get();
         $last_nodes = Store::where('parent_id', null)->select('stores.*')->max('id');
-        return response()->json(['stores' => $stores, 'last_nodes' => $last_nodes]);
+        return response()->json(['trees' => $stores, 'last_nodes' => $last_nodes]);
     }
 
     public function store_Store_first_level(Request $request)
@@ -74,7 +74,7 @@ class StoreController extends Controller
         }
         $Store->id = $request->post('store_id');
         $Store->rank = $request->post('rank');
-        $Store->status = $request->post('status');
+        $Store->type_branch = $request->post('status');
         $Store->save();
 
         return response()->json($request);

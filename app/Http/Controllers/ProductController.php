@@ -68,7 +68,7 @@ class ProductController extends Controller
 
         $products = Product::where('parent_id', null)->with('children')->get();
         $last_nodes = Product::where('parent_id', null)->select('products.*')->max('id');
-        return response()->json(['products' => $products, 'last_nodes' => $last_nodes]);
+        return response()->json(['trees' => $products, 'last_nodes' => $last_nodes]);
     }
 
 
@@ -158,20 +158,20 @@ class ProductController extends Controller
 
 
 
-        $validator = Validator::make($request->all(), [
-            'text' => 'required',
-            'hash_rate' => 'required',
-            'purchase_price' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'text' => 'required',
+        //     'hash_rate' => 'required',
+        //     'purchase_price' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['error' => $validator->errors()], 401);
+        // }
 
         // -------------------------------------------------------
 
 
-
+        // return response()->json($request->all());
         $file_name = '';
         if ($request->file('image') != 0) {
 
@@ -192,6 +192,7 @@ class ProductController extends Controller
         $product->rank = $request->post('rank');
         $product->product_minimum = $request->post('product_minimum');
         $product->status = $request->post('status');
+        $product->rate = $request->post('hash_rate');
 
         $product->image = $file_name;
         $product->save();
@@ -205,16 +206,21 @@ class ProductController extends Controller
             $product_unit->unit_id = $request->post('unit');
             $product_unit->product_id = $product->id;
             $product_unit->purchase_price = $request->post('purchase_price');
+            $product_unit->unit_type = 1;
+
             $product_unit->save();
 
 
             if ($request->post('retail_unit')) {
 
                 $product_unit = new ProductUnit();
-                $product_unit->unit_id = $request->post('retail_unit');
+                $product_unit->unit_id = $request->post('retail_unit'); 
+           
                 $product_unit->product_id = $product->id;
                 $product_unit->purchase_price = $request->post('purchase_price_for_retail_unit');
-                $product_unit->rate = $request->post('hash_rate');
+                // $product_unit->rate = $request->post('hash_rate');
+                $product_unit->unit_type = 0;
+
                 $product_unit->save();
 
                 // return response()->json($value);

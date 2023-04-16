@@ -19,13 +19,13 @@
               </div>
               <hr />
               <div class="row">
-             
+
                 <div class="col-md-4">
                   <label for="cliente">اختر عميل</label>
 
 
 
-                  <div class="custom-search">
+                  <!-- <div class="custom-search">
                     <select v-model="customer" id="customer" class="form-control">
                       <option v-for="cust in customers" v-bind:value="[cust.id, cust.name]">
                         {{ cust.name }}
@@ -33,12 +33,23 @@
                     </select>
 
 
-                    <!-- <input id='product_tree' type="text" class="custom-search-input"> -->
                     <button class="custom-search-botton" type="button" data-toggle="modal"
                       data-target="#exampleModalCustomer"> <i class="fa fa-plus-circle"></i></button>
+                  </div> -->
+
+                  <div class="custom-search">
+                    <select v-model="customer" id="customer" class="custom-search-input">
+                      <option v-for="cust in customers" v-bind:value="[cust.id, cust.name]">
+                        {{ cust.name }}
+                      </option>
+                    </select>
+
+
+                    <!-- <button class="custom-search-botton" type="button" data-toggle="modal"
+                      data-target="#exampleModalCustomer"> <i class="fa fa-plus-circle"></i></button>
+ -->
+
                   </div>
-
-
 
                 </div>
 
@@ -58,32 +69,32 @@
                   <input name="date" type="date" v-model="date" />
                 </div>
                 <div class="col-md-2">
-             
-             <!-- <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+
+                  <!-- <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
                data-target=".bs-example-modal-lg">
                <i class="fa fa-plus-circle"></i></a> -->
 
-               <router-link to="/temporale_cash" class="tn btn-info btn-sm waves-effect btn-agregar"  id="agregar_productos"
-               >
-               <i class="fa fa-plus-circle"></i></router-link>
+                  <router-link to="/temporale_cash" class="tn btn-info btn-sm waves-effect btn-agregar"
+                    id="agregar_productos">
+                    <i class="fa fa-plus-circle"></i></router-link>
 
-             <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
-               data-target="#modal_vaciar">
-               <i class="fa fa-trash"></i></a>
+                  <a class="tn btn-danger btn-sm waves-effect btn-agregar" data-toggle="modal"
+                    data-target="#modal_vaciar">
+                    <i class="fa fa-trash"></i></a>
 
-               <router-link  to="/cashlist"  class="tn btn-info btn-sm waves-effect btn-agregar">
-                   <i class="fa fa-eye"></i>
-                 </router-link>
+                  <router-link to="/cashlist" class="tn btn-info btn-sm waves-effect btn-agregar">
+                    <i class="fa fa-eye"></i>
+                  </router-link>
 
 
-      
-         </div>
+
+                </div>
               </div>
               <!-- end row -->
 
 
 
-              <div class="modal fade" id="exampleModalCustomer" tabindex="-1" role="dialog"
+              <!-- <div class="modal fade" id="exampleModalCustomer" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -95,13 +106,13 @@
                     </div>
                     <div class="modal-body">
 
-                  
+
 
                     </div>
 
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="row" style="font-size: 10pt">
                 <div class="col-md-12">
                   <div class="table-responsive">
@@ -114,6 +125,7 @@
                           <th style="width: 60px">الحاله</th>
                           <th style="width: 60px">المواصفات والطراز</th>
                           <th style="width: 60px">الكميه</th>
+                          <th style="width: 60px">التكلفه</th>
                           <th style="width: 60px">العمليات</th>
                         </tr>
                       </thead>
@@ -128,20 +140,13 @@
                           <td>{{ temporales.status }}</td>
                           <td>{{ temporales.desc }}</td>
                           <td>{{ temporales.tem_qty }}</td>
-                          <td>
-                    <button
-                      type="button"
-                  
-                      class="btn btn-danger"
-                    >
-                      <i class="fa fa-trash"></i>
-                    </button>
-                    <router-link
-                     
-                      class="btn btn-success"
-                      ><i class="fa fa-edit"></i
-                    ></router-link>
-                  </td>
+                          <td></td>
+
+                          <button type="button" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          <router-link class="btn btn-success"><i class="fa fa-edit"></i></router-link>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -236,26 +241,30 @@
                       <td>{{ index + 1 }}</td>
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          {{ product.product
+                          {{
+                            product.product
                           }}<input type="hidden" v-model="product.product_id" id="id" />
                         </div>
                       </td>
 
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          {{ product.status
+                          {{
+                            product.status
                           }}<input type="hidden" v-model="product.status_id" id="id" />
                         </div>
                       </td>
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          {{ product.desc
+                          {{
+                            product.desc
                           }}<input type="hidden" v-model="product.desc" id="id" />
                         </div>
                       </td>
                       <td>
                         <div id="factura_producto" class="input_nombre">
-                          {{ product.store
+                          {{
+                            product.store
                           }}<input type="hidden" v-model="product.store_id" id="id" />
                         </div>
                       </td>
@@ -266,6 +275,25 @@
                         <div id="factura_producto" class="input_nombre">
                           {{ product.availabe_qty }}
                         </div>
+
+                        <!-- <div v-for="temx in product.units">
+
+<span v-if="temx.unit_type == 1">
+  {{ parseInt(product.quantity / product.rate) }} {{ temx.name }}
+</span>
+<span v-if="temx.unit_type == 0">
+  <span
+    v-if="Math.round(((product.quantity / product.rate) - parseInt(product.quantity / product.rate)) * product.rate) != 0">
+    و
+    {{ Math.round(((product.quantity / product.rate) - parseInt(product.quantity / product.rate)) * product.rate) }}{{
+      temx.name
+    }}
+  </span>
+
+</span>
+</div> -->
+                    
+
                       </td>
 
                       <td>
@@ -300,7 +328,7 @@
                   </tbody>
                 </table>
               </div>
-              <a href="javascript:void" @click="Add_newcash()" class="btn btn-success"><span>تاكيد العمليه</span></a>
+              <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد العمليه</span></a>
             </div>
             <pagination align="center" :data="products" @pagination-change-page="list"></pagination>
           </div>
@@ -478,31 +506,27 @@
 
 <script>
 import pagination from "laravel-vue-pagination";
+import operation from '../../../../js/operation.js';
 export default {
   components: {
     pagination,
   },
+  mixins: [operation],
   data() {
-
-    return data;
+    return {
+      // customers: '',
+      // type: '',
+      // type_refresh: '',
+    }
   },
 
   mounted() {
     this.list();
-    this.type = 'cash';
+    this.type = 'Cash';
     this.type_refresh = 'decrement';
 
   },
   methods: {
-    delete_temporale() {
-      this.axios.post(`/cash/delete`).then((response) => {
-        toastMessage("تم الحذف بنجاح");
-
-        this.$router.go(0);
-      });
-    },
-
-
 
     get_search(word_search) {
       this.axios
@@ -530,7 +554,7 @@ export default {
             this.total_quantity = item.tem_qty + this.total_quantity;
           });
 
-          this.products = data.products;
+          // this.products = data.products;
           this.customers = data.customers;
 
         })
@@ -542,116 +566,10 @@ export default {
 
 
 
-    add_one_cash(
-      product_id,
-      qty = 0,
-      desc,
-      availabe_qty,
-      product_name,
-      store,
-      status,
-      index
-    ) {
 
-
-
-      if (this.check_state[index] == true) {
-
-        if (qty != 0) {
-
-
-          if (qty <= availabe_qty) {
-
-
-            this.counts[index] = index;
-
-            this.product[index] = product_id;
-            this.qty[index] = qty;
-            this.desc[index] = desc;
-            this.product_name[index] = product_name;
-
-            this.store[index] = store;
-            this.status[index] = status;
-
-            this.availabe_qty[index] = availabe_qty;
-
-
-          }
-        }
-
-
-      } else if (this.check_state[index] == false) {
-
-        this.$delete(this.counts, index);
-        this.$delete(this.product, index);
-        this.$delete(this.qty, index);
-        this.$delete(this.desc, index);
-        this.$delete(this.product_name, index);
-        this.$delete(this.store, index);
-        this.$delete(this.status, index);
-        this.$delete(this.availabe_qty, index);
-
-
-      }
-      // console.log(this.counts);
-      // console.log(this.product);
-      // console.log(this.qty);
-      // console.log(this.desc);
-      // console.log(this.product_name);
-      // console.log(this.store);
-      // console.log(this.status);
-      // console.log(this.availabe_qty);
-
-
-
-
-
-    },
-
-
-    Add_newcash() {
-      Add_new(this)
-
-    },
-    payment() {
-
-      payment(this)
-
-    },
   },
 };
 </script>
-<style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
-
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style>
   
 <style scoped>
 th,

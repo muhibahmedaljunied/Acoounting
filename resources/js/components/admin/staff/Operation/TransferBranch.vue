@@ -230,7 +230,8 @@
   <!-- /row -->
 </template>
 
-// <script>
+ <script>
+
 // import pagination from "laravel-vue-pagination";
 
 // export default {

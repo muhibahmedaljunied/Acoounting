@@ -29,7 +29,7 @@
                     <div class="card-body">
                       <!-- <div class="container"> -->
 
-                      <div class="well" id="treeview_json"></div>
+                      <div class="well" id="treeview_json_product"></div>
                       <!-- </div> -->
                     </div>
                   </div>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="form-group">
                   <label for="Product">اسم المنتج</label>
-                  <input v-model="text" type="text" name="Product" id="product" class="form-control" required /><span
+                  <input style = "background-color: beige;" v-model="text" type="text" name="Product" id="product" class="form-control" required /><span
                     style="color:red">{{ error_text[0] }}</span>
 
                 </div>
@@ -148,6 +148,12 @@
                     style="color:red">{{ error_hash_rate[0] }}</span>
                   </div>
 
+                  <div class="form-group">
+                    <label for="Product Minimum">مده الارجاع</label>
+                    <input v-model="period" type="number" name="Minimum" id="Minimum" class="form-control" />
+                   
+                  </div>
+
                 </div>
 
                 <!-- <div class="form-group">
@@ -172,7 +178,7 @@
               </div>
             </div>
             <div class="card-footer">
-              <button type="button" class="btn btn-primary btn-lg btn-block" @click="add_product"> حفظ </button>
+              <button type="button" class="btn btn-primary btn-lg btn-block" @click="addnode()"> حفظ </button>
             </div>
           </form>
         </div>
@@ -201,14 +207,24 @@
 
 <script>
 
+// import jtree from '../../../../js/jtree.js';
+import tree from '../../../../js/tree/tree.js';
 
 export default {
+  // mixins: [jtree],
+  mixins: [tree],
 
+  // mixins: [tree],
   data() {
     return {
       // show_retail_unit:false,
-
-      check_state: '',
+      // check_state: '',
+      // product_first_level: '',
+      // last_nodes: '',
+      // rank: 1,
+      // parent: 0,
+      // jsonTreeData: [],
+      // type_of_tree:0,
       error_text: '',
       error_hash_rate: '',
       error_purchase_price: '',
@@ -219,28 +235,28 @@ export default {
       purchase_price: '',
       purchase_price_for_retail_unit: '',
       product_minimum: '',
+      period:'',
       file: '',
       text: '',
       product: '',
       image: '',
       status: false,
-      // product_first_level: '',
-      last_nodes: '',
-      rank: 1,
-      parent: 0,
       id: '',
       trees: "",
       errors: "",
-      jsonTreeData: [],
+      
       add: 0,
+      
+      
 
 
     };
   },
   mounted() {
     // this.list();
+    this.type_of_tree=0;
     this.axios.post("/unit").then((response) => {
-      console.log(response);
+      // console.log(response);
       this.units = response.data.units;
 
 
@@ -251,167 +267,126 @@ export default {
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'product');
 
-    // initial();
-
-    this.showtree();
+    this.showtree('product');
   },
 
   methods: {
 
-    showtree() {
+    // showtree() {
 
-      let gthis = 'this';
-      this.axios.post(`/tree_product`).then((response) => {
-        this.trees = response.data.products;
-        this.jsonTreeData = response.data.products;
-        this.last_nodes = response.data.last_nodes;
+    //   let gthis = 'this';
+    //   this.axios.post(`/tree_product`).then((response) => {
+    //     this.trees = response.data.products;
+    //     this.jsonTreeData = response.data.products;
+    //     this.last_nodes = response.data.last_nodes;
 
-        // $(`#product_number_first_level`).val(response.data.last_nodes + 1);
-        $(`#product_number`).val(response.data.last_nodes + 1);
-
-
-        $('#treeview_json').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeData,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-          contextmenu: {
-            items: contextmenu
-          },
+    //     // $(`#product_number_first_level`).val(response.data.last_nodes + 1);
+    //     $(`#product_number`).val(response.data.last_nodes + 1);
 
 
+    //     $('#treeview_json').jstree({
+    //       core: {
+    //         themes: {
+    //           responsive: false,
+    //         },
+    //         // so that create works
+    //         check_callback: true,
+    //         data: this.jsonTreeData,
+    //       },
+    //       types: {
+    //         default: {
+    //           icon: "fa fa-folder text-primary",
+    //         },
+    //         file: {
+    //           icon: "fa fa-file  text-primary",
+    //         },
+    //       },
+    //       checkbox: {
+    //         three_state: false,
+
+    //       },
+    //       state: {
+    //         key: "demo2"
+    //       },
+    //       search: {
+    //         case_insensitive: true,
+    //         show_only_matches: true
+    //       },
+    //       plugins: ["checkbox",
+    //         "contextmenu",
+    //         "dnd",
+    //         "massload",
+    //         "search",
+    //         "sort",
+    //         "state",
+    //         "types",
+    //         "unique",
+    //         "wholerow",
+    //         "changed",
+    //         "conditionalselect"],
+    //       contextmenu: {
+    //         items: contextmenu
+    //       },
 
 
 
 
-        }).on('rename_node.jstree', function (e, data) {
-          let currentObj = this;
-          const config = {
-            headers: {
-              "content-type": "multipart/form-data",
-            },
-          };
 
 
-          let formData = new FormData();
-          formData.append("text", data.node.text);
-
-          let url = `/product_rename_node/${data.node.id}`;
-          axios.post(url, formData).then((response) => {
-
-            currentObj.success = response.data.success;
-            currentObj.filename = "";
-
-          }).catch(function (error) {
-            currentObj.output = error;
-          });
-        }).on("changed.jstree", function (e, data) {
+    //     }).on('rename_node.jstree', function (e, data) {
+    //       let currentObj = this;
+    //       const config = {
+    //         headers: {
+    //           "content-type": "multipart/form-data",
+    //         },
+    //       };
 
 
-        });
+    //       let formData = new FormData();
+    //       formData.append("text", data.node.text);
 
-      });
-    },
+    //       let url = `/product_rename_node/${data.node.id}`;
+    //       axios.post(url, formData).then((response) => {
+
+    //         currentObj.success = response.data.success;
+    //         currentObj.filename = "";
+
+    //       }).catch(function (error) {
+    //         currentObj.output = error;
+    //       });
+    //     }).on("changed.jstree", function (e, data) {
+
+
+    //     });
+
+    //   });
+    // },
 
 
 
-    first_level(e) {
+    // first_level(e) {
 
-      e.preventDefault();
-      addnode_first(this.product);
-    },
+    //   e.preventDefault();
+    //   addnode_first(this.product);
+    // },
 
     onFileChange(e) {
       this.file = e.target.files[0];
     },
-    add_product(e) {
-      // e.preventDefault();
+  
 
-      addnode(this);
-      // this.$router.go(0);
-
-
-
-
-    },
-
-    updateproduct(e) {
-      e.preventDefault();
-      updatenode($("#update_product_number").val(), this.text);
+    // updateproduct(e) {
+    //   e.preventDefault();
+    //   jtree.updatenode($("#update_product_number").val(), this.text);
 
 
 
-    }
+    // }
 
   },
 };
 </script>
 
-<!-- <style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
 
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style> -->
 
 

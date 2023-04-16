@@ -6,49 +6,27 @@
 
 
 
-
+<link href="{{URL::asset('assets/css/custom-search.css')}}" rel="stylesheet">   <!-- this style for button of show tree and select item  -->
 <link href="{{URL::asset('assets/css/font-awesome.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{URL::asset('assets/css/jstree.css')}}" >
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css"> -->
-
 <link href="{{URL::asset('assets/css/jquery-ui.min.css')}}" rel="stylesheet">
 <link rel="icon" href="{{URL::asset('assets/img/brand/favicon.png')}}" type="image/x-icon"/>
-
 <link href="{{URL::asset('assets/css/icons.css')}}" rel="stylesheet">
 <link href="{{URL::asset('assets/css/estilos_factura.css')}}" rel="stylesheet">
-
 <link href="{{URL::asset('assets/plugins/mscrollbar/jquery.mCustomScrollbar.css')}}" rel="stylesheet"/>
-
-<link href="{{URL::asset('assets/plugins/sidebar/sidebar.css')}}" rel="stylesheet">
-                            
+<link href="{{URL::asset('assets/plugins/sidebar/sidebar.css')}}" rel="stylesheet">                   
 <link rel="stylesheet" href="{{URL::asset('assets/css-rtl/sidemenu.css')}}">
-
-
 <link href="{{URL::asset('assets/css-rtl/style.css')}}" rel="stylesheet">
-
 <link href="{{URL::asset('assets/css-rtl/style-dark.css')}}" rel="stylesheet">
-
 <link href="{{URL::asset('assets/css-rtl/skin-modes.css')}}" rel="stylesheet">
 <link href="{{URL::asset('assets/css/style copy.css')}}" rel="stylesheet">
-
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
-
-
-<!-- ------------------------------------ -->
-
-
-<link href="{{URL::asset('assets/css/bootstrap3.3.6.min.css')}}" rel="stylesheet">
-	<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" /> -->
-
-	<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" /> -->
-	
-	<!-- <link href="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css"rel="stylesheet" type="text/css" /> -->
-<!-- ----------------------------------------- -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 
 
 
+
+    
 <style>
     #invoice{
         padding: 30px;
@@ -216,3 +194,4 @@
         }
     }
 </style>
+

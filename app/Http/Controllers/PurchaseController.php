@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\TemporaleTrait;
+use App\Traits\Temporale\TemporaleTrait;
+use App\Traits\Invoice\InvoiceTrait;
+use App\Traits\Details\DetailsTrait;
+// use Illuminate\Foundation\Auth\Access\store as s;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\status;
+use App\Models\Temporale;
 use App\Models\Purchase;
+use App\Models\PaymentPurchase;
 use App\Models\StoreProduct;
-use App\Models\PurchaseDetail;
-use Illuminate\Foundation\Auth\Access\store as s;
 use App\Models\Supplier;
 use DB;
 use Illuminate\Support\Facades\Auth;
@@ -17,21 +21,22 @@ use PhpParser\Node\Stmt\Foreach_;
 
 class PurchaseController extends Controller
 {
-    use TemporaleTrait;
+    use TemporaleTrait, InvoiceTrait, DetailsTrait,GeneralTrait;
 
     public function index()
     {
 
 
         $products = DB::table('products')
-        ->select('products.*',)
-        ->get();
+            ->select('products.*',)
+            ->get();
 
         $statuses = Status::all();
+
         // ----------------------------------------------------------------------------------------------
         $stores = DB::table('stores')
-        ->select('stores.*')
-        ->get();
+            ->select('stores.*')
+            ->get();
         // ----------------------------------------------------------------------------------------------
         $suppliers = Supplier::all();
 
@@ -39,17 +44,38 @@ class PurchaseController extends Controller
 
         return response()->json(['products' => $products, 'suppliers' => $suppliers, 'temporales' => $temporales, 'statuses' => $statuses, 'stores' => $stores]);
     }
-
-
     public function create()
     {
-        
     }
 
     public function get_all_newsale()
     {
     }
-    
+    public function payment_bond(Request $request){
+
+        $payable_note = DB::table('purchases')
+            ->where('purchases.id',$request->id)
+            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+            ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
+            ->select('purchases.*', 'purchases.id as purchases_id', 'suppliers.*', 'payment_purchases.*')
+            ->get();
+        return response()->json(['payable_note' => $payable_note]);
+
+    }
+    public function payment_bond_store(Request $request){
+
+
+        $payment = PaymentPurchase::find($request->id);
+        if($request->post('total_remaining') == 0 ){ 
+            $array_data =['payment_status' =>'paiding','paid'=>1212,'remaining'=>1212];
+        }
+        if($request->post('total_remaining') > 0 ){ 
+            $array_data =['payment_status','Partialy'];
+        }
+
+        $payment->update($array_data);
+
+    }
     public function show()
     {
         $purchases = DB::table('purchases')
@@ -73,44 +99,33 @@ class PurchaseController extends Controller
 
         return response()->json(['products' => $products]);
     }
-
-    public function details_purchase($id)
+  
+    public function invoice_purchase($id,$table = 'purchase_details')
     {
-        // return response()->json();
-        $purchase_details = PurchaseDetail::where('purchase_details.purchase_id', $id)
-            ->where('store_products.quantity', '!=', 0)
-            ->join('store_products', 'store_products.id', '=', 'purchase_details.store_product_id')
-            ->joinpurchase()
-            ->select('products.*','products.text as product', 'purchase_details.*', 'statuses.name as status', 'stores.text as store', 'store_products.quantity as avilable_qty', 'store_products.desc', DB::raw('purchase_details.qty-purchase_details.qty_return AS qty_remain'))
-            ->get();
-
-
-        return response()->json(['purchase_details' => $purchase_details]);
-    }
-
-    public function invoice_purchase($id)
-    {
-
-
+ 
         $purchases = Purchase::where('purchases.id', $id)
             ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
             ->select('purchases.*', 'purchases.id as purchase_id', 'purchases.*')
             ->get();
 
+        $details = $this->invoice($id,$table);
 
-        $purchase_details = PurchaseDetail::where('purchase_details.purchase_id', $id)
-            ->where('store_products.quantity', '!=', 0)
-            ->join('store_products', 'store_products.id', '=', 'purchase_details.store_product_id')
-            ->join('products', 'store_products.product_id', '=', 'products.id')
-            ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
-            ->join('stores', 'store_products.store_id', '=', 'stores.id')
-            ->select('products.*','products.text as product', 'purchase_details.*', 'statuses.*', 'statuses.name as status', 'stores.*','stores.text as store', 'store_products.quantity as avilable_qty', 'store_products.desc', DB::raw('purchase_details.qty-purchase_details.qty_return AS qty_remain'))
-            ->get();
+      
 
         $users = Auth::user();
 
 
-        return response()->json(['purchase_details' => $purchase_details, 'purchases' => $purchases, 'users' => $users]);
+        return response()->json([$table => $details, 'purchases' => $purchases, 'users' => $users]);
     }
-    
+    public function destroy(Request $request)
+    {
+        if ($request->id) {
+            Temporale::where('type_process', 'purchase')->where('temporales.product_id', $request->id)->delete();
+        } else {
+            Temporale::where('type_process', 'purchase')->delete();
+        }
+
+
+        return response()->json('successfully deleted');
+    }
 }

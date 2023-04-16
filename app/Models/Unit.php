@@ -20,4 +20,16 @@ class Unit extends Authenticatable
     ];
 
 
+    public function products()
+    {
+        // return $this->belongsToMany(Product::class);
+
+        return $this->belongsToMany(Product::class,'product_units','unit_id','product_id');
+
+    }
+
+    
+
+
+
 }

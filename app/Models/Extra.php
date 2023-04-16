@@ -17,4 +17,9 @@ class Extra extends Model
         return $this->belongsTo(ExtraType::class);
     }
 
+    public function extra_sanction()
+    {
+        return $this->belongsTo(ExtraSanction::class);
+    }
+
 }

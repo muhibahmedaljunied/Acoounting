@@ -19,5 +19,10 @@ class ProductUnit extends Authenticatable
        'product_id','unit_id','rate_convert',
     ];
 
+   
+
+
+    
+
 
 }

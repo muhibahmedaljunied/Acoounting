@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Route;
 // {
 
 //     public function index(){
- 
-        
+
+
 //         return 'muhib';
 //     }
 
@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 //     public function __construct()
 //     {
 
-        
+
 //         $this->id = 1;
 //     }
 // }
@@ -43,6 +43,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('customer/layouts/master');
 // });
 
+Route::get('/test-event', 'AbsenceController@test');
+
 Route::post('/customer/customer-register', 'CustomerController@register');
 Route::post('/customer/customer-logout', 'CustomerController@logout');
 Route::post('/customer/customer-session', 'CustomerController@sessionData');
@@ -52,16 +54,33 @@ Route::post('/customer/product-details/{id}', 'ProductController@getProductDetai
 Route::post('/customer/featured-product', 'customer\CartController@getFeaturedProducts');
 Route::post('/customer/new-product', 'customer\CartController@getNewProducts');
 
+Route::post('/customer/customer_account_list/{id}', 'CustomerController@show');
+
+
 Route::get('/customer/add-cart/{id}/{cartQty}', 'customer\CartController@addToCart');
 Route::post('/customer/all-cart', 'customer\CartController@allCart');
 Route::post('/customer/delete-cart', 'customer\CartController@deleteCart');
 Route::post('/customer/update-cart', 'customer\CartController@updateCart');
 Route::post('/customer/confirm-order', 'OrderController@store');
 Route::post('/customer/shipping-info', 'OrderController@update');
+
+// --------------------------------banks------------------------------------------
+Route::post('/banks', 'BankController@show');
+// --------------------------------Currencies------------------------------------------
+Route::post('/currencies', 'CurrencyController@show');
+// --------------------------------treasuries------------------------------------------
+Route::post('/treasuries', 'TreasuryController@show');
+// --------------------------------type_expence------------------------------------------
+Route::post('/type_expence', 'TypeExpenceController@show');
+// --------------------------------type_income------------------------------------------
+Route::post('/type_income', 'TypeIncomeController@show');
+// --------------------------------expence_type------------------------------------------
+Route::post('/expence_type', 'ExpenceTypeController@show');
 // ------------------------------------accounts-------------------------------------------------------------------------------------------------------------------------
 
 Route::post('/tree_account', 'AccountController@tree_account');
 Route::post('/account/{id}', 'AccountController@edit');
+Route::post('/delete_account/{id}', 'AccountController@destroy');
 Route::post('/store_account', 'AccountController@store');
 Route::post('/account_list/{id}', 'AccountController@AccountStatement');
 Route::post('/account_details_node/{id}', 'AccountController@account_details_node');
@@ -88,11 +107,12 @@ Route::post('/store_daily', 'DailyController@store');
 ################################################Supply##################################
 Route::post('/supply/newsupply', 'SupplyController@index');
 
-Route::post('/supply/delete', 'SupplyController@destroy');
+Route::post('/Supply/delete', 'SupplyController@destroy');
+Route::post('/Supply/delete/{id}', 'SupplyController@destroy');
 
-// Route::post('/add_supply/{id}', 'SupplyController@store');
+// Route::post('/add_Supply/{id}', 'SupplyController@store');
 
-Route::post('/add_supply', 'SupplyController@store');
+Route::post('/add_Supply', 'SupplyController@store');
 
 Route::post('/paysupply', 'SupplyController@payment');
 
@@ -103,7 +123,7 @@ Route::post('/listsupply', 'SupplyController@show');
 
 Route::post('/listsupplysearch', 'SupplyController@search');
 
-Route::post('/supply_details/{id}', 'SupplyController@details_supply');
+Route::post('/supply_details/{id}', 'SupplyController@details');
 Route::post('/invoice_supply/{id}', 'SupplyController@invoice_supply');
 Route::post('/recive_supply/{id}', 'SupplyController@recive_supply');
 
@@ -120,13 +140,14 @@ Route::post('/expence/newexpence', 'ExpenceController@index');
 
 Route::post('/expence/delete', 'ExpenceController@destroy');
 
-// Route::post('/add_supply/{id}', 'SupplyController@store');
+// Route::post('/add_Supply/{id}', 'SupplyController@store');
 
 Route::post('/store_expence', 'ExpenceController@store');
 
 Route::post('/payexpence', 'ExpenceController@payment');
 
 Route::post('/expences', 'ExpenceController@show');
+
 Route::post('/expence/newexpencesearch', 'ExpenceController@search_new');
 
 Route::post('/listexpence', 'ExpenceController@show');
@@ -136,58 +157,51 @@ Route::post('/listexpencesearch', 'ExpenceController@search');
 Route::post('/expence_details/{id}', 'ExpenceController@details_supply');
 Route::post('/invoice_expence/{id}', 'ExpenceController@invoice_supply');
 Route::post('/recive_expence/{id}', 'ExpenceController@recive_supply');
-
-// Route::post('/Repoexpence', 'ExpenceController@get_data_for_report');
-// Route::post('/repoexpence_by_supplier', 'ExpenceController@reposupply_by_supplier');
-// Route::post('/Repoexpencereturn', 'SupplyReturnController@get_data_for_report');
-// Route::post('/repoexpencereturn_by_supplier', 'SupplyReturnController@reposupplyreturn_by_supplier');
-
-
-// Route::post('/repo_movement', 'SupplyController@repo_movement');
-// Route::post('/repo_stock', 'SupplyController@repo_stock');
-
 ################################################sale##################################
 Route::post('/sale/newsale', 'SaleController@index');
+Route::post('/sale/newsale/{id}', 'SaleController@index');
 Route::post('/listsale', 'SaleController@show');
 Route::post('/listsalesearch', 'SaleController@search');
-Route::post('/add_sale', 'SaleController@store');
-Route::post('/paysale', 'SaleController@payment');
-Route::post('/sale_details/{id}', 'SaleController@details_sale');
+Route::post('/add_Sale', 'SaleController@store');
+Route::post('/paySale', 'SaleController@payment');
+Route::post('/sale_details/{id}', 'SaleController@details');
 
+Route::post('/Sale/delete', 'SaleController@destroy');
+Route::post('/Sale/delete/{id}', 'SaleController@destroy');
 
 Route::post('/invoice_sale/{id}', 'SaleController@invoice_sale');
 
 Route::post('/salereturn', 'SaleReturnController@create');
 Route::post('/listreturn_sale/{id}', 'SaleReturnController@show');
 
-Route::post('/returnsale_details/{id}', 'SaleReturnController@return_sale_detail');
+Route::post('/returnsale_details/{id}', 'SaleReturnController@return_detail');
 
 Route::post('/invoice_return_sale/{id}', 'SaleReturnController@return_invoice');
 
 ################################################purchase##################################
 Route::post('/purchase/newpurchase', 'PurchaseController@index');
+Route::post('/Purchase/delete', 'PurchaseController@destroy');
+Route::post('/Purchase/delete/{id}', 'PurchaseController@destroy');
 Route::post('/purchase/newpurchasesearch', 'PurchaseController@search');
 Route::post('/listpurchase', 'PurchaseController@show');
 Route::post('/listpurchasesearch', 'PurchaseController@search');
-Route::post('/add_purchase', 'PurchaseController@store');
-Route::post('/paypurchase', 'purchaseController@payment');
-Route::post('/purchase_details/{id}', 'PurchaseController@details_purchase');
+Route::post('/add_Purchase', 'PurchaseController@store');
+Route::post('/payPurchase', 'purchaseController@payment');
+Route::post('/purchase_details/{id}', 'PurchaseController@details');
 Route::post('/purchasereturn', 'PurchaseReturnController@create');
-
 Route::post('/listreturn_purchase/{id}', 'PurchaseReturnController@show');
-
 Route::post('/listreturn_purchasesearch', 'PurchaseReturnController@search');
-
-Route::post('/returnpurchase_details/{id}', 'PurchaseReturnController@return_purchase_detail');
-
+Route::post('/returnpurchase_details/{id}', 'PurchaseReturnController@return_detail');
 Route::post('/invoice_purchase/{id}', 'PurchaseController@invoice_purchase');
-
 Route::post('/invoice_return_purchase/{id}', 'PurchaseReturnController@return_invoice');
+Route::post('/payment_bond/{id}', 'PurchaseController@payment_bond');
 
+Route::post('/payment_bond', 'PayableNoteController@index');
+Route::post('/payment_bond_store/{id}', 'PayableNoteController@store');
 
-
-
-
+// -------------------------------------OpeningInventury----------------------------------------------------------
+Route::post('/add_Opening', 'InventuryController@store');
+Route::post('/opening/newopening', 'InventuryController@index');
 // ------------------------------------Transfer------------------------------------------------------------------------------------------------------------------------------------
 Route::post('/transfer', 'TransferController@index');
 Route::post('/transfer_before', 'TransferController@show');
@@ -209,18 +223,18 @@ Route::post('/details_transfer/{id}', 'TransferController@details_transfer');
 ################################################Cashing##################################
 Route::post('/cash/newcash', 'CashController@index');
 
-Route::post('/cash/delete', 'CashController@destroy');
+Route::post('/Cash/delete', 'CashController@destroy');
 
-// Route::post('/add_cash/{id}', 'CashController@store');
+// Route::post('/add_Cash/{id}', 'CashController@store');
 
-Route::post('/add_cash', 'CashController@store');
+Route::post('/add_Cash', 'CashController@store');
 Route::post('/paycash', 'CashController@payment');
 
 Route::post('/cash/newcashsearch', 'CashController@search_new');
 
 
 Route::post('/listcash', 'CashController@show');
-Route::post('/cash_details/{id}', 'CashController@details_cash');
+Route::post('/cash_details/{id}', 'CashController@details');
 Route::post('/invoice_cash/{id}', 'CashController@invoice_cash');
 Route::post('/recive_cash/{id}', 'CashController@recive_cash');
 
@@ -306,12 +320,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/delete_product/{id}', 'ProductController@destroy');
     // -------------------------------------------------------
 
-
+    // Route::post('/store_first_level', 'ProductController@store_first_level');
     Route::post('/tree_product', 'ProductController@tree_product');
-
-
-    Route::post('/store_first_level', 'ProductController@store_first_level');
-
     Route::post('/product_edit_node/{id}', 'ProductController@product_edit_node');
     Route::post('/product_store_first_level', 'ProductController@product_store_first_level');
     Route::post('/product_details_node/{id}', 'ProductController@product_details_node');
@@ -326,6 +336,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/productsearch', 'ProductController@search');
     ######################################################################
+
+    Route::post('/get_unit/{id}', 'UnitController@show');
     Route::post('/unit', 'UnitController@index');
     Route::post('/create_unit', 'UnitController@create');
     Route::post('/store_unit', 'UnitController@store');
@@ -356,7 +368,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/listreturn_supplysearch', 'SupplyReturnController@search');
 
-    Route::post('/returnsupply_details/{id}', 'SupplyReturnController@return_supply_detail');
+    Route::post('/returnsupply_details/{id}', 'SupplyReturnController@return_detail');
     // Route::post('/return_details_s/{id}', 'SupplyReturnController@return_detail');
 
     Route::post('/invoice_return_supply/{id}', 'SupplyReturnController@return_invoice');
@@ -381,7 +393,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/listreturn_cash/{id}', 'CashReturnController@show');
 
-    Route::post('/returncash_details/{id}', 'CashReturnController@return_cash_detail');
+    Route::post('/returncash_details/{id}', 'CashReturnController@return_detail');
     // Route::post('/return_details_c/{id}', 'CashReturnController@return_detail');
 
     Route::post('/invoice_return_cash/{id}', 'CashReturnController@return_invoice');
@@ -394,7 +406,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/delete_supplier/{id}', 'SupplierController@destroy');
 
     Route::post('/suppliersearch', 'SupplierController@search');
-
+    Route::post('/supplier/supplier_account_list/{id}', 'SupplierController@show');
     Route::post('/SupplierExport', 'SupplierController@Export');
     Route::post('/SupplierImport', 'SupplierController@Import');
 
@@ -480,21 +492,48 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::post('/purchase/refund', 'RefundPurchaseController@create');
     // Route::post('/product-repurchase/{id}', 'RefundPurchaseController@product_repurchase');
     // Route::post('/supplier-repurchase/{id}', 'RefundPurchaseController@supplier_repurchase');
-    #########################staff############################
+    // -----------------------------------------------------------------------------------------
+    Route::post('/tree_structure', 'AdministrativeStructureController@tree_structure');
+    Route::post('/structure_details_node/{id}', 'AdministrativeStructureController@structure_details_node');
+    Route::post('/tree_job', 'AdministrativeStructureController@tree_structure');
+    Route::post('/store_structure', 'AdministrativeStructureController@store');
+    Route::post('/delete_structure/{id}', 'AdministrativeStructureController@destroy');
+    // --------------------------------staff---------------------------------------------------------
+
+
     Route::post('/staff', 'StaffController@index');
+    Route::post('/staff/{id}', 'StaffController@select_staff');
     Route::post('store_staff', 'StaffController@store');
     Route::post('/update_staff/{id}', 'StaffController@update');
     Route::post('/staff/{id}', 'StaffController@edit');
     Route::post('/delete_staff/{id}', 'StaffController@destroy');
+    Route::post('/staff/select_staff', 'StaffController@select_staff');
 
     Route::post('/staffsearch', 'StaffController@search');
+    Route::post('/staff/get_job/{id}', 'StaffController@get_job');
+
     // Route::post('/staffExport', 'StaffController@Export');
     // Route::post('/staffImport', 'StaffController@Import');
 
     #########################staff############################
+
+    // -----------------------------------period-----------------
+    Route::post('/period', 'PeriodController@index');
+    // -----------------------------------work_type-----------------
+    Route::post('/work_type', 'WorkTypeController@index');
+    Route::post('/store_work_type', 'WorkTypeController@store');
+    // -----------------------------------work_system-----------------
+    Route::post('/work_system', 'WorkSystemController@index');
+    Route::post('/store_work_system', 'WorkSystemController@store');
     // ---------------------------------attendance-----------------------------------------------
+    Route::post('/attend', 'AttendanceController@show');
     Route::post('/store_attendance', 'AttendanceController@store');
     Route::post('/attendance', 'AttendanceController@index');
+    Route::post('/attendance_report', 'AttendanceController@report');
+    Route::post('/attendance_report/search', 'AttendanceController@search');
+    Route::post('/attendance/get_period/{id}', 'AttendanceController@get_period');
+    Route::post('/attendance/get_staff/{id}', 'AttendanceController@get_staff');
+    Route::post('/attendance/select_staff', 'AttendanceController@select_staff');
     //  --------------------------------------------------------------------------
     Route::post('/salary', 'SalaryController@index');
     Route::post('/store_salary', 'SalaryController@store');
@@ -504,8 +543,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/salarysearch', 'SalaryController@search');
 
-    Route::post('/salary_details', 'SalaryController@salary_details');
-
+    Route::post('/salary_details', 'SalaryController@salary');
+    Route::post('/salary_details/{id}', 'SalaryController@salary_details');
+    Route::post('/salary', 'SalaryController@salary');
+    Route::post('/salary/select_staff', 'SalaryController@select_staff');
     //  ----------------------------branch----------------------------------------
 
     Route::post('/branch', 'BranchController@index');
@@ -590,8 +631,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/delete_allowance_type/{id}', 'AllowanceController@destroy');
     Route::post('/allowance_typesearch', 'AllowanceController@search');
     Route::post('/store_allowance', 'AllowanceController@store');
+    // --------------------------------------------------------------------official_holiday--------------------
+    Route::post('/official_holiday', 'OfficialHolidayController@index');
+    Route::post('/create_official_holiday', 'OfficialHolidayController@create');
+
+    Route::post('/update_official_holiday/{id}', 'OfficialHolidayController@update');
+    Route::post('/official_holiday/{id}', 'OfficialHolidayController@edit');
+    Route::post('/delete_official_holiday/{id}', 'OfficialHolidayController@destroy');
+    Route::post('/official_holidaysearch', 'OfficialHolidayController@search');
     //  ---------------------------------------allowance_type-----------------------------
     Route::post('/extra_type', 'ExtraController@index');
+    Route::post('/extra_part', 'ExtraPartController@index');
     Route::post('/create_extra_type', 'ExtraController@create');
     Route::post('/storeextra_type', 'ExtraController@store');
     Route::post('/update_extra_type/{id}', 'ExtraController@update');
@@ -608,12 +658,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/delete_delay_type/{id}', 'DelayController@destroy');
     Route::post('/delay_typesearch', 'DelayController@search');
 
+    Route::post('/delay_sanction', 'DelaySanctionController@index');
+    Route::post('/store_delay_sanction', 'DelaySanctionController@store');
+
 
 
 
     // --------------------------------------------------------Absence---------------------------------------------------------------------
     Route::post('/absence', 'AbsenceController@index');
     Route::post('/store_absence', 'AbsenceController@store');
+    Route::post('/absence_sanction', 'AbsenceSanctionController@index');
+    Route::post('/store_absence_sanction', 'AbsenceSanctionController@store');
 
     // --------------------------------------------------------Delay---------------------------------------------------------------------
     Route::post('/delay', 'DelayController@index');
@@ -621,14 +676,23 @@ Route::group(['middleware' => ['auth']], function () {
     // --------------------------------------------------------Extra---------------------------------------------------------------------
     Route::post('/extra', 'ExtraController@index');
     Route::post('/store_extra', 'ExtraController@store');
+    Route::post('/extra/select_staff', 'ExtraController@select_staff');
+    Route::post('/extra_sanction', 'ExtraSanctionController@index');
+    Route::post('/store_extra_sanction', 'ExtraSanctionController@store');
     // --------------------------------------------------------Discount---------------------------------------------------------------------
     Route::post('/discount', 'DiscountController@index');
     Route::post('/store_discount', 'DiscountController@store');
+    Route::post('/discount/select_staff', 'DiscountController@select_staff');
+    // --------------------------------------------------------vacation_type---------------------------------------------------------------------
 
+    Route::post('/vacation_type', 'VacationTypeController@index');
+    Route::post('/store_vacation_type', 'VacationTypeController@store');
     // --------------------------------------------------------Vacation---------------------------------------------------------------------
     Route::post('/vacation', 'VacationController@index');
     Route::post('/store_leave', 'VacationController@store');
-    Route::post('/select_staff', 'VacationController@select_staff');
+    Route::post('/vacation/select_staff', 'VacationController@select_staff');
+    Route::post('/leave_sanction', 'LeaveSanctionController@index');
+    Route::post('/store_leave_sanction', 'LeaveSanctionController@store');
 
     // --------------------------------------------------------loan---------------------------------------------------------------------
     Route::post('/loan', 'LoanController@index');
@@ -636,4 +700,5 @@ Route::group(['middleware' => ['auth']], function () {
     // --------------------------------------------------------loan---------------------------------------------------------------------
     Route::post('/advance', 'AdvanceController@index');
     Route::post('/store_advance', 'AdvanceController@store');
+    Route::post('/advance/select_staff', 'AdvanceController@select_staff');
 });

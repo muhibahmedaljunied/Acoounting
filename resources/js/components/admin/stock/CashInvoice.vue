@@ -91,6 +91,7 @@ export default {
       cash_detail: 0,
       timestamp: "",
       user: '',
+      table:'cash_details',
 
       // ------for style--------
       data_style: {
@@ -112,7 +113,7 @@ export default {
   },
   mounted() {
     let uri = `/invoice_cash/${this.$route.params.id}`;
-    this.axios.post(uri).then((response) => {
+    this.axios.post(uri,{ table: this.table }).then((response) => {
       console.log(response.data.users.name);
       this.user = response.data.users.name;
 

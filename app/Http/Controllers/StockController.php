@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\TemporaleTrait;
+use App\Traits\InvoiceTrait;
+use App\Traits\DetailsTrait;
 use App\Stock;
 use App\Models\StoreProduct;
 use Illuminate\Http\Request;
@@ -13,14 +16,31 @@ class StockController extends Controller
     public function index()
     {
 
+
+
         
-        $stocks = StoreProduct::where('store_products.quantity', '!=', 0)
-            ->joinall()
-            // ->join('products', 'store_products.product_id', '=', 'products.id')
-            // ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
-            // ->join('stores', 'store_products.store_id', '=', 'stores.id')
-            ->select('store_products.quantity','store_products.*','products.id','products.text as product','statuses.name as status','stores.text as store')
+        $stocks = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type','==',0)
+            // ->joinall()
+            ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
+            ->join('stores', 'store_products.store_id', '=', 'stores.id')
+            ->join('products', 'store_products.product_id', '=', 'products.id')
+            ->join('product_units', 'product_units.product_id', '=', 'products.id')
+            ->join('units', 'units.id', '=', 'product_units.unit_id')
+            ->select('store_products.quantity','store_products.*','products.id','products.text as product','products.rate','statuses.name as status','stores.text as store','units.name as unit')
             ->paginate(10);
+
+
+        foreach ($stocks as $value) {
+
+            $units = DB::table('product_units')
+                ->join('units', 'units.id', '=', 'product_units.unit_id')
+                ->join('products', 'products.id', '=', 'product_units.product_id')
+                ->where('product_units.product_id', $value->product_id)
+                ->select('units.*','products.rate','product_units.unit_type')
+                ->get();
+
+            $value->units = $units;
+        }     
 
      
         return response()->json($stocks);

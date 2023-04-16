@@ -1,11 +1,18 @@
 import Try from './components/admin/try'
 import Dashboard from './components/Dashboard'
+import Company from './components/admin/setting/Company'
 // import Category from './components/admin/category/Category'
 
 import AccountsGuide from './components/admin/FinancialAccounting/accounting/AccountsGuide'
 import AccountList from './components/admin/FinancialAccounting/accounting/AccountList'
 import DailyRestrictions from './components/admin/FinancialAccounting/operation/DailyRestrictions'
+import AccountBasicData from './components/admin/FinancialAccounting/AccountBasicData'
+
+
 // ------------------------------------------------------------------staff---------------------------------------------------------------------------
+import SalaryDetails from './components/admin/staff/SalaryDetails'
+
+import AdministrativeStructure from './components/admin/staff/AdministrativeStructure'
 import BasicData from './components/admin/staff/BasicData'
 import Staff from './components/admin/staff/Staff'
 import Operation from './components/admin/staff/Operation'
@@ -32,11 +39,15 @@ import UpdateStatus from './components/admin/status/UpdateStatus'
 import AddStatus from './components/admin/status/AddStatus'
 
 // ------------------------------Style------------------------------
-import RightSide from './components/admin/stock/Style/RightSide' 
-import FooterSide from './components/admin/stock/Style/FooterSide' 
-// -----------------------------------------------------------
+import RightSide from './components/admin/stock/Style/RightSide'
+import FooterSide from './components/admin/stock/Style/FooterSide'
+// -------------------------------Recive----------------------------
+import Recive from './components/admin/stock/Recive/Recive'
+// ------------------------------------------opening_inventory
+import OpeningInventory from './components/admin/stock/OpeningInventory'
+import Pricing from './components/admin/stock/Pricing'
 // ----------------------------------transfer---------------------------------------------------------------------------------------------------
-import Add from './components/admin/stock/transfer/Add'  
+import Add from './components/admin/stock/transfer/Add'
 import Transfer from './components/admin/stock/transfer/Transfer'
 import TransferDetail from './components/admin/stock/transfer/TransferDetail'
 // ----------------------------------Store---------------------------------------------------------------------------------------------------
@@ -98,11 +109,12 @@ import ReturnPurchaseInvoice from './components/admin/purchase/ReturnPurchaseInv
 import Supplier from './components/admin/supplier/Supplier'
 import UpdateSupplier from './components/admin/supplier/UpdateSupplier'
 import AddSupplier from './components/admin/supplier/AddSupplier'
+import SupplierAccountList from './components/admin/supplier/SupplierAccountList'
 // ----------------------------------customer----------------------------------------------------------------------------------------------------------------------
 import Customer from './components/admin/customer/Customer'
 import UpdateCustomer from './components/admin/customer/UpdateCustomer'
 import AddCustomer from './components/admin/customer/AddCustomer'
-
+import CustomerAccountList from './components/admin/customer/CustomerAccountList'
 // ----------------------------------Report---------------------------------------------------------------------------------------------------
 import Movement from './components/admin/report/Movement'
 import Sale from './components/admin/report/Sale'
@@ -113,19 +125,27 @@ import RepoStock from './components/admin/report/RepoStock'
 import RepoSupply from './components/admin/report/RepoSupply'
 import RepoSupplyReturn from './components/admin/report/RepoSupplyReturn'
 // -------------------------------------------------------------------------------------------------------------------------------------------
- const routes = [
+const routes = [
   {
-    path:'/try',
-    component:Try
+    path: '/try',
+    component: Try
   },
-  { 
-    path: '/', 
+  {
+    path: '/',
     component: Dashboard
+  },
+  {
+    path: '/company',
+    component: Company
   },
   {
     // -------------------------------------------------------------------------------------------------------------------------------------------
     path: '/accounts_guide',
     component: AccountsGuide
+  },
+  {
+    path: '/accounts_basic_data',
+    component: AccountBasicData
   },
   {
     path: '/account_list',
@@ -135,39 +155,60 @@ import RepoSupplyReturn from './components/admin/report/RepoSupplyReturn'
     path: '/daily_restrictions',
     component: DailyRestrictions
   },
-  { 
-    path: '/dashboard', 
+  {
+    path: '/dashboard',
     component: Dashboard
   },
-    {// ----------------------------------Staff---------------------------------------------------------------------------------------------------
-      path: '/staff/basic_data',
-      component: BasicData
-  
-    },
-  
-    {
-      path: '/staff/staff',
-      component: Staff
-  
-    },
-    {
-      path: '/staff/operation',
-      component: Operation
-  
-    },
-    {
-      path: '/staff/report',
-      component: StaffReport
-  
-    },
+  {// ----------------------------------Staff---------------------------------------------------------------------------------------------------
+    path: '/staff/basic_data',
+    component: BasicData
 
+  },
+  {
+    path: '/salary_details/:id',
+    component: SalaryDetails
 
-  { 
-    path: '/store', 
-    component: Store
+  },
+  {
+    path: '/tree_structure',
+    component: AdministrativeStructure
+
   },
 
-  {  
+  {
+    path: '/staff/staff',
+    component: Staff
+
+  },
+  {
+    path: '/staff/operation',
+    component: Operation
+
+  },
+  {
+    path: '/staff/report',
+    component: StaffReport
+
+  },
+
+
+  {
+    path: '/store',
+    component: Store
+  },
+  {
+    path: '/recive',
+    component: Recive
+  },
+  {
+    path: '/opening_inventory',
+    component: OpeningInventory
+  },
+  {
+    path: '/pricing',
+    component: Pricing
+  },
+  {
     path: '/transfer',
     component: Transfer
   },
@@ -182,180 +223,180 @@ import RepoSupplyReturn from './components/admin/report/RepoSupplyReturn'
   // ----------------------------------transfer---------------------------------------------------------------------------------------------------
 
 
-  { 
-    path: '/status', 
+  {
+    path: '/status',
     component: Status
   },
-  { 
-    path: '/edit_status/:id', 
-    name:'edit_status',
+  {
+    path: '/edit_status/:id',
+    name: 'edit_status',
     component: UpdateStatus
   },
-  { 
-    path: '/create_status', 
+  {
+    path: '/create_status',
     component: AddStatus
     // ----------------------------------status---------------------------------------------------------------------------------------------------
   },
   // ------------------------------------Unit-----------------------------------------------------
-  { 
-    path: '/unit', 
-    name:'unit',
+  {
+    path: '/unit',
+    name: 'unit',
     component: Unit
   },
-  { 
-    path: '/edit_unit/:id', 
-    name:'edit_unit',
+  {
+    path: '/edit_unit/:id',
+    name: 'edit_unit',
     component: UpdateUnit
   },
-  { 
-    path: '/create_unit', 
-    name:'create_unit',
+  {
+    path: '/create_unit',
+    name: 'create_unit',
     component: AddUnit
   },
   // ------------------------------------------------------
 
 
-  { 
-    path: '/user', 
-    name:'user',
+  {
+    path: '/user',
+    name: 'user',
     component: User
   },
-  { 
-    path: '/edit_user/:id', 
-    name:'edit_user',
+  {
+    path: '/edit_user/:id',
+    name: 'edit_user',
     component: UpdateUser
   },
-  { 
-    path: '/create_user', 
-    name:'create_user',
+  {
+    path: '/create_user',
+    name: 'create_user',
     component: AddUser
     // ----------------------------------Category---------------------------------------------------------------------------------------------------
   },
-  { 
-    path: '/product', 
-    name:'product',
+  {
+    path: '/product',
+    name: 'product',
     component: Product
   },
-  { 
-    path: '/temporale_cash', 
-    component:TemporaleCash
+  {
+    path: '/temporale_cash',
+    component: TemporaleCash
   },
 
-  { 
-    path: '/cash', 
-    component:Cashing
+  {
+    path: '/cash',
+    component: Cashing
   },
-  { 
-    path: '/cashlist', 
-    component:CashList
+  {
+    path: '/cashlist',
+    component: CashList
   },
   // { 
   //   path: '/cash_details/:id', 
   //   component:CashDetails
   // },
-  { 
-    path: '/cash_invoice/:id', 
-    component:CashInvoice
+  {
+    path: '/cash_invoice/:id',
+    component: CashInvoice
   },
-  { 
-    path: '/cash_recive/:id', 
-    component:CashRecive
+  {
+    path: '/cash_recive/:id',
+    component: CashRecive
   },
-  { 
-    path: '/cash_invoice_update/:id', 
-    component:CashInvoiceUpdate
+  {
+    path: '/cash_invoice_update/:id',
+    component: CashInvoiceUpdate
   },
-  { 
-    path: '/returncash/:id', 
-    component:ReturnCash
+  {
+    path: '/returncash/:id',
+    component: ReturnCash
   },
-  { 
-    path: '/returncashlist/:id', 
-    component:ReturnCashList
+  {
+    path: '/returncashlist/:id',
+    component: ReturnCashList
   },
- {
-  path:'/return_cash_invoice/:id',
-  component:ReturnCashInvoice
-},
-{
-  path:'/return_cash_recive/:id',
-  component:ReturnCashRecive
-},   // ----------------------------------Category---------------------------------------------------------------------------------------------------
-{ 
-  path: '/expence', 
-  component:Expence
-}, 
-{
-  path: '/temporale_expence',
-  component: TemporaleExpence
-},
-{ 
-  path: '/expencelist', 
-  component:ExpenceList
-},
-{ 
-  path: '/expence_invoice/:id', 
-  component:ExpenceInvoice
-},
-{ 
-  path: '/income', 
-  component:Income
-}, 
-{
-  path: '/temporale_income',
-  component: TemporaleIncome
-},
-{ 
-  path: '/incomelist', 
-  component:IncomeList
-},
-{ 
-  path: '/income_invoice/:id', 
-  component:IncomeInvoice
-},
+  {
+    path: '/return_cash_invoice/:id',
+    component: ReturnCashInvoice
+  },
+  {
+    path: '/return_cash_recive/:id',
+    component: ReturnCashRecive
+  },   // ----------------------------------Category---------------------------------------------------------------------------------------------------
+  {
+    path: '/expence',
+    component: Expence
+  },
+  {
+    path: '/temporale_expence',
+    component: TemporaleExpence
+  },
+  {
+    path: '/expencelist',
+    component: ExpenceList
+  },
+  {
+    path: '/expence_invoice/:id',
+    component: ExpenceInvoice
+  },
+  {
+    path: '/income',
+    component: Income
+  },
+  {
+    path: '/temporale_income',
+    component: TemporaleIncome
+  },
+  {
+    path: '/incomelist',
+    component: IncomeList
+  },
+  {
+    path: '/income_invoice/:id',
+    component: IncomeInvoice
+  },
 
 
 
-// ==========================================
-  { 
-    path: '/supply', 
-    component:Supply
-  }, 
+  // ==========================================
+  {
+    path: '/supply',
+    component: Supply
+  },
   {
     path: '/temporale_supply',
     component: TemporaleSupply
   },
-  { 
-    path: '/supplylist', 
-    component:SupplyList
+  {
+    path: '/supplylist',
+    component: SupplyList
   },
-  { 
-    path: '/supply_invoice/:id', 
-    component:SupplyInvoice
+  {
+    path: '/supply_invoice/:id',
+    component: SupplyInvoice
   },
-  { 
-    path: '/supply_recive/:id', 
-    component:SupplyRecive
+  {
+    path: '/supply_recive/:id',
+    component: SupplyRecive
   },
-  { 
-    path: '/supply_invoice_update/:id', 
-    component:SupplyInvoiceUpdate
+  {
+    path: '/supply_invoice_update/:id',
+    component: SupplyInvoiceUpdate
   },
-  { 
-    path: '/returnsupply/:id', 
-    component:ReturnSupply
+  {
+    path: '/returnsupply/:id',
+    component: ReturnSupply
   },
-  { 
-    path: '/returnsupplylist/:id', 
-    component:ReturnSupplyList
+  {
+    path: '/returnsupplylist/:id',
+    component: ReturnSupplyList
   },
-  { 
-    path: '/return_supply_invoice/:id', 
-    component:ReturnSupplyInvoice
+  {
+    path: '/return_supply_invoice/:id',
+    component: ReturnSupplyInvoice
   },
-  { 
-    path: '/return_supply_recive/:id', 
-    component:ReturnSupplyRecive
+  {
+    path: '/return_supply_recive/:id',
+    component: ReturnSupplyRecive
   },
   {// ----------------------------------sale-----------------------------------------------------------------------------
     path: '/listsale',
@@ -437,28 +478,36 @@ import RepoSupplyReturn from './components/admin/report/RepoSupplyReturn'
     path: '/return_purchase_invoice/:id',
     component: ReturnPurchaseInvoice
   },
-  { 
-    path: '/stock', 
+  {
+    path: '/stock',
     component: Stock
   },
 
-  { 
-    path: '/supplier', 
+  {
+    path: '/supplier',
     component: Supplier
   },
-  { 
-    path: '/edit_supplier/:id', 
-    name:'edit_supplier',
+  {
+    path: '/edit_supplier/:id',
+    name: 'edit_supplier',
     component: UpdateSupplier
   },
-  { 
-    path: '/create_supplier', 
+  {
+    path: '/create_supplier',
     component: AddSupplier
+  },
+  {
+    path: '/supplier_account_list',
+    component: SupplierAccountList
   },
   {
     path: '/customer',
     name: 'customer',
     component: Customer
+  },
+  {
+    path: '/customer_account_list',
+    component: CustomerAccountList
   },
   {
     path: '/edit_customer/:id',
@@ -471,40 +520,40 @@ import RepoSupplyReturn from './components/admin/report/RepoSupplyReturn'
     component: AddCustomer
     // ----------------------------------customer---------------------------------------------------------------------------------------------------
   },
-  { 
-    path: '/movements', 
+  {
+    path: '/movements',
     component: Movement
   },
-  { 
-    path: '/sales', 
+  {
+    path: '/sales',
     component: Sale
   },
-  { 
-    path: '/purchases', 
+  {
+    path: '/purchases',
     component: Purchase
   },
-  { 
-    path: '/reportcashing', 
+  {
+    path: '/reportcashing',
     component: RepoCashing
   },
-  { 
-    path: '/reportcashingreturn', 
+  {
+    path: '/reportcashingreturn',
     component: RepoCashingReturn
   },
-  { 
-    path: '/reportstock', 
+  {
+    path: '/reportstock',
     component: RepoStock
   },
-  { 
-    path: '/reportsupply', 
+  {
+    path: '/reportsupply',
     component: RepoSupply
-      // --------------------------------------Report----------------------------------------------------------------------------------------------
+    // --------------------------------------Report----------------------------------------------------------------------------------------------
 
   },
-  { 
-    path: '/reportsupplyreturn', 
+  {
+    path: '/reportsupplyreturn',
     component: RepoSupplyReturn
-      // --------------------------------------Report----------------------------------------------------------------------------------------------
+    // --------------------------------------Report----------------------------------------------------------------------------------------------
 
   },
 

@@ -3,25 +3,20 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="d-flex justify-content-between">
-            <span class="h2"> القروض</span>
-          </div>
+        <div class="card-header">
 
-          <div class="d-flex justify-content-right">
-            <!-- <router-link
-              to="create_category"
-              id="agregar_productos"
-              class="tn btn-info btn-lg waves-effect btn-agregar"
-              ><i class="fa fa-plus-circle"></i
-            ></router-link> -->
-            <a class="tn btn-info btn-lg waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            <span class="h2"> القروض</span>
+   
+
+          <div style="display: flex;float: left; margin: 5px" >
+     
+            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addLoan">
               <i class="fa fa-plus-circle"></i></a>
 
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="true" placeholder="بحث عن صنف" v-model="word_search"
-              @input="get_search()" />
+              <input autocomplete="on" v-model="word_search" type="text" class="form-control input-text"
+              placeholder="بحث ...." aria-label="Recipient's username" aria-describedby="basic-addon2"
+              @input="get_search()">
 
             <div></div>
           </div>
@@ -52,7 +47,6 @@
                   <td>{{ loan.note }}</td>
 
                   <td>
-                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
                     <button type="button" @click="delete_loan(loan.id)" class="btn btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
@@ -132,7 +126,7 @@
                               <tbody>
                                 <tr v-for="index in count" :key="index">
                                   <td>
-                                    <select v-model="staffselected" name="type" id="type" class="form-control" required>
+                                    <select v-model="staffselected[index]" name="type" id="type" class="form-control" required>
                                       <option v-for="staff in staffs" v-bind:value="staff.id">
                                         {{ staff.name }}
                                       </option>
@@ -141,7 +135,7 @@
                                   <td>
 
                                     <input
-                                v-model="quantity"
+                                v-model="qty[index]"
                                 type="text"
                                 class="form-control"
                                 name="name"
@@ -156,7 +150,7 @@
 
 
                                     <input
-                                v-model="date"
+                                v-model="date[index]"
                                 type="date"
                                 class="form-control"
                                 name="name"
@@ -170,7 +164,7 @@
 
 
                                     <input
-                                v-model="number_premium"
+                                v-model="number_premium[index]"
                                 type="text"
                                 class="form-control"
                                 name="name"
@@ -182,7 +176,7 @@
 
 
                                     <input
-                                v-model="value_premium"
+                                v-model="value_premium[index]"
                                 type="text"
                                 class="form-control"
                                 name="name"
@@ -210,7 +204,7 @@
 
 
                                 </tr>
-                                <a href="javascript:void" @click="Add_newadvance()" class="btn btn-success"><span>تاكيد
+                                <a href="javascript:void" @click="Add_newloan()" class="btn btn-success"><span>تاكيد
                                     العمليه</span></a>
 
                               </tbody>
@@ -337,15 +331,15 @@
 
 <script>
 import pagination from "laravel-vue-pagination";
-
+import operation from '../../../../../js/staff/operation.js';
 export default {
   components: {
     pagination,
   },
-
+  mixins: [operation],
   data() {
     return {
-      // category: "yes",
+   
 
       loans: {
         type: Object,
@@ -357,9 +351,8 @@ export default {
       staffselected: "",
 
       number_premium: "",
-
       date: "",
-      quantity: "",
+      qty: "",
       value_premium: "",
       note: "",
       word_search: "",
@@ -369,12 +362,7 @@ export default {
     this.list();
   },
   methods: {
-    addComponent(index) {
-      addComponent(this, index);
-    },
-    disComponent(index) {
-      disComponent(this, index);
-    },
+ 
     get_search(word_search) {
       this.axios
         .post(`/loansearch`, { word_search: this.word_search })
@@ -384,45 +372,45 @@ export default {
           // this.$root.logo = "Category";
         });
     },
-    delete_loan(id) {
-      this.axios
-        .post(`delete_loan/${id}`)
-        .then((response) => {
-          toastMessage("تم الحذف بنجاح");
+    // delete_loan(id) {
+    //   this.axios
+    //     .post(`delete_loan/${id}`)
+    //     .then((response) => {
+    //       toastMessage("تم الحذف بنجاح");
 
-          this.list();
-          // this.$router.push('category')
-        })
-        .catch((error) => {
-          console.log(error.response);
+    //       this.list();
+    //       // this.$router.push('category')
+    //     })
+    //     .catch((error) => {
+    //       console.log(error.response);
 
-          if (error.response.status == 500) {
-            toast.fire({
-              title: " فشل",
-              text: error.response.data.message,
-              button: "Close", // Text on button
-              icon: "error", //built in icons: success, warning, error, info
-              timer: 5000, //timeOut for auto-close
-              buttons: {
-                confirm: {
-                  text: "OK",
-                  value: true,
-                  visible: true,
-                  className: "",
-                  closeModal: true,
-                },
-                cancel: {
-                  text: "Cancel",
-                  value: false,
-                  visible: true,
-                  className: "",
-                  closeModal: true,
-                },
-              },
-            });
-          }
-        });
-    },
+    //       if (error.response.status == 500) {
+    //         toast.fire({
+    //           title: " فشل",
+    //           text: error.response.data.message,
+    //           button: "Close", // Text on button
+    //           icon: "error", //built in icons: success, warning, error, info
+    //           timer: 5000, //timeOut for auto-close
+    //           buttons: {
+    //             confirm: {
+    //               text: "OK",
+    //               value: true,
+    //               visible: true,
+    //               className: "",
+    //               closeModal: true,
+    //             },
+    //             cancel: {
+    //               text: "Cancel",
+    //               value: false,
+    //               visible: true,
+    //               className: "",
+    //               closeModal: true,
+    //             },
+    //           },
+    //         });
+    //       }
+    //     });
+    // },
     list(page = 1) {
       this.axios
         .post(`/loan?page=${page}`)
@@ -437,34 +425,21 @@ export default {
     Add_newloan() {
       console.log(this.counts);
       this.axios
-        .post(`/store_leave`, {
+        .post(`/store_loan`, {
           type: this.type,
           count: this.counts,
           staff: this.staffselected,
-          type_extra: this.typeselected,
-          start_date: this.start_date,
-          end_date: this.end_date,
-          start_time: this.start_time,
-          end_time: this.end_time,
+          qty: this.qty,
+          date: this.date,
+          number_premium: this.number_premium,
+          value_premium: this.value_premium,
+       
 
         })
         .then((response) => {
           // ---------------------------------------------------------------
           console.log(response);
 
-          // this.temporale = response.data;
-          // this.temporale.forEach((item) => {
-          //   this.total_quantity = item.tem_qty + this.total_quantity;
-
-          //   this.grand_total = item.subtotal + this.grand_total;
-          //   this.To_pay = item.subtotal + this.To_pay;
-
-          //   this.total_tax = item.tax + this.total_tax;
-
-          //  console.log(this.total_tax);
-
-
-          // });
 
           toastMessage("تم الاضافه بنجاح");
           // this.$router.go(0);

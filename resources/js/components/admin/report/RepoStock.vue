@@ -1,12 +1,11 @@
-    <template>
+<template>
   <div class="container-fluid">
     <div class="row row-sm">
       <div class="col-xl-12">
         <div class="card">
-          <div class="card-header pb-0">
-            <div class="d-flex justify-content-between">
-              <span style="font-size: x-large"> تقرير المخزون </span>
-            </div>
+          <div class="card-header">
+            <span style="font-size: x-large"> تقرير المخزون </span>
+
           </div>
           <div class="card-body">
             <div class="row">
@@ -15,53 +14,57 @@
 
 
                   <div class="invoice-box">
+                    <p>اختر التقرير</p>
 
-                    <!-- <div class="form-group"> -->
                     <div class="row">
-                      <p>اختر التقرير</p>
-                      <form>
-                        <label v-for="(typee, index) in types" class="checkbox-inline">
-                          <input v-model="typeselected[index]" @change='onreportchange()' type="checkbox">&nbsp;
-                          {{ types[index] }}
-                        </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                      <div class="col-sm-10">
+                        <form>
+                          <label v-for="(typee, index) in types" class="checkbox-inline">
+                            <input v-model="typeselected[index]" @change='onreportchange()' type="checkbox">&nbsp;
+                            {{ types[index] }}
+                          </label>&nbsp;&nbsp;&nbsp;&nbsp;
 
-                      </form>
+                        </form>
+                      </div>
+                      <div class="col-sm-2">
+
+<a @click="Search()" class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal"
+  id="agregar_productos" data-target=".bs-example-modal-sm">
+  <i class="fa fa-search"></i></a>
+<a @click="printDiv('printme')" class="tn btn-info btn-sm waves-effect btn-agregar"
+  data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-sm">
+  <i class="fa fa-print"></i></a>
+
+</div>
                     </div>
                     <div class="row">
                       <div class="col-md-3" v-show="showproduct">
                         <label for="status">المنتج</label>
-                        <!-- <select @change="onreportchange" v-model="productselected" name="status" id="status"
-                          class="form-control">
 
-                          <option v-for="products in product" v-bind:value="[products.id, products.name]">
-                            {{ products.name }}
-                          </option>
-
-                        </select> -->
 
                         <div class="custom-search">
-                          <!-- <label for="status">المنتج</label> -->
-                          <input v-model="productselected" id='product_tree' type="text" class="custom-search-input" >
-                          <button class="custom-search-botton" type="submit" data-toggle="modal"
-                            data-target="#exampleModalProduct"> <i class="fa fa-plus-circle"></i></button>
+
+                          <input :id="'Stock_product_tree' + index" type="text" readonly class="custom-search-input">
+                          <input :id="'Stock_product_tree_id' + index" type="hidden" readonly
+                            class="custom-search-input">
+
+
+                          <button @click="detect_index(index)" class="custom-search-botton" type="submit"
+                            data-toggle="modal" data-target="#exampleModalProduct"> <i
+                              class="fa fa-plus-circle"></i></button>
                         </div>
 
                       </div>
                       <div class="col-md-3" v-show="showstore">
                         <label for="status">المخزن</label>
-                        <!-- <select @change="onreportchange" v-model="storeselected" name="status" id="status"
-                          class="form-control">
-
-                          <option v-for="stores in store" v-bind:value="[stores.id, stores.code]">
-                            {{ stores.code }}
-                          </option>
-
-                        </select> -->
 
                         <div class="custom-search">
-                          <input  v-model="storeselected" id='store_tree' type="text" class="custom-search-input">
-                          <button class="custom-search-botton" type="submit" data-toggle="modal"
-                            data-target="#exampleModalStore"> <i class="fa fa-plus-circle"></i></button>
+
+                          <input :id="'Stock_store_tree' + index" type="text" readonly class="custom-search-input">
+                          <input :id="'Stock_store_tree_id' + index" type="hidden" readonly class="custom-search-input">
+                          <button @click="detect_index_store(index)" class="custom-search-botton" type="submit"
+                            data-toggle="modal" data-target="#exampleModalStore"> <i
+                              class="fa fa-plus-circle"></i></button>
                         </div>
                       </div>
 
@@ -80,30 +83,24 @@
                         <input type="text" v-model="descselected" class="form-control input_cantidad"
                           onkeypress="return valida(event)" />
                       </div>
+
+                      <div class="col-md-3" v-show="showunit">
+                        <label for="status"> الوحده </label>
+                        <select v-model="unitselected" class="form-control" @change="onreportchange">
+
+                          <option v-for="units in unit" v-bind:value="[units.id, units.name]">
+                            {{ units.name }}
+                          </option>
+
+                        </select>
+                      </div>
+
+                    
+
                     </div>
 
 
-                    <div class='row'>
-                      <div class="col-md-10">
-
-                      </div>
-
-                      <div class="col-md-2">
-
-                        <a @click="Search()" class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal"
-                          id="agregar_productos" data-target=".bs-example-modal-sm">
-                          <i class="fa fa-search"></i></a>
-                        <a @click="printDiv('printme')" class="tn btn-info btn-sm waves-effect btn-agregar"
-                          data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-sm">
-                          <i class="fa fa-print"></i></a>
-                        <!-- <a @click="Search()" class="tn btn-info btn-lg waves-effect btn-agregar" data-toggle="modal"
-                          id="agregar_productos" data-target=".bs-example-modal-lg">
-                          <i class="fa fa-search"></i></a>
-                        <a @click="printDiv('printme')" class="tn btn-info btn-lg waves-effect btn-agregar"
-                          data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-lg">
-                          <i class="fa fa-print"></i></a> -->
-                      </div>
-                    </div>
+                 
 
 
                   </div>
@@ -157,11 +154,9 @@
 
                         <td v-if="productselected == 0">المنتج</td>
                         <!-- <td v-if="moveselected == 1">نوع العمليه</td> -->
-
                         <td v-if="storeselected == 0">المخزن</td>
                         <td v-if="statusselected == 0">الحاله</td>
                         <td v-if="descselected == 0">الطراز والمواصفات</td>
-
                         <td>الكميه</td>
 
                         <!-- <td>التاريخ</td> -->
@@ -182,7 +177,34 @@
                           {{ datas.desc }}
                         </td>
 
-                        <td>{{ datas.quantity }}</td>
+                        <td>
+                          <!-- {{ datas.quantity }} {{ datas.unit }} -->
+
+
+                          <div v-for="temx in datas.units">
+
+
+
+                            <span v-if="temx.unit_type == 0">
+
+                              <span v-if="datas.quantity / datas.rate >= 1">
+                                {{ Math.round((datas.quantity / datas.rate)) }}{{
+                                  datas.units[0].name
+                                }}
+                              </span>
+
+                              <span v-if="datas.quantity % datas.rate >= 1">
+                                {{ Math.round((datas.quantity % datas.rate)) }}{{
+                                  datas.units[1].name
+                                }}
+                              </span>
+                            </span>
+
+                          </div>
+
+                        </td>
+
+
                         <!-- <td>{{ datas.date }}</td> -->
                       </tr>
                     </tbody>
@@ -214,7 +236,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="well" id="treeview_json_product"></div>
+                  <div class="well" id="treeview_json_product"></div>
 
                 </div>
 
@@ -234,7 +256,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="well" id="treeview_json_store"></div>
+                  <div class="well" id="treeview_json_store"></div>
 
                 </div>
 
@@ -253,42 +275,40 @@
   <!-- container -->
 </template>
 <script>
+
+import tree from '../../../../js/tree/tree.js';
+import ReportOperation from '../../../../js/ReportOperation.js';
 export default {
+  mixins: [tree, ReportOperation],
   data() {
     return {
+      type: '',
       supplier: "yes",
       product: "",
-
+      type_of_tree: 1,
       store: "",
       status: "",
+      unit: '',
       types: [
         'حسب المخزن',
         'حسب المنتج',
         'حسب حاله المنتج',
-        'حسب المواصفات والطراز'
+        'حسب المواصفات والطراز',
+        // 'حسب نوع العمليه',
+        'حسب الوحده',
 
 
       ],
-      showstore: false,
-      showproduct: false,
-      showstatus: false,
-      showdesc: false,
+      timestamp: '',
+      user: '',
+      index: 1,
 
-      user: "",
-      statusselected: 0,
+      // user: "",
 
-      productselected: 0,
-      productselectedname: "",
-      storeselectedname: "",
-      statusselectedname: "",
-      storeselected: 0,
-      descselected: "",
-      typeselected: [],
-      moveselected: 0,
-      type_report: 0,
-      from_date: "2021-11-24",
-      to_date: "2021-11-24",
-      //   statusselected: "",
+      // type_report: 0,
+      // from_date: "2021-11-24",
+      // to_date: "2021-11-24",
+
 
       report: {
         data: "",
@@ -299,15 +319,18 @@ export default {
   },
   created() {
     setInterval(this.getNow, 1000);
-    this.showtree();
-    //
+
   },
   mounted() {
     // this.$router.go(0);
+
+    this.type = 'Stock';
+    this.showtree('product');
+    this.showtree('store');
+
     this.axios.post("/Reposupply").then((response) => {
-      this.store = response.data.store;
-      this.product = response.data.product;
       this.status = response.data.status;
+      this.unit = response.data.unit;
       console.log(response.data.users);
       this.user = response.data.users.name;
     });
@@ -327,147 +350,14 @@ export default {
       const dateTime = date + " " + time;
       this.timestamp = dateTime;
     },
-    showtree() {
 
-
-      this.axios.post(`/tree_product`).then((response) => {
-        this.jsonTreeDataProduct = response.data.products;
-let gf_product = this;
-
-        $('#treeview_json_product').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataProduct,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-           
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-        
-
-
-
-
-
-        }).on("changed.jstree", function (e, data) {
-
-          console.log(data.node.id);
-          $(`#product_tree`).val(data.node.id)
-          //  modal-title-store
-          gf_product.set_product(gf_product,data.node.id,data.node.text);
-
-        });
-
-      });
-      this.axios.post(`/tree_store`).then((response) => {
-        this.jsonTreeDataStore = response.data.stores;
-
-  let gf_store = this;
-        $('#treeview_json_store').jstree({
-          core: {
-            themes: {
-              responsive: false,
-            },
-            // so that create works
-            check_callback: true,
-            data: this.jsonTreeDataStore,
-          },
-          types: {
-            default: {
-              icon: "fa fa-folder text-primary",
-            },
-            file: {
-              icon: "fa fa-file  text-primary",
-            },
-          },
-          checkbox: {
-            three_state: false,
-
-          },
-          state: {
-            key: "demo2"
-          },
-          search: {
-            case_insensitive: true,
-            show_only_matches: true
-          },
-          plugins: ["checkbox",
-            "contextmenu",
-            "dnd",
-            "massload",
-            "search",
-            "sort",
-            "state",
-            "types",
-            "unique",
-            "wholerow",
-            "changed",
-            "conditionalselect"],
-          contextmenu: {
-            items: contextmenu
-          },
-
-
-
-
-
-
-        }).on("changed.jstree", function (e, data) {
-
-          console.log(data.node.id);
-          $(`#store_tree`).val(data.node.id)
-          //  modal-title-store
-          gf_store.set_store(gf_store,data.node.id,data.node.text);
-        });
-
-      });
-    },
-    set_product(gf,id,name){
-      gf.productselected = id;
-      gf.productselectedname = name;
-    },
-     set_store(gf,id,name){
-      gf.storeselected = id;
-            gf.storeselectedname = name;
-
-    },
     onreportchange() {
 
       (this.typeselected[0] == true) ? this.showstore = true : this.showstore = false;
       (this.typeselected[1] == true) ? this.showproduct = true : this.showproduct = false;
       (this.typeselected[2] == true) ? this.showstatus = true : this.showstatus = false;
       (this.typeselected[3] == true) ? this.showdesc = true : this.showdesc = false;
+      (this.typeselected[4] == true) ? this.showunit = true : this.showunit = false;
 
 
     },
@@ -485,6 +375,7 @@ let gf_product = this;
           product_id: this.productselected,
           status_id: this.statusselected,
           desc: this.descselected,
+          unit: this.unitelected,
           // from_date: this.from_date,
           // to_date: this.to_date,
         })
@@ -503,37 +394,6 @@ let gf_product = this;
 };
 </script>
 
-<style scoped>
-.custom-search {
-  position: relative;
-  width: 300px;
-}
-
-.custom-search-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background: #d1095e;
-  color: #fff;
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
-}
-</style>
 
 <!-- <style scoped>
 h2,
