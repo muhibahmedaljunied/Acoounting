@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Loan;
 use App\Models\Staff;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class LoanController extends Controller
@@ -20,9 +21,14 @@ class LoanController extends Controller
         ->join('staff','staff.id', '=', 'loans.staff_id')
         ->select('staff.name as staff','loans.*')
         ->paginate(10);
-
-   
-        $staffs = Staff::all();
+        // $staffs = Staff::all();
+         // ------------------------------------------------------------------------------------------------
+         $minutes = 60;
+         $staffs = Cache::remember('staff', $minutes, function () {
+             return DB::table('staff')->get();
+         });
+         // --------------------------------------------------------------------------------------------------
+        
         return response()->json(['staffs'=>$staffs,'loans'=>$loans]);
     }
 

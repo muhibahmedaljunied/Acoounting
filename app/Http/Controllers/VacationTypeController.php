@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Traits\Staff\BasicData\StoreTrait;
 use App\Models\VacationType;
 use DB;
 use Illuminate\Http\Request;
@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class VacationTypeController extends Controller
 {
 
+    use StoreTrait;
     public function index()
     {
         $vacation_types = DB::table('vacation_types')

@@ -16,23 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-class muhib2
-{
-
-    public function index(){
-
-        return 'muhib2';
-    }
-
-
-    public function __construct()
-    {
-
-        
-        $this->id = 1;
-    }
-}
-
 
 Route::get('/login', function (Request $request) {
     // return view('auth/register');

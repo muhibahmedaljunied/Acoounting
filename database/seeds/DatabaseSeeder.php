@@ -11,6 +11,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+        // $this->call(
+        //     ProductTableSeeder::class,
+        //     ProductTableSeeder::class
+        // );
         DB::table('roles')->insert([
             'id'       => 1,
             'name'   => "Admin",

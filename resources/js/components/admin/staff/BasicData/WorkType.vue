@@ -28,7 +28,7 @@
                 <tr>
                   <th class="wd-15p border-bottom-0">#</th>
                   <th class="wd-15p border-bottom-0">نوع الدوام</th>
-                
+
 
 
 
@@ -39,17 +39,18 @@
                 <tr v-for="(work_type, index) in work_types" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ work_type.name }}</td>
-              
+
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                    <button type="button" @click="delete_work_type(work_type.id)" class="btn btn-danger">
+                    <button type="button" @click="delete_work_type(work_type.id)"
+                      class="btn btn-sm waves-effect btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
 
                     <router-link :to="{
                       name: 'edit_branch',
                       params: { id: work_type.id },
-                    }" class="edit btn btn-success">
+                    }" class="edit btn btn-sm waves-effect btn-success">
                       <i class="fa fa-edit"></i></router-link>
                   </td>
                 </tr>
@@ -101,9 +102,9 @@
                                   <th> توع الدوام</th>
 
 
-                          
 
-                                
+
+
 
 
                                   <th>اضافه</th>
@@ -112,12 +113,13 @@
                               <tbody>
                                 <tr v-for="index in count" :key="index">
                                   <td>
-                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name" required />
+                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name"
+                                      required />
 
 
                                   </td>
-                         
-                               
+
+
 
 
 
@@ -136,7 +138,7 @@
 
 
                                 </tr>
-                          
+
 
                               </tbody>
                             </table>
@@ -151,8 +153,8 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
               </div>
 
             </div>
@@ -185,28 +187,30 @@ export default {
         type: Object,
         default: null,
       },
-  
-
-     
-    
-
 
     };
   },
   mounted() {
     this.list();
-    this.type = 'work_type';
     this.counts[0] = 1;
+    this.type = 'work_type';
   },
   methods: {
 
+    Add_new() {
 
+      $this.Add({
+        count: this.counts,
+        name: this.name,
+
+      });
+    },
     list(page = 1) {
       this.axios
         .post(`/work_type?page=${page}`)
         .then(({ data }) => {
           this.work_types = data.work_types;
-        
+
         })
         .catch(({ response }) => {
           console.error(response);

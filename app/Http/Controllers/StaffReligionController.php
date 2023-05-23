@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\Staff\BasicData\StoreTrait;
 use App\Models\StaffReligion;
 use DB;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ class StaffReligionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    use StoreTrait;
     public function index()
     {
         

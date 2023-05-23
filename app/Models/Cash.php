@@ -8,4 +8,6 @@ class Cash extends Model
     protected $fillable = [
         'customer_id','customer_name','date'
     ];
+
+    
 }

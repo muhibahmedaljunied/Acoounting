@@ -14,39 +14,38 @@ use App\Models\AttendanceDetail;
 use App\Models\Discount;
 use App\Models\Payroll;
 use App\Models\Vacation;
-use App\Models\Staff;
+
 use DB;
 
 trait TemporaleTrait
 {
 
-    function add($request, $value, $type)
+    function add(...$list_data)
     {
         $attendance_id  = 0 ;
-        // return $attendance_id;
+        $request = $list_data['request'];
+        $value = $list_data['value'];
+        $type = $list_data['type'];
+        
         switch ($type) {
 
-            
-
+     
             case 'extra':
-                $date1 = $request['start_time'][$value];
-                $date2 = $request['end_time'][$value];
-                $timestamp1 = strtotime($date1);
-                $timestamp2 = strtotime($date2);
-                $hour = abs($timestamp2 - $timestamp1) / (60 * 60) . " hour(s)";
-                // $quantity = intval($hour)*intval(1000);
-                // -----------------------------------------------------------------------------------------------------------
+
                 $temporale = new Extra();
                 $temporale->staff_id = $request['staff'][$value];
                 $temporale->extra_type_id = $request['extra_type'][$value];
                 $temporale->date = $request['date'][$value];
-                // $temporale->start_date = $request['start_date'][$value];
-                // $temporale->end_date = $request['end_date'][$value];
                 $temporale->start_time = $request['start_time'][$value];
                 $temporale->end_time = $request['end_time'][$value];
-                $temporale->number_hours = intval($hour);
-                // $temporale->quantity = $quantity;
-                // $temporale->note = $request['note'][$value];
+                $temporale->number_hours = $request['duration'][$value][0];
+                break;
+
+            case 'attendance':
+                $attendance = new Attendance();
+                $attendance->staff_id =  $request['staff'][$value];
+                $attendance->attendance_date = $request['attendance_date'][$value];
+                $attendance->attendance_status = $request['attendance_status'][$value];
                 break;
             case 'discount':
                 $temporale = new Discount();
@@ -77,8 +76,9 @@ trait TemporaleTrait
                 $temporale->vacation_type_id = $request['leave_type'][$value];
                 $temporale->start_date = $request['start_date'][$value];
                 $temporale->end_date = $request['end_date'][$value];
-                $temporale->total_days = $request['days'];
+                $temporale->total_days = $request['days'][$value];
                 // $temporale->total_days = $request->post('days')[$value];
+                // return $request['days'][$value];
                 break;
             case 'absence_sanction':
                 $temporale = new AbsenceSanction();
@@ -126,6 +126,7 @@ trait TemporaleTrait
 
 
         $temporale->save();
+        return $temporale->id;
     }
 
     function refresh_payroll($request, $value, $type)

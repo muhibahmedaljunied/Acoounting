@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\Staff\StoreTrait;
-// use Illuminate\Foundation\Auth\Access\Staff as s;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\WorkPeriod;
-use App\Models\Period;
 use App\Models\Staff;
 use App\Models\WorkType;
-
+use App\Models\AttendanceDetail;
+use App\Traits\Details\DetailsTrait;
+use DB;
+use Illuminate\Support\Facades\Cache;
 class AttendanceController extends Controller
 
 {
-    use StoreTrait;
-
+    use DetailsTrait;
     public function index(Request $request)
     {
 
@@ -27,6 +26,13 @@ class AttendanceController extends Controller
         ])->paginate(10);
 
         $staffs = Staff::all();
+         // ------------------------------------------------------------------------------------------------
+         $minutes = 60;
+         $staffs = Cache::remember('staff', $minutes, function () {
+             return DB::table('staff')->get();
+         });
+         // --------------------------------------------------------------------------------------------------
+        
         return response()->json(['list' => $attendances, 'staffs' => $staffs]);
     }
 
@@ -39,48 +45,17 @@ class AttendanceController extends Controller
         // ->select('attendances.*','attendance_details.*')
         // ->get();
 
-        $attenances =  Attendance::with([
-            
-            'attendance_details' => function ($query) {
-                $query->select('*');
-            }
 
-        ])->paginate(10);
+        $attenances = Cache::rememberForever('attenances', function () {
+            return Attendance::with([
 
-        // $total_delay = 0;
-        // $total_leave = 0;
-        // $total_apsence = 0;
-        // $total_present = 0;
-
-        // foreach ($attenances as $value) {
-
-            
-
-        //     foreach ($value->attendance_details as $attenances) {
-
-
-        //         $total_delay  = $total_delay + $attenances->delay;
-        //         $total_leave  = $total_leave + $attenances->leave;
-        //         if($attenances->attendance_status == 0){
-
-        //             $total_apsence  = $total_apsence + $attenances->apsence;
-                  
-        //         }else{
-        //             $total_present  = $total_present + $attenances->present;
-                
-        //         }
-              
-         
-        //     }
-        //     $value->total_delay  = $total_delay;
-        //     $value->total_leave  = $total_leave;
-        //     $value->total_apsence  = $total_apsence;
-        //     $value->total_present  = $total_present;
-
-
-
-        // }
-
+                'attendance_details' => function ($query) {
+                    $query->select('*');
+                }
+    
+            ])->paginate(10);
+    
+        });
 
         return response()->json(['staffs' => $staffs, 'list' => $attenances, 'work_systems' => $work_systems]);
     }
@@ -107,7 +82,7 @@ class AttendanceController extends Controller
     {
 
 
-        
+
         $all = array();
 
         // if ($request->post('work_system') != 0) {
@@ -127,19 +102,18 @@ class AttendanceController extends Controller
             $all[1] = $s2;
         }
 
-     
 
 
-        $attendances =  Attendance::where(["attendances.staff_id"=> $request->post('staff')])->
-        whereBetween('attendances.attendance_date', array($request->post('from_date'), $request->post('into_date')))
-        ->with([
-            'attendance_details' => function ($query) use ($request) {
-                $query->where(["attendance_details.period_id"=>$request->post('period')])->select('*');
-            },
-            'staff' => function ($query){
-                $query->select('*');
-            }
-        ])
+
+        $attendances =  Attendance::where(["attendances.staff_id" => $request->post('staff')])->whereBetween('attendances.attendance_date', array($request->post('from_date'), $request->post('into_date')))
+            ->with([
+                'attendance_details' => function ($query) use ($request) {
+                    $query->where(["attendance_details.period_id" => $request->post('period')])->select('*');
+                },
+                'staff' => function ($query) {
+                    $query->select('*');
+                }
+            ])
             ->paginate(10);
 
 
@@ -147,8 +121,8 @@ class AttendanceController extends Controller
         $total_leave =   0;
         $total_apsence = 0;
         $total_present = 0;
-    
-        
+
+
 
         foreach ($attendances as $value) {
 
@@ -157,34 +131,26 @@ class AttendanceController extends Controller
             $date = date('l', $date);
             $day = $date;
 
-            foreach ($value->attendance_details as $attenances ) {
+            foreach ($value->attendance_details as $attenances) {
 
 
                 $total_delay  = $total_delay + $attenances->delay;
                 $total_leave  = $total_leave + $attenances->leave;
-              
-                if($attenances->attendance_status == 0){
+
+                if ($attenances->attendance_status == 0) {
 
                     $total_apsence  = $total_apsence + $attenances->apsence;
-                  
-                }else{
+                } else {
                     $total_present  = $total_present + $attenances->present;
-                
                 }
-              
-         
             }
-         
+
 
             $value->total_delay  = $total_delay;
             $value->total_leave  = $total_leave;
             $value->total_apsence  = $total_apsence;
             $value->total_present  = $total_present;
             $value->date  = $date;
-   
-
-
-
         }
 
 
@@ -204,64 +170,60 @@ class AttendanceController extends Controller
         return response()->json(['list' => $staffs]);
     }
 
-    // public function store(Request $request)
-    // {
+    public function store(Request $request)
+    {
+
+        // return response()->json($request->all());
+
+        foreach ($request->post('count') as $value) {
 
 
-    //     // return response()->json($request->all());
+            if ($request['attendance_in_out'] == 1) {
 
-    //     foreach ($request->post('count') as $value) {
-    //         $temporale_f = 0;
-    //         if ($request->post('type') == 'attendance') {
+                $updating_data = ['attendance_status' => $request->post('attendance_status')[$value], 
+                                 'check_in' => $request->post('time_in')[$value]];
+            } else {
 
-    //             $temporale_f = tap(Attendance::where(['staff_id' => $request['staff'][$value], 'attendance_date' => $request['attendance_date'][$value]]))
-    //                 ->update(['attendance_status' => $request->post('status_attendance')[$value], 'check_in' => $request->post('time_in')[$value], 'check_out' => $request->post('time_out')[$value]])
-    //                 ->get('id');
-    //         }
-
-    //         if (count($temporale_f) == 0) {
+                $updating_data = ['attendance_status' => $request->post('attendance_status')[$value], 
+                                  'check_out' => $request->post('time_out')[$value]];
+            }
 
 
-    //             $attendance = new Attendance();
-    //             $attendance->staff_id =  $request['staff'][$value];
-    //             $attendance->attendance_date =  $request['attendance_date'][$value];
-    //             $attendance->attendance_status =  $request['status_attendance'][$value];
-    //             $attendance->check_in =  $request['time_in'][$value];
-    //             $attendance->check_out =  $request['time_out'][$value];
-    //             $attendance->save();
-
-    //         }
-    //     }
+            $attendance_id = Attendance::whereAttendance($request)
+                ->select('attendances.id')
+                ->get();
 
 
+            if ($attendance_id->isEmpty()) {
+
+                $attendance_id = $this->add($request->all(), $value, $request->post('type'));
+
+                // $this->init_details(id: $attendance_id,value: $value,type: $request->post('type'),data: $request->all());
+                $this->init_details(id:$attendance_id,value:$value,type:$request->post('type'),data:$request->all());
+
+            } else {
+
+                foreach ($attendance_id as $values) {
+
+                    $attendance_id = $values['id'];
+                }
+
+                $temporale_f = tap(AttendanceDetail::where([
+                    'attendance_id' => $attendance_id,
+                    'period_id' => $request['period']
+                ]))
+                    ->update($updating_data)
+                    ->get('id');
+
+                if ($temporale_f->isEmpty()) {
+
+                    $this->init_details(id:$attendance_id,value:$value,type:$request->post('type'),data:$request->all());
 
 
+                }
+            }
+        }
 
-
-    //     return response()->json(['message' => $request->all()]);
-
-
-    // $attendance_status = 0;
-    // if ($request->post('attendance_status') == 'apsence') {
-    //     $attendance_status = 0;
-    // }
-    // if ($request->post('attendance_status') == 'attend') {
-    //     $attendance_status = 1;
-    // }
-    // if ($request->post('attendance_status') == 'permission') {
-    //     $attendance_status = 2;
-    // }
-    // $staff = new Attendance();
-    // $staff->staff_id = $request->post('staff_id');
-    // $staff->attendance_status = $attendance_status;
-    // $staff->attendance_date = $request->post('attendance_date');
-    // $staff->check_in = $request->post('check_in');
-    // $staff->check_out = $request->post('check_out');
-    // $staff->save();
-
-
-
-
-    // return response()->json($request->all());
-    // }
+        return response()->json($request->all());
+    }
 }

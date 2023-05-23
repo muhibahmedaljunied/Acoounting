@@ -181,11 +181,11 @@ import Attendance from "./Operation/Attendance";
 import Allowance from "./Operation/Allowance";
 
 import Leave from "./Operation/Leave";
-import Absence from "./Operation/Absence";
+// import Absence from "./Operation/Absence";
 
 import Advance from "./Operation/Advance";
 
-import Delay from "./Operation/Delay";
+// import Delay from "./Operation/Delay";
 
 import Extra from "./Operation/Extra";
 
@@ -207,9 +207,9 @@ export default {
   components: {
     Attendance,
     Leave,
-    Absence,
+    // Absence,
     Advance,
-    Delay,
+    // Delay,
     Extra,
     Discount,
     Loan,

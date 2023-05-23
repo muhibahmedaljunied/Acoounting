@@ -1,3 +1,4 @@
+
 <template>
   <!-- row opened -->
   <div class="row row-sm">
@@ -49,15 +50,16 @@
               <td v-if="absence_sanction.discount == 2">نسبه</td>
               <td>{{ absence_sanction.sanctions }}</td>
               <td>
-                <button type="button" @click="delete_item(absence_sanction.id)" class="btn btn-danger btn-sm waves-effect">
+                <button type="button" @click="delete_item(absence_sanction.id)"
+                  class="btn btn-danger btn-sm waves-effect">
                   <i class="fa fa-trash"></i>
                 </button>
 
-             
 
-                  <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSA" data-toggle="modal" id="agregar_productos"
-            >
-              <i class="fa fa-edit"></i></a>
+
+                <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSA" data-toggle="modal"
+                  id="agregar_productos">
+                  <i class="fa fa-edit"></i></a>
               </td>
             </tr>
           </tbody>
@@ -217,7 +219,7 @@
 
               <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              
+
             </div>
           </div>
         </div>
@@ -369,7 +371,7 @@
 
               <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              
+
             </div>
           </div>
         </div>
@@ -377,7 +379,7 @@
     </div>
 
 
-   
+
   </div>
 </template>
 
@@ -398,20 +400,11 @@ export default {
         type: Object,
         default: null,
       },
-      staffselected: [],
       discountselected: [],
-      discounttypeselected: [],
       absenceselected: [],
       iterationselected: [],
+      discounttypeselected: [],
       sanctionselected: [],
-      staffs: '',
-      discount_types: '',
-      absence_types: '',
-
-      count: 1,
-      counts: [],
-
-
 
     };
   },
@@ -423,6 +416,22 @@ export default {
   methods: {
 
 
+    Add_new() {
+
+      this.Add(
+        {
+          type: this.type,
+          count: this.counts,
+          staff:this.staffselected,
+          discount: this.discountselected,
+          absence: this.absenceselected,
+          iteration: this.iterationselected,
+          discount_type: this.discounttypeselected,
+          sanction: this.sanctionselected,
+        });
+
+
+    },
 
     list(page = 1) {
       this.axios
@@ -440,30 +449,7 @@ export default {
         });
     },
 
-    Add_new() {
-
-      this.axios
-        .post(`/store_absence_sanction`, {
-          type: this.type,
-          staff: this.staffselected,
-          count: this.counts,
-          discount: this.discountselected,
-          absence: this.absenceselected,
-          iteration: this.iterationselected,
-          discount_type: this.discounttypeselected,
-          sanction: this.sanctionselected,
-
-        })
-        .then((response) => {
-          console.log(response);
-          toastMessage("تم الاضافه بنجاح");
-          // this.$router.go(0);
-        });
-
-      // this.$router.go(0);
-
-    },
-
+    
   },
 };
 </script>

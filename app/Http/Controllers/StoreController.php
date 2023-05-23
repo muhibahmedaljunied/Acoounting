@@ -9,6 +9,7 @@ use App\Imports\StoreImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Storage;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -36,23 +37,31 @@ class StoreController extends Controller
     public function tree_store()
     {
 
-        $stores = Store::where('parent_id', null)->with('children')->get();
-        $last_nodes = Store::where('parent_id', null)->select('stores.*')->max('id');
+        $stores =  Cache::rememberForever('tree_store_stores',function(){
+
+            return Store::where('parent_id', null)->with('children')->get();
+
+        });
+        $last_nodes = Cache::rememberForever('tree_store_last_nodes',function(){
+
+            return Store::where('parent_id', null)->select('stores.*')->max('id');
+
+        });
         return response()->json(['trees' => $stores, 'last_nodes' => $last_nodes]);
     }
 
-    public function store_Store_first_level(Request $request)
-    {
+    // public function store_Store_first_level(Request $request)
+    // {
 
-        $Store = new Store();
-        $Store->text = $request->post('text');
-        $Store->id = $request->post('id');
+    //     $Store = new Store();
+    //     $Store->text = $request->post('text');
+    //     $Store->id = $request->post('id');
 
-        $Store->rank = 1;
-        $Store->save();
+    //     $Store->rank = 1;
+    //     $Store->save();
 
-        return response()->json();
-    }
+    //     return response()->json();
+    // }
     public function store(Request $request)
     {
 

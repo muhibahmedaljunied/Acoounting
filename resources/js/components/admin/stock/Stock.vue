@@ -2,14 +2,10 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="d-flex justify-content-between">
+        <div class="card-header">
             <span class="h2"> المخزون</span>
-          </div>
-          <p class="tx-12 tx-gray-500 mb-2">
-
-          </p>
-          <div class="d-flex justify-content-between">
+        
+          <div style="display: flex;float: left; margin: 5px">
 
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
               aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />

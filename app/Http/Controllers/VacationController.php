@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\StaffType;
 use App\Models\VacationType;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class VacationController extends Controller 
@@ -26,19 +27,16 @@ class VacationController extends Controller
 
         $vacations = staff::with(['vacation','vacation.vacation_type'])->paginate(10);
 
-
-        // $vacations  = DB::table('vacations')
-        // ->join('staff','staff.id', '=', 'vacations.staff_id')
-        // ->join('vacation_types','vacation_types.id', '=', 'vacations.vacation_type_id')
-        // ->select('vacations.*','staff.name as staff','vacation_types.name as type')
-        // ->paginate(10);
-
-
-
-        // $jobs = Job::all();
         $branches = Branch::all();
         $staff_types = StaffType::all();
-        $staffs = Staff::all();
+        // $staffs = Staff::all();
+         // ------------------------------------------------------------------------------------------------
+         $staffs = Cache::rememberForever('staff', function () {
+             return DB::table('staff')->get();
+         });
+         // --------------------------------------------------------------------------------------------------
+        
+
         $vacation_types = VacationType::all();
         return response()->json(['list'=>$vacations,'branches'=>$branches,'staff_types'=>$staff_types,'staffs'=>$staffs,'vacation_types'=>$vacation_types]);
     }
@@ -49,6 +47,39 @@ class VacationController extends Controller
     return response()->json(['list'=>$staffs]);
 
 
+    }
+
+    public function store(Request $request)
+    {
+
+        foreach ($request->post('count') as $value) {
+
+
+            // return response()->json(['message' => $request->all()]);
+            $temporale_f = 0;
+
+
+            if ($request->post('type') == 'leave') {
+
+
+                $temporale_f = tap(Vacation::whereLeave($request))
+                    ->update(['total_days' => $request['days']])
+                    ->get('id');
+            }
+
+            if ($temporale_f->isEmpty()) {
+
+
+
+                $this->add($request->all(), $value, $request->post('type'));
+                $this->refresh_payroll($request->all(), $value, $request->post('type'));
+            }
+        }
+
+
+
+
+        return response()->json(['message' => $request->all()]);
     }
 
     /**

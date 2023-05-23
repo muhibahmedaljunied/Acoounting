@@ -11,6 +11,9 @@ export default {
       leave: [],
 
       period_selected:0,
+      start_period_selected:0,
+      end_period_selected:0,
+
       staff_selected:0,
       work_selected: 0,
       work_systems: 0,
@@ -83,16 +86,7 @@ export default {
       });
 
     },
-    list(page = 1) {
-      this.axios
-        .post(`/${this.table}?page=${page}`)
-        .then(({ data }) => {
-          this.absence_sanction = data.data;
-        })
-        .catch(({ response }) => {
-          console.error(response);
-        });
-    },
+    
     get_search(word_search) {
       this.axios
         .post(`/extra_typesearch`, { word_search: this.word_search })

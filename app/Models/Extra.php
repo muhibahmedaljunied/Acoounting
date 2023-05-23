@@ -22,4 +22,19 @@ class Extra extends Model
         return $this->belongsTo(ExtraSanction::class);
     }
 
+    public function scopeWhereExtra($query, $value)
+
+    {
+        return $query->where([
+            'staff_id' => $value['staff'],
+            'extra_type_id' => $value['extra_type'],
+          
+        ]);
+
+                                                        
+                                                            
+    }
+
+    
+
 }

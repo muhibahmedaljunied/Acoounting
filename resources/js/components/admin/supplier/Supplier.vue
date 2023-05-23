@@ -2,12 +2,10 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="d-flex justify-content-right">
+        <div class="card-header">
             <span class="h2"> الموردين</span>
-          </div>
 
-          <div class="d-flex justify-content-right">
+          <div style="display: flex;float: left; margin: 5px">
             <router-link
               to="create_supplier"
               class="tn btn-info btn-sm waves-effect btn-agregar"

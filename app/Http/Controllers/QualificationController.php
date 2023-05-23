@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Traits\Staff\BasicData\StoreTrait;
 use App\Models\Qualification;
 use DB;
 use Illuminate\Http\Request;
 
 class QualificationController extends Controller
 {
+
+
+    use StoreTrait;
     /**
      * Display a listing of the resource.
      *
@@ -37,10 +40,10 @@ class QualificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    // public function store(Request $request)
+    // {
+    //     //
+    // }
 
     /**
      * Display the specified resource.

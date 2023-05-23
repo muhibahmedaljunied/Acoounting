@@ -1,14 +1,12 @@
-<template>
+s<template>
   <!-- row opened -->
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="d-flex justify-content-between">
+        <div class="card-header">
             <span class="h2"> العملاء</span>
-          </div>
 
-          <div class="d-flex justify-content-right">
+          <div style="display: flex;float: left; margin: 5px">
             <router-link
               to="create_customer"
               class="tn btn-info btn-sm waves-effect btn-agregar"

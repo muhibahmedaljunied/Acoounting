@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Traits\GeneralTrait;
 use App\Traits\Temporale\TemporaleTrait;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\Details\DetailsTrait;
 use App\Models\StoreProduct;
-// use Illuminate\Foundation\Auth\Access\store as s;
 use App\Models\Product;
 use App\Models\Supply;
 use App\Models\SupplyDetail;
@@ -26,7 +26,7 @@ use DB;
 class SupplyController extends Controller
 {
 
-    use TemporaleTrait,InvoiceTrait,DetailsTrait,GeneralTrait;
+    use TemporaleTrait, InvoiceTrait, DetailsTrait, GeneralTrait;
     public function index()
     {
 
@@ -66,6 +66,98 @@ class SupplyController extends Controller
         return response()->json(['products' => $products]);
     }
 
+    public function store(Request $request)
+    {
+
+        // return response()->json(['message' => $request->all()]);
+        foreach ($request->post('count') as $value) {
+
+            $temporale_f = 0;
+            // if ($value !== null) {
+
+
+            $temporale_f = tap(Temporale::whereall($request->all(), $value, $request->post('type')))
+                ->update(['qty' => $request->post('qty')[$value], 'price' => $request['price'][$value]])
+                ->get('id');
+
+
+            if (count($temporale_f) == 0) {
+
+                $this->add_temporale(data: $request->all(), value: $value, type: $request->post('type'));
+            }
+
+            // }
+        }
+
+
+        return response()->json(['message' => $request->all()]);
+    }
+
+
+    public function payment(Request $request)
+    {
+
+
+
+        $supply_id =  $this->add_start(data: $request->all());
+        $temporale = $this->check_temporale($request->post('type'));
+        // return response()->json(['message' => $temporale]);
+        if (count($temporale) != 0) {
+
+
+            foreach ($temporale as $value) {
+
+                $stock_f = 0;
+                $store_product_f = 0;
+
+                $store_product_f = $this->refresh_store(
+                    data: $value,
+
+                ); // this make updating for store_products
+                // return response()->json(['message' => $store_product_f]);
+                $id_store_product = $this->get($value);  //this get data from store_products
+                //----------------------------------------------------------------------------------------------------------------------------------------- 
+                if ($store_product_f == 0) {
+
+                    $id_store_product = $this->init_store(
+                        data: $value,
+                    );
+
+
+                    // $id_store_product = $this->init_store(value:$value, type:$request->post('type')); // this make intial for store_products if it is empty
+                }
+
+                $this->init_details(
+                    id: $supply_id,
+                    id_store_product: $id_store_product,
+                    data: $value,
+
+                ); // this make initial for details tables
+
+                $stock_f = $this->refresh_stock(
+                    id: $supply_id,
+                    data: $value,
+
+                ); // this make update for stock table
+
+                if ($stock_f == 0) {
+
+                    $this->init_stock(
+                        id: $supply_id,
+                        data: $value,
+
+                    ); //this make intial for stock table if it is empty 
+                }
+            }
+
+            Temporale::where('type_process', $request->post('type'))->delete(); //this removes data from temporale table after moving it 
+            return response()->json(['message' => 'success']);
+        }
+
+        return response()->json(['message' => 'faild']);
+    }
+
+
     public function create()
     {
         $product = Product::all();
@@ -89,7 +181,7 @@ class SupplyController extends Controller
 
 
 
-        return response()->json(['product' => $product, 'supplier' => $supplier, 'store' => $store, 'status' => $status,'unit' => $unit, 'users' => $users]);
+        return response()->json(['product' => $product, 'supplier' => $supplier, 'store' => $store, 'status' => $status, 'unit' => $unit, 'users' => $users]);
     }
 
 
@@ -122,19 +214,19 @@ class SupplyController extends Controller
         return response()->json(['supplies' => $supplies]);
     }
 
-    public function invoice_supply(Request $request,$id)
+    public function invoice_supply(Request $request, $id)
     {
 
-        
+
         $table = $request->post('table');
-       
+
 
         $supplies = Supply::where('supplies.id', $id)
             ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
             ->select('supplies.*', 'supplies.id as supply_id', 'suppliers.*')
             ->get();
-        $details = $this->invoice($id,$table);
- 
+        $details = $this->invoice($id, $table);
+
         $users = Auth::user();
 
 
@@ -226,7 +318,7 @@ class SupplyController extends Controller
         if ($request->post('type_operation') == 9) {
             $type_operation = 'PurchaseReturn';
         }
-        
+
 
         if ($request->post('type_operation') == 1) {
 
@@ -234,7 +326,7 @@ class SupplyController extends Controller
                 // ->where('stocks.type_operation', $type_operation)
                 ->whereBetween('stocks.date', array($request->post('from_date'), $request->post('to_date')))
                 ->joinstock()
-                ->select('stocks.*', 'stocks.quantity as qty_stock', 'products.text as product', 'stores.*', 'stores.text as store', 'statuses.name as status','units.name as unit')
+                ->select('stocks.*', 'stocks.quantity as qty_stock', 'products.text as product', 'stores.*', 'stores.text as store', 'statuses.name as status', 'units.name as unit')
                 ->get();
 
             $users = Auth::user();
@@ -247,13 +339,13 @@ class SupplyController extends Controller
                 ->where('stocks.type_operation', $type_operation)
                 ->whereBetween('stocks.date', array($request->post('from_date'), $request->post('to_date')))
                 ->joinstock()
-                ->select('stocks.*', 'stocks.quantity as qty_stock', 'products.text as product', 'stores.*', 'stores.text as store', 'statuses.name as status','units.name as unit')
+                ->select('stocks.*', 'stocks.quantity as qty_stock', 'products.text as product', 'stores.*', 'stores.text as store', 'statuses.name as status', 'units.name as unit')
                 ->get();
         } else {
             $repomovement = Stock::where('stocks.type_operation', $type_operation)
                 ->whereBetween('stocks.date', array($request->post('from_date'), $request->post('to_date')))
                 ->joinstock()
-                ->select('stocks.*', 'stocks.quantity as qty_stock', 'products.text as product', 'stores.*', 'stores.text as store', 'statuses.name as status','units.name as unit')
+                ->select('stocks.*', 'stocks.quantity as qty_stock', 'products.text as product', 'stores.*', 'stores.text as store', 'statuses.name as status', 'units.name as unit')
                 ->get();
         }
 
@@ -272,11 +364,11 @@ class SupplyController extends Controller
         if (!empty($all)) {
 
             $repostocks = StoreProduct::where($all)
-                ->where('store_products.quantity', '!=', 0)->where('product_units.unit_type','==',0)
+                ->where('store_products.quantity', '!=', 0)->where('product_units.unit_type', '==', 0)
                 ->joinall()
                 ->join('product_units', 'product_units.product_id', '=', 'products.id')
                 ->join('units', 'units.id', '=', 'product_units.unit_id')
-                ->select('products.text as product', 'store_products.*', 'stores.*', 'statuses.name as status','units.name as unit')
+                ->select('products.text as product', 'store_products.*', 'stores.*', 'statuses.name as status', 'units.name as unit')
                 ->get();
 
             foreach ($repostocks as $value) {
@@ -285,18 +377,18 @@ class SupplyController extends Controller
                     ->join('units', 'units.id', '=', 'product_units.unit_id')
                     ->join('products', 'products.id', '=', 'product_units.product_id')
                     ->where('product_units.product_id', $value->product_id)
-                    ->select('units.*','products.rate','product_units.unit_type','products.rate')
+                    ->select('units.*', 'products.rate', 'product_units.unit_type', 'products.rate')
                     ->get();
-    
+
                 $value->units = $units;
             }
         } else {
 
-            $repostocks = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type','==',0)
+            $repostocks = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type', '==', 0)
                 ->joinall()
                 ->join('product_units', 'product_units.product_id', '=', 'products.id')
                 ->join('units', 'units.id', '=', 'product_units.unit_id')
-                ->select('products.text as product', 'store_products.*', 'stores.*', 'stores.text as store', 'statuses.name as status','products.rate','units.name as unit')
+                ->select('products.text as product', 'store_products.*', 'stores.*', 'stores.text as store', 'statuses.name as status', 'products.rate', 'units.name as unit')
                 ->get();
 
 
@@ -306,9 +398,9 @@ class SupplyController extends Controller
                     ->join('units', 'units.id', '=', 'product_units.unit_id')
                     ->join('products', 'products.id', '=', 'product_units.product_id')
                     ->where('product_units.product_id', $value->product_id)
-                    ->select('units.*','products.rate','product_units.unit_type')
+                    ->select('units.*', 'products.rate', 'product_units.unit_type')
                     ->get();
-    
+
                 $value->units = $units;
             }
         }
@@ -334,11 +426,10 @@ class SupplyController extends Controller
 
     public function destroy(Request $request)
     {
-        if($request->id){
-            Temporale::where('type_process', 'supply')->where('temporales.product_id',$request->id)->delete();
-        }else{
+        if ($request->id) {
+            Temporale::where('type_process', 'supply')->where('temporales.product_id', $request->id)->delete();
+        } else {
             Temporale::where('type_process', 'supply')->delete();
-
         }
 
 

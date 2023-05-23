@@ -52,9 +52,9 @@
                   <i class="fa fa-trash"></i>
                 </button>
 
-                <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSE" data-toggle="modal" id="agregar_productos"
-           >
-              <i class="fa fa-edit"></i></a>
+                <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSE" data-toggle="modal"
+                  id="agregar_productos">
+                  <i class="fa fa-edit"></i></a>
               </td>
             </tr>
           </tbody>
@@ -90,296 +90,131 @@
                       </div>
                     </div>
                     <div class="modal-body">
-            <div class="row row-sm">
-              <div class="col-xl-12">
-                <div class="card">
-                  <div class="card-header pb-0">
+                      <div class="row row-sm">
+                        <div class="col-xl-12">
+                          <div class="card">
+                            <div class="card-header pb-0">
 
-                  </div>
-                  <div class="card-body">
-                    <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
+                            </div>
+                            <div class="card-body">
+                              <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
 
-                      <div class="table-responsive">
-                        <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
-                          <thead>
-                            <tr>
-                              <th>اسم الموظف</th>
-                              <th>الاضافي</th>
-                              <th>اجزاء الاضافي</th>
-                              <th>عدد مرات التكرار</th>
-                              <th> طريقه الاحتساب</th>
-                              <th> الجزاء</th>
-
-
-
+                                <div class="table-responsive">
+                                  <table class="table table-bordered text-right m-t-30"
+                                    style="width: 100%; font-size: x-small">
+                                    <thead>
+                                      <tr>
+                                        <th>اسم الموظف</th>
+                                        <th>الاضافي</th>
+                                        <th>اجزاء الاضافي</th>
+                                        <th>عدد مرات التكرار</th>
+                                        <th> طريقه الاحتساب</th>
+                                        <th> الجزاء</th>
 
 
 
 
-                              <th>اضافه</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr v-for="index in count" :key="index">
-
-                              <td>
-                                <select v-model="staffselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-for="staff in staffs" v-bind:value="staff.id">
-                                    {{ staff.name }}
-                                  </option>
-                                </select>
-                              </td>
-                              <td>
-                                <select v-model="extraselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-for="extra in extra_types" v-bind:value="extra.id">
-                                    {{ extra.name }}
-                                  </option>
-                                </select>
-                              </td>
-
-                              <td>
-                                <select v-model="extrapartselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-for="extra_part in extra_parts" v-bind:value="extra_part.id">
-                                    {{ extra_part.name }}
-                                  </option>
-                                </select>
-                              </td>
-
-
-                              <td>
-                                <select v-model="iterationselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-bind:value="1">
-                                    مره واحده
-                                  </option>
-
-                                  <option v-bind:value="2">
-                                    مرتين
-                                  </option>
-
-                                  <option v-bind:value="3">
-                                    ثلاث مرات
-                                  </option>
-
-                                  <option v-bind:value="4">
-                                    اربع مرات
-                                  </option>
-
-                                  <option v-bind:value="5">
-                                    خمس مرات او اكثر
-                                  </option>
-                                </select>
-                              </td>
-                              <td>
-                                  <select v-model="discounttypeselected[index]" name="type" id="type"
-                                    class="form-control " required>
-                                    <option v-for="discount in discount_types" v-bind:value="discount.id">
-                                      {{ discount.name }}
-                                    </option>
-                                  </select>
-                                </td>
-                              <td>
-                                <input v-model="sanctionselected[index]" type="text" class="form-control" name="name"
-                                  id="name" required />
-
-                              </td>
-
-
-                              <td v-if="index == 1">
-                                <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
-                                  <i class="fa fa-plus-circle"></i></a>
-
-                                <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
-                                  <i class="fa fa-minus-circle"></i></a>
-                              </td>
 
 
 
-                            </tr>
-                         
+                                        <th>اضافه</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr v-for="index in count" :key="index">
 
-                          </tbody>
-                        </table>
-                      </div>
-                    </form>
+                                        <td>
+                                          <select v-model="staffselected[index]" name="type" id="type"
+                                            class="form-control " required>
+                                            <option v-for="staff in staffs" v-bind:value="staff.id">
+                                              {{ staff.name }}
+                                            </option>
+                                          </select>
+                                        </td>
+                                        <td>
+                                          <select v-model="extraselected[index]" name="type" id="type"
+                                            class="form-control " required>
+                                            <option v-for="extra in extra_types" v-bind:value="extra.id">
+                                              {{ extra.name }}
+                                            </option>
+                                          </select>
+                                        </td>
 
-                  </div>
-                </div>
-              </div>
+                                        <td>
+                                          <select v-model="extrapartselected[index]" name="type" id="type"
+                                            class="form-control " required>
+                                            <option v-for="extra_part in extra_parts" v-bind:value="extra_part.id">
+                                              {{ extra_part.name }}
+                                            </option>
+                                          </select>
+                                        </td>
 
-            </div>
-          </div>
-                    <div class="card-footer pb-0">
-                      <div class="d-flex justify-content-between">
-                        <i class="mdi mdi-dots-horizontal text-gray"></i>
+
+                                        <td>
+                                          <select v-model="iterationselected[index]" name="type" id="type"
+                                            class="form-control " required>
+                                            <option v-bind:value="1">
+                                              مره واحده
+                                            </option>
+
+                                            <option v-bind:value="2">
+                                              مرتين
+                                            </option>
+
+                                            <option v-bind:value="3">
+                                              ثلاث مرات
+                                            </option>
+
+                                            <option v-bind:value="4">
+                                              اربع مرات
+                                            </option>
+
+                                            <option v-bind:value="5">
+                                              خمس مرات او اكثر
+                                            </option>
+                                          </select>
+                                        </td>
+                                        <td>
+                                          <select v-model="discounttypeselected[index]" name="type" id="type"
+                                            class="form-control " required>
+                                            <option v-for="discount in discount_types" v-bind:value="discount.id">
+                                              {{ discount.name }}
+                                            </option>
+                                          </select>
+                                        </td>
+                                        <td>
+                                          <input v-model="sanctionselected[index]" type="text" class="form-control"
+                                            name="name" id="name" required />
+
+                                        </td>
+
+
+                                        <td v-if="index == 1">
+                                          <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                            v-on:click="addComponent(count)">
+                                            <i class="fa fa-plus-circle"></i></a>
+
+                                          <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                            v-on:click="disComponent(count)">
+                                            <i class="fa fa-minus-circle"></i></a>
+                                        </td>
+
+
+
+                                      </tr>
+
+
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </form>
+
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
-                  </div>
-
-
-                  <!-- </form> -->
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
-              <!-- <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"@click="submitForm()">
-                        حفظ
-                      </button> -->
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal fade" id="updateSE" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <form method="post">
-        <div class="modal-dialog modal-fullscreen">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-
-            <div class="modal-body">
-              <div class="row row-sm">
-                <div class="col-xl-12">
-                  <!-- <form method="post"> -->
-                  <div class="card">
-                    <div class="card-header pb-0">
-                      <div class="d-flex justify-content-between">
-                        <h4 class="modal-title" id="myLargeModalLabel"> جزاءات الاضافي</h4>
-
-                        <i class="mdi mdi-dots-horizontal text-gray"></i>
-                      </div>
-                    </div>
-                    <div class="modal-body">
-            <div class="row row-sm">
-              <div class="col-xl-12">
-                <div class="card">
-                  <div class="card-header pb-0">
-
-                  </div>
-                  <div class="card-body">
-                    <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
-
-                      <div class="table-responsive">
-                        <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
-                          <thead>
-                            <tr>
-                              <th>اسم الموظف</th>
-                              <th>الاضافي</th>
-                              <th>اجزاء الاضافي</th>
-                              <th>عدد مرات التكرار</th>
-                              <th> طريقه الاحتساب</th>
-                              <th> الجزاء</th>
-
-
-
-
-
-
-
-                              <th>اضافه</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr v-for="index in count" :key="index">
-
-                              <td>
-                                <select v-model="staffselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-for="staff in staffs" v-bind:value="staff.id">
-                                    {{ staff.name }}
-                                  </option>
-                                </select>
-                              </td>
-                              <td>
-                                <select v-model="extraselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-for="extra in extra_types" v-bind:value="extra.id">
-                                    {{ extra.name }}
-                                  </option>
-                                </select>
-                              </td>
-
-                              <td>
-                                <select v-model="extrapartselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-for="extra_part in extra_parts" v-bind:value="extra_part.id">
-                                    {{ extra_part.name }}
-                                  </option>
-                                </select>
-                              </td>
-
-
-                              <td>
-                                <select v-model="iterationselected[index]" name="type" id="type" class="form-control "
-                                  required>
-                                  <option v-bind:value="1">
-                                    مره واحده
-                                  </option>
-
-                                  <option v-bind:value="2">
-                                    مرتين
-                                  </option>
-
-                                  <option v-bind:value="3">
-                                    ثلاث مرات
-                                  </option>
-
-                                  <option v-bind:value="4">
-                                    اربع مرات
-                                  </option>
-
-                                  <option v-bind:value="5">
-                                    خمس مرات او اكثر
-                                  </option>
-                                </select>
-                              </td>
-                              <td>
-                                  <select v-model="discounttypeselected[index]" name="type" id="type"
-                                    class="form-control " required>
-                                    <option v-for="discount in discount_types" v-bind:value="discount.id">
-                                      {{ discount.name }}
-                                    </option>
-                                  </select>
-                                </td>
-                              <td>
-                                <input v-model="sanctionselected[index]" type="text" class="form-control" name="name"
-                                  id="name" required />
-
-                              </td>
-
-
-                              <td v-if="index == 1">
-                                <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
-                                  <i class="fa fa-plus-circle"></i></a>
-
-                                <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
-                                  <i class="fa fa-minus-circle"></i></a>
-                              </td>
-
-
-
-                            </tr>
-                         
-
-                          </tbody>
-                        </table>
-                      </div>
-                    </form>
-
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
                     <div class="card-footer pb-0">
                       <div class="d-flex justify-content-between">
                         <i class="mdi mdi-dots-horizontal text-gray"></i>
@@ -405,7 +240,6 @@
       </form>
     </div>
 
- 
   </div>
 </template>
 
@@ -425,19 +259,12 @@ export default {
         type: Object,
         default: null,
       },
-      staffselected: [],
+
+      iterationselected: [],
+      discounttypeselected: [],
+      sanctionselected: [],
       extraselected: [],
       extrapartselected: [],
-      iterationselected: [],
-      sanctionselected: [],
-      discounttypeselected:[],
-
-      count: 1,
-      counts: [],
-      discount_types:'',
-      extra_parts: '',
-      extra_types: '',
-      staffs: '',
     };
   },
   mounted() {
@@ -447,6 +274,22 @@ export default {
   },
   methods: {
 
+    Add_new() {
+
+      this.Add(
+        {
+          type: this.type,
+          count: this.counts,
+          staff:this.staffselected,
+          extra: this.extraselected,
+          extra_part: this.extrapartselected,
+          iteration: this.iterationselected,
+          discount_type: this.discounttypeselected,
+          sanction: this.sanctionselected,
+        });
+
+
+    },
 
 
     list(page = 1) {
@@ -464,30 +307,7 @@ export default {
         });
     },
 
-    Add_new() {
-
-      this.axios
-        .post(`/store_extra_sanction`, {
-          type: this.type,
-          staff: this.staffselected,
-          count: this.counts,
-          discount: this.discountselected,
-          extra: this.extraselected,
-          extra_part: this.extrapartselected,
-          iteration: this.iterationselected,
-          discount_type: this.discounttypeselected,
-          sanction: this.sanctionselected,
-
-        })
-        .then((response) => {
-          console.log(response);
-          toastMessage("تم الاضافه بنجاح");
-          // this.$router.go(0);
-        });
-
-      // this.$router.go(0);
-
-    },
+   
 
   },
 };

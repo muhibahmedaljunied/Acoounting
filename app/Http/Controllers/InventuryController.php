@@ -26,17 +26,20 @@ class InventuryController extends Controller
     public function index()
     {
 
-        $temporale = DB::table('opening_inventuries')
-            ->join('stores', 'opening_inventuries.store_id', '=', 'stores.id')
-            ->join('statuses', 'opening_inventuries.status_id', '=', 'statuses.id')
-            ->join('products', 'products.id', '=', 'opening_inventuries.product_id')
-            ->join('units', 'units.id', '=', 'opening_inventuries.unit_id')
-            ->select('products.text as product', 'opening_inventuries.qty as tem_qty', 'opening_inventuries.desc', 'opening_inventuries.*', 'stores.text as store', 'statuses.name as status', 'units.name as unit')
-            ->paginate(20);
+        // $temporale = DB::table('opening_inventories') 
+        //     ->join('stores', 'opening_inventuries.store_id', '=', 'stores.id')
+        //     ->join('statuses', 'opening_inventuries.status_id', '=', 'statuses.id')
+        //     ->join('products', 'products.id', '=', 'opening_inventuries.product_id')
+        //     ->join('units', 'units.id', '=', 'opening_inventuries.unit_id')
+        //     ->select('products.text as product', 'opening_inventuries.qty as tem_qty', 'opening_inventuries.desc', 'opening_inventuries.*', 'stores.text as store', 'statuses.name as status', 'units.name as unit')
+        //     ->paginate(20);
 
         $statuses = Status::all();
 
-        return response()->json(['temporales' => $temporale, 'statuses' => $statuses]);
+        return response()->json([
+            // 'temporales' => $temporale, 
+            'statuses' => $statuses
+        ]);
     }
 
 
@@ -45,56 +48,72 @@ class InventuryController extends Controller
 
 
 
+        // -------------------------------------------------------------------------------------
+
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
+
+            foreach ($request->post('count') as $value) {
 
 
-        foreach ($request->post('count') as $value) {
-
-            if ($value !== null) {
 
                 $stock_f = 0;
                 $store_product_f = 0;
+                $data = array(
+                    'product_id' => $request['product_id'][$value],
+                    'status_id' => $request['status_id'][$value],
+                    'store_id' => $request['store_id'][$value],
+                    'unit_id' => $request['unit_id'][$value],
+                    'qty' => $request['qty'][$value],
+                    'desc' => $request['desc'][$value],
+                    'price' => $request['price'][$value],
+                    'date' => $request['date'][$value],
+                    'total' => $request['total'][$value],
+                    'type' => 'Opening',
+                    'type_refresh' => 'increment',
 
 
-                // return response()->json(['rrx' =>$request->all()]);
-                $array_unit_after_decode =json_decode($request['unit_id'][$value]);
-                $micro_unit_qty = $this->set_unit($request, $value, $array_unit_after_decode);
-                
-         
-                $store_product_f = $this->refresh_store_from_opening($value, $request->all(), $micro_unit_qty);
-        
-                //  --------------------------------------------------------------------------
-                $id_store_product = $this->get($value, $request->all());
-         
-                foreach ($id_store_product as $values) {
+                );
+                dd($data);
 
-                    // return response()->json(['rrx' =>$values['id'] ]);
-                    $id_store_product = $values['id'];
-                }
+                $store_product_f = $this->refresh_store(data: $data); // this make updating for store_products
 
+                $id_store_product = $this->get($data);  //this get data from store_products
+
+                // //----------------------------------------------------------------------------------------------------------------------------------------- 
                 if ($store_product_f == 0) {
+                    $id_store_product = $this->init_store(data: $data);
+                } // this make intial for store_products if it is empty
 
-                    $id_store_product = $this->init_store($value, 'Opening', $request->all(), $micro_unit_qty);
-                }
+                $r = $this->init_details(
+                    id_store_product: $id_store_product,
+                    data: $data
+                );
+                // dd($r);
 
+                $stock_f = $this->refresh_stock(data: $data); // this make update for stock table
 
-               
-                // --------------------------------------------------------------------------------------------------------------
-
-                $r = $this->init_details(null, $id_store_product, $value, 'Opening', $request->all());
-
-                // return response()->json(['rrx' =>$r ]);
-                // --------------------------------------------------------------------------------------------------------------
-                $stock_f = $this->refresh_stock(null, $value, 'Opening', 'increment', $request->all());
-                // -----------------------------------------------------
-
-                // return response()->json(['rrx' =>$stock_f ]);
                 if ($stock_f == 0) {
 
-
-                    $this->init_stock(null, $value, 'Opening', $request->post('date'), $request->all());
+                    $this->init_stock(data: $data); //this make intial for stock table if it is empty 
                 }
             }
+
+            // ------------------------------------------------------------------------------------------------------
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "purchase created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
+        // -------------------------------------------------------------------------------------
+
         return response()->json(['message' => 'success']);
     }
 

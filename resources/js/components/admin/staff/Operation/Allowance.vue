@@ -83,15 +83,7 @@
                       <i class="fa fa-trash"></i>
                     </button>
 
-                    <!-- <router-link
-                      :to="{
-                        name: 'edit_staff',
-                        params: { id: staff.id },
-                      }"
-                      class="edit btn btn-success"
-                    >
-                      <i class="fa fa-edit"></i
-                    ></router-link> -->
+
                   </td>
                 </tr>
               </tbody>
@@ -103,7 +95,7 @@
             </table>
           </div>
         </div>
-      
+
       </div>
 
 
@@ -234,7 +226,8 @@
                                           {{ allowance_type.name }}
                                         </option>
                                       </select></td>
-                                    <td><input v-model="qty[index]" type="number" class="form-control input_cantidad">
+                                    <td><input v-model="quantity[index]" type="number"
+                                        class="form-control input_cantidad">
                                     </td>
 
                                     <td v-if="index == 1">
@@ -264,10 +257,14 @@
                         </div>
                       </div>
                     </div>
+
+
                     <div class="modal-footer">
-                <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
-                    العمليه</span></a>
-              </div>
+                      <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
+
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+
                   </form>
                 </div>
                 <!--/div-->
@@ -290,13 +287,14 @@
 </template>
 
 <script>
+
 import pagination from "laravel-vue-pagination";
-// import operation from '../../../../../js/staff/operation/operation.js';
+import operation from '../../../../../js/staff/operation/operation.js';
 export default {
   components: {
     pagination,
   },
-  // mixins: [operation],
+  mixins: [operation],
   data() {
     return {
       // category: "yes",
@@ -306,36 +304,10 @@ export default {
         default: null,
       },
 
-
-      count: 1,
-      counts: {},
-
-      staff_id: '',
-      salary: '',
-      allow: [],
-      qty: [],
-      branchselected: "",
-      staff_allowances: "",
-      salaryselected: 0,
-      date: "",
-      allowances: "",
+      allowance_types: "",
       allowance_type: [],
       allowance_status: [],
-      allowance: [],
-
-
-      checkselected: [],
-      staffselected: [],
-      jobselected: 1,
-      brancheselected: 1,
-      staff_typeselected: 1,
-
-      staffs: "",
-      // jobs: "",
-      // branches: "",
-      staff_types: "",
-      allowance_types: "",
-      // allowance_type: '',
+      quantity: [],
 
       word_search: "",
     };
@@ -349,50 +321,30 @@ export default {
 
   },
   methods: {
-    data_list() {
 
-      return {
-        type: this.type,
-        staff: this.staffselected,
-        allowance_type: this.allowance_type,
-        // salary: this.salaryselected,
-        count: this.counts,
-        allow: this.allow,
-        qty: this.qty,
-      }
+    Add_new() {
+
+      this.Add(
+        {
+          type: this.type,
+          count: this.counts,
+          staff: this.staffselected,
+          allowance_status: this.allowance_status,
+          allowance_type: this.allowance_type,
+          qty: this.quantity,
+         
+
+        });
+
+
     },
+
     get_search(word_search) {
       this.axios
         .post(`/salarysearch`, { word_search: this.word_search })
         .then(({ data }) => {
-          // this.salarys = data.salarys;
           this.staff_allowances = data.staff_allowances;
-          // this.$root.logo = "Category";
         });
-    },
-    Add_new() {
-
-
-      axios
-        .post(`/store_allowance`, {
-          type: this.type,
-          staff: this.staffselected,
-          allowance_status: this.allowance_status,
-          allowance_type: this.allowance_type,
-
-          count: this.counts,
-          allow: this.allow,
-          qty: this.qty,
-
-        })
-        .then((response) => {
-          // ---------------------------------------------------------------
-          console.log(response);
-          toastMessage("تم الاضافه بنجاح");
-          vm.$router.go(0);
-        });
-
-      // }
     },
 
     list(page = 1) {

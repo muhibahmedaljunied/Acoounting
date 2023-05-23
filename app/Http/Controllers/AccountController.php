@@ -22,39 +22,7 @@ class AccountController extends Controller
     public function create()
     {
     }
-    // public function account_store_first_level(Request $request)
-    // {
 
-    //     $account = new Account();
-    //     $account->text = $request->post('text');
-    //     $account->id = $request->post('id');
-    //     $account->parent_id = null;
-    //     $account->rank = 1;
-    //     $account->save();
-
-    //     return response()->json();
-    // }
-
-
-    public function Export()
-    {
-        $filename = '-accounts.xlsx';
-        Excel::store(new AccountExport, $filename);
-        $fullPath = Storage::disk('local')->path($filename);
-
-        return response()->json([
-            'data' => $fullPath,
-            'message' => 'account are successfully exported.'
-        ], 200);
-    }
-
-
-    public function Import(Request $request)
-    {
-
-        $filename = '-accounts.xlsx';
-        return response()->json(Excel::import(new AccountImport, Storage::disk('local')->path($filename)));
-    }
 
 
     public function get_account_name(Request $request)

@@ -119,14 +119,14 @@
 
                          <!-- <span v-if="cash_details.qty_return-cash_details.quantity == 0" > لا يمكن اجراء عمليه ارجاع </span> -->
                       </td>
-                       <td v-if="cash_details.qty_remain != 0">
+                       <!-- <td v-if="cash_details.qty_remain != 0">
                       <input
                      type="checkbox"
                        
                @change="add_one_return(cash_details.qty_remain,index,cash_details.product_id,cash_details.store_id,cash_details.status_id,cash_details.desc)"
                         class="btn btn-info waves-effect"
                         >
-                    </td>
+                    </td> -->
                     
                     </tr>
                     <tr>
@@ -222,110 +222,6 @@ export default {
   },
   methods: {
 
-    
-
-//     refund() {
-
-         
-//       this.axios.post("/cashreturn", {
-//           old: this.cash_detail,
-//           date: this.dateselected,
-//           note: this.note,
-//           cash_id:this.cash_id,
-//           return_qty:this.return_qty,
-//            total: this.Total_quantity,
-//            type:'return_cash',
-
-//         }).then((response) => {
-
-//                 if(response.data.message != 0){
-
-                  
-//                       toastMessage("تم الارجاع بنجاح");
-
-//                           this.$router.go(-1);
-                   
-//                 }else{
-// toastMessage("فشل",response.data.text);
-       
-
-//                 }
-                   
-//       });
-
-            
-//     },
-//    add_return(qty_return,index,product_id,store_id,status_id,desc){
-
-    
-
-//      this.Total_quantity=parseInt(this.Total_quantity)+ parseInt(qty_return);
-   
-
-//         this.return_qty[index] = {product_id:product_id,
-//                                       store_id:store_id,
-//                                       status_id:status_id,
-//                                       desc:desc,
-//                                       qty:qty_return
-//          };
-//           console.log(this.return_qty);
-    
-//     },
-
-add_one_return( qty_return,index,product_id,store_id,status_id,desc) {
-
-  alert(qty_return);
-
-if (this.check_state[index] == true) {
-
-  this.total_quantity = parseInt(this.total_quantity) + parseInt(qty_return);
-
-
-
-  if (qty_return != 0) {
-
-
-    // if (qty_return <= availabe_qty) {
-
-
-      this.counts[index] = index;
-
-      this.product[index] = product_id;
-      this.qty[index] = qty_return;
-      this.desc[index] = desc;
-
-      this.store[index] = store_id;
-      this.status[index] = status_id;
-
-    
-
-
-    // }
-  }
-
-
-} else if (this.check_state[index] == false) {
-
-  this.$delete(this.counts, index);
-  this.$delete(this.product, index);
-  this.$delete(this.qty, index);
-  this.$delete(this.desc, index);
-  this.$delete(this.product_name, index);
-  this.$delete(this.store, index);
-  this.$delete(this.status, index);
-  this.$delete(this.availabe_qty, index);
-
-
-}
-
- console.log(this.counts);
-  console.log(this.product);
-  console.log(this.qty);
-  console.log(this.desc);
-  console.log(this.store);
-  console.log(this.status);
-
-},
 
   },
   

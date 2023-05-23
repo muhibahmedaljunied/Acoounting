@@ -8,126 +8,51 @@ use App\Models\StoreProduct;
 trait StoreProductTrait
 {
 
-    function get($value, $data = null)
+    function get($data)
     {
 
-// return $data['desc'][$value];
-        if ($data != null) {
-            $id_store_product = StoreProduct::where([
-                'store_products.product_id' => $data['product_id'][$value],
-                'store_products.store_id' => $data['store_id'][$value],
-                'store_products.status_id' => $data['status_id'][$value],
-                // 'store_products.unit_id' => $data['unit_id'][$value],
-                'store_products.desc' => $data['desc'][$value]
-            ])
-                ->select('store_products.id')
-                ->get();
 
-            return $id_store_product;
-        } else {
-            $id_store_product = StoreProduct::where([
-                'store_products.product_id' => $value['product_id'],
-                'store_products.store_id' => $value['store_id'],
-                'store_products.status_id' => $value['status_id'],
-                // 'store_products.unit_id' => $value['unit_id'],
-                'store_products.desc' => $value['desc']
-            ])
-                ->select('store_products.id')
-                ->get();
+        $id_store_product = StoreProduct::where([
+            'store_products.product_id' => $data['product_id'],
+            'store_products.store_id' => $data['store_id'],
+            'store_products.status_id' => $data['status_id'],
+            'store_products.desc' => $data['desc']
+        ])
+            ->select('store_products.id')
+            ->get();
 
-            return $id_store_product;
-        }
+        $response = (count($id_store_product->toarray()) == 0) ? 0 : $id_store_product[0]['id'];
+        return $response;
     }
 
 
-    function init_store($value, $operation,$data = null,$qty = null)
+    function init_store($data,$store_id = null)
     {
-
-
-        if ($operation == 'Supply' || $operation == 'Cash' || $operation == 'Purchase' || $operation == 'Sale' || $operation == 'Transfer' || $operation == 'Opening') {
-
-            if ($operation == 'Transfer') {
-                // return $data['status_id'][$value];
-                // $qty = $qty;
-                $store = $data['intostore_id'][$value];
-                // ----------------------------------------------------------------
-                $store_product = new StoreProduct();
-                $store_product->product_id = $data['product_id'][$value];
-                $store_product->store_id = $store;
-                $store_product->status_id = $data['status_id'][$value];
-                $store_product->desc = $data['desc'][$value];
-                $store_product->quantity = $qty;
-                $store_product->save();
-        
-                $id = $store_product->id;
-                return $id;
-
-
-            } 
-            if ($operation == 'Opening') {
-                // return $data['status_id'][$value];
-           
-                // ----------------------------------------------------------------
-                $store_product = new StoreProduct();
-                $store_product->product_id = $data['product_id'][$value];
-                $store_product->store_id = $data['store_id'][$value];
-                $store_product->status_id = $data['status_id'][$value];
-                $store_product->desc = $data['desc'][$value];
-                $store_product->quantity = $qty;
-                $store_product->save();
-        
-                $id = $store_product->id;
-                return $id;
-
-
-            }else {
-                $qty = $value['micro_unit_qty'];
-                $store = $value['store_id'];
-            }
-        } 
-       
+        $store_id = ($store_id) ? $store_id : $data['store_id'] ;
 
         $store_product = new StoreProduct();
-        $store_product->product_id = $value['product_id'];
-        $store_product->store_id = $store;
-        $store_product->status_id = $value['status_id'];
-        $store_product->desc = $value['desc'];
-        $store_product->quantity = $qty;
+        $store_product->product_id = $data['product_id'];
+        $store_product->store_id = $store_id;
+        $store_product->status_id = $data['status_id'];
+        $store_product->desc = $data['desc'];
+        $store_product->quantity = $data['qty'];
         $store_product->save();
-        $id = $store_product->id;
-        return $id;
+        return $store_product->id;
     }
 
-    // function init_store_from_retrn($value, $operation, $type = null, $data = null)
-    // {
+    function refresh_store($data, $type_refresh = null, $store_id = null)
+    {
 
+        $type_refresh = ($type_refresh) ? $type_refresh : $data['type_refresh'] ;
+        $store_id = ($store_id) ? $store_id : $data['store_id'] ;
+        $condition = [
+            'product_id' => $data['product_id'],
+            'status_id' => $data['status_id'],
+            'store_id' => $store_id,
+            'desc' => $data['desc'],
+        ];
 
-
-    //         if ($operation == 'Transfer') {
-    //             $qty = $data['micro_unit_qty'][$value];
-    //             $store = $data['intostore_id'][$value];
-    //             // ----------------------------------------------------------------
-    //             $store_product = new StoreProduct();
-    //             $store_product->product_id = $data['product_id'][$value];
-    //             $store_product->store_id = $store;
-    //             $store_product->status_id = $data['status_id'][$value];
-    //             // $store_product->unit_id = $data['unit_id'][$value];
-
-    //             $store_product->desc = $data['desc'][$value];
-    //             $store_product->quantity = $qty;
-    //             $store_product->save();
-        
-    //             $id = $store_product->id;
-    //             return $id;
-
-
-    //         } else {
-    //             $qty = $value['micro_unit_qty'];
-    //             $store = $value['store_id'];
-    //         }
-       
-
-    // }
-    
-
+        $store_product_f = DB::table('store_products')->where($condition)->$type_refresh('quantity', $data['qty']);
+        return $store_product_f;
+    }
 }

@@ -11,8 +11,8 @@
               Example of Valex Simple Table. <a href="">Learn more</a>
             </p>
             <div class="d-flex justify-content-between"></div>
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -172,6 +172,27 @@
 
                       <div v-for="temx in purchase_details.units">
 
+
+
+                        <span v-if="temx.unit_type == 0">
+
+                          <span v-if="purchase_details.qty / purchase_details.rate >= 1">
+                            {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
+                              purchase_details.units[0].name
+                            }}
+                          </span>
+
+                          <span v-if="purchase_details.qty % purchase_details.rate >= 1">
+                            {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
+                              purchase_details.units[1].name
+                            }}
+                          </span>
+                        </span>
+
+                      </div>
+
+                      <!-- <div v-for="temx in purchase_details.units">
+
                         <span v-if="temx.name == purchase_details.unit">
 
                           <span v-if="temx.unit_type == 1">
@@ -200,7 +221,7 @@
 
 
 
-                      </div>
+                      </div> -->
 
                     </td>
 
@@ -306,34 +327,7 @@ export default {
           console.error(response);
         });
     },
-    // supply_details(id){
-    //     this.axios.post(`supply_details/${id}`).then(response => {
-    // 		toast.fire({
-    //                           title: "Deleted!",
-    //                           text: "Your category has been deleted.",
-    //                           button: "Close", // Text on button
-    //                           icon: "success", //built in icons: success, warning, error, info
-    //                           timer: 3000, //timeOut for auto-close
-    //                           buttons: {
-    //                               confirm: {
-    //                               text: "OK",
-    //                               value: true,
-    //                               visible: true,
-    //                               className: "",
-    //                               closeModal: true
-    //                               },
-    //                               cancel: {
-    //                               text: "Cancel",
-    //                               value: false,
-    //                               visible: true,
-    //                               className: "",
-    //                               closeModal: true,
-    //                               }
-    //                           }
-    //                       })
-    //               // this.$router.push('category')
-    // 	})
-    // }
+
   },
 };
 </script>

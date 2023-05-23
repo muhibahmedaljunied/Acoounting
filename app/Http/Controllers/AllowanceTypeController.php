@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Traits\Staff\BasicData\StoreTrait;
 
 use App\Models\AllowanceType;
 
@@ -12,11 +13,11 @@ use Illuminate\Http\Request;
 class AllowanceTypeController extends Controller
 {
 
-
+    use StoreTrait;
     public function index()
     {
-        
-      
+
+
         $allowance_types = AllowanceType::all();
         return response()->json(['allowance_types' => $allowance_types]);
     }
@@ -31,7 +32,7 @@ class AllowanceTypeController extends Controller
         //
     }
 
-   
+
 
     public function show(AllowanceType $allowance)
     {

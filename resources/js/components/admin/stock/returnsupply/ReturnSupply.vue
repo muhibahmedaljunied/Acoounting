@@ -156,7 +156,7 @@
                         </td>
                       </tr>
 
-                      <a v-if="not_qty" @click="Add_return()" class="btn btn-success"><span>تاكيد العمليه</span></a>
+                      <!-- <a v-if="not_qty" @click="Add_return()" class="btn btn-success"><span>تاكيد العمليه</span></a> -->
 
 <!-- 
                       <div>
@@ -228,64 +228,7 @@ export default {
 
 
 
-   
-
-    add_one_return( qty_return, index, product_id, store_id, status_id, desc) {
-
-
-
-      if (this.check_state[index] == true) {
-
-        this.total_quantity = parseInt(this.total_quantity) + parseInt(qty_return);
-        alert(qty_return);
-    
-
-        if (qty_return != 0) {
-
-
-          // if (qty_return <= availabe_qty) {
-
-
-            this.counts[index] = index;
-
-            this.product[index] = product_id;
-            this.qty[index] = qty_return;
-            this.desc[index] = desc;
-
-            this.store[index] = store_id;
-            this.status[index] = status_id;
-
-            // this.availabe_qty[index] = availabe_qty;
-
-
-          // }
-        }
-
-
-      } else if (this.check_state[index] == false) {
-
-        this.$delete(this.counts, index);
-        this.$delete(this.product, index);
-        this.$delete(this.qty, index);
-        this.$delete(this.desc, index);
-        this.$delete(this.product_name, index);
-        this.$delete(this.store, index);
-        this.$delete(this.status, index);
-        this.$delete(this.availabe_qty, index);
-
-
-      }
-
-       console.log(this.counts);
-        console.log(this.product);
-        console.log(this.qty);
-        console.log(this.desc);
-        console.log(this.store);
-        console.log(this.status);
-    
-    },
-
-
+  
   },
 };
 </script>

@@ -14,6 +14,7 @@ use App\Models\Department;
 use App\Models\Payroll;
 use App\Models\WorkType;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
@@ -26,6 +27,7 @@ class StaffController extends Controller
     public function index()
     {
 
+        
         
         $staff_list =  staff::with([
             'department' => function ($query) {
@@ -57,25 +59,16 @@ class StaffController extends Controller
             ->paginate(10);
 
 
-        // $staff_list = DB::table('staff')
-        // ->join('qualifications','qualifications.id', '=', 'staff.qualification_id')
-        // ->join('branches','branches.id', '=', 'staff.branch_id')
-        // ->join('administrative_structures','administrative_structures.id', '=', 'staff.department_id')
-        // // ->join('administrative_structures','administrative_structures.id', '=', 'staff.job_id')
-        // ->join('staff_types','staff_types.id', '=', 'staff.staff_type_id')
-        // ->join('work_types','work_types.id', '=', 'staff.work_type_id')
-        // ->join('staff_religions','staff_religions.id', '=', 'staff.religion_id')
-        // ->join('nationalities','nationalities.id', '=', 'staff.nationality_id')
-        // ->select(
-        //     'staff.id','staff.email','staff.date','staff.name as staff',
-        //     'staff.staff_status as status','staff.gender','staff.social_status',
-        //     'staff.personal_card','staff.phone','staff.barth_date','work_types.name as work_type',
-        //     'qualifications.name as qualification','branches.name  as branch',
-        //     'administrative_structures.text as department','administrative_structures.text  as job',
-        //     'staff_types.name as staff_types','staff_religions.name as religion','nationalities.name as nationality')
-        // ->paginate(10);
+            
 
-        $staffs = Staff::all();
+
+        // $staffs = Staff::all();
+         // ------------------------------------------------------------------------------------------------
+         $staffs = Cache::rememberForever('staff', function () {
+             return DB::table('staff')->get();
+         });
+         // --------------------------------------------------------------------------------------------------
+        
         $work_systems = WorkType::all();
         $qualifications = Qualification::all();
         $nationalities = Nationality::all();

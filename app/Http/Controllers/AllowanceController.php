@@ -2,45 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\Staff\StoreTrait;
+// use App\Traits\Staff\StoreTrait;
 use App\Models\Allowance;
 use App\Models\AllowanceType;
 use App\Models\Staff;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class AllowanceController extends Controller
 {
 
-    use StoreTrait;
+    // use StoreTrait;
     public function index()
     {
-        
-        $staffs = Staff::all();
-        // $staff_allowances = DB::table('allowances')
-        // ->join('staff', 'staff.id', '=', 'allowances.staff_id')
-        // ->join('allowance_types', 'allowances.allowance_type_id', '=', 'allowance_types.id')
-        // ->select('staff.*', 'allowance_types.name as type','allowances.*')
-        // ->paginate(10);
 
-        $staff_allowances =  staff::with([
-            
-            'allowance' => function ($query) {
-                $query->select('*');
-            },
-        
-            'allowance.allowance_type' => function ($query) {
-                $query->select('*');
-            },
-         
-        ])
-            ->paginate(10);
+        // $staffs = Staff::all();
+        // ------------------------------------------------------------------------------------------------
+        $staffs = Cache::rememberForever('staff', function () {
+            return DB::table('staff')->get();
+        });
+        // --------------------------------------------------------------------------------------------------
 
 
-      
+
+        $staff_allowances = Cache::rememberForever('staff_allowances', function () {
+            return staff::with([
+
+                'allowance' => function ($query) {
+                    $query->select('*');
+                },
+
+                'allowance.allowance_type' => function ($query) {
+                    $query->select('*');
+                },
+
+            ])
+                ->paginate(10);
+        });
+
+
 
         $allowance_types = AllowanceType::all();
-        return response()->json(['allowance_types' => $allowance_types,'staffs' => $staffs,'list' => $staff_allowances]);
+        return response()->json(['allowance_types' => $allowance_types, 'staffs' => $staffs, 'list' => $staff_allowances]);
+    }
+
+
+    public function store(Request $request)
+    {
+
+        foreach ($request->post('count') as $value) {
+
+
+            // return response()->json(['message' => $request->all()]);
+            $temporale_f = 0;
+            if ($request->post('type') == 'allowance') {
+
+                $temporale_f = tap(Allowance::whereAllowance($request))
+                    ->update(['qty' => $request['qty'][$value]])
+                    ->get('id');
+                $this->refresh_payroll($request->all(), $value, $request->post('type'));
+            }
+
+            if ($temporale_f->isEmpty()) {
+
+                $this->add($request->all(), $value, $request->post('type'));
+                $this->refresh_payroll($request->all(), $value, $request->post('type'));
+            }
+            // }
+        }
+
+
+
+
+        return response()->json(['message' => $request->all()]);
     }
 
     /**
@@ -53,7 +88,7 @@ class AllowanceController extends Controller
         //
     }
 
-   
+
 
 
 

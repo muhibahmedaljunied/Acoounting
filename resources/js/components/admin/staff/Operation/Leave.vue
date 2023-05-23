@@ -97,8 +97,8 @@
                     </button>
 
                     <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-              data-target="#addExtra">
-              <i class="fa fa-edit"></i></a>
+                      data-target="#addExtra">
+                      <i class="fa fa-edit"></i></a>
                   </td>
                 </tr>
               </tbody>
@@ -160,7 +160,7 @@
                                 <tbody>
                                   <tr v-for="index in count" :key="index">
                                     <td>
-                                      <select v-model="staff_selected[index]" id="inputState" class="form-control">
+                                      <select v-model="staffselected[index]" id="inputState" class="form-control">
                                         <option v-for="staff in staffs" v-bind:value="staff.id">
                                           {{ staff.name }}
                                         </option>
@@ -168,7 +168,7 @@
                                     </td>
                                     <td>
 
-                                      <select v-model="vacation_typeselected[index]" id="inputState" class="form-control">
+                                      <select v-model="leave_typeselected[index]" id="inputState" class="form-control">
                                         <option v-for="vacation_type in vacation_types" v-bind:value="vacation_type.id">
                                           {{ vacation_type.name }}
                                         </option>
@@ -196,14 +196,15 @@
                                     <td>
 
 
-                                      <input readonly @change="on_change_date()" v-model="days" type="number" name="exampleRadios"
-                                        class="form-control" />
+
+                                      <input @keypress="calc_days(index)" v-model="days[index]" type="number"
+                                        id="num_days" name="exampleRadios" class="form-control" />
 
                                     </td>
                                     <td>
 
 
-                                      <input readonly v-model="days" type="number" name="exampleRadios" class="form-control" />
+                                      <input type="number" id="numddd_days" name="exampleRadios" class="form-control" />
 
                                     </td>
                                     <td>
@@ -225,7 +226,7 @@
 
 
                                   </tr>
-                                 
+
 
                                 </tbody>
                               </table>
@@ -246,22 +247,21 @@
                 </div>
               </div>
 
+
+
               <div class="modal-footer">
-                <a href="javascript:void" @click="Add_newleave()" class="btn btn-success"><span>تاكيد
-                                      العمليه</span></a>
+                <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
-          
+
             </div>
-            <!-- /.modal-content -->
           </div>
 
-          <!-- /.modal-dialog -->
         </div>
       </div>
     </div>
-    <!--/div-->
   </div>
-  <!-- /row -->
 </template>
 
 <script>
@@ -274,33 +274,19 @@ export default {
   mixins: [operation],
   data() {
     return {
-      // category: "yes",
 
       value_list: {
         type: Object,
         default: null,
       },
-      count: 1,
-      counts: {},
-      staff_selected: [],
+
+      leave_typeselected: [],
+      leaveselected: [],
+      leavepartselected: [],
       start_date: [],
       end_date: [],
-      days: 2,
-      name: "",
+      days: [],
 
-      staffs: "",
-      jobselected: 1,
-      branchselected: 1,
-      staff_typeselected: 1,
-      vacation_typeselected: [],
-      // staffselected: 1,
-
-      staff_on_change: "",
-      vactions: "",
-      jobs: "",
-      branches: "",
-      staff_types: "",
-      vacation_types: "",
       word_search: "",
     };
   },
@@ -310,17 +296,23 @@ export default {
     this.type = 'leave';
   },
   methods: {
-    data_list() {
+    Add_new() {
 
-      return {
-        type: this.type,
-        count: this.counts,
-        staff: this.staff_selected,
-        leave_type: this.vacation_typeselected,
-        start_date: this.start_date,
-        end_date: this.end_date,
-        days: this.days,
-      }
+      this.Add(
+        {
+          type: this.type,
+          count: this.counts,
+          staff: this.staffselected,
+          leave_type: this.leave_typeselected,
+          leave: this.leaveselected,
+          leave_part: this.leavepartselected,
+          start_date: this.start_date,
+          end_date: this.end_date,
+          days: this.days,
+
+        });
+
+
     },
     get_search(word_search) {
       this.axios
@@ -331,57 +323,35 @@ export default {
           // this.$root.logo = "Category";
         });
     },
-    // delete_vaction(id) {
-    //   this.axios
-    //     .post(`delete_vacation/${id}`)
-    //     .then((response) => {
-    //       toastMessage("تم الحذف بنجاح");
 
-    //       this.list();
-    //       // this.$router.push('category')
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.response);
+    calc_days(index) {
 
-    //       if (error.response.status == 500) {
-    //         toast.fire({
-    //           title: " فشل",
-    //           text: error.response.data.message,
-    //           button: "Close", // Text on button
-    //           icon: "error", //built in icons: success, warning, error, info
-    //           timer: 5000, //timeOut for auto-close
-    //           buttons: {
-    //             confirm: {
-    //               text: "OK",
-    //               value: true,
-    //               visible: true,
-    //               className: "",
-    //               closeModal: true,
-    //             },
-    //             cancel: {
-    //               text: "Cancel",
-    //               value: false,
-    //               visible: true,
-    //               className: "",
-    //               closeModal: true,
-    //             },
-    //           },
-    //         });
-    //       }
-    //     });
-    // },
-    // select_staff() {
-    //   this.axios
-    //     .post(`/select_staff`, {
-    //       branch: this.branchselected,
-    //       staff_type: this.staff_typeselected,
-    //       job: this.jobselected,
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.staff_on_change = response;
-    //     });
-    // },
+
+      var start_date = this.start_date[index].split("-");
+      var end_date = this.end_date[index].split("-");
+
+      var date1 = new Date(`${start_date[0]}/${start_date[1]}/${start_date[2]}`);
+      var date2 = new Date(`${end_date[0]}/${end_date[1]}/${end_date[2]}`);
+
+      // To calculate the time difference of two dates
+      var Difference_In_Time = date2.getTime() - date1.getTime();
+
+      // To calculate the no. of days between two dates
+      var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+      //To display the final no. of days (result)
+      console.log("Total number of days between dates <br>"
+        + date1 + "<br> and <br>"
+        + date2 + " is: <br> "
+        + Difference_In_Days);
+
+      this.days[index] = Difference_In_Days;
+      $(`#num_days`).val(Difference_In_Days);
+
+
+
+    },
+
     list(page = 1) {
       this.axios
         .post(`/vacation?page=${page}`)
@@ -396,65 +366,6 @@ export default {
         .catch(({ response }) => {
           console.error(response);
         });
-    },
-
-    on_change_date() {
-
-      alert('fdfdf');
-      // var date1 = new Date("06/30/2019");
-      // var date2 = new Date("07/30/2019");
-
-      // // To calculate the time difference of two dates
-      // var Difference_In_Time = date2.getTime() - date1.getTime();
-
-      // // To calculate the no. of days between two dates
-      // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-
-      // //To display the final no. of days (result)
-      // console.log("Total number of days between dates  <br>"
-      //   + date1 + "<br> and <br>"
-      //   + date2 + " is: <br> "
-      //   + Difference_In_Days);
-
-
-    },
-    Add_newleave() {
-      console.log(this.counts);
-      this.axios
-        .post(`/store_leave`, {
-          type: this.type,
-          count: this.counts,
-          staff: this.staff_selected,
-          leave_type: this.vacation_typeselected,
-          start_date: this.start_date,
-          end_date: this.end_date,
-          days: this.days,
-
-        })
-        .then((response) => {
-          // ---------------------------------------------------------------
-          console.log(response);
-
-          // this.temporale = response.data;
-          // this.temporale.forEach((item) => {
-          //   this.total_quantity = item.tem_qty + this.total_quantity;
-
-          //   this.grand_total = item.subtotal + this.grand_total;
-          //   this.To_pay = item.subtotal + this.To_pay;
-
-          //   this.total_tax = item.tax + this.total_tax;
-
-          //  console.log(this.total_tax);
-
-
-          // });
-
-          toastMessage("تم الاضافه بنجاح");
-          // this.$router.go(0);
-        });
-
-      // this.$router.go(0);
-
     },
 
 

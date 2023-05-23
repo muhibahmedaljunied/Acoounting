@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Foundation\Auth\Access\Store as s;
-use App\Traits\ConditionTrait;
+use App\Traits\GeneralTrait;
 use App\Traits\Temporale\TemporaleTrait;
+use App\Traits\Invoice\InvoiceTrait;
+use App\Traits\Details\DetailsTrait;
 use App\Models\Cash;
 use App\Models\CashDetail;
 use App\Models\Customer;
@@ -19,17 +20,17 @@ use DB;
 
 class CashController extends Controller
 {
-    use TemporaleTrait, ConditionTrait;
+    use GeneralTrait, TemporaleTrait, DetailsTrait, InvoiceTrait;
     public function index()
     {
-        $products = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type','==',0)
+        $products = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type', '==', 0)
             ->join('products', 'store_products.product_id', '=', 'products.id')
             ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
             ->join('stores', 'store_products.store_id', '=', 'stores.id')
             ->join('product_units', 'product_units.product_id', '=', 'products.id')
             ->join('units', 'units.id', '=', 'product_units.unit_id')
             // ->where('products.notes',0)
-            ->select('products.*', 'products.text as product','products.rate', 'stores.text as store', 'statuses.name as status', 'store_products.quantity as availabe_qty', 'store_products.*')
+            ->select('products.*', 'products.text as product', 'products.rate', 'stores.text as store', 'statuses.name as status', 'store_products.quantity as availabe_qty', 'store_products.*')
             ->paginate(100);
 
         foreach ($products as $value) {
@@ -38,11 +39,11 @@ class CashController extends Controller
                 ->join('units', 'units.id', '=', 'product_units.unit_id')
                 ->join('products', 'products.id', '=', 'product_units.product_id')
                 ->where('product_units.product_id', $value->product_id)
-                ->select('units.*','products.rate','product_units.unit_type')
+                ->select('units.*', 'products.rate', 'product_units.unit_type')
                 ->get();
 
             $value->units = $units;
-        }     
+        }
 
         $statuses = Status::all();
         // ----------------------------------------------------------------------------------------------
@@ -68,6 +69,87 @@ class CashController extends Controller
 
 
         return response()->json(['products' => $products]);
+    }
+
+
+    public function store(Request $request)
+    {
+
+        // return response()->json(['message' => $request->all()]);
+        foreach ($request->post('count') as $value) {
+
+            $temporale_f = 0;
+            // if ($value !== null) {
+
+            $temporale_f = tap(Temporale::whereall($request->all(), $value, $request->post('type')))
+                ->update(['qty' => $request->post('qty')[$value], 'price' => $request['price'][$value]])
+                ->get('id');
+
+            if (count($temporale_f) == 0) {
+
+
+                $this->add_temporale(data: $request->all(), value: $value, type: $request->post('type'));
+            }
+            // }
+        }
+
+
+        return response()->json(['message' => $request->all()]);
+    }
+    public function payment(Request $request)
+    {
+
+
+        $cash_id =  $this->add_start(data: $request->all());
+        // -----------------------------------------------here ended-----------------------------------
+        $temporale = $this->check_temporale($request->post('type'));
+        // return response()->json(['message' => $temporale]);
+        if (count($temporale) != 0) {
+
+            foreach ($temporale as $value) {
+
+                $stock_f = 0;
+                $store_product_f = 0;
+                $store_product_f = $this->refresh_store(
+                    data: $value,
+                );
+                // return response()->json(['message' => $store_product_f]);
+                $id_store_product = $this->get($value);  //this get data from store_products
+
+                //----------------------------------------------------------------------------------------------------------------------------------------- 
+                if ($store_product_f == 0) {
+
+                    $id_store_product = $this->init_store(
+                        data: $value,
+                    );
+
+                }
+
+                $this->init_details(
+                    id: $cash_id,
+                    id_store_product: $id_store_product,
+                    data: $value,
+                ); // this make initial for details tables
+
+                $stock_f = $this->refresh_stock(
+                    id: $cash_id,
+                    data: $value,
+                ); // this make update for stock table
+
+                if ($stock_f == 0) {
+
+                    $this->init_stock(
+                        id: $cash_id,
+                        data: $value,
+                    ); //this make intial for stock table if it is empty 
+                }
+            }
+
+            Temporale::where('type_process', $request->post('type'))->delete(); //this removes data from temporale table after moving it 
+            return response()->json(['message' => 'success']);
+        }
+
+        return response()->json(['message' => 'faild']);
     }
 
 
@@ -108,7 +190,7 @@ class CashController extends Controller
         return response()->json(['cashes' => $cashes]);
     }
 
-    public function invoice_cash(Request $request,$id)
+    public function invoice_cash(Request $request, $id)
     {
 
         $table = $request->post('table');
@@ -116,7 +198,7 @@ class CashController extends Controller
             ->join('customers', 'customers.id', '=', 'cashes.customer_id')
             ->select('cashes.*', 'cashes.id as cash_id', 'customers.*')
             ->get();
-        $details = $this->invoice($id,$table);
+        $details = $this->invoice($id, $table);
 
         $users = Auth::user();
         return response()->json([$table => $details, 'cashes' => $cashes, 'users' => $users]);

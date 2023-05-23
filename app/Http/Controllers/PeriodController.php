@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Traits\Staff\BasicData\StoreTrait;
 
 use App\Models\Absence;
 use App\Models\Period;
@@ -11,6 +12,8 @@ use Illuminate\Http\Request;
 
 class PeriodController extends Controller
 {
+
+    use StoreTrait;
     /**
      * Display a listing of the resource.
      *
@@ -52,17 +55,17 @@ class PeriodController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $absence = new Absence();
-        $absence->staff_id = $request->post('staff');
-        $absence->absence_type_id = $request->post('absence_type');
-        $absence->date = $request->post('date');
-        $absence->note = $request->post('note');
+    // public function store(Request $request)
+    // {
+    //     $absence = new Absence();
+    //     $absence->staff_id = $request->post('staff');
+    //     $absence->absence_type_id = $request->post('absence_type');
+    //     $absence->date = $request->post('date');
+    //     $absence->note = $request->post('note');
 
-        $absence->save();
-        return response()->json();
-    }
+    //     $absence->save();
+    //     return response()->json();
+    // }
 
     /**
      * Display the specified resource.

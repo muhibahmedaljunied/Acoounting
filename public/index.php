@@ -25,7 +25,7 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -40,8 +40,18 @@ require __DIR__.'/../vendor/autoload.php';
 */
 // https://www.youtube.com/watch?v=gpjFP6RJMXA
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
+// KV(sW5Qu#riHRZF   passwor of paypal
+// $r = new ReflectionClass(get_class($app));
+        // ob_start();
+        // var_dump($r->getMethods());
+        // $dump = ob_get_contents();
+        // ob_end_clean();
+    
+        // echo "<pre> $dump </pre>";  
+        
+        // die();
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +67,18 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-$response = $kernel->handle( 
+$response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
+
+// ob_start();
+// echo 'I am in app.php inside bootstrap<br>';
+// var_dump($request);
+// $dump = ob_get_contents();
+// ob_end_clean();
+
+// echo "<pre> $dump </pre>";
+// die($request);
 
 $response->send();
 

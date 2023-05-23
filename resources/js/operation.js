@@ -113,24 +113,23 @@ export default {
       // if (this.return_qty.length != 0) {
 
       var url = this.type.toLowerCase();
-      // alert(this.id);
+      // alert(url);
       this.axios
         .post(`/${url}`, {
 
           count: this.counts,
-          product_id: this.product,
-          store_id: this.store,
           unit_id: this.unit,
-          desc: this.desc,
-          qty: this.qty,
-          status_id: this.status,
-          // ------
           type: this.type,
           type_refresh: this.type_refresh,
           old: this.detail,
           date: this.dateselected,
           note: this.note,
           id:this.id,
+          // product_id: this.product,
+          // store_id: this.store,
+          // desc: this.desc,
+          // qty: this.qty,
+          // status_id: this.status,
           // return_qty: this.return_qty,
           // total: this.total_quantity,
         

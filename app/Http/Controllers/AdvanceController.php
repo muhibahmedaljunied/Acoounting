@@ -1,22 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Traits\Staff\StoreTrait;
-// use Illuminate\Foundation\Auth\Access\Staff as s;
+// use App\Traits\Staff\StoreTrait;
 use App\Models\Advance;
 use App\Models\Staff;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class AdvanceController extends Controller
 {
-   use StoreTrait;
+//    use StoreTrait;
     public function index()
     {
-        
 
-        $advances = staff::with(['advance'])->paginate(10);
-        $staffs = Staff::all();
+        $advances = Staff::with(['advance'])->paginate(10);
+        // $staffs = Staff::all();
+        // ------------------------------------------------------------------------------------------------
+        $staffs = Cache::rememberForever('staff', function () {
+            return DB::table('staff')->get();
+        });
+        // -------------------------------------------------------------------------------------------------
+
         return response()->json(['staffs'=>$staffs,'list'=>$advances]);
     }
 
@@ -30,11 +35,37 @@ class AdvanceController extends Controller
         }
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+        public function store(Request $request)
+        {
+    
+            foreach ($request->post('count') as $value) {
+    
+    
+                // return response()->json(['message' => $request->all()]);
+                $temporale_f = 0;
+    
+                if ($request->post('type') == 'advance') {
+    
+                    $temporale_f = tap(Advance::whereAdvance($request))
+                        ->update(['quantity' => $request['qty'][$value]])
+                        ->get('id');
+                    $this->refresh_payroll($request->all(), $value, $request->post('type'));
+                }
+    
+                if ($temporale_f->isEmpty()) {
+    
+                    $this->add($request->all(), $value, $request->post('type'));
+                    $this->refresh_payroll($request->all(), $value, $request->post('type'));
+                }
+            }
+    
+    
+    
+    
+            return response()->json(['message' => $request->all()]);
+        }
+
     public function create()
     {
         //

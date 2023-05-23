@@ -40,14 +40,14 @@
 
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                    <button type="button" @click="delete_absence_type(absence_type.id)" class="btn btn-danger">
+                    <button type="button" @click="delete_absence_type(absence_type.id)" class="btn btn-sm waves-effect btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
 
                     <router-link :to="{
                       name: 'edit_branch',
                       params: { id: absence_type.id },
-                    }" class="edit btn btn-success">
+                    }" class="edit btn btn-sm waves-effect btn-success">
                       <i class="fa fa-edit"></i></router-link>
                   </td>
                 </tr>
@@ -109,7 +109,7 @@
                               <tbody>
                                 <tr v-for="index in count" :key="index">
                                   <td>
-                                    <input type="text" class="form-control" name="name" id="name" required />
+                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name" required />
 
                                   </td>
                             
@@ -172,14 +172,11 @@ export default {
   mixins: [operation],
   data() {
     return {
-      // category: "yes",
-
       absence_types: {
         type: Object,
         default: null,
       },
     
- 
     };
   },
   mounted() {
@@ -188,45 +185,15 @@ export default {
   },
   methods: {
 
-    // delete_absence_type(id) {
-    //   this.axios
-    //     .post(`delete_absence_type/${id}`)
-    //     .then((response) => {
-    //       toastMessage("تم الحذف بنجاح");
+    Add_new() {
 
-    //       this.list();
-    //       // this.$router.push('category')
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.response);
-
-    //       if (error.response.status == 500) {
-    //         toast.fire({
-    //           title: " فشل",
-    //           text: error.response.data.message,
-    //           button: "Close", // Text on button
-    //           icon: "error", //built in icons: success, warning, error, info
-    //           timer: 5000, //timeOut for auto-close
-    //           buttons: {
-    //             confirm: {
-    //               text: "OK",
-    //               value: true,
-    //               visible: true,
-    //               className: "",
-    //               closeModal: true,
-    //             },
-    //             cancel: {
-    //               text: "Cancel",
-    //               value: false,
-    //               visible: true,
-    //               className: "",
-    //               closeModal: true,
-    //             },
-    //           },
-    //         });
-    //       }
-    //     });
-    // },
+      $this.Add({
+          count:this.counts,
+          type:this.type,
+          name:this.name,
+                  
+    });
+    },
     list(page = 1) {
       this.axios
         .post(`/absence_type?page=${page}`)

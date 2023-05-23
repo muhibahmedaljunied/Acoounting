@@ -55,33 +55,34 @@
                     {{ rests.name }} من {{ rests.from_time }} الي {{ rests.into_time }}
                   </td>
 
-                  <td >
+                  <td>
                     <span v-for="days in work_system.days">
-                      
-                      <span v-if="days == 1">سبت    </span>
-                      <span v-if="days == 2">احد    </span>
-                      <span v-if="days == 3">اثنين  </span>
-                      <span v-if="days == 4">ثلاثاء  </span>
+
+                      <span v-if="days == 1">سبت </span>
+                      <span v-if="days == 2">احد </span>
+                      <span v-if="days == 3">اثنين </span>
+                      <span v-if="days == 4">ثلاثاء </span>
                       <span v-if="days == 5">اربعاء </span>
-                      <span v-if="days == 6">خميس   </span>
-                      <span v-if="days == 7">جمعه   </span>
-                   
+                      <span v-if="days == 6">خميس </span>
+                      <span v-if="days == 7">جمعه </span>
+
                     </span>
-                 
+
                   </td>
 
 
 
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                    <button type="button" @click="delete_work_system(work_system.id)" class="btn btn-danger">
+                    <button type="button" @click="delete_work_system(work_system.id)"
+                      class="btn btn-sm waves-effect btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
 
                     <router-link :to="{
                       name: 'edit_branch',
                       params: { id: work_system.id },
-                    }" class="edit btn btn-success">
+                    }" class="edit btn btn-sm waves-effect btn-success">
                       <i class="fa fa-edit"></i></router-link>
                   </td>
                 </tr>
@@ -265,11 +266,12 @@
 
     </div>
   </div>
-</div></div></template>
+</template>
 
 
 
 <script>
+
 import pagination from "laravel-vue-pagination";
 import operation from '../../../../../js/staff/BasicData/operation.js';
 
@@ -284,24 +286,46 @@ export default {
       values: [
 
       ],
-      all_values:[],
+      all_values: [],
       work_systems: {
         type: Object,
         default: null,
       },
 
+      work_type_selected: [],
+      period_selected: [],
+      rest_selected: [],
+      fieldset1: [],
+      fieldset2: [],
+      fieldset3: [],
+      fieldset4: [],
+      fieldset5: [],
+      fieldset6: [],
+      fieldset7: [],
+
     };
   },
   mounted() {
     this.list();
-
- 
-    this.type = 'work_system';
     this.counts[0] = 1;
+    this.type = 'work_system';
+
 
   },
   methods: {
 
+    Add_new() {
+
+      $this.Add({
+        count: this.counts,
+        type: this.type,
+        work_type: this.work_type_selected,
+        period: this.period_selected,
+        rest: this.rest_selected,
+        day: this.all_values,
+
+      });
+    },
     check(e, fild, index, id) {
       // this.values[1][0] = 0;
       // console.log(this.values[1][0]);

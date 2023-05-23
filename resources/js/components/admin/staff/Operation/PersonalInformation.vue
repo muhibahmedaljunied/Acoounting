@@ -173,14 +173,14 @@
                           </div>
                           <div class="row">
 
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-3">
                               <label for="inputAddress">القسم</label>
                               <select v-model="departmentselected" class="form-control" required>
                                 <option v-for="department in departments" v-bind:value="department.id">
                                   {{ department.name }}
                                 </option>
                               </select>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-3">
                               <label for="inputZip">تاريخ المبلاد </label>
@@ -664,7 +664,6 @@ export default {
       staff_typeselected: 1,
       registerselected: '',
       branchselected: '',
-      departmentselected: '',
 
       registers: "",
       branches: "",
@@ -719,45 +718,7 @@ export default {
           // this.$root.logo = "Category";
         });
     },
-    // delete_staff(id) {
-    //   this.axios
-    //     .post(`delete_staff/${id}`)
-    //     .then((response) => {
-    //       toastMessage("تم الحذف بنجاح");
 
-    //       this.list();
-    //       // this.$router.push('category')
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.response);
-
-    //       if (error.response.status == 500) {
-    //         toast.fire({
-    //           title: " فشل",
-    //           text: error.response.data.message,
-    //           button: "Close", // Text on button
-    //           icon: "error", //built in icons: success, warning, error, info
-    //           timer: 5000, //timeOut for auto-close
-    //           buttons: {
-    //             confirm: {
-    //               text: "OK",
-    //               value: true,
-    //               visible: true,
-    //               className: "",
-    //               closeModal: true,
-    //             },
-    //             cancel: {
-    //               text: "Cancel",
-    //               value: false,
-    //               visible: true,
-    //               className: "",
-    //               closeModal: true,
-    //             },
-    //           },
-    //         });
-    //       }
-    //     });
-    // },
     list(page = 1) {
       this.axios
         .post(`/staff?page=${page}`)
@@ -793,7 +754,6 @@ export default {
       formData.append("job", this.jobselected);
       formData.append("branch", this.branchselected);
       formData.append("department", this.structureselected);
-      // formData.append("department", this.departmentselected);
       formData.append("phone", this.phone);
       formData.append("register", this.registerselected);
       formData.append("work", this.work_selected);

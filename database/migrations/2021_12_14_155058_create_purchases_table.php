@@ -27,7 +27,7 @@ class CreatePurchasesTable extends Migration
             $table->integer('grand_total');
             $table->string('status')->nullable();
 
-            $table->integer('quantity')->nullable();
+            // $table->integer('quantity')->nullable();
             $table->integer('qty_return')->default(0);
 
             // $table->unsignedInteger('store_id');

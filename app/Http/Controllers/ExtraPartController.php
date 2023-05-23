@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\Staff\StoreTrait;
-// use Illuminate\Foundation\Auth\Access\Staff as s;
+use App\Traits\Staff\BasicData\StoreTrait;
 use App\Models\Extra;
 use App\Models\ExtraType;
 use App\Models\ExtraPart;
@@ -16,10 +15,6 @@ class ExtraPartController extends Controller
     use StoreTrait;
     public function index()
     {
-
-       
-
-
 
     
         $extra_parts = ExtraPart::all();

@@ -10,6 +10,7 @@ use App\Models\Allowance;
 use App\Models\AllowanceType;
 use App\Models\Staff;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class SalaryController extends Controller
@@ -18,11 +19,17 @@ class SalaryController extends Controller
     public function index()
     {
         $branches = Branch::all();
-        $jobs = Job::all();
         $staff_types = StaffType::all();
         $allowances = Allowance::all();
-        $staffs = Staff::all();
-        // $allowance_types = AllowanceType::all();
+        // $staffs = Staff::all();
+        // ----------------------------------------------------------------------------
+        $staffs = Cache::rememberForever('staff', function () {
+            return DB::table('staff')->get();
+        });
+        $re =Cache::get('staff');
+        // ----------------------------------------------------------------------------
+    
+        $allowance_types = AllowanceType::all();
 
         $staff_allowances = DB::table('payrolls')
             ->join('staff', 'staff.id', '=', 'payrolls.staff_id')
@@ -42,30 +49,35 @@ class SalaryController extends Controller
     public function select_staff(Request $request)
     {
 
-        $salaries =  staff::where('id', $request->id)->with([
-            'payroll' => function ($query) {
-                $query->select('*');
-            },
-            'extra' => function ($query) {
-                $query->select('*');
-            },
-            'allowance' => function ($query) {
-                $query->select('*');
-            },
-            'discount' => function ($query) {
-                $query->select('*');
-            },
-            'extra.extra_type' => function ($query) {
-                $query->select('*');
-            },
-            'allowance.allowance_type' => function ($query) {
-                $query->select('*');
-            },
-            'discount.discount_type' => function ($query) {
-                $query->select('*');
-            }
-        ])
-            ->paginate(10);
+        $salaries = Cache::rememberForever('attenances', function () use ($request) {
+            return staff::where('id', $request->id)->with([
+                'payroll' => function ($query) {
+                    $query->select('*');
+                },
+                'extra' => function ($query) {
+                    $query->select('*');
+                },
+                'allowance' => function ($query) {
+                    $query->select('*');
+                },
+                'discount' => function ($query) {
+                    $query->select('*');
+                },
+                'extra.extra_type' => function ($query) {
+                    $query->select('*');
+                },
+                'allowance.allowance_type' => function ($query) {
+                    $query->select('*');
+                },
+                'discount.discount_type' => function ($query) {
+                    $query->select('*');
+                }
+            ])
+                ->paginate(10);
+        });
+
+
+
 
         return response()->json(['list' => $salaries]);
     }
@@ -144,35 +156,69 @@ class SalaryController extends Controller
 
 
 
+        $salaries = Cache::rememberForever('salaries_details', function () use ($request) {
+            return staff::where('id', $request->id)->with([
+                'payroll' => function ($query) {
+                    $query->select('*');
+                },
+                'extra' => function ($query) {
+                    $query->select('*');
+                },
+                'allowance' => function ($query) {
+                    $query->select('*');
+                },
+                'discount' => function ($query) {
+                    $query->select('*');
+                },
+                'advance' => function ($query) {
+                    $query->select('*');
+                },
+                'extra.extra_type' => function ($query) {
+                    $query->select('*');
+                },
+                'allowance.allowance_type' => function ($query) {
+                    $query->select('*');
+                },
+                'discount.discount_type' => function ($query) {
+                    $query->select('*');
+                },
 
-        $salaries =  staff::where('id', $request->id)->with([
-            'payroll' => function ($query) {
-                $query->select('*');
-            },
-            'extra' => function ($query) {
-                $query->select('*');
-            },
-            'allowance' => function ($query) {
-                $query->select('*');
-            },
-            'discount' => function ($query) {
-                $query->select('*');
-            },
-            'advance' => function ($query) {
-                $query->select('*');
-            },
-            'extra.extra_type' => function ($query) {
-                $query->select('*');
-            },
-            'allowance.allowance_type' => function ($query) {
-                $query->select('*');
-            },
-            'discount.discount_type' => function ($query) {
-                $query->select('*');
-            },
+            ])
+                ->paginate(10);
+        });
 
-        ])
-            ->paginate(10);
+
+
+
+
+        // $salaries =  staff::where('id', $request->id)->with([
+        //     'payroll' => function ($query) {
+        //         $query->select('*');
+        //     },
+        //     'extra' => function ($query) {
+        //         $query->select('*');
+        //     },
+        //     'allowance' => function ($query) {
+        //         $query->select('*');
+        //     },
+        //     'discount' => function ($query) {
+        //         $query->select('*');
+        //     },
+        //     'advance' => function ($query) {
+        //         $query->select('*');
+        //     },
+        //     'extra.extra_type' => function ($query) {
+        //         $query->select('*');
+        //     },
+        //     'allowance.allowance_type' => function ($query) {
+        //         $query->select('*');
+        //     },
+        //     'discount.discount_type' => function ($query) {
+        //         $query->select('*');
+        //     },
+
+        // ])
+        //     ->paginate(10);
 
 
 
@@ -184,7 +230,7 @@ class SalaryController extends Controller
     public function salary()
     {
 
-      
+
 
         $salaries = DB::table('staff')
             ->join('payrolls', 'payrolls.staff_id', '=', 'staff.id')

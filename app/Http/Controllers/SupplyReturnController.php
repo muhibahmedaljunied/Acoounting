@@ -1,133 +1,56 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Traits\TemporaleTrait;
-use App\Traits\StoreTrait;
-use App\Traits\ReturnTrait;
-use App\Traits\StockTrait;
-use App\Traits\StoreProductTrait;
+
+use App\Traits\Temporale\TemporaleTrait;
+use App\Traits\Stock\StockTrait;
+use App\Traits\StoreProduct\StoreProductTrait;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\SupplyReturn;
 use App\Models\Store;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Supplier;
+use App\Facades\Returns;
 use Illuminate\Http\Request;
 use DB;
+
 class SupplyReturnController extends Controller
 {
 
-    use TemporaleTrait,StoreTrait,StockTrait,StoreProductTrait,ReturnTrait;
+    use TemporaleTrait, StockTrait, StoreProductTrait;
 
-    // public function create(Request $request)
-    // {
-
-    //     $data = $request->post('old');
-    //     $return = $request->post('return_qty');
-
-    //     // return response()->json(['data'=> $data,'return'=>$return]);
+    public function create(Request $request)   // this create return for supply,cashing,sale,purchase
+    {
 
 
-    //     // -------------------------------------------- this check if qty_return greater than quantity or qty_avilable-----------------------------------------------------
 
-    //     foreach ($data as  $value) {
+        $request_data = $request->post('old');
 
-    //         if ($value['qty_remain'] > $value['avilable_qty']) {
+        // -------------------------------------------- this check if qty_return greater than quantity or qty_avilable-----------------------------------------------------
 
-
-    //             return response()->json(['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المتوفره"]);
-    //         } elseif ($value['qty_remain'] > $value['qty']) {
-
-    //             return response()->json(['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المورده"]);
-    //         } elseif ($value['qty_remain'] == 0) {
-
-    //             return response()->json(['message' => 0, 'text' => "لا يمكنك ارجاع كميه 0"]);
-    //         }
-    //     }
+        foreach ($request_data as  $key => $value) {
 
 
-    //     // -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //     $supply_return = new SupplyReturn();
-    //     $supply_return->supply_id = $request->post('supply_id');
-    //     $supply_return->date  = $request->post('date');
-    //     $supply_return->quantity = $request->post('total');
-    //     $supply_return->note  = $request->post('note');
-    //     $supply_return->save();
+            $result = Returns::check_return($value);
 
-    //     // -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+            if ($result['message'] == 0) {
 
-    //     DB::table('supplies')
-    //         ->where('id', $request->post('supply_id'))
-    //         ->increment('qty_return', $request->post('total'));
+                return response()->json(['message' => 0, 'text' => $result['text']]);
+            }
+        }
+        // -------------------------------------------------------------------------------------------------
 
-    //     // -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        $return = Returns::store_return($request->all());
 
-    //     foreach ($return as $key_qty => $value_qty) {
+        // -------------------------------------------------------------------------------------------------
 
-    //     return response()->json(['data'=> $value_qty]);
-
-    //         if ($value_qty != null) {
-
-
-    //             foreach ($data as  $value) {
-
-    //                 if ($value_qty['product_id'] == $value['product_id'] && $value_qty['store_id'] == $value['store_id'] && $value_qty['status_id'] == $value['status_id'] && $value_qty['desc'] == $value['desc'] ) {
-
-    //                     // -------------------------------------------------------------------------------------------------
-    //                     $stock_f = 0;
-    //                     $store_product_f = 0;
-
-    //                     $store_product_f = $this->refresh_store($value,'return_supply','decrement');
-
-    //                     //----------------------------------------------------------------------------------------------------------------------------------------- 
-
-    //                     $id_store_product = $this->get($value);
-
-
-    //                     foreach ($id_store_product as $values) {
-
-
-    //                         $id_store_product = $values['id'];
-    //                     }
-
-    //                     if ($store_product_f == 0) {
-
-    //                         $id_store_product = $this->init_store($value,'return_supply');
-    //                         // return response()->json(['id_store_product'=>'muhib']);
-
-
-    //                     }
-
-    //                     // return response()->json(['id_store_product'=> $id_store_product]);
-
-    //                     //----------------------------------------------------------------------------------------------------------------------------------------- 
-    //                     $this->init_details($supply_return->id,$id_store_product,$value,'return_supply',$request->all());
-
-    //                     // -------------------------------------------------------------------------------------------------
-
-    //                     SupplyDetail::wheresupply($value)->increment('qty_return', $value_qty['qty']);
-
-    //                     // -------------------------------------------------------------------------------------------------
-
-    //                     $stock_f = $this->refresh_stock($supply_return->id, $value, 'return_supply', 'decrement');
-                   
-    //                     // -------------------------------------------------------------------------------------------------
-
-
-    //                     if ($stock_f == 0) {
-
-    //                         $this->init_stock($supply_return->id, $value,'return_supply', $request->post('date'));
-
-    //                     }
-
-    //                     // -------------------------------------------------------------------------------------------------
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return response()->json($request->post('total'));
-    // }
+        foreach ($request->post('count') as $value) {
+            $data = array_merge($request->all(), $value);
+            $data = Returns::create_return($data, $return->id);
+        }
+        return response()->json(['message' => 'success']);
+    }
 
     public function get_data_for_report()
     {
@@ -138,10 +61,6 @@ class SupplyReturnController extends Controller
 
         return response()->json(['product' => $product, 'supplier' => $supplier, 'store' => $store]);
     }
-
-
-
-
 
     public function show($id)
     {
@@ -199,16 +118,8 @@ class SupplyReturnController extends Controller
             ->join('products', 'supply_return_details.product_id', '=', 'products.id')
             ->join('statuses', 'supply_return_details.status_id', '=', 'statuses.id')
             ->join('stores', 'supply_return_details.store_id', '=', 'stores.id')
-            ->select('supply_return_details.*', 'supply_return_details.quantity as qty_return', 'supply_returns.*', 'statuses.*', 'statuses.name as status', 'stores.*','stores.text as store', 'products.text as product')
+            ->select('supply_return_details.*', 'supply_return_details.quantity as qty_return', 'supply_returns.*', 'statuses.*', 'statuses.name as status', 'stores.*', 'stores.text as store', 'products.text as product')
             ->get();
-
-            
-
-       
-
-
-
-
 
 
         $users = Auth::user();

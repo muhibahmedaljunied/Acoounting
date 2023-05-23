@@ -24,6 +24,7 @@ class TransferDetail extends Model
             ->join('statuses', 'transfer_details.status_id', '=', 'statuses.id')
             ->join('stores', 'transfer_details.store_id', '=', 'stores.id')
             ->join('units', 'transfer_details.unit_id', '=', 'units.id');
+
     }
 
     public function scopeWhereall($query, $request, $value)

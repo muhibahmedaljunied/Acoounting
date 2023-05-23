@@ -4,20 +4,20 @@
     <div class="col-xl-12">
       <div class="card">
         <div class="card-header ">
-  
-            <span class="h2"> الخصميات</span>
-    
+
+          <span class="h2"> الخصميات</span>
+
 
           <div style="display: flex;float: left; margin: 5px">
-           
+
             <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addDiscount">
               <i class="fa fa-plus-circle"></i></a>
 
-              <input autocomplete="on" v-model="word_search" type="text" class="form-control input-text"
+            <input autocomplete="on" v-model="word_search" type="text" class="form-control input-text"
               placeholder="بحث ...." aria-label="Recipient's username" aria-describedby="basic-addon2"
               @input="get_search()">
-           
+
 
 
 
@@ -45,30 +45,30 @@
                 <tr v-for="(discount, index) in value_list.data" :key="index">
 
                   <td>{{ discount.name }}</td>
-                 
+
                   <td>
-                   
-                   <div v-for="(discount_names, index) in discount.discount" :key="index">
-                     {{ discount_names.discount_type.name }}
-                     <hr>
-                   </div>
-                   </td>
- 
-                   <td>
-                    
-                     <div v-for="(discount_qty, index) in discount.discount" :key="index">
-                     {{ discount_qty.quantity }}
-                     <hr>
-                   </div>
-                    </td>
-                    
-                    <td>
-                    
+
+                    <div v-for="(discount_names, index) in discount.discount" :key="index">
+                      {{ discount_names.discount_type.name }}
+                      <hr>
+                    </div>
+                  </td>
+
+                  <td>
+
                     <div v-for="(discount_qty, index) in discount.discount" :key="index">
-                    {{ discount_qty.date }}
-                    <hr>
-                  </div>
-                   </td>
+                      {{ discount_qty.quantity }}
+                      <hr>
+                    </div>
+                  </td>
+
+                  <td>
+
+                    <div v-for="(discount_qty, index) in discount.discount" :key="index">
+                      {{ discount_qty.date }}
+                      <hr>
+                    </div>
+                  </td>
 
                   <!-- <td>{{ discount.date }}</td> -->
                   <td>{{ discount.note }}</td>
@@ -76,16 +76,17 @@
 
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                    <button type="button" @click="delete_discount(discount.id)" class="btn btn-danger btn-sm waves-effect">
+                    <button type="button" @click="delete_discount(discount.id)"
+                      class="btn btn-danger btn-sm waves-effect">
                       <i class="fa fa-trash"></i>
                     </button>
 
-                    <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateDiscount" data-toggle="modal" id="agregar_productos"
-            >
-              <i class="fa fa-edit"></i></a>
+                    <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateDiscount"
+                      data-toggle="modal" id="agregar_productos">
+                      <i class="fa fa-edit"></i></a>
                     <router-link :to="{
                       name: 'edit_advance',
-                    
+
                     }" class="edit btn btn-success">
                       <i class="fa fa-eye"></i></router-link>
                   </td>
@@ -100,7 +101,7 @@
           </div>
           <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
         </div>
-        <div class="modal fade" id="updateDiscount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- <div class="modal fade" id="updateDiscount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <form method="post">
             <div class="modal-dialog modal-fullscreen">
               <div class="modal-content">
@@ -112,7 +113,7 @@
                 <div class="modal-body">
                   <div class="row row-sm">
                     <div class="col-xl-12">
-                      <!-- <form method="post"> -->
+              
                       <div class="card">
                         <div class="card-header pb-0">
                           <div class="d-flex justify-content-between">
@@ -208,7 +209,7 @@
                         </div>
 
 
-                        <!-- </form> -->
+                   
                       </div>
                     </div>
                   </div>
@@ -222,7 +223,7 @@
               </div>
             </div>
           </form>
-        </div>
+        </div> -->
         <div class="modal fade" id="addDiscount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <form method="post">
             <div class="modal-dialog modal-fullscreen">
@@ -255,6 +256,7 @@
 
 
                                       <th>اسم المؤظف</th>
+                                      <th> نوع الخصم</th>
 
                                       <th>المبلغ</th>
 
@@ -282,7 +284,16 @@
                                         </select>
 
                                       </td>
+                                      <td>
 
+                                        <select v-model="discounttypeselected[index]" name="type" id="type"
+                                          class="form-control" required>
+                                          <option v-for="discount_type in discount_types" v-bind:value="discount_type.id">
+                                            {{ discount_type.name }}
+                                          </option>
+                                        </select>
+
+                                      </td>
 
                                       <td>
 
@@ -337,8 +348,8 @@
                   </div>
 
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="Add_newdiscount()">حفظ </button>
-                    
+                    <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
+
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   </div>
                 </div>
@@ -346,7 +357,7 @@
             </div>
           </form>
         </div>
-       
+
       </div>
     </div>
     <!--/div-->
@@ -364,23 +375,15 @@ export default {
   mixins: [operation],
   data() {
     return {
-      count: 1,
-      counts: [],
-      discount_types: "",
-      staffs: '',
-      staffselected: [],
-      typeselected: [],
-      date: [],
-      quantity: [],
 
-      note: '',
-      name: '',
 
       value_list: {
         type: Object,
         default: null,
       },
-
+      discounttypeselected: [],
+      quantity: [],
+      date: [],
       word_search: "",
     };
   },
@@ -390,24 +393,28 @@ export default {
     this.type = 'discount';
   },
   methods: {
-    data_list() {
+    Add_new() {
 
-return {
-  type: this.type,
-        count: this.counts,
-        staff: this.staffselected,
-        discount_type: this.typeselected,
-        qty: this.quantity,
-        date: this.date,
-}
-},
+      this.Add(
+        {
+          type: this.type,
+          count: this.counts,
+          staff: this.staffselected,
+          discount_type: this.discounttypeselected,
+          qty: this.quantity,
+          date: this.date,
+
+        });
+
+
+    },
+
     get_search(word_search) {
       this.axios
         .post(`/discountsearch`, { word_search: this.word_search })
         .then(({ data }) => {
           this.discounts = data;
 
-          // this.$root.logo = "Category";
         });
     },
 
@@ -423,44 +430,7 @@ return {
           console.error(response);
         });
     },
-    Add_newdiscount() {
-      console.log(this.counts);
-      this.axios
-      .post(`/store_discount`, {
-        type: this.type,
-        count: this.counts,
-        staff: this.staffselected,
-        discount_type: this.typeselected,
-        qty: this.quantity,
-        date: this.date,
 
-
-      })
-      .then((response) => {
-        // ---------------------------------------------------------------
-        console.log(response);
-
-        // this.temporale = response.data;
-        // this.temporale.forEach((item) => {
-        //   this.total_quantity = item.tem_qty + this.total_quantity;
-  
-        //   this.grand_total = item.subtotal + this.grand_total;
-        //   this.To_pay = item.subtotal + this.To_pay;
-  
-        //   this.total_tax = item.tax + this.total_tax;
-  
-          //  console.log(this.total_tax);
-  
-  
-        // });
-  
-        toastMessage("تم الاضافه بنجاح");
-        // this.$router.go(0);
-      });
-    
-      // this.$router.go(0);
-
-    },
 
   },
 };

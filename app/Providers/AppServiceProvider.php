@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\ReturnService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +16,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        
+        $this->app->bind('return',function($app){
+
+            return new ReturnService();
+        });
 
     }
 
@@ -24,7 +31,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        DB::listen(function($query) {
+            Log::info(
+                $query->sql,
+                $query->bindings,
+                $query->time
+            );
+        });
     }
 }
-// python train.py --batch 20  --img 1024 --epochs 3  --data /content/yolov5/data/data.yaml  --weights /content/yolov5/data/yolov5s.pt --cache

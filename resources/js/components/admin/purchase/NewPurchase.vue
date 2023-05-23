@@ -87,7 +87,29 @@
                         <tr v-for="temporales in temporale">
                           <td style="width: 40px">{{ temporales.product }}</td>
 
-                          <td>{{ temporales.tem_qty }} {{ temporales.unit }}</td>
+                          <td>
+                            <!-- <div v-for="temx in purchase_details.units">
+
+
+
+                              <span v-if="temx.unit_type == 0">
+
+                                <span v-if="purchase_details.qty / purchase_details.rate >= 1">
+                                  {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
+                                    purchase_details.units[0].name
+                                  }}
+                                </span>
+
+                                <span v-if="purchase_details.qty % purchase_details.rate >= 1">
+                                  {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
+                                    purchase_details.units[1].name
+                                  }}
+                                </span>
+                              </span>
+
+                            </div> -->
+                            {{ temporales.tem_qty }} {{ temporales.unit }}
+                          </td>
                           <td>{{ temporales.price }}</td>
                           <td>{{ temporales.status }}</td>
                           <td>{{ temporales.store }}</td>
@@ -150,14 +172,13 @@
                     <input type="hidden" id="subtotal_general_sf" name="subtotal_general_sf" class="form-control"
                       value="0.00" />
                   </div>
-                  <div class="col-md-12">  <label for="pagoPrevio">نوع العمله</label>
-                    <select name="forma_pago" class="form-control" id="forma_pago" 
-                      >
-                      <option v-bind:value="2">ريال يمني  </option>
+                  <div class="col-md-12"> <label for="pagoPrevio">نوع العمله</label>
+                    <select name="forma_pago" class="form-control" id="forma_pago">
+                      <option v-bind:value="2">ريال يمني </option>
                       <option v-bind:value="1">دولار امريكي</option>
                       <option v-bind:value="2">ريال سعودي </option>
                     </select>
-                    </div>
+                  </div>
                   <div class="col-md-12">&nbsp;</div>
                   <div class="col-md-12">
                     <label for="pagoPrevio">الخصم (%)</label>
@@ -168,9 +189,8 @@
                   </div>
                   <div class="col-md-12">
                     <label for="pagoPrevio">مصروفات مباشره</label>
-                    <input type="number" :min="0" :max="99" :step="1"
-                      oninput="validity.valid||(value='');" class="form-control input_cantidad"
-                      onkeypress="return valida(event)" />
+                    <input type="number" :min="0" :max="99" :step="1" oninput="validity.valid||(value='');"
+                      class="form-control input_cantidad" onkeypress="return valida(event)" />
 
                   </div>
 
@@ -197,13 +217,13 @@
                 <input type="hidden" id="items_totales" />
                 <input type="hidden" id="registros_totales" />
               </div>
-              <div class="col-md-12" >
+              <div class="col-md-12">
                 <label for="pagoPrevio">الصندوق</label>
                 <select name="forma_pago" class="form-control" id="forma_pago" v-model="Way_to_pay_selected"
-                      v-on:change="onwaychange">
-                      <option ></option>
-                    </select>
-         
+                  v-on:change="onwaychange">
+                  <option></option>
+                </select>
+
               </div>
 
               <div class="col-md-12" v-show="show">
@@ -557,8 +577,8 @@
                     <div class="m-b-20">
                       <div class="checkmark">
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-                          <circle class="path circle" fill="none" stroke="#4bd396" stroke-width="6"
-                            stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                          <circle class="path circle" fill="none" stroke="#4bd396" stroke-width="6" stroke-miterlimit="10"
+                            cx="65.1" cy="65.1" r="62.1" />
                           <polyline class="path check" fill="none" stroke="#4bd396" stroke-width="6"
                             stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
                         </svg>
@@ -616,7 +636,7 @@ export default {
       // store: [],
       intostore: [],
       intostore_id: [],
-    
+
       total_quantity: 0,
       grand_total: 0,
       sub_total: 0,
@@ -627,7 +647,7 @@ export default {
       supplier: [],
       suppliers: '',
       customers: '',
-    
+
       temporale: 1,
       type_payment: 0,
       Way_to_pay_selected: 1,

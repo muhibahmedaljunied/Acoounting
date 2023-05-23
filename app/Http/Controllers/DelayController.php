@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\Staff\BasicData\StoreTrait;
 use App\Models\Delay;
 use App\Models\DelayType;
 use App\Models\Staff;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class DelayController extends Controller
@@ -15,6 +17,7 @@ class DelayController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    use StoreTrait;
     public function index()
     {
         // $delays = DB::table('delays')
@@ -24,7 +27,14 @@ class DelayController extends Controller
         // ->paginate(10);
 
         $delay_types = DelayType::all();
-        $staffs = Staff::all();
+        // $staffs = Staff::all();
+         // ------------------------------------------------------------------------------------------------
+         $minutes = 60;
+         $staffs = Cache::remember('staff', $minutes, function () {
+             return DB::table('staff')->get();
+         });
+         // --------------------------------------------------------------------------------------------------
+        
         return response()->json(['delay_types'=>$delay_types,'staffs'=>$staffs]);
     }
 

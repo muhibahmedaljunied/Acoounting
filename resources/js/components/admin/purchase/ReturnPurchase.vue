@@ -28,7 +28,7 @@
                         <th class="wd-15p border-bottom-0">كميه الشراء</th>
                         <!-- <th class="wd-15p border-bottom-0">الوحده</th> -->
 
-                        <th class="wd-15p border-bottom-0"> سعر الوحده</th>
+                        <!-- <th class="wd-15p border-bottom-0"> سعر الوحده</th> -->
                         <!-- <th class="wd-15p border-bottom-0">  الخصم</th> -->
 
 
@@ -37,8 +37,9 @@
                         <th> المواصفات والطراز</th>
                         <th>المخزن</th>
                         <th>الكميه المسموح ارجاعها</th>
+                        <th>الكميه المرتجعه الفعليه</th>
                         <th class="wd-15p border-bottom-0">الوحده</th>
-                        <th>اضافه</th>
+                        <!-- <th>اضافه</th> -->
                       </tr>
                     </thead>
                     <tbody v-if="detail && detail.length > 0">
@@ -61,7 +62,7 @@
                         <!-- <td>{{ purchase_details.qty }} {{ purchase_details.unit }}</td> -->
 
                         <td>
-
+                          <!-- 
                           <div v-for="temx in purchase_details.units">
 
                             <span v-if="temx.name == purchase_details.unit">
@@ -92,20 +93,41 @@
 
 
 
+                          </div> -->
+                          <div v-for="temx in purchase_details.units">
+
+
+
+                            <span v-if="temx.unit_type == 0">
+
+                              <span v-if="purchase_details.qty / purchase_details.rate >= 1">
+                                {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
+                                  purchase_details.units[0].name
+                                }}
+                              </span>
+
+                              <span v-if="purchase_details.qty % purchase_details.rate >= 1">
+                                {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
+                                  purchase_details.units[1].name
+                                }}
+                              </span>
+                            </span>
+
                           </div>
+
 
                         </td>
 
 
 
-                        <td>
+                        <!-- <td>
                           <div class="form-group">
                             <input v-model="purchase_details.price" readonly type="text" name="name" id="name"
                               class="form-control" />
                           </div>
 
 
-                        </td>
+                        </td> -->
                         <!-- <td>
                           <div class="form-group">
                             <input v-model="purchase_details.avilable_qty" type="text" name="name" id="name"
@@ -145,6 +167,39 @@
                         <td>{{ purchase_details.store }}</td>
 
                         <td>
+                          <!-- <div class="form-group">
+                            <input v-model="purchase_details.qty_remain" type="number" min="1"
+                              :max="purchase_details.qty_remain" step="1" class="form-control" readonly />
+
+
+
+                          </div> -->
+                          <div v-for="temx in purchase_details.units">
+
+
+
+                            <span v-if="temx.unit_type == 0">
+
+                              <span v-if="purchase_details.qty_remain / purchase_details.rate >= 1">
+                                {{ Math.floor((purchase_details.qty_remain / purchase_details.rate)) }}{{
+                                  purchase_details.units[0].name
+                                }}
+                              </span>
+
+                              <span v-if="purchase_details.qty_remain % purchase_details.rate >= 1">
+                                {{ Math.floor((purchase_details.qty_remain % purchase_details.rate)) }}{{
+                                  purchase_details.units[1].name
+                                }}
+                              </span>
+                            </span>
+
+                          </div>
+
+
+
+                        </td>
+
+                        <!-- <td>
                           <div class="form-group">
                             <input v-if="purchase_details.avilable_qty > purchase_details.qty_remain"
                               v-model="purchase_details.qty_remain" type="number" min="1"
@@ -154,18 +209,31 @@
                               v-model="purchase_details.qty_remain" type="number" min="1"
                               :max="purchase_details.qty_remain" step="1" class="form-control" />
                             <input v-else-if="purchase_details.avilable_qty < purchase_details.qty_remain"
-                              v-model="purchase_details.qty_remain = purchase_details.avilable_qty" type="number"
-                              min="1" :max="purchase_details.avilable_qty" step="1" class="form-control" />
+                              v-model="purchase_details.qty_remain = purchase_details.avilable_qty" type="number" min="1"
+                              :max="purchase_details.avilable_qty" step="1" class="form-control" />
 
+
+                          </div>
+
+                        </td> -->
+                        <td>
+                          <div class="form-group">
+                            <input v-model="purchase_details.qty_return_now" type="number" min="1" step="1"
+                              class="form-control" />
 
                           </div>
 
                         </td>
+
                         <td>
-                          <div class="form-group">
-                            <input v-model="purchase_details.unit" readonly type="text" name="name" id="name"
-                              class="form-control" />
-                          </div>
+
+                          <select v-model="purchase_details.unit_selected" name="" id="" class="form-control">
+                            <option v-for="unit in purchase_details.units" :value="[unit.id, unit.rate, unit.unit_type]">
+
+                              {{ unit.name }}
+                            </option>
+
+                          </select>
                         </td>
                         <!-- <td>
                           <div v-for="temx in purchase_details.units">
@@ -191,28 +259,28 @@
 
                         </td> -->
 
-                        <td>
-                          <input v-if="
-                            purchase_details.qty_return !=
+                        <!-- <td>
+                          <input v-if="purchase_details.qty_return !=
                             purchase_details.quantity
-                          " v-model="check_state[index]" @change="
-  add_one_return(
-    purchase_details.qty_remain,
-    index,
-    purchase_details.product_id,
-    purchase_details.store_id,
-    purchase_details.status_id,
-    purchase_details.desc,
+                            " v-model="check_state[index]" @change="
+    add_one_return(
+      purchase_details.qty_remain,
+      purchase_details.qty_return_now,
+      index,
+      purchase_details.product_id,
+      purchase_details.store_id,
+      purchase_details.status_id,
+      purchase_details.desc,
 
-    [
-      purchase_details.unit_id,
-      purchase_details.rate,
-      purchase_details.unit_type
-    ],
+      [
+        purchase_details.unit_id,
+        purchase_details.rate,
+        purchase_details.unit_type
+      ],
 
-  )
-" type="checkbox" class="btn btn-info waves-effect">
-                        </td>
+    )
+    " type="checkbox" class="btn btn-info waves-effect">
+                        </td> -->
                       </tr>
                       <tr>
                         <td colspan="10">
@@ -231,17 +299,17 @@
                             <label for="date">طريقه الدفع</label><br />
 
 
-                            <select name="forma_pago" class="form-control" id="forma_pago" 
-                            >
-                              
-                    
+                            <select name="forma_pago" class="form-control" id="forma_pago">
+
+
                               <option v-bind:value="1">نقد</option>
                               <option v-bind:value="2">أجل</option>
-                            </select>                          </div>
+                            </select>
+                          </div>
                         </td>
                       </tr>
                       <tr>
-                       
+
                         <td colspan="10">
                           <div class="m-t-30 col-md-12">
                             <label for="date">التاريخ</label><br />
@@ -319,57 +387,10 @@ export default {
     });
   },
   methods: {
-   
-
-    add_one_return(qty_return, index, product, store, status, desc, unit) {
-
-
-      console.log(product, index);
-      console.log(qty_return, index);
-      console.log(unit, index);
-      console.log(desc, index);
-      console.log(store, index);
-      console.log(status, index);
-
-      if (this.check_state[index] == true) {
-
-
-        // if (qty != 0) {
-
-        // if (qty <= availabe_qty) {
-
-        this.counts[index] = index;
-        this.product[index] = product;
-        this.qty[index] = qty_return;
-        this.unit[index] = unit;
-        this.desc[index] = desc;
-        this.store[index] = store;
-        this.status[index] = status;
-        // }
-        // }
-
-
-
-      } else if (this.check_state[index] == false) {
-
-        this.$delete(this.counts, index);
-        this.$delete(this.product, index);
-        this.$delete(this.qty, index);
-        this.$delete(this.unit, index);
-        this.$delete(this.desc, index);
-        this.$delete(this.store, index);
-        this.$delete(this.status, index);
-
-
-      }
-
-    },
-
-
 
 
   },
- 
+
 
 };
 </script>

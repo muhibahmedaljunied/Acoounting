@@ -3,12 +3,11 @@
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header pb-0">
-          <div class="d-flex justify-content-between">
+        <div class="card-header">
             <span class="h2">التحويلات المخزنيه</span>
-          </div>
+      
 
-          <div class="d-flex justify-content-right">
+          <div style="display: flex;float: left; margin: 5px">
             <router-link
               to="create_transfer"
               id="agregar_productos"
@@ -42,7 +41,7 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th class="wd-15p border-bottom-0" rowspan="1">
+                    <th class="wd-45p border-bottom-0" rowspan="1">
                       رقم السند
                     </th>
                     <th class="wd-15p border-bottom-0" rowspan="1">التاريخ</th>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
-    
+
     public function staff()
     {
         return $this->belongsTo(Staff::class);
@@ -27,5 +27,13 @@ class Attendance extends Model
         return $this->hasMany(AttendanceDetail::class);
     }
 
-    
+    public function scopeWhereAttendance($query, $value)
+
+    {
+
+        return $query->where([
+            'staff_id' => $value['staff'],
+            'attendance_date' => $value['attendance_date'],
+        ]);
+    }
 }

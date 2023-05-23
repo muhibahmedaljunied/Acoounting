@@ -42,14 +42,15 @@
 
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                    <button type="button" @click="delete_qualification(qualification.id)" class="btn btn-danger">
+                    <button type="button" @click="delete_qualification(qualification.id)"
+                      class="btn btn-sm waves-effect btn-danger">
                       <i class="fa fa-trash"></i>
                     </button>
 
                     <router-link :to="{
                       name: 'edit_category',
                       params: { id: qualification.id },
-                    }" class="edit btn btn-success">
+                    }" class="edit btn btn-sm waves-effect btn-success">
                       <i class="fa fa-edit"></i></router-link>
                   </td>
                 </tr>
@@ -64,7 +65,7 @@
           <pagination align="center" :data="qualifications" @pagination-change-page="list"></pagination>
 
         </div>
-      
+
 
         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
           aria-hidden="true" style="display: none" id="addq">
@@ -79,8 +80,8 @@
                 </div>
                 <div class="col-md-4">
                   <div class="col-sm-12">
-                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto"
-                      id="buscar_producto" v-model="word_search" @input="get_search()" />
+                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto" id="buscar_producto"
+                      v-model="word_search" @input="get_search()" />
                   </div>
                 </div>
               </div>
@@ -89,38 +90,38 @@
                   <div class="col-xl-12">
                     <div class="card">
                       <div class="card-header pb-0">
-                      
+
                       </div>
                       <div class="card-body">
                         <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
 
                           <div class="table-responsive">
-                            <table class="table table-bordered text-right m-t-30"
-                              style="width: 100%; font-size: x-small">
+                            <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
                               <thead>
                                 <tr>
 
                                   <th> الاسم</th>
 
 
-                    
-                        
 
-                              
-            
+
+
+
+
                                   <th>اضافه</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 <tr v-for="index in count" :key="index">
                                   <td>
-                                    <input type="text" class="form-control" name="name" id="name" required />
+                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name"
+                                      required />
 
                                   </td>
-                            
-                            
-                               
-                             
+
+
+
+
 
                                   <td v-if="index == 1">
                                     <a class="tn btn-info btn-sm waves-effect btn-agregar"
@@ -144,27 +145,26 @@
                       </div>
                     </div>
                   </div>
-         
+
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
               </div>
 
 
             </div>
-     
+
           </div>
 
-         
+
         </div>
       </div>
     </div>
 
   </div>
-
 </template>
 
 <script>
@@ -178,80 +178,32 @@ export default {
   mixins: [operation],
   data() {
     return {
-  
+
 
       qualifications: {
         type: Object,
         default: null,
       },
-   
+
     };
   },
   mounted() {
     this.list();
+    this.counts[0] = 1;
+
     this.type = 'qualification';
   },
   methods: {
-    Import() {
-      this.axios.post(`/CategoryImport`).then(({ data }) => {
-        console.log(data);
+    Add_new() {
 
-        this.list();
-        toast.fire({
-          title: "تم الاستيراد بنجاح",
-          text: "Products are successfully exported.",
-          button: "Close", // Text on button
-          icon: "success", //built in icons: success, warning, error, info
-          timer: 3000, //timeOut for auto-close
-          buttons: {
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-            cancel: {
-              text: "Cancel",
-              value: false,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-          },
-        });
+      $this.Add({
+        count: this.counts,
+        type: this.type,
+        name: this.name,
+
       });
     },
-    Export() {
-      this.axios.post(`/CategoryExport`).then((response) => {
-        toast.fire({
-          title: "تم التصدير بنجاح",
-          text: "Products are successfully exported.",
-          button: "Close", // Text on button
-          icon: "success", //built in icons: success, warning, error, info
-          timer: 3000, //timeOut for auto-close
-          buttons: {
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-            cancel: {
-              text: "Cancel",
-              value: false,
-              visible: true,
-              className: "",
-              closeModal: true,
-            },
-          },
-        });
-        console.log(response.data.data);
-      });
-    },
- 
-  
+
     list(page = 1) {
       this.axios
         .post(`/qualification?page=${page}`)
@@ -262,7 +214,7 @@ export default {
           console.error(response);
         });
     },
-  
+
 
   },
 };

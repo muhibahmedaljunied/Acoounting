@@ -227,22 +227,15 @@
                                         <th style="width: 60px">العمليات</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="opening && opening.data.length > 0">
+                                <!-- <tbody v-if="opening && opening.data.length > 0">
                                     <tr v-for="(openings, index) in opening.data" :key="index">
                                         <td style="width: 40px">{{ index + 1 }}</td>
                                         <td style="width: 40px">{{ openings.product }}</td>
-                                        <!-- <td style="width: 40px">
-                            {{ openings.group_name }}
-                          </td>
-                          <td style="width: 40px">
-                            {{ openings.category_name }}
-                          </td> -->
+                               
                                         <td style="width: 40px">
                                             {{ openings.store }}
                                         </td>
-                                        <!-- <td style="width: 40px">
-                            {{ openings.shelve_name }}
-                          </td> -->
+                             
                                         <td style="width: 40px">{{ openings.status }}</td>
                                         <td style="width: 40px">{{ openings.desc }}</td>
 
@@ -254,16 +247,14 @@
                                                 @click="show_modal(openings.product_id)"
                                                 class="tn btn-danger btn-sm waves-effect btn-agregar">
                                                 <i class="fa fa-trash"></i></button>
-                                            <!-- <button data-toggle="modal"
-                            data-target="#modal_update"   @click="show_modal(openings.product_id)" class="tn btn-danger btn-sm waves-effect btn-agregar">
-                              <i class="fa fa-edit"></i></button> -->
+                                       
                                             <router-link to="/opening_supply"
                                                 class="tn btn-info btn-sm waves-effect btn-agregar"
                                                 data-toggle="tooltip" title="تعديل">
                                                 <i class="fa fa-edit"></i></router-link>
                                         </td>
                                     </tr>
-                                </tbody>
+                                </tbody> -->
                             </table>
                         </div>
                     </div>
@@ -329,6 +320,8 @@ export default {
                     count: this.counts,
                     product_id: this.product,
                     store_id: this.store,
+                    type: this.type,
+                    type_refresh: this.type_refresh,
                     desc: this.desc,
                     qty: this.qty,
                     unit_id: this.unit,
@@ -336,7 +329,7 @@ export default {
                     price: this.price,
                     expiry_date: this.expiry_date,
                     total: this.total,
-                    old: this.detail,
+                    // old: this.detail,
 
 
                 })
@@ -361,9 +354,9 @@ export default {
             this.axios
                 .post(`/opening/newopening?page=${page}`)
                 .then(({ data }) => {
-                    console.log(data.temporales);
+                    console.log('data.statuses');
 
-                    this.opening = data.temporales;
+                    // this.opening = data.temporales;
                     this.statuses = data.statuses;
 
                 })

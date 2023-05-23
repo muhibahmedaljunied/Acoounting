@@ -27,17 +27,19 @@
                         <th>المخزن</th>
                         <th>الكميه المتوفره</th>
                         <th>الكميه المباعه</th>
-                        <th> السعر </th>
+                        <!-- <th> السعر </th> -->
                         <th> الوحده </th>
 
 
                         <th>الكميه المسموح ارجاعها</th>
-                        <th>اضافه</th>
+                        <th>الكميه المرتجعه الفعليه </th>
+
+                        <!-- <th>اضافه</th> -->
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="(sale_details, index) in detail" :key="index">
-                        <input v-model="id = sale_details.sale_id" readonly type="hidden" name="name" id="name"
+                        <input v-model="id = sale_details.sale_id"  type="hidden" name="name" id="name"
                           class="form-control" />
 
                         <td>
@@ -84,7 +86,7 @@
                           </div>
                         </td> -->
                         <td>
-
+                          <!-- 
                           <div v-for="temx in sale_details.units">
 
                             <span v-if="temx.name == sale_details.unit">
@@ -115,94 +117,86 @@
 
 
 
-                          </div>
-
-                        </td>
-
-                        <!-- <td>
+                          </div> -->
                           <div v-for="temx in sale_details.units">
 
+
+
                             <span v-if="temx.unit_type == 0">
-                              {{ parseInt(sale_details.qty / sale_details.rate) }} {{ temx.name }}
-                            </span>
-                            <span v-if="temx.unit_type == 1">
-                              <span
-                                v-if="Math.floor(((sale_details.qty / sale_details.rate) - parseInt(sale_details.qty / sale_details.rate)) * sale_details.rate) != 0">
-                                و
-                                {{
-                                  Math.floor(((sale_details.qty / sale_details.rate) -
-                                    parseInt(sale_details.qty / sale_details.rate)) * sale_details.rate)
-                                }}{{
-  temx.name
-}}
+
+                              <span v-if="sale_details.qty / sale_details.rate >= 1">
+                                {{ Math.floor((sale_details.qty / sale_details.rate)) }}{{
+                                  sale_details.units[0].name
+                                }}
+                              </span>
+
+                              <span v-if="sale_details.qty % sale_details.rate >= 1">
+                                {{ Math.floor((sale_details.qty % sale_details.rate)) }}{{
+                                  sale_details.units[1].name
+                                }}
+                              </span>
+
+                              <span v-if="sale_details.qty == 0">
+                                0
                               </span>
 
                             </span>
+
                           </div>
 
-                        </td> -->
-
-                        <td>
-                          <div class="form-group">
-                            <input v-model="sale_details.price" readonly type="text" name="name" class="form-control" />
-                          </div>
                         </td>
+
+                      
                         <td>
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                             <input v-model="sale_details.unit" readonly type="text" name="name" class="form-control" />
-                          </div>
+                          </div> -->
+                          <select v-model="sale_details.unit_selected" name="" id="" class="form-control">
+                            <option v-for="unit in sale_details.units" :value="[unit.id, unit.rate, unit.unit_type]">
+
+                              {{ unit.name }}
+                            </option>
+
+                          </select>
                         </td>
 
                         <td>
-                          <div class="form-group">
-                            <input v-model="sale_details.qty_remain" type="number" min="1"
-                              :max="sale_details.qty_remain" step="1" class="form-control" />
-                          </div>
-
-                        </td>
-                        <!-- <td>
+                         
                           <div v-for="temx in sale_details.units">
 
-                            <span v-if="temx.unit_type == 1">
-                              {{ parseInt(sale_details.qty_remain / sale_details.rate) }} {{ temx.name }}
-                            </span>
+
+
                             <span v-if="temx.unit_type == 0">
-                              <span
-                                v-if="Math.floor(((sale_details.qty_remain / sale_details.rate) - parseInt(sale_details.qty_remain / sale_details.rate)) * sale_details.rate) != 0">
-                                و
-                                {{
-                                  Math.floor(((sale_details.qty_remain / sale_details.rate) -
-                                    parseInt(sale_details.qty_remain / sale_details.rate)) * sale_details.rate)
-                                }}{{
-  temx.name
-}}
+
+                              <span v-if="sale_details.qty_remain / sale_details.rate >= 1">
+                                {{ Math.floor((sale_details.qty_remain / sale_details.rate)) }}{{
+                                  sale_details.units[0].name
+                                }}
+                              </span>
+
+                              <span v-if="sale_details.qty_remain % sale_details.rate >= 1">
+                                {{ Math.floor((sale_details.qty_remain % sale_details.rate)) }}{{
+                                  sale_details.units[1].name
+                                }}
+                              </span>
+
+                              <span v-if="sale_details.qty_remain == 0">
+                                0
                               </span>
 
                             </span>
+
                           </div>
 
-                        </td> -->
-
-
-                        <td>
-                          <input v-if="
-                            sale_details.qty_return != sale_details.quantity
-                          " v-model="check_state[index]" @change="
-  add_one_return(
-    sale_details.qty_remain,
-    index,
-    sale_details.product_id,
-    sale_details.store_id,
-    sale_details.status_id,
-    sale_details.desc,
-    [
-      sale_details.unit_id,
-      sale_details.rate,
-      sale_details.unit_type
-    ],
-  )
-" type="checkbox" class="btn btn-info waves-effect">
                         </td>
+                        <td>
+                          <div class="form-group">
+                            <input v-model="sale_details.qty_return_now" type="number" min="1" step="1"
+                              class="form-control" />
+
+                          </div>
+                        </td>
+                     
                       </tr>
 
                       <tr>
@@ -273,9 +267,7 @@ export default {
 
 
     return {
-      // detail: '',
-      // sale_id: "",
-      // seen: false,
+
       not_qty: true,
       message_check: false,
       text_message: 0,
@@ -308,49 +300,6 @@ export default {
     },
 
 
-    add_one_return(qty_return, index, product, store, status, desc, unit) {
-
-
-
-
-      console.log(product, index);
-      console.log(qty_return, index);
-      console.log(unit, index);
-      console.log(desc, index);
-      console.log(store, index);
-      console.log(status, index);
-
-      if (this.check_state[index] == true) {
-
-
-        this.counts[index] = index;
-        this.product[index] = product;
-        this.qty[index] = qty_return;
-        this.unit[index] = unit;
-        this.desc[index] = desc;
-        this.store[index] = store;
-        this.status[index] = status;
-
-
-
-
-
-        // console.log(this.return_qty);
-
-      } else if (this.check_state[index] == false) {
-
-        this.$delete(this.counts, index);
-        this.$delete(this.product, index);
-        this.$delete(this.qty, index);
-        this.$delete(this.unit, index);
-        this.$delete(this.desc, index);
-        this.$delete(this.store, index);
-        this.$delete(this.status, index);
-
-        // console.log(this.return_qty);
-      }
-
-    },
 
   },
   computed: {},

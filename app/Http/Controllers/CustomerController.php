@@ -64,28 +64,6 @@ class CustomerController extends Controller
     }
 
     
-    // public function Export( )      
-    // {      
-    //     $filename = '-customers.xlsx';
-    //     Excel::store(new CustomerExport, $filename);
-    //     $fullPath = Storage::disk('local')->path($filename);
-
-    //     return response()->json([
-    //         'data' => $fullPath,
-    //         'message' => 'supplier are successfully exported.'
-    //     ], 200);
-
-    // }
-
-
-    // public function Import(Request $request)
-    // {
-
-    //     $filename = '-customers.xlsx';
-    //     return response()->json(Excel::import(new CustomerImport,Storage::disk('local')->path($filename)));
-       
-    // }
-
     
     public function store(Request $request){
     	$customer = new Customer();

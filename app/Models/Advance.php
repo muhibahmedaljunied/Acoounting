@@ -10,4 +10,18 @@ class Advance extends Model
     {
         return $this->belongsTo(Staff::class);
     }
+    public function scopeWhereAdvance($query, $value)
+
+    {
+
+
+        return $query->where([
+                                'staff_id' => $value['staff'],
+                                'date' => $value['date'],
+        ]);
+    }
+
+    
+
+                                                        
 }

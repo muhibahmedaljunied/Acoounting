@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Traits\Staff\BasicData\StoreTrait;
 
 use App\Models\StaffType;
 use DB;
@@ -8,6 +9,8 @@ use Illuminate\Http\Request;
 
 class StaffTypeController extends Controller
 {
+
+    use StoreTrait;
     /**
      * Display a listing of the resource.
      *
@@ -37,10 +40,10 @@ class StaffTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    // public function store(Request $request)
+    // {
+    //     //
+    // }
 
     /**
      * Display the specified resource.

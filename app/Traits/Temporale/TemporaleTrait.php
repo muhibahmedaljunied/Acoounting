@@ -9,12 +9,6 @@ use DB;
 trait TemporaleTrait
 {
 
-    // public function __construct()
-    // {
-      
-    // }
-
-
     function check_temporale($type)
     {
 
@@ -31,8 +25,7 @@ trait TemporaleTrait
         }
 
 
-
-        return $temporale;
+        return $temporale->toarray();
     }
 
 
@@ -66,33 +59,32 @@ trait TemporaleTrait
     }
 
 
-    function add_temporale($request, $value, $type, $id = null, $id_store_product = null)
+    // function add_temporale($request, $value, $type, $id = null, $id_store_product = null)
+    function add_temporale(...$list_data)
     {
- 
-        // $this->request = $request;
-        // $this->value = $value;
+
+
+        $request = $list_data['request'];
+        $value = $list_data['value'];
+        $type = $list_data['type'];
+        // $id = $list_data['id'];
+        // $id_store_product = $list_data['id_store_product'];
+
         $array_unit_after_decode =$request['unit'][$value];
         // return $array_unit_after_decode[0];
-
-
         
-        if ($type == 'Transfer') {
-            $temporale = new TransferDetail();
-        } else {
+        // if ($type == 'Transfer') {
+        //     $temporale = new TransferDetail();
+        // } else {
 
             $temporale = new Temporale();
-        }
+        // }
      
-
-     
-        
-
         switch ($type) {
 
             case ($type == 'Expence'):
                 $temporale->expence_id =  $request['expence_type'][$value];
                 $temporale->qty = $request['qty'][$value];
-   
 
                 break;
 
@@ -100,11 +92,11 @@ trait TemporaleTrait
                 $array_unit_after_decode =json_decode($request['unit'][$value]);
                 $micro_unit_qty = $this->set_unit($request,$value,$array_unit_after_decode);
                 $temporale->product_id =  $request['product'][$value];
-                $temporale->qty = $request['qty'][$value];
+                // $temporale->qty = $request['qty'][$value];
                 $temporale->store_id =  $request['store'][$value];
                 $temporale->status_id =  $request['status'][$value];
                 $temporale->unit_id =  $array_unit_after_decode[0];
-                $temporale->micro_unit_qty = $micro_unit_qty;
+                $temporale->qty = $micro_unit_qty;
                 $temporale->desc =  $request['desc'][$value];
 
                 break;
@@ -113,11 +105,11 @@ trait TemporaleTrait
             case ($type == 'Cash'):
                 $micro_unit_qty = $this->set_unit($request,$value,$array_unit_after_decode);
                 $temporale->product_id =  $request['product'][$value];
-                $temporale->qty = $request['qty'][$value];
+                // $temporale->qty = $request['qty'][$value];
                 $temporale->store_id =  $request['store'][$value];
                 $temporale->status_id =  $request['status'][$value];
                 $temporale->unit_id =  $array_unit_after_decode[0];
-                $temporale->micro_unit_qty = $micro_unit_qty;
+                $temporale->qty = $micro_unit_qty;
                 $temporale->desc =  $request['desc'][$value];
 
                 break;    
@@ -127,7 +119,7 @@ trait TemporaleTrait
                 $array_unit_after_decode =json_decode($request['unit'][$value]);
                 $micro_unit_qty = $this->set_unit($request,$value,$array_unit_after_decode);
                 $temporale->product_id =  $request['product'][$value];
-                $temporale->qty = $request['qty'][$value];
+                // $temporale->qty = $request['qty'][$value];
                 $temporale->store_id =  $request['store'][$value];
                 $temporale->tax =  $request['tax'][$value];
                 $temporale->price =  $request['price'][$value];
@@ -135,14 +127,14 @@ trait TemporaleTrait
                 $temporale->total = $request['total'][$value] + $request['tax'][$value];
                 $temporale->status_id =  $request['status'][$value];
                 $temporale->unit_id =  $array_unit_after_decode[0];
-                $temporale->micro_unit_qty = $micro_unit_qty;
+                $temporale->qty = $micro_unit_qty;
                 $temporale->desc =  $request['desc'][$value];
                 break;
             case 'Sale':
 
                 $micro_unit_qty = $this->set_unit($request,$value,$array_unit_after_decode);
                 $temporale->product_id =  $request['product'][$value];
-                $temporale->qty = $request['qty'][$value];
+                // $temporale->qty = $request['qty'][$value];
                 $temporale->store_id =  $request['store'][$value];
                 $temporale->tax =  $request['tax'][$value];
                 $temporale->price =  $request['price'][$value];
@@ -150,18 +142,19 @@ trait TemporaleTrait
                 $temporale->total = $request['total'][$value] + $request['tax'][$value];
                 $temporale->status_id =  $request['status'][$value];
                 $temporale->unit_id =  $array_unit_after_decode[0];
-                $temporale->micro_unit_qty = $micro_unit_qty;
+                $temporale->qty = $micro_unit_qty;
                 $temporale->desc =  $request['desc'][$value];
                 break;
         }
 
 
 
-        if ($type == 'Transfer') {
-            $temporale->save();
-        } else {
-            $temporale->type_process = $type;
-        }
+        // if ($type == 'Transfer') {
+        //     $temporale->save();
+        // } else {
+        //     $temporale->type_process = $type;
+        // }
+        $temporale->type_process = $type;
         $temporale->save();
     }
 

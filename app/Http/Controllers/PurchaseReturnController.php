@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\Traits\Temporale\TemporaleTrait;
-use App\Traits\StoreProduct\StoreTrait;
 use App\Traits\Details\ReturnDetailsTrait;
 use App\Traits\GeneralTrait;
 use App\Traits\Stock\StockTrait;
@@ -13,20 +10,24 @@ use App\Traits\StoreProduct\StoreProductTrait;
 use Illuminate\Http\Request;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturn;
-
+use App\Facades\Returns;
 use Illuminate\Support\Facades\Auth;
 use DB;
 
 class PurchaseReturnController extends Controller
 {
-    
-    use TemporaleTrait, StockTrait, StoreTrait, StoreProductTrait,GeneralTrait,ReturnDetailsTrait;
+
+    use TemporaleTrait,
+        StockTrait,
+        StoreProductTrait,
+        GeneralTrait,
+        ReturnDetailsTrait;
 
     public function index()
     {
     }
 
-   
+
     public function return_invoice($id)
     {
 
@@ -62,5 +63,53 @@ class PurchaseReturnController extends Controller
 
 
         return response()->json(['returns' => $returns]);
+    }
+    public function create(Request $request)   // this create return for supply,cashing,sale,purchase
+    {
+
+        $request_data = $request->post('old'); //this conten the prev data
+        // -------------------------------------------- this check if qty_return greater than quantity or qty_avilable-----------------------------------------------------
+
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
+
+            // -----------------------------------------------------------------------------------------------------------------
+            foreach ($request_data as $value) {
+
+                $qty_after_convert = Returns::check_return($value);
+
+                if ($qty_after_convert['message'] == 0) {
+
+                    return response()->json(['message' => 0, 'text' => $qty_after_convert['text']]);
+                }
+            }
+
+            // -------------------------------------------------------------------------------------------------
+            $return_id = Returns::store_return($request->all());
+            // -------------------------------------------------------------------------------------------------
+
+            foreach ($request_data as $value) {
+
+                $data = array_merge($request->except('old'), $value);
+                $data['qty'] = $qty_after_convert['qty'];
+
+                $responce = Returns::create($data, $return_id);
+            }
+
+            // ------------------------------------------------------------------------------------------------------
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => $responce,
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $responce,
+                'status' => 'failed'
+            ], 400);
+        }
+
+        // return response()->json(['message' => $responce]);
     }
 }

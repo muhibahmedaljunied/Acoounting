@@ -29,11 +29,14 @@ class CreateTransferDetailsTable extends Migration
             $table->unsignedInteger('store_id')->unsigned()->nullable();
             $table->foreign('store_id')->references('id')->on('stores');
 
-            // $table->unsignedInteger('shelve_id')->unsigned()->nullable();
-            // $table->foreign('shelve_id')->references('id')->on('shelves');
-
+           
             $table->unsignedInteger('status_id')->unsigned()->nullable();
             $table->foreign('status_id')->references('id')->on('statuses');
+
+
+            $table->unsignedInteger('unit_id')->unsigned()->nullable();
+            $table->foreign('unit_id')->references('id')->on('units');
+
 
             $table->string('desc')->nullable();
             $table->string('status')->nullable();

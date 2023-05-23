@@ -18,4 +18,17 @@ class Allowance extends Model
     {
         return $this->belongsTo(AllowanceType::class);
     }
+
+    public function scopeWhereAllowance($query, $value)
+
+    {
+        return $query->where([
+            'staff_id' => $value['staff'],
+            'allowance_type_id' => $value['allowance_type'],
+        ]);
+    }
+
+
+
+                                                    
 }

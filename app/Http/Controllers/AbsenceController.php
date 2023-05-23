@@ -8,6 +8,7 @@ use App\Models\AbsenceType;
 use App\Models\Staff;
 use App\Models\SanctionDiscount;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class AbsenceController extends Controller
@@ -18,22 +19,26 @@ class AbsenceController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function test()
- {
-           event(new TestEvent('One Click'));
-     return response()->json(['absence_types'=>'Hooray!!! You have fired your Event successfully']);
-
- }
+    public function test()
+    {
+        event(new TestEvent('One Click'));
+        return response()->json(['absence_types' => 'Hooray!!! You have fired your Event successfully']);
+    }
 
 
     public function index()
     {
-        
+
         $absence_types = AbsenceType::all();
         $discount_types = SanctionDiscount::all();
-        $staffs = Staff::all();
+         // ------------------------------------------------------------------------------------------------
+         $staffs = Cache::rememberForever('staff', function () {
+             return DB::table('staff')->get();
+         });
+         // --------------------------------------------------------------------------------------------------
+        
 
-        return response()->json(['absence_types'=>$absence_types,'staffs'=>$staffs,'discount_types'=>$discount_types]);
+        return response()->json(['absence_types' => $absence_types, 'staffs' => $staffs, 'discount_types' => $discount_types]);
     }
 
     /**
@@ -46,7 +51,7 @@ class AbsenceController extends Controller
         //
     }
 
-  
+
     public function store(Request $request)
     {
         $absence = new Absence();
@@ -59,7 +64,7 @@ class AbsenceController extends Controller
         return response()->json();
     }
 
-  
+
     public function show(Absence $absence)
     {
         //
@@ -71,7 +76,7 @@ class AbsenceController extends Controller
         //
     }
 
- 
+
     public function update(Request $request, Absence $absence)
     {
         //

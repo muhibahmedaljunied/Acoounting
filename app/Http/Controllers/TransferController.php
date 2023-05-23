@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Traits\Temporale\TemporaleTrait;
-use App\Traits\StoreProduct\StoreTrait;
+use App\Traits\GeneralTrait;
 use App\Traits\Stock\StockTrait;
 use App\Traits\StoreProduct\StoreProductTrait;
 use App\Traits\Details\DetailsTrait;
-
+// use App\Facades\Returns;
 use App\Models\Product;
 use App\Models\StoreProduct;
 use Illuminate\Http\Request;
@@ -19,7 +19,11 @@ use DB;
 class TransferController extends Controller
 {
 
-    use TemporaleTrait, StoreTrait, StockTrait, StoreProductTrait,DetailsTrait;
+    use TemporaleTrait,
+        StockTrait,
+        StoreProductTrait,
+        DetailsTrait,
+        GeneralTrait;
 
 
     public function index()
@@ -44,7 +48,7 @@ class TransferController extends Controller
 
 
 
-        $products = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type','==',0)
+        $products = StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type', '==', 0)
             ->where('store_products.product_id', $request->post('product'))
             // ->joinall()
             ->join('products', 'products.id', '=', 'store_products.product_id')
@@ -52,25 +56,10 @@ class TransferController extends Controller
             ->join('statuses', 'statuses.id', '=', 'store_products.status_id')
             ->join('product_units', 'product_units.product_id', '=', 'products.id')
             ->join('units', 'units.id', '=', 'product_units.unit_id')
-            ->select('store_products.quantity', 'store_products.*','units.name as unit', 'products.id', 'products.text as product','products.rate', 'statuses.name as status', 'stores.text as store')
+            ->select('store_products.quantity', 'store_products.*', 'units.name as unit', 'products.id', 'products.text as product', 'products.rate', 'statuses.name as status', 'stores.text as store')
             ->get();
 
-        foreach ($products as $value) {
-
-            $units = DB::table('product_units')
-                ->join('units', 'units.id', '=', 'product_units.unit_id')
-                ->join('products', 'products.id', '=', 'product_units.product_id')
-                ->where('product_units.product_id', $value->product_id)
-                ->select('units.*','products.rate','product_units.unit_type')
-                ->get();
-
-            $value->units = $units;
-        }     
-
-
-
-  
-
+        $this->units($products);
         return response()->json(['products' => $products]);
     }
 
@@ -92,79 +81,137 @@ class TransferController extends Controller
     {
 
 
-        
-        $transfer = new Transfer();
-        $transfer->date =  $request->post('date');
-        $transfer->save();
+        $request_data = $request->post('old'); //this conten the prev data
 
-        foreach ($request->post('count') as $value) {
 
-        
 
-            if ($value !== null) {
+        try {
 
-                $stock_f = 0;
-                $store_product_f = 0;
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
+            // ---------------------------------------------------------------------------------------
 
-              
+            $transfer_id =  $this->add_start(data: $request->all());
 
-                $array_unit_after_decode =$request['unit_id'][$value];
-                $micro_unit_qty = $this->set_unit($request,$value,$array_unit_after_decode);
-                // return response()->json(['rrx' =>$micro_unit_qty]);
-                $store_product_f = $this->refresh_store_from_transfer($value,$request->all(),$micro_unit_qty,'decrement');
+            foreach ($request_data as $key => $value) {
 
-                $store_product_f = $this->refresh_store_from_transfer($value,$request->all(),$micro_unit_qty,'increment');
-               
-                //  --------------------------------------------------------------------------
-                $id_store_product = $this->get($value,$request->all());
-                // return response()->json(['rrx' =>$id_store_product ]);
-                foreach ($id_store_product as $values) {
 
-                    // return response()->json(['rrx' =>$values['id'] ]);
-                    $id_store_product = $values['id'];
+                // dd($value['qty_transfer']);
+
+                $qty_after_convert = $this->check_return($value);
+
+                if ($qty_after_convert['message'] == 0) {
+
+                    return response()->json(['message' => 0, 'text' => $qty_after_convert['text']]);
                 }
 
-                if ($store_product_f == 0) {
+                $data = array_merge($request->except(['old']), $value);
+                $data['qty'] = $qty_after_convert['qty'];
 
-                    $id_store_product = $this->init_store($value,'Transfer',$request->all(),$micro_unit_qty);
-                   
-                }
+                if ($value !== null) {
 
-                
-                // return response()->json(['rrx' =>$id_store_product ]);
-                // --------------------------------------------------------------------------------------------------------------
+                    $stock_f = 0;
+                    $store_product_f = 0;
+                    $store_product_f = $this->refresh_store(
+                        data: $data,
+                        type_refresh: 'decrement',
+                    );
 
-                $r = $this->init_details($transfer->id,$id_store_product,$value,'Transfer',$request->all());
+                    $store_product_f = $this->refresh_store(
 
-                // return response()->json(['rrx' =>$r ]);
-                // --------------------------------------------------------------------------------------------------------------
-                $stock_f = $this->refresh_stock($transfer->id, $value, 'Transfer', 'increment',$request->all());
-                // -----------------------------------------------------
-
-                // return response()->json(['rrx' =>$stock_f ]);
-                if ($stock_f == 0) {
+                        data: $data,
+                        type_refresh: 'increment',
+                        store_id: $data['intostore'][$key]
 
 
-                    $this->init_stock($transfer->id, $value, 'Transfer', $request->post('date'),$request->all());
+                    );
+
+                    //  --------------------------------------------------------------------------
+                    $id_store_product = $this->get($value);
+
+
+                    if ($store_product_f == 0) {
+
+                        $id_store_product = $this->init_store(
+                            data: $data,
+                            store_id: $data['intostore'][$key]
+                        );
+                    }
+
+                    // --------------------------------------------------------------------------------------------------------------
+
+                    $r = $this->init_details(
+                        id: $transfer_id,
+                        id_store_product: $id_store_product,
+                        data: $data,
+                        unit_id: $data['unit_selected'][0]
+                    );
+
+                    // --------------------------------------------------------------------------------------------------------------
+                    $stock_f = $this->refresh_stock(
+                        id: $transfer_id,
+                        type_refresh: 'increment',
+                        data: $data
+                    );
+                    // -----------------------------------------------------
+
+                    if ($stock_f == 0) {
+
+                        $this->init_stock(
+                            id: $transfer_id,
+                            data: $data
+                        );
+                    }
                 }
             }
+            // ---------------------------------------------------------------------------------------
 
-
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "purchase created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
-        return response()->json(['message' => 'success']);
+        // return response([
+        //     'message' => '$exp->getMessage()',
+        //     'status' => 'success'
+        // ], 400);
+    }
+
+
+    public function check_return($value)
+    {
+
+        // return $value['qty_transfer'];
+        $qty_transfer = $value['qty_transfer'];
+        $qty = $value['quantity'];
+        foreach ($value['units'] as $key => $values) {   //this for converts qty_return into micro unit
+
+            if ($value['unit_selected'][2] == 1) {
+
+
+                $qty_transfer = $value['qty_transfer'] * $value['rate'];
+            }
+        }
+
+
+        // -------------------------------------------------------------------------------------------------------------------
+        if ($qty_transfer > $qty) {
+            return ['message' => 0, 'text' => "لا يمكنك تحويل كميه اكبر من  الكميه المتوفره"];
+        }
+
+
+        return ['message' => 1, 'qty' => $qty_transfer];
     }
 
     public function show(Request $request)
     {
 
-        // $transfer_details =  TransferDetail::where('status', '0')->get();
-        // ->join('store_products', 'store_products.id', '=', $table.'.store_product_id')
-        // ->join('products', $table.'.product_id', '=', 'products.id')
-        // ->join('statuses', $table.'.status_id', '=', 'statuses.id')
-        // ->join('stores', $table.'.store_id', '=', 'stores.id')
-        // ->join('units', $table.'.unit_id', '=', 'units.id')
-        // ->select('products.*', 'products.text as product', 'units.name as unit', $table.'.*', 'statuses.name as status', 'stores.text as store', 'store_products.quantity as avilable_qty', 'store_products.desc', DB::raw($table.'.qty-' . $table.'.qty_return AS qty_remain'))
-        // ->get();
 
 
         $transfer_details = DB::table('transfer_details')
@@ -172,9 +219,14 @@ class TransferController extends Controller
             ->join('statuses', 'transfer_details.status_id', '=', 'statuses.id')
             ->join('stores', 'transfer_details.store_id', '=', 'stores.id')
             ->join('units', 'transfer_details.unit_id', '=', 'units.id')
-            ->select('products.*','units.name as unit', 'transfer_details.*', 'statuses.*', 'statuses.name as status', 'stores.*')
+            ->select('products.*', 'units.name as unit', 'transfer_details.*', 'statuses.*', 'statuses.name as status', 'stores.*')
             ->get();
 
+        foreach ($transfer_details as $value) {
+
+            $value->qty_transfer = 0;
+            $value->unit_selected = [];
+        }
         $this->units($transfer_details);
         return response()->json(['transfer_details' => $transfer_details]);
     }
@@ -184,57 +236,29 @@ class TransferController extends Controller
 
         $transfer_details = TransferDetail::where('transfer_details.transfer_id', $id)
             ->jointransfer()
-            // ->join('products', 'transfer_details.product_id', '=', 'products.id')
-            // ->join('statuses', 'transfer_details.status_id', '=', 'statuses.id')
-            // ->join('stores', 'transfer_details.store_id', '=', 'stores.id')
-            ->select('transfer_details.*', 'products.text as product', 'statuses.name as status', 'stores.text as store')
+            ->select('products.*', 'transfer_details.*', 'units.name as unit', 'products.text as product', 'statuses.name as status', 'stores.text as store')
             ->get();
+        $this->units($transfer_details);
 
 
         return response()->json(['transfer_details' => $transfer_details]);
     }
 
-    function set_unit($request,$value,$array_unit_after_decode){
+    // function set_unit($request, $value, $array_unit_after_decode)
+    // {
 
-        if($array_unit_after_decode[2] == 0){  //this means unit_type
-
-            $micro_unit_qty = $request['qty'][$value];
-        }else{
-
-            $micro_unit_qty = $request['qty'][$value]*$array_unit_after_decode[1]; 
-        }
-
-        return $micro_unit_qty;
-
-    }
-
-    // public function unit ($request,$value){
-
-        
-    //     foreach ($request['old'] as $key => $values) {   //this for converts qty_avaliable into big unit
+    //     if ($array_unit_after_decode[2] == 0) {  //this means unit_type
 
     //         $micro_unit_qty = $request['qty'][$value];
+    //     } else {
 
-    //         if($values['units'][$value]['name'] == $values['unit'] && $values['units'][$value]['unit_type'] == 1){
-
-                    
-    //              $micro_unit_qty = $request['qty'][$value]*$request['unit_id'][$value][1]; 
-    
-    //         }
-
-    //         if($values['units'][$value]['name'] == $values['unit'] && $values['units'][$value]['unit_type'] == 0){
-
-                    
-    //               $micro_unit_qty = $request['qty'][$value];
-    
-    //         }
-
+    //         $micro_unit_qty = $request['qty'][$value] * $array_unit_after_decode[1];
     //     }
 
     //     return $micro_unit_qty;
-
-
-
-
     // }
+
+
+
+
 }

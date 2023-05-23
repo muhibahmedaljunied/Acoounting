@@ -12,6 +12,7 @@ use Storage;
 
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -66,40 +67,39 @@ class ProductController extends Controller
     public function tree_product()
     {
 
-        $products = Product::where('parent_id', null)->with('children')->get();
-        $last_nodes = Product::where('parent_id', null)->select('products.*')->max('id');
+
+        $products = Cache::rememberForever('tree_product_products',function(){
+
+            return Product::where('parent_id', null)->with('children')->get();
+
+        });
+
+        $last_nodes = Cache::rememberForever('tree_product_last_nodes',function(){
+
+            return Product::where('parent_id', null)->select('products.*')->max('id');
+
+        });
+
         return response()->json(['trees' => $products, 'last_nodes' => $last_nodes]);
     }
 
 
 
-    // -------------------------------------------------------------------
-    // public function getProductDetails($id)
+
+
+
+    // public function product_Store_first_level(Request $request)
     // {
-    //     $Product = DB::table('products')
-    //         ->join('categories', 'products.category_id', '=', 'categories.id')
-    //         ->where('products.id', '=', $id)
-    //         ->select('products.*', 'categories.name as category_name')
-    //         ->first();
 
-    //     //$data = $Product->toArray();
-    //     //var_dump($Product);
-    //     return response()->json($Product);
+    //     $Store = new Product();
+    //     $Store->text = $request->post('text');
+    //     $Store->id = $request->post('id');
+
+    //     $Store->rank = 1;
+    //     $Store->save();
+
+    //     return response()->json();
     // }
-
-
-    public function product_Store_first_level(Request $request)
-    {
-
-        $Store = new Product();
-        $Store->text = $request->post('text');
-        $Store->id = $request->post('id');
-
-        $Store->rank = 1;
-        $Store->save();
-
-        return response()->json();
-    }
 
     // ---------------------------------------------------------------------
     /**
@@ -125,33 +125,33 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store_first_level(Request $request)
-    {
+    // public function store_first_level(Request $request)
+    // {
 
 
-        $file_name = '';
-        if ($request->file('image') != 0) {
+    //     $file_name = '';
+    //     if ($request->file('image') != 0) {
 
 
-            $file = $request->file('image');
-            $upload_path = public_path('assets/upload');
-            $file_name = $file->getClientOriginalName();
-            $generated_new_name = time() . '.' . $file->getClientOriginalExtension();
-            $file->move($upload_path, $file_name);
-        }
+    //         $file = $request->file('image');
+    //         $upload_path = public_path('assets/upload');
+    //         $file_name = $file->getClientOriginalName();
+    //         $generated_new_name = time() . '.' . $file->getClientOriginalExtension();
+    //         $file->move($upload_path, $file_name);
+    //     }
 
-        $product = new Product();
-        $product->text = $request->post('product');
-        $product->id = $request->post('id');
+    //     $product = new Product();
+    //     $product->text = $request->post('product');
+    //     $product->id = $request->post('id');
 
-        $product->rank = $request->post('rank');
-        $product->image = $file_name;
-        // $product->image = $generated_new_name;
+    //     $product->rank = $request->post('rank');
+    //     $product->image = $file_name;
+    //     // $product->image = $generated_new_name;
 
-        $product->save();
+    //     $product->save();
 
-        return response()->json($request->file('image'));
-    }
+    //     return response()->json($request->file('image'));
+    // }
 
     public function store(Request $request)
     {
@@ -236,24 +236,6 @@ class ProductController extends Controller
         return response()->json($request->file('image'));
     }
 
-    public function Export()
-    {
-        $filename = '-products.xlsx';
-        Excel::store(new ProductExport, $filename);
-        $fullPath = Storage::disk('local')->path($filename);
-
-        return response()->json([
-            'data' => $fullPath,
-            'message' => 'stores are successfully exported.'
-        ], 200);
-    }
-
-    public function Import(Request $request)
-    {
-
-        $filename = '-products.xlsx';
-        return response()->json(Excel::import(new ProductImport, Storage::disk('local')->path($filename)));
-    }
 
     public function product_details_node($id)
     {

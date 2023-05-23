@@ -3,47 +3,23 @@ export default {
   data() {
 
     return {
-     
-      type:'',
-      name:[],
       count: 1,
       counts: {},
-
-     
-
-      work_type_selected: [],
-      period_selected: [],
-      rest_selected: [],
+      name:[],
+      // ----------------------------
+      type:'',
       work_types: '',
       periods: '',
       breaks: '',
-      fieldset1: [],
-      fieldset2: [],
-      fieldset3: [],
-      fieldset4: [],
-      fieldset5: [],
-      fieldset6: [],
-      fieldset7: [],
-
-
+  
     }
   },
     methods: {
    
-      Add_new() {
+      Add(data) {
         
-        // console.log(this.all_values);
         this.axios
-        .post(`/store_${this.type}`,{
-          count:this.counts,
-          name:this.name,
-          type:this.type,
-          work_type:this.work_type_selected,
-          period:this.period_selected,
-          rest:this.rest_selected,
-          day:this.all_values,
-        
-        })
+        .post(`/store_${this.type}`,data)
         .then((response) => {
           console.log(response);
           toastMessage("تم الاضافه بنجاح");
@@ -63,7 +39,6 @@ export default {
             toastMessage("تم الحذف بنجاح");
   
             this.list();
-            // this.$router.push('category')
           })
           .catch((error) => {
             console.log(error.response);

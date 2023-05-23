@@ -45,14 +45,14 @@
                     <td>{{ official_holidays.duration }}</td> -->
                     <td>
                       <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                      <button type="button" @click="delete_extra_type(official_holidays.id)" class="btn btn-danger">
+                      <button type="button" @click="delete_extra_type(official_holidays.id)" class="btn btn-sm waves-effect btn-danger">
                         <i class="fa fa-trash"></i>
                       </button>
   
                       <router-link :to="{
                         name: 'edit_branch',
                         params: { id: official_holidays.id },
-                      }" class="edit btn btn-success">
+                      }" class="edit btn btn-sm waves-effect btn-success">
                         <i class="fa fa-edit"></i></router-link>
                     </td>
                   </tr>
@@ -114,7 +114,7 @@
                               <tbody>
                                 <tr v-for="index in count" :key="index">
                                   <td>
-                                    <input type="text" class="form-control" name="name" id="name" required />
+                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name" required />
 
                                   </td>
                             
@@ -188,6 +188,8 @@
     },
     mounted() {
       this.list();
+      this.counts[0] = 1;
+
       this.type = '';
     },
     methods: {

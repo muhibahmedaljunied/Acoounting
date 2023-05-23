@@ -38,7 +38,7 @@ class CreateTemporalesTable extends Migration
             $table->integer('total')->nullable();
 
             $table->string('type_process',10);
-            $table->integer('micro_unit_qty');
+            $table->integer('micro_unit_qty')->nullable();
 
             $table->timestamps();
 
