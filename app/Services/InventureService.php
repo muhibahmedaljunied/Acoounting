@@ -48,7 +48,6 @@ class InventureService
     function get($data)
     {
 
-
         $id_store_product = StoreProduct::where([
             'store_products.product_id' => $data['product_id'],
             'store_products.store_id' => $data['store_id'],

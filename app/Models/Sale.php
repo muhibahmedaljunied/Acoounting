@@ -28,6 +28,12 @@ class Sale extends Model
         return $this->hasMany(PaymentSale::class);
     }
 
+     // public function payments()
+    // {
+    //     return $this->morphMany('App\Payments', 'commentable');
+    // }
+    
+
 
 
 }

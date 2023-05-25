@@ -81,32 +81,28 @@ class TransferController extends Controller
     {
 
 
-        $request_data = $request->post('old'); //this conten the prev data
-
-
-
         try {
 
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
             // ---------------------------------------------------------------------------------------
 
             $transfer_id =  $this->add_start(data: $request->all());
+            $data = $request->all();
 
-            foreach ($request_data as $key => $value) {
+            foreach ($request->post('count') as $value) {
 
 
-                // dd($value['qty_transfer']);
-
-                $qty_after_convert = $this->check_return($value);
-
+                $data = array_merge($request->except(['old']), $request['old'][$value]);
+                $qty_after_convert = $this->check_return($data);
                 if ($qty_after_convert['message'] == 0) {
 
                     return response()->json(['message' => 0, 'text' => $qty_after_convert['text']]);
                 }
 
-                $data = array_merge($request->except(['old']), $value);
-                $data['qty'] = $qty_after_convert['qty'];
+                $data['qty'] = $qty_after_convert['qty_transfer'];
 
+
+                // dd($data);
                 if ($value !== null) {
 
                     $stock_f = 0;
@@ -120,20 +116,23 @@ class TransferController extends Controller
 
                         data: $data,
                         type_refresh: 'increment',
-                        store_id: $data['intostore'][$key]
+                        store_id: $data['intostore_id'][$value]
 
 
                     );
 
-                    //  --------------------------------------------------------------------------
-                    $id_store_product = $this->get($value);
 
+                    //  --------------------------------------------------------------------------
+
+                    $id_store_product = $this->get($data);
+
+                    // exit();
 
                     if ($store_product_f == 0) {
 
                         $id_store_product = $this->init_store(
                             data: $data,
-                            store_id: $data['intostore'][$key]
+                            store_id: $data['intostore_id'][$value]
                         );
                     }
 
@@ -163,6 +162,8 @@ class TransferController extends Controller
                     }
                 }
             }
+            // dd('s');
+
             // ---------------------------------------------------------------------------------------
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
@@ -206,7 +207,7 @@ class TransferController extends Controller
         }
 
 
-        return ['message' => 1, 'qty' => $qty_transfer];
+        return ['message' => 1, 'qty_transfer' => $qty_transfer];
     }
 
     public function show(Request $request)

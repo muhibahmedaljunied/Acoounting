@@ -47,7 +47,8 @@ class InventuryController extends Controller
     {
 
 
-
+$data = [];
+    // dd($request->all());
         // -------------------------------------------------------------------------------------
 
         try {
@@ -56,25 +57,28 @@ class InventuryController extends Controller
             foreach ($request->post('count') as $value) {
 
 
+               
+                dd(array_values($request->all()));
+                dd($data);
 
                 $stock_f = 0;
                 $store_product_f = 0;
-                $data = array(
-                    'product_id' => $request['product_id'][$value],
-                    'status_id' => $request['status_id'][$value],
-                    'store_id' => $request['store_id'][$value],
-                    'unit_id' => $request['unit_id'][$value],
-                    'qty' => $request['qty'][$value],
-                    'desc' => $request['desc'][$value],
-                    'price' => $request['price'][$value],
-                    'date' => $request['date'][$value],
-                    'total' => $request['total'][$value],
-                    'type' => 'Opening',
-                    'type_refresh' => 'increment',
+                // $data = array(
+                //     'product_id' => $request['product_id'][$value],
+                //     'status_id' => $request['status_id'][$value],
+                //     'store_id' => $request['store_id'][$value],
+                //     'unit_id' => $request['unit_id'][$value],
+                //     'qty' => $request['qty'][$value],
+                //     'desc' => $request['desc'][$value],
+                //     'price' => $request['price'][$value],
+                //     'date' => $request['date'][$value],
+                //     'total' => $request['total'][$value],
+                //     'type' => 'Opening',
+                //     'type_refresh' => 'increment',
 
 
-                );
-                dd($data);
+                // );
+           
 
                 $store_product_f = $this->refresh_store(data: $data); // this make updating for store_products
 

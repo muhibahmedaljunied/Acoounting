@@ -243,11 +243,12 @@
                             add_one_transfer(
                               index,
                               data_product.product_id,
-                              qty[index],
+                              data_product.qty_transfer,
+                              data_product.quantity,
                               data_product.desc,
                               data_product.status_id,
                               data_product.store_id,
-                              unit[index]
+                              data_product.unit_selected                              
                               // intostore[index]
                             )
                           "
@@ -349,6 +350,7 @@
         type: "",
         intostore: [],
         intostore_id: [],
+        quantity:[],
         transfer_details: "",
         transfer_id: "",
         transfer_date: "",
@@ -402,12 +404,13 @@
 
       add_one_transfer(
         index,
-        product,
+        product=0,
         qty = 0,
+        quantity=0,
         desc = 0,
         status = 0,
         store = 0,
-        unit
+        unit=0
       ) {
         if (this.check_state[index] == true) {
           if (qty != 0) {
@@ -417,11 +420,13 @@
             this.intostore_id[index] = $(`#Transfer_store_tree_id${index}`).val();
             this.counts[index] = index;
             this.product[index] = product;
-            this.qty[index] = qty;
+            // this.qty[index] = qty;
+            this.quantity[index] = quantity;
             this.desc[index] = desc;
             this.store[index] = store;
             this.status[index] = status;
             this.unit[index] = unit;
+
 
             // }
           }
@@ -431,9 +436,12 @@
 
         console.log(this.counts, index);
         console.log(this.product, index);
-        console.log(this.qty, index);
+        // console.log(this.qty, index);
         console.log(this.desc, index);
         console.log(this.unit, index);
+        // console.log(this.qty, index);
+        console.log(this.quantity, index);
+        console.log(this.units, index);
         console.log(this.store, index);
         console.log(this.status, index);
       },
@@ -450,8 +458,10 @@
             product_id: this.product,
             store_id: this.store,
             desc: this.desc,
-            qty: this.qty,
-            unit_id: this.unit,
+            // qty: this.qty,
+            quantity: this.quantity,
+            unit_selected: this.unit,
+            units: this.units,
             status_id: this.status,
             intostore: this.intostore,
             intostore_id: this.intostore_id,

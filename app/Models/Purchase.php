@@ -24,4 +24,11 @@ class Purchase extends Model
     {
         return $this->hasMany(PaymentPurchase::class);
     }
+
+
+    // public function payments()
+    // {
+    //     return $this->morphMany('App\Payments', 'commentable');
+    // }
+
 }

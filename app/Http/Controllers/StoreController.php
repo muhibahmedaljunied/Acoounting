@@ -22,7 +22,7 @@ class StoreController extends Controller
 
         $stores = DB::table('stores')
             ->select('stores.*')
-            ->paginate(10);
+            ->paginate(100);
         return response()->json($stores);
     }
 
@@ -50,18 +50,7 @@ class StoreController extends Controller
         return response()->json(['trees' => $stores, 'last_nodes' => $last_nodes]);
     }
 
-    // public function store_Store_first_level(Request $request)
-    // {
-
-    //     $Store = new Store();
-    //     $Store->text = $request->post('text');
-    //     $Store->id = $request->post('id');
-
-    //     $Store->rank = 1;
-    //     $Store->save();
-
-    //     return response()->json();
-    // }
+   
     public function store(Request $request)
     {
 
@@ -85,6 +74,8 @@ class StoreController extends Controller
         $Store->rank = $request->post('rank');
         $Store->type_branch = $request->post('status');
         $Store->save();
+
+        // Cache::forget(['tree_store_stores','tree_store_last_nodes']);
 
         return response()->json($request);
     }
@@ -148,25 +139,25 @@ class StoreController extends Controller
 
 
 
-    public function Export( )      
-    {      
-        $filename = '-store.xlsx';
-        Excel::store(new StoreExport, $filename);
-        $fullPath = Storage::disk('local')->path($filename);
+    // public function Export( )      
+    // {      
+    //     $filename = '-store.xlsx';
+    //     Excel::store(new StoreExport, $filename);
+    //     $fullPath = Storage::disk('local')->path($filename);
 
-        return response()->json([
-            'data' => $fullPath,
-            'message' => 'stores are successfully exported.'
-        ], 200);
+    //     return response()->json([
+    //         'data' => $fullPath,
+    //         'message' => 'stores are successfully exported.'
+    //     ], 200);
 
-    }
+    // }
 
-    public function Import(Request $request)
-    {
+    // public function Import(Request $request)
+    // {
 
-        $filename = '-store.xlsx';
-        return response()->json(Excel::import(new StoreImport, Storage::disk('local')->path($filename)));
-    }
+    //     $filename = '-store.xlsx';
+    //     return response()->json(Excel::import(new StoreImport, Storage::disk('local')->path($filename)));
+    // }
 
 
 
