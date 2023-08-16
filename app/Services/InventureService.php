@@ -1,97 +1,154 @@
 <?php
 
 namespace App\Services;
+
+use App\Models\PurchaseDetail;
 use App\Models\StoreProduct;
+use App\RepositoryInterface\StoreProductRepositoryInterface;
 use App\Models\Stock;
-use Illuminate\Http\Request;
 use DB;
 
 class InventureService
 {
+    public $core;
+    public $SP;
 
-    function refresh_stock($data,$id=null,$type_refresh =null)
+    public function __construct(StoreProductRepositoryInterface $SP)
     {
-  
-      $type = ($type_refresh) ? $type_refresh : $data['type_refresh'];
-  
-  
-      $stock_f = DB::table('stocks')
-        ->where('product_id', $data['product_id'])
-        ->where('type_operation', $data['type'])
-        ->where('store_id', $data['store_id'])
-        ->where('status_id', $data['status_id'])
-        ->where('unit_id', $data['unit_id'])
-        ->where('desc', $data['desc'])
-        ->$type('quantity', $data['qty']);
-      return $stock_f;
-    }
-  
-  
-    function init_stock($data,$id=null)
-    {
-  
-  
-  
-      $stocks = new Stock();
-      $stocks->product_id = $data['product_id'];
-      $stocks->store_id = $data['store_id'];
-      $stocks->status_id = $data['status_id'];
-      $stocks->unit_id = $data['unit_id'];
-      $stocks->desc = $data['desc'];
-      $stocks->type_operation = $data['type'];
-      $stocks->quantity = $data['qty'];
-      $stocks->date = $data['date'];
-      $stocks->save();
-      // }
+        $this->core = app(CoreService::class);
+        $this->SP = $SP;
     }
 
-    function get($data)
+
+    function refresh_stock($type_refresh = null)
+    {
+
+        if ($this->core->stock_f != 0) {
+            return 0;
+        }
+
+        $type = ($type_refresh) ? $type_refresh : $this->core->data['type_refresh'];
+
+        // return $type;
+        $stock_f = DB::table('stocks')
+            ->where('type_operation', $this->core->data['type'])
+            ->where('unit_id', $this->core->data['unit'][$this->core->value][0])
+            ->$type('quantity', $this->core->micro_unit_qty);
+
+        $this->core->stock_f = $stock_f;
+        return $this;
+    }
+
+
+    function init_stock()
+    {
+
+        if ($this->core->stock_f != 0) {
+            return 0;
+        }
+        // dd($this->core->data['unit']);
+        $stocks = new Stock();
+        $stocks->store_product_id = $this->core->id_store_product;
+        $stocks->unit_id = $this->core->unit_value;
+        $stocks->type_operation = $this->core->data['type'];
+        $stocks->quantity = $this->core->micro_unit_qty;
+        $stocks->date = $this->core->data['date'];
+        $stocks->save();
+
+
+        // }
+    }
+
+    function get_store($type = null)
+    {
+
+
+        $id_store_product = ($type == 'purchase') ? $this->get_store_product_for_purchase() : $this->get_store_product_for_another();
+
+
+        $this->core->id_store_product = (count($id_store_product->toarray()) == 0) ? 0 : $id_store_product[0]['id'];
+
+        return $this;
+    }
+
+
+    function init_store()
+    {
+
+        if ($this->core->store_product_f != 0) {
+            return 0;
+        }
+
+        $this->SP->init_store_product();
+
+        return $this;
+    }
+
+    function refresh_store(...$list_data)
+    {
+
+        $type_refresh = (isset($this->core->data['type_refresh'])) ? $this->core->data['type_refresh'] : $list_data['type_refresh'];
+        //    dd($this->SP);
+        $this->SP->refresh_store_product(type_refresh: $type_refresh);
+
+        return $this;
+    }
+
+    function refresh_price()
+    {
+
+        $qty = 0;
+        $total = 0;
+        $cost = 0;
+
+        $data = PurchaseDetail::where('purchase_details.store_product_id', $this->core->id_store_product)
+            ->select('purchase_details.*')
+            ->get();
+
+        if (count($data) > 1) {
+
+            foreach ($data as $key => $value) {
+
+                $qty += $value->qty;
+                $total += $value->total;
+            }
+
+            $cost = $total / $qty;
+            // dd($cost);
+
+            DB::table('store_products')->where('store_products.id', $this->core->id_store_product)
+                ->update(['cost' => $cost]);
+        }
+    }
+
+    function get_store_product_for_purchase()
+    {
+
+
+        $id_store_product = StoreProduct::where([
+            'product_id' => $this->core->data['product'][$this->core->value],
+            'store_id' => $this->core->data['store'],
+            'status_id' => $this->core->data['status'][$this->core->value],
+            'desc' => $this->core->data['desc'][$this->core->value]
+        ])
+            ->select()
+            ->get();
+
+
+        return $id_store_product;
+    }
+
+
+    function get_store_product_for_another()
     {
 
         $id_store_product = StoreProduct::where([
-            'store_products.product_id' => $data['product_id'],
-            'store_products.store_id' => $data['store_id'],
-            'store_products.status_id' => $data['status_id'],
-            'store_products.desc' => $data['desc']
+            'store_products.id' => $this->core->data['old'][$this->core->value]['store_product_id'],
+
         ])
-            ->select('store_products.id')
+            ->select()
             ->get();
 
-        $response = (count($id_store_product->toarray()) == 0) ? 0 : $id_store_product[0]['id'];
-        return $response;
+        return $id_store_product;
     }
-
-
-    function init_store($data,$store_id = null)
-    {
-        $store_id = ($store_id) ? $store_id : $data['store_id'] ;
-
-        $store_product = new StoreProduct();
-        $store_product->product_id = $data['product_id'];
-        $store_product->store_id = $store_id;
-        $store_product->status_id = $data['status_id'];
-        $store_product->desc = $data['desc'];
-        $store_product->quantity = $data['qty'];
-        $store_product->save();
-        return $store_product->id;
-    }
-
-    function refresh_store($data, $type_refresh = null, $store_id = null)
-    {
-
-        $type_refresh = ($type_refresh) ? $type_refresh : $data['type_refresh'] ;
-        $store_id = ($store_id) ? $store_id : $data['store_id'] ;
-        $condition = [
-            'product_id' => $data['product_id'],
-            'status_id' => $data['status_id'],
-            'store_id' => $store_id,
-            'desc' => $data['desc'],
-        ];
-
-        $store_product_f = DB::table('store_products')->where($condition)->$type_refresh('quantity', $data['qty']);
-        return $store_product_f;
-    }
-
-   
-
 }

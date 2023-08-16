@@ -22,8 +22,8 @@ class CreateExtrasTable extends Migration
             $table->unsignedInteger('extra_type_id');
             $table->foreign('extra_type_id')->references('id')->on('extra_types');
             // ----------------------------------------------------------------------
-            // $table->unsignedInteger('extra_sanction_id');
-            // $table->foreign('extra_sanction_id')->references('id')->on('extra_sanctions');
+            $table->unsignedInteger('extra_sanction_id');
+            $table->foreign('extra_sanction_id')->references('id')->on('extra_sanctions');
             // ----------------------------------------------------------------------
 
             $table->time('start_time')->nullable();
@@ -31,10 +31,6 @@ class CreateExtrasTable extends Migration
             $table->float('number_hours')->nullable();
 
             $table->date('date');
-            
-
-      
-
             $table->string('note')->nullable();
             
             $table->timestamps();

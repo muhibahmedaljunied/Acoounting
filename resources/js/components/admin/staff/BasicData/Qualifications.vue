@@ -194,29 +194,40 @@ export default {
     this.type = 'qualification';
   },
   methods: {
-    Add_new() {
+    
 
-      $this.Add({
-        count: this.counts,
-        type: this.type,
-        name: this.name,
+      Add_new() {
 
-      });
+        this.axios
+          .post(`/store_qualification`, {
+            count: this.counts,
+            type: this.type,
+            name: this.name,
+
+          }
+          )
+          .then((response) => {
+            console.log(response);
+            toastMessage("تم الاضافه بنجاح");
+            // this.$router.go(0);
+          });
+
+
+      },
+
+      list(page = 1) {
+        this.axios
+          .post(`/qualification?page=${page}`)
+          .then(({ data }) => {
+            this.qualifications = data;
+          })
+          .catch(({ response }) => {
+            console.error(response);
+          });
+      },
+
+
     },
-
-    list(page = 1) {
-      this.axios
-        .post(`/qualification?page=${page}`)
-        .then(({ data }) => {
-          this.qualifications = data;
-        })
-        .catch(({ response }) => {
-          console.error(response);
-        });
-    },
-
-
-  },
-};
+  };
 </script>
 

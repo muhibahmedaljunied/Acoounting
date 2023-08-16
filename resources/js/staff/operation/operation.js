@@ -36,6 +36,8 @@ export default {
   methods: {
 
     Add(data) {
+      alert('sdsdsd');
+
       // console.log(data);
       this.axios
         .post(`/store_${this.type}`, data)

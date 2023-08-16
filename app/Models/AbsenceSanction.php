@@ -15,7 +15,6 @@ class AbsenceSanction extends Model
 
 
         return $query->where([
-            'staff_id' => $value['staff'],
             'absence_type_id' => $value['absence'],
             'iteration' => $value['iteration'],
             'sanction_discount_id' => $value['discount_type'],
@@ -32,5 +31,11 @@ class AbsenceSanction extends Model
     public function attendance()
     {
         return $this->belongsToMany(Attendance::class);
+    }
+
+
+    public function staff_sanction()
+    {
+        return $this->morphMany(StaffSanction::class, 'sanctionable');
     }
 }

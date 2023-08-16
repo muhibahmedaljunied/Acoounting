@@ -15,7 +15,7 @@
         <div class="card-body">
           <div class="form">
             <h3 class="text-center">اضافه عميل </h3>
-            <form method="post" @submit.prevent="addcustomer">
+
               <div class="form-group">
                 <label for="name">الاسم</label>
                 <input v-model="name" type="text" name="name" id="name" class="form-control" required />
@@ -39,14 +39,15 @@
               <!-- = -->
               <!-- <div class="m-t-20 col-md-6 col-xs-6"> -->
               <div class="form-group">
-                <label for="cliente">رقم الحساب</label>
+                <label for="cliente">اسم الحساب</label>
 
 
                 <div class="custom-search">
 
 
 
-                  <input :id="'Customer_account_tree_id'+indexselected" type="text" class="custom-search-input">
+                  <input :id="'Customer_account_tree'" type="text" class="custom-search-input">
+                  <input :id="'Customer_account_tree_id'" type="hidden" class="custom-search-input">
                   <button class="custom-search-botton" type="button" data-toggle="modal"
                     data-target="#exampleModalaccount"> <i class="fa fa-plus-circle"></i></button>
                 </div>
@@ -54,13 +55,13 @@
 
 
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="status">اسم الحساب</label>
                 <input :id="'Customer_account_tree'+indexselected" v-model="account_name" type="text" name="status" class="form-control" />
-              </div>
+              </div> -->
               <!-- = -->
 
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="role">الصلاحيه</label>
                 <select v-model="roleselected" name="role" id="role" class="form-control">
                   <option value="">select</option>
@@ -68,16 +69,16 @@
                     {{ roles.name }}
                   </option>
                 </select>
-              </div>
+              </div> -->
 
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="status">الحاله</label>
                 <input v-model="status" type="text" name="status" id="status" class="form-control" />
-              </div>
-              <button type="submit" class="btn btn-primary btn-lg btn-block">
+              </div> -->
+              <button @click="addcustomer()" type="submit" class="btn btn-primary btn-lg btn-block">
                 اضافه
               </button>
-            </form>
+   
           </div>
         </div>
         <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -117,37 +118,33 @@ export default {
     
     return {
   
-      indexselected:0,
+      // indexselected:0,
       account_name:'',
+      account:'',
       type: '',
       name: "",
       phone: "",
       email: "",
       address: "",
       password: 123,
-      status: 1,
+      // status: 1,
       role: '',
-      roleselected: 1,
-      type_of_tree:0,
+      // roleselected: 1,
+      type_of_tree:'',
       jsonTreeData:'',
     };
   },
-  // created() {
-  //   let uri = `/create_customer`;
-  //   this.axios.post(uri).then((response) => {
-  //     console.log(response.data);
-  //     this.role = response.data;
-  //   });
-  // },
+
 
   mounted() {
     this.type = 'Customer';
+    this.type_of_tree=1;
     this.showtree('account');
   },
   methods: {
 
-    addcustomer(event) {
-      event.preventDefault();
+    addcustomer() {
+    
       let currentObj = this;
       const config = {
         headers: {
@@ -161,8 +158,9 @@ export default {
       formData.append("phone", this.phone);
       formData.append("email", this.email);
       formData.append("address", this.address);
+      formData.append("account", this.account);
       // formData.append("password", this.password);
-      formData.append("status", this.status);
+      // formData.append("status", this.status);
       // formData.append("role_id", this.roleselected);
 
       // send upload request
@@ -172,7 +170,7 @@ export default {
           currentObj.success = response.data.success;
           currentObj.filename = "";
 
-          event.preventDefault();
+       
           toastMessage("تم الاضافه بنجاح");
 
         })
@@ -180,136 +178,10 @@ export default {
           currentObj.output = error;
         });
 
-      this.$router.go(-1);
+      // this.$router.go(-1);
 
     },
-    // showtree() {
-
-
-    //   this.axios.post(`/tree_product`).then((response) => {
-    //     this.jsonTreeDataProduct = response.data.products;
-
-
-    //     $('#treeview_json_product').jstree({
-    //       core: {
-    //         themes: {
-    //           responsive: false,
-    //         },
-    //         // so that create works
-    //         check_callback: true,
-    //         data: this.jsonTreeDataProduct,
-    //       },
-    //       types: {
-    //         default: {
-    //           icon: "fa fa-folder text-primary",
-    //         },
-    //         file: {
-    //           icon: "fa fa-file  text-primary",
-    //         },
-    //       },
-    //       checkbox: {
-    //         three_state: false,
-
-    //       },
-    //       state: {
-    //         key: "demo2"
-    //       },
-    //       search: {
-    //         case_insensitive: true,
-    //         show_only_matches: true
-    //       },
-    //       plugins: ["checkbox",
-    //         "contextmenu",
-    //         "dnd",
-    //         "massload",
-    //         "search",
-    //         "sort",
-    //         "state",
-    //         "types",
-    //         "unique",
-    //         "wholerow",
-    //         "changed",
-    //         "conditionalselect"],
-    //       contextmenu: {
-    //         items: contextmenu
-    //       },
-
-
-
-
-
-
-    //     }).on("changed.jstree", function (e, data) {
-
-    //       console.log(data.node.id);
-    //       $(`.modal-title-product`).val(data.node.id)
-    //       //  modal-title-store
-
-    //     });
-
-    //   });
-    //   this.axios.post(`/tree_store`).then((response) => {
-    //     this.jsonTreeDataStore = response.data.stores;
-
-
-    //     $('#treeview_json_store').jstree({
-    //       core: {
-    //         themes: {
-    //           responsive: false,
-    //         },
-    //         // so that create works
-    //         check_callback: true,
-    //         data: this.jsonTreeDataStore,
-    //       },
-    //       types: {
-    //         default: {
-    //           icon: "fa fa-folder text-primary",
-    //         },
-    //         file: {
-    //           icon: "fa fa-file  text-primary",
-    //         },
-    //       },
-    //       checkbox: {
-    //         three_state: false,
-
-    //       },
-    //       state: {
-    //         key: "demo2"
-    //       },
-    //       search: {
-    //         case_insensitive: true,
-    //         show_only_matches: true
-    //       },
-    //       plugins: ["checkbox",
-    //         "contextmenu",
-    //         "dnd",
-    //         "massload",
-    //         "search",
-    //         "sort",
-    //         "state",
-    //         "types",
-    //         "unique",
-    //         "wholerow",
-    //         "changed",
-    //         "conditionalselect"],
-    //       contextmenu: {
-    //         items: contextmenu
-    //       },
-
-
-
-
-
-
-    //     }).on("changed.jstree", function (e, data) {
-
-    //       console.log(data.node.id);
-    //       $(`.modal-title-store`).val(data.node.id)
-    //       //  modal-title-store
-    //     });
-
-    //   });
-    // },
+    
   },
 };
 </script>

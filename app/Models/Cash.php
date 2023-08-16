@@ -9,5 +9,8 @@ class Cash extends Model
         'customer_id','customer_name','date'
     ];
 
-    
+    public function stock()
+    {
+        return $this->morphMany(Stock::class, 'stockable');
+    }
 }

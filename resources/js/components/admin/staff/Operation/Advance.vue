@@ -283,7 +283,7 @@ export default {
 
     list(page = 1) {
       this.axios
-        .post(`/advance?page=${page}`)
+        .post(`/advance?page=${page}`,{ type: 'advance'})
         .then(({ data }) => {
           this.value_list = data.list;
           this.staffs = data.staffs;

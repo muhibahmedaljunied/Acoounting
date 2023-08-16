@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="card text-right">
                     <div class="card-header">
-                     الوارد
+                        الوارد
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">Special title treatment</h5>
@@ -22,10 +22,10 @@
                                     <th>الوحده</th>
                                     <th>التكلفه</th>
                                     <th>الكميه الوارده</th>
-                                  
+
                                     <th>الاجمالي</th>
                                     <th>اضافه</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,12 +50,12 @@
 
 
                                         <div class="custom-search">
-                                     
 
-                                            <input :id="'Supply_product_tree'+index" type="text" readonly
+
+                                            <input :id="'Supply_product_tree' + index" type="text" readonly
                                                 class="custom-search-input">
-                                            <input :id="'Supply_product_tree_id'+index" type="hidden" v-model="product[index]"
-                                                class="custom-search-input">
+                                            <input :id="'Supply_product_tree_id' + index" type="hidden"
+                                                v-model="product[index]" class="custom-search-input">
 
 
 
@@ -100,19 +100,19 @@
                                         </div> -->
 
                                         <div class="custom-search">
-                                     
-
-                                     <input :id="'Supply_store_tree'+index" type="text" readonly
-                                         class="custom-search-input">
-                                     <input :id="'Supply_store_tree_id'+index" type="hidden" v-model="store[index]"
-                                         class="custom-search-input">
 
 
+                                            <input :id="'Supply_store_tree' + index" type="text" readonly
+                                                class="custom-search-input">
+                                            <input :id="'Supply_store_tree_id' + index" type="hidden" v-model="store[index]"
+                                                class="custom-search-input">
 
-                                     <button class="custom-search-botton" type="button" data-toggle="modal"
-                                         data-target="#exampleModalStore" @click="detect_index_store(index)"> <i
-                                             class="fa fa-plus-circle"></i></button>
-                                 </div>
+
+
+                                            <button class="custom-search-botton" type="button" data-toggle="modal"
+                                                data-target="#exampleModalStore" @click="detect_index_store(index)"> <i
+                                                    class="fa fa-plus-circle"></i></button>
+                                        </div>
 
 
 
@@ -130,18 +130,19 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <input  type="number" v-model="qty[index]" id="qty"
+                                        <input type="number" v-model="qty[index]" id="qty"
                                             class="form-control input_cantidad" onkeypress="return valida(event)" />
                                     </td>
                                     <td>
-                                        <input  @input="calculate_price(price[index], qty[index], index)"  type="number" v-model="price[index]" id="qty"
-                                            class="form-control input_cantidad" onkeypress="return valida(event)" />
+                                        <input @input="calculate_price(price[index], qty[index], index)" type="number"
+                                            v-model="price[index]" id="qty" class="form-control input_cantidad"
+                                            onkeypress="return valida(event)" />
                                     </td>
 
-                                   
+
                                     <td>
-                                        <input type="number" v-model="total[index]" 
-                                            class="form-control input_cantidad" onkeypress="return " readonly />
+                                        <input type="number" v-model="total[index]" class="form-control input_cantidad"
+                                            onkeypress="return " readonly />
                                     </td>
 
                                     <td v-if="index == 1">
@@ -223,65 +224,96 @@ export default {
     components: {
         pagination,
     },
-    mixins: [operation,tree],
+    mixins: [operation, tree],
     data() {
 
         return {
-            // indexselected: '',
-            // type: '',
-            // type_refresh: '',
-            // count: 1,
-            // counts: {},
-            // product_name: [],
-            // product: [],
-            // products: '',
-            // word_search: '',
-            // check_state: [],
-            // qty: [],
-            // availabe_qty: [],
-            // desc: [],
-            // stores: '',
-            // statuses: '',
-            // jsonTreeData:'',
-            // type_of_tree:1,
-            // date: new Date().toISOString().substr(0, 10),
-            // status: [],
-            // store: [],
-            // units: '',
-            // unit: [],
-            // unit_type: [],
-            // rate: [],
-            // show: false,
-            // paid: 0,
-            // return_qty: [],
-            // note: '',
-            // not_qty: true,
-            // seen: false,
-            // detail: '',
-            // total:[],
-            // total_quantity: 0,
+
+            product: [],
+            qty: [],
+            unit: [],
+            desc: [],
+            store: [],
+            status: [],
+            counts: {},
+            count: 1,
+            date: new Date().toISOString().substr(0, 10),
+            dateselected: new Date().toISOString().substr(0, 10),
+            expiry_date: new Date().toISOString().substr(0, 10),
+            table: '',
+            type: '',
+            type_refresh: '',
+            note: "",
+            detail: '',
+            Total_quantity: 0,
+            total_quantity: 0,
+            check_state: [],
+            return_qty: [],
+            price: [],
+            tax: [],
+            products: '',
+            stores: '',
+            statuses: '',
+            stores: '',
+            statuses: '',
+            units: '',
+            opening: '',
+            availabe_qty: [],
+            word_search: '',
+            total: [],
+            customer: [],
+            supplier: [],
+            suppliers: '',
+            customers: '',
+            seen: false,
+            id: '',
+
+            all_products: '',
+            jsonTreeData: '',
+            type_of_tree: 1,
+            indexselected: '',
+            indexselectedproduct: '',
+            indexselectedstore: '',
+            last_nodes: '',
+            rank: 1,
+            parent: 0,
+            index: 0,
+
+            statusselected: 0,
+            unitselected: 0,
+            unitselectedname: '',
+            productselected: 0,
+            productselectedname: "",
+            storeselectedname: "",
+            storeselected: 0,
+            descselected: "",
+            operationselected: 0,
+            dateselected: 0,
+            typeselected: [],
+            checkselected: '',
+            moveselected: 0,
             remaining: 0,
             id: '',
-            
+
 
         }
-   
+
     },
     mounted() {
-        this.type_of_tree=1;
+        this.type_of_tree = 1;
         this.list();
         this.type = 'Supply';
         this.showtree('product');
         this.showtree('store');
         this.counts[0] = 1;
         this.type_refresh = 'increment';
-        
+
 
     },
 
     methods: {
         calculate_price(price, qty, index) {
-            var unit=JSON.parse($(`#select_unit${index}`).val());
+            var unit = JSON.parse($(`#select_unit${index}`).val());
             if (unit[2] == 0) {
 
                 this.total[index] = price * qty;
@@ -294,9 +326,9 @@ export default {
             }
 
         },
-      
 
-        
+
+
 
         get_search() {
             // alert(typeof(this.word_search));
@@ -323,7 +355,7 @@ export default {
                 .then(({ data }) => {
                     console.log(data);
 
-                   
+
                     this.suppliers = data.suppliers;
 
                     this.stores = data.stores;

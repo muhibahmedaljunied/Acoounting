@@ -18,7 +18,7 @@ class CreateAbsenceTypesTable extends Migration
             $table->Increments('id');
 
             $table->string('name');
-            
+            $table->string('code')->nullable();
             $table->timestamps();
         });
     }

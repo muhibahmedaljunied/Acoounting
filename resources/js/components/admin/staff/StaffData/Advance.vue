@@ -36,7 +36,7 @@
             </div>
             <div class="col-md-2">
               <label for="status"> من تأريخ</label>
-             <input v-model="from_date" type="date" name="" id="" class="form-control">
+              <input v-model="from_date" type="date" name="" id="" class="form-control">
             </div>
 
             <div class="col-md-2">
@@ -53,9 +53,12 @@
                 <tr>
                   <!-- <th class="wd-15p border-bottom-0">الرقم الوظيفي</th> -->
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
-                  <th class="wd-15p border-bottom-0">المبلغ</th>
                   <th class="wd-15p border-bottom-0">التاريخ</th>
-                  <th class="wd-15p border-bottom-0"> ملاجظه</th>
+
+                  <th class="wd-15p border-bottom-0">المبلغ</th>
+                  <th class="wd-15p border-bottom-0" style="color:red">الاجمالي</th>
+
+                  <!-- <th class="wd-15p border-bottom-0"> ملاجظه</th> -->
 
 
                   <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
@@ -64,15 +67,6 @@
               <tbody v-if="list_data && list_data.data.length > 0">
                 <tr v-for="(advance, index) in list_data.data" :key="index">
                   <td>{{ advance.name }}</td>
-
-
-                  <td>
-
-                    <div v-for="(adv, index) in advance.advance" :key="index">
-                      {{ adv.quantity }}
-                      <hr>
-                    </div>
-                  </td>
 
                   <td>
 
@@ -85,12 +79,18 @@
                   <td>
 
                     <div v-for="(adv, index) in advance.advance" :key="index">
-                      {{ adv.note }}
+                      {{ adv.quantity }}
                       <hr>
                     </div>
                   </td>
 
-<!-- 
+
+                  <td style="color:red">
+
+                    {{ advance.sum_advanve }}
+                  </td>
+
+                  <!-- 
                   <td>
                     <button type="button" @click="delete_advance(advance.id)" class="btn btn-danger">
                       <i class="fa fa-trash"></i>
@@ -107,6 +107,10 @@
                     }" class="edit btn btn-success">
                       <i class="fa fa-eye"></i></router-link>
                   </td> -->
+                </tr>
+                <tr>
+                  <td colspan="3" style="color:red;font-size: x-large;">الاجمالي</td>
+                  
                 </tr>
               </tbody>
               <tbody v-else>
@@ -131,8 +135,8 @@
                 </div>
                 <div class="col-md-4">
                   <div class="col-sm-12">
-                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto"
-                      id="buscar_producto" v-model="word_search" @input="get_search()" />
+                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto" id="buscar_producto"
+                      v-model="word_search" @input="get_search()" />
                   </div>
                 </div>
               </div>
@@ -220,8 +224,8 @@
 
                                     <td>
 
-                                      <input v-model="date[index]" type="date" class="form-control" name="name"
-                                        id="name" required />
+                                      <input v-model="date[index]" type="date" class="form-control" name="name" id="name"
+                                        required />
 
                                     </td>
 
@@ -368,7 +372,7 @@ export default {
       word_search: "",
 
 
-    
+
       from_date: new Date().toISOString().substr(0, 10),
       into_date: new Date().toISOString().substr(0, 10),
     };

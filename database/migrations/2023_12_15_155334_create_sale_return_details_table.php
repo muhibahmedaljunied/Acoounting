@@ -15,7 +15,7 @@ class CreateSaleReturnDetailsTable extends Migration
     {Schema::create('sale_return_details', function (Blueprint $table) {
         $table->increments('id');
     
-        $table->string('desc')->nullable();
+       
 
         $table->integer('qty')->nullable();
 
@@ -27,15 +27,17 @@ class CreateSaleReturnDetailsTable extends Migration
 
 
 
-        $table->integer('product_id')->unsigned()->nullable();
-        $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        // $table->integer('product_id')->unsigned()->nullable();
+        // $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
-        $table->unsignedInteger('store_id')->unsigned()->nullable();
-        $table->foreign('store_id')->references('id')->on('stores');
+        // $table->unsignedInteger('store_id')->unsigned()->nullable();
+        // $table->foreign('store_id')->references('id')->on('stores');
 
 
-        $table->unsignedInteger('status_id')->unsigned()->nullable();
-        $table->foreign('status_id')->references('id')->on('statuses');
+        // $table->unsignedInteger('status_id')->unsigned()->nullable();
+        // $table->foreign('status_id')->references('id')->on('statuses');
+
+        // $table->string('desc')->nullable();
 
 
 

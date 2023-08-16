@@ -11,100 +11,100 @@ use DB;
 
 trait ReturnTrait
 {
-    public function create_return($data, $return_id)   // this create return for supply,cashing,sale,purchase
-    {
+    // public function create_return($data, $return_id)   // this create return for supply,cashing,sale,purchase
+    // {
 
-        $stock_f = 0;
-        $this->refresh_store(
-            data: $data
-        ); // this make updating for store_products
-        // -------------------------------------------------------------------------------------------------
+    //     $stock_f = 0;
+    //     $this->refresh_store(
+    //         data: $data
+    //     ); // this make updating for store_products
+    //     // -------------------------------------------------------------------------------------------------
 
-        $id_store_product = $this->get($data);  //this get data from store_products
-
-
-        //----------------------------------------------------------------------------------------------------------------------------------------- 
-
-        foreach ($id_store_product as $values) {
+    //     $id_store_product = $this->get($data);  //this get data from store_products
 
 
-            $id_store_product = $values['id'];
-        }
+    //     //----------------------------------------------------------------------------------------------------------------------------------------- 
 
-        //----------------------------------------------------------------------------------------------------------------------------------------- 
-        $this->init_details(
-            id: $return_id,
-            id_store_product: $id_store_product,
-            data: $data
-        ); // this make initial for details tables
-        //----------------------------------------------------------------------------------------------------------------------------------------- 
+    //     foreach ($id_store_product as $values) {
 
-        $stock_f = $this->refresh_stock(
-            id: $return_id,
-            data: $data
-        ); // this make update for stock table
-        //----------------------------------------------------------------------------------------------------------------------------------------- 
 
-        $this->refresh_details( 
-            data:$data, 
-        );
-        //----------------------------------------------------------------------------------------------------------------------------------------- 
+    //         $id_store_product = $values['id'];
+    //     }
 
-        if ($stock_f == 0) {
+    //     //----------------------------------------------------------------------------------------------------------------------------------------- 
+    //     $this->init_details(
+    //         id: $return_id,
+    //         id_store_product: $id_store_product,
+    //         data: $data
+    //     ); // this make initial for details tables
+    //     //----------------------------------------------------------------------------------------------------------------------------------------- 
+
+    //     $stock_f = $this->refresh_stock(
+    //         id: $return_id,
+    //         data: $data
+    //     ); // this make update for stock table
+    //     //----------------------------------------------------------------------------------------------------------------------------------------- 
+
+    //     $this->refresh_details( 
+    //         data:$data, 
+    //     );
+    //     //----------------------------------------------------------------------------------------------------------------------------------------- 
+
+    //     if ($stock_f == 0) {
 
     
-            $this->init_stock(
-                data: $data
-            ); //this make intial for stock table if it is empty 
-        }
-    }
+    //         $this->init_stock(
+    //             data: $data
+    //         ); //this make intial for stock table if it is empty 
+    //     }
+    // }
 
-    function store_return($request)
-    {
+    // function store_return($request)
+    // {
 
-        $tables = '';
-        switch ($request['type']) {
+    //     $tables = '';
+    //     switch ($request['type']) {
 
 
-            case 'SupplyReturn':
-                $return = new SupplyReturn();
-                $return->supply_id = $request['id']; #this equal supply_id
-                $tables = 'supplies';
+    //         case 'SupplyReturn':
+    //             $return = new SupplyReturn();
+    //             $return->supply_id = $request['id']; #this equal supply_id
+    //             $tables = 'supplies';
 
-                break;
+    //             break;
 
-            case 'CashReturn':
+    //         case 'CashReturn':
 
-                $return = new CashReturn();
-                $return->cash_id = $request['id']; #this equal cash_id
-                $tables = 'cashes';
-                break;
-            case 'PurchaseReturn':
+    //             $return = new CashReturn();
+    //             $return->cash_id = $request['id']; #this equal cash_id
+    //             $tables = 'cashes';
+    //             break;
+    //         case 'PurchaseReturn':
 
-                $return = new PurchaseReturn();
-                $return->purchase_id = $request['id'];
-                $tables = 'purchases';
-                break;
+    //             $return = new PurchaseReturn();
+    //             $return->purchase_id = $request['id'];
+    //             $tables = 'purchases';
+    //             break;
 
-            case 'SaleReturn':
+    //         case 'SaleReturn':
 
-                $return = new SaleReturn();
-                $return->sale_id = $request['id'];
-                $tables = 'sales';
+    //             $return = new SaleReturn();
+    //             $return->sale_id = $request['id'];
+    //             $tables = 'sales';
 
-                break;
+    //             break;
 
-            default:
-                break;
-        }
+    //         default:
+    //             break;
+    //     }
 
-        $return->date  = $request['date'];
-        // $return->quantity = $request->post('total');
-        $return->note  = $request['note'];
-        $return->save();
+    //     $return->date  = $request['date'];
+    //     // $return->quantity = $request->post('total');
+    //     $return->note  = $request['note'];
+    //     $return->save();
 
-        return $return->id;
-    }
+    //     return $return->id;
+    // }
 
 
     public function check_return($value)

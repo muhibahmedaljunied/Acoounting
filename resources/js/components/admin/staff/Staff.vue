@@ -19,7 +19,8 @@
                       <ul class="nav panel-tabs main-nav-line">
                         <li class="nav-item">
                       <a href="#tab2" class="nav-link" data-toggle="tab"
-                            >البيانات الشخصيه</a
+                            >بيانات الموظف</a
+
                           >
                         </li>
                          <li class="nav-item">
@@ -39,7 +40,7 @@
 
                          <li class="nav-item">
                         <a href="#tab4" class="nav-link" data-toggle="tab"
-                            >كشف الرواتب</a
+                            > الرواتب</a
                           >
                         </li>
 
@@ -55,9 +56,9 @@
                         <li class="nav-item">
                           <a href="#tab7" class="nav-link" data-toggle="tab"> الخصم</a>
                         </li>
-                        <!-- <li class="nav-item">
-                          <a href="#tab8" class="nav-link" data-toggle="tab">القرض</a>
-                        </li> -->
+                        <li class="nav-item">
+                          <a href="#tab8" class="nav-link" data-toggle="tab">الجزاء والعقوبات</a>
+                        </li>
 
                       
                       

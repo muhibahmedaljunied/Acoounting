@@ -22,7 +22,7 @@
             </div>
             <div class="col-md-2">
               <label for="status"> من تأريخ</label>
-             <input v-model="from_date" type="date" name="" id="" class="form-control">
+              <input v-model="from_date" type="date" name="" id="" class="form-control">
             </div>
 
             <div class="col-md-2">
@@ -38,12 +38,14 @@
               <thead>
                 <tr>
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
+                  <th class="wd-15p border-bottom-0">تاريخ بدء الاجازه</th>
+                  <th class="wd-15p border-bottom-0">تاريخ انتهاء الاجازه</th>
 
                   <th class="wd-15p border-bottom-0">نوع الاجازه</th>
 
                   <th class="wd-15p border-bottom-0">عدد الايام</th>
-                  <th class="wd-15p border-bottom-0">تاريخ بدء الاجازه</th>
-                  <th class="wd-15p border-bottom-0">تاريخ انتهاء الاجازه</th>
+                  <th class="wd-15p border-bottom-0" style="color:red">الاجمالي</th>
+
 
                   <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
                 </tr>
@@ -51,20 +53,6 @@
               <tbody v-if="list_data && list_data.data.length > 0">
                 <tr v-for="(vacation, index) in list_data.data" :key="index">
                   <td>{{ vacation.name }}</td>
-
-                  <td>
-
-                    <div v-for="(vacation_names, index) in vacation.vacation" :key="index">
-                      {{ vacation_names.vacation_type.name }}
-                    </div>
-                  </td>
-
-                  <td>
-
-                    <div v-for="(vacation_number, index) in vacation.vacation" :key="index">
-                      {{ vacation_number.total_days }}
-                    </div>
-                  </td>
 
                   <td>
 
@@ -80,6 +68,22 @@
                       {{ vacation_end_date.end_date }}
                     </div>
                   </td>
+
+                  <td>
+
+                    <div v-for="(vacation_names, index) in vacation.vacation" :key="index">
+                      {{ vacation_names.vacation_type.name }}
+                    </div>
+                  </td>
+
+                  <td>
+
+                    <div v-for="(vacation_number, index) in vacation.vacation" :key="index">
+                      {{ vacation_number.total_days }}
+                    </div>
+                  </td>
+
+                  <td style="color:red">{{ vacation.sum_vacation }}</td>
 
 
 
@@ -99,6 +103,10 @@
 
 
                   </td> -->
+                </tr>
+                <tr>
+                  <td colspan="5" style="color:red;font-size: x-large;">الاجمالي</td>
+                  
                 </tr>
               </tbody>
               <tbody v-else>

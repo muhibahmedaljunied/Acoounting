@@ -111,9 +111,8 @@
                       <input :id="'Movement_product_tree' + index" type="text" readonly class="custom-search-input">
                       <input :id="'Movement_product_tree_id' + index" type="hidden" readonly class="custom-search-input">
 
-                      <button @click="detect_index(index)" class="custom-search-botton" type="submit"
-                        data-toggle="modal" data-target="#exampleModalProduct"> <i
-                          class="fa fa-plus-circle"></i></button>
+                      <button @click="detect_index(index)" class="custom-search-botton" type="submit" data-toggle="modal"
+                        data-target="#exampleModalProduct"> <i class="fa fa-plus-circle"></i></button>
                     </div>
                   </div>
                   <div class="col-md-2" v-show="showstatus">
@@ -270,7 +269,7 @@
                               مرتجع شراء
                             </td>
 
-                            
+
 
                           </div>
                           <td v-if="storeselected == 0">{{ datas.store }}</td>
@@ -355,7 +354,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 
@@ -366,7 +364,32 @@ export default {
   mixins: [tree, ReportOperation],
   data() {
     return {
-      name_of_report:'تقرير حركه الاصناف',
+
+      all_products: '',
+   
+      indexselected: '',
+      indexselectedproduct: '',
+      indexselectedstore: '',
+      last_nodes: '',
+      rank: 1,
+      parent: 0,
+      index: 0,
+
+      statusselected: 0,
+      unitselected: 0,
+      unitselectedname: '',
+      productselected: 0,
+      productselectedname: "",
+      storeselectedname: "",
+      storeselected: 0,
+      descselected: "",
+      operationselected: 0,
+      dateselected: 0,
+      typeselected: [],
+      checkselected: '',
+      moveselected: 0,
+
+      name_of_report: 'تقرير حركه الاصناف',
       type: '',
       type_of_tree: 1,
       jsonTreeData: '',
@@ -395,16 +418,16 @@ export default {
         ' شراء',
         ' مرتجع بيع',
         ' مرتجع شراء',
-     
+
 
 
       ],
       timestamp: '',
       index: 1,
-     
 
-      
-   
+
+
+
       // type_report: 0,
       // from_date: "2021-11-24",
       // to_date: new Date().toISOString().substr(0, 10),
@@ -462,7 +485,7 @@ export default {
 
 
     },
-  
+
     Search() {
       this.axios
         .post(`/repo_movement`, {
@@ -482,7 +505,7 @@ export default {
     },
     printDiv(printme) {
 
-      report_style(printme,'');
+      report_style(printme, '');
 
     },
   },

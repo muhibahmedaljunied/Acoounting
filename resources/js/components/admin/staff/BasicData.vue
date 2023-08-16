@@ -77,16 +77,16 @@
                           <a href="#tab23" class="nav-link" data-toggle="tab"> انواع الدوام </a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab17" class="nav-link" data-toggle="tab"> نماذج الدوام </a>
+                          <a href="#tab17" class="nav-link" data-toggle="tab"> نظام وفترات الدوام </a>
                         </li>
                         <li class="nav-item">
                           <a href="#tab21" class="nav-link" data-toggle="tab"> فترات الدوام</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                           <a href="#tab22" class="nav-link" data-toggle="tab"> اوقات الاستراحه</a>
                         </li>
 
-                        
+                         -->
                   
 
 
@@ -175,9 +175,9 @@
                       </div>
 
 
-                      <div class="tab-pane" id="tab22">
+                      <!-- <div class="tab-pane" id="tab22">
                         <break></break> 
-                      </div>
+                      </div> -->
 
                       <div class="tab-pane" id="tab23">
                         <work-type></work-type> 
@@ -215,7 +215,7 @@ import ExtraPart from "./BasicData/ExtraPart";
 // import LeaveSanction from "./BasicData/LeaveSanction";
 import WorkSystem from "./BasicData/WorkSystem";
 import WorkType from "./BasicData/WorkType";
-import Break from "./BasicData/Break";
+// import Break from "./BasicData/Break";
 import Period from "./BasicData/Period";
 
 
@@ -241,7 +241,7 @@ export default {
     // LeaveSanction,
     WorkSystem,
     WorkType,
-    Break,
+    // Break,
     Period
 
 

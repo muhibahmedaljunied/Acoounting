@@ -36,7 +36,7 @@
                 <tr v-for="(absence_type, index) in absence_types" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ absence_type.name }}</td>
-                  <td>{{ absence_type.name }}</td>
+                  <!-- <td>{{ absence_type.name }}</td> -->
 
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
@@ -187,12 +187,21 @@ export default {
 
     Add_new() {
 
-      $this.Add({
+      this.axios
+        .post(`/store_absence_type`, {
           count:this.counts,
           type:this.type,
           name:this.name,
                   
-    });
+    }
+        )
+        .then((response) => {
+          console.log(response);
+          toastMessage("تم الاضافه بنجاح");
+          // this.$router.go(0);
+        });
+
+      
     },
     list(page = 1) {
       this.axios

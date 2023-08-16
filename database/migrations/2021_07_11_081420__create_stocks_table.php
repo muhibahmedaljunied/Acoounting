@@ -30,10 +30,14 @@ class CreateStocksTable extends Migration
             $table->unsignedInteger('status_id')->unsigned()->nullable();
             $table->foreign('status_id')->references('id')->on('statuses');
 
+            $table->morphs('stockable');
+
             $table->string('desc')->nullable();
             $table->integer('quantity')->default(0);
-            $table->integer('number_operation')->nullable(); //canceld
-            $table->string('type_operation');
+
+
+            // $table->integer('number_operation')->nullable(); //canceld
+            // $table->string('type_operation');
             $table->date('date');
 
             

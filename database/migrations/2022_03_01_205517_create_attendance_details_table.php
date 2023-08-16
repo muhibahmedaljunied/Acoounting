@@ -16,6 +16,9 @@ class CreateAttendanceDetailsTable extends Migration
         Schema::create('attendance_details', function (Blueprint $table) {
             $table->Increments('id');
              
+            $table->unsignedInteger('attendance_id');
+            $table->foreign('attendance_id')->references('id')->on('attendances');
+            
          
             $table->unsignedInteger('period_id');
             $table->foreign('period_id')->references('id')->on('periods');
@@ -31,6 +34,9 @@ class CreateAttendanceDetailsTable extends Migration
             $table->integer('delay')->nullable()->default(0);
 
             $table->integer('leave')->nullable()->default(0);
+
+            $table->integer('extra')->nullable()->default(0);
+
 
             $table->timestamps();
         });

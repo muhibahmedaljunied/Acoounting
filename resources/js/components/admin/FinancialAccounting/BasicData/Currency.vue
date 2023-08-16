@@ -41,16 +41,16 @@
               <tbody v-if="currencies && currencies.data.length > 0">
                 <tr v-for="(currency, index) in currencies.data" :key="index">
                   <td>
-                    {{ currency.currency_name }}
+                    {{ currency.name }}
                   </td>
 
                   <td>
 
-                    {{ currency.symbol }}
+                    {{ currency.symbole }}
                   </td>
                   <td>
 
-                    {{ currency.exchange_rate }}
+                    {{ currency.rate }}
                   </td>
 
 
@@ -63,8 +63,16 @@
 
 
                   <td>
-
-                  </td>
+                                        <button data-toggle="modal" data-target="#modal_vaciar1"
+                                    
+                                            class="tn btn-danger btn-sm waves-effect btn-agregar">
+                                            <i class="fa fa-trash"></i></button>
+                                 
+                                        <router-link to="/temporale_supply"
+                                            class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="tooltip"
+                                            title="تعديل">
+                                            <i class="fa fa-edit"></i></router-link>
+                                    </td>
                 </tr>
               </tbody>
 

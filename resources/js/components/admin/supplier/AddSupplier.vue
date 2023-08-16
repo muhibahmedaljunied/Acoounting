@@ -46,8 +46,8 @@
 
                 <div class="custom-search">
 
-                  <input :id="'Supplier_account_tree_id'+indexselected" type="text" class="custom-search-input">
-                  <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(indexselected)"
+                  <input :id="'Supplier_account_tree_id'" type="text" class="custom-search-input">
+                  <button class="custom-search-botton" type="button" data-toggle="modal" 
                     data-target="#exampleModalaccount"> <i class="fa fa-plus-circle"></i></button>
 
                 </div>
@@ -106,7 +106,7 @@ export default {
   data() {
     return {
   
-      indexselected:0,
+      // indexselected:0,
       type:'',
       error_name:'',
       error_email:'',
@@ -123,6 +123,7 @@ export default {
  
   mounted() {
     this.type =  'Supplier';
+    this.type_of_tree =1;
     this.showtree('account');
    
   },
@@ -139,6 +140,7 @@ export default {
       let formData = new FormData();
 
       formData.append("name", this.name);
+      formData.append("account", this.account);
       formData.append("phone", this.phone);
       formData.append("email", this.email);
       formData.append("address", this.address);
@@ -165,73 +167,7 @@ export default {
 
       // this.$router.go(-1);
     },
-    // showtree() {
-
-
-    //   this.axios.post(`/tree_account`).then((response) => {
-    //     this.jsonTreeDataProduct = response.data.products;
-
-
-    //     $('#treeview_json_account').jstree({
-    //       core: {
-    //         themes: {
-    //           responsive: false,
-    //         },
-    //         // so that create works
-    //         check_callback: true,
-    //         data: this.jsonTreeDataaccount,
-    //       },
-    //       types: {
-    //         default: {
-    //           icon: "fa fa-folder text-primary",
-    //         },
-    //         file: {
-    //           icon: "fa fa-file  text-primary",
-    //         },
-    //       },
-    //       checkbox: {
-    //         three_state: false,
-
-    //       },
-    //       state: {
-    //         key: "demo2"
-    //       },
-    //       search: {
-    //         case_insensitive: true,
-    //         show_only_matches: true
-    //       },
-    //       plugins: ["checkbox",
-    //         "contextmenu",
-    //         "dnd",
-    //         "massload",
-    //         "search",
-    //         "sort",
-    //         "state",
-    //         "types",
-    //         "unique",
-    //         "wholerow",
-    //         "changed",
-    //         "conditionalselect"],
-    //       contextmenu: {
-    //         items: contextmenu
-    //       },
-
-
-
-
-
-
-    //     }).on("changed.jstree", function (e, data) {
-
-    //       console.log(data.node.id);
-    //       $(`.modal-title-product`).val(data.node.id)
-    //       //  modal-title-store
-
-    //     });
-
-    //   });
-     
-    // },
+    
   },
 };
 </script>

@@ -26,6 +26,11 @@ class Purchase extends Model
     }
 
 
+    public function stock()
+    {
+        return $this->morphMany(Stock::class, 'stockable');
+    }
+
     // public function payments()
     // {
     //     return $this->morphMany('App\Payments', 'commentable');

@@ -27,6 +27,14 @@ class Stock extends Model
     }
 
 
+    public function stockable()
+    {
+      //   return $this->morphTo('App\AbsenceSanction','App\DelaySanction','App\ExtraSanction','App\LeaveSanction');
+        return $this->morphTo();
+  
+    }
+
+
     
 
 }

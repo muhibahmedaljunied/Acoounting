@@ -21,7 +21,7 @@ class CreateAdministrativeStructuresTable extends Migration
             $table->unsignedInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('administrative_structures');
             $table->integer('rank')->nullable();
-            $table->integer('type_branch');
+            $table->integer('type_branch')->nullable();
             $table->string('status')->nullable();
             
 

@@ -154,6 +154,7 @@ export default {
       this.axios
         .post(`/customer?page=${page}`)
         .then(({ data }) => {
+          console.log();
           this.customers = data;
         })
         .catch(({ response }) => {

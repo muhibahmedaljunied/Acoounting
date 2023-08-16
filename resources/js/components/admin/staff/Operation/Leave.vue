@@ -57,7 +57,7 @@
                   <td>
 
                     <div v-for="(vacation_number, index) in vacation.vacation" :key="index">
-                      {{ vacation_number.total_days }}
+                      {{ vacation_number.vacation_type.duration }}
                       <hr>
                     </div>
                   </td>
@@ -354,7 +354,7 @@ export default {
 
     list(page = 1) {
       this.axios
-        .post(`/vacation?page=${page}`)
+        .post(`/vacation?page=${page}`,{ type: 'vacation'})
         .then(({ data }) => {
           this.value_list = data.list;
           this.vacation_types = data.vacation_types;

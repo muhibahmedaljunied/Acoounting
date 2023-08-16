@@ -28,14 +28,14 @@
                       </div>
                       <div class="col-sm-2">
 
-<a @click="Search()" class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal"
-  id="agregar_productos" data-target=".bs-example-modal-sm">
-  <i class="fa fa-search"></i></a>
-<a @click="printDiv('printme')" class="tn btn-info btn-sm waves-effect btn-agregar"
-  data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-sm">
-  <i class="fa fa-print"></i></a>
+                        <a @click="Search()" class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal"
+                          id="agregar_productos" data-target=".bs-example-modal-sm">
+                          <i class="fa fa-search"></i></a>
+                        <a @click="printDiv('printme')" class="tn btn-info btn-sm waves-effect btn-agregar"
+                          data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-sm">
+                          <i class="fa fa-print"></i></a>
 
-</div>
+                      </div>
                     </div>
                     <div class="row">
                       <div class="col-md-3" v-show="showproduct">
@@ -45,8 +45,7 @@
                         <div class="custom-search">
 
                           <input :id="'Stock_product_tree' + index" type="text" readonly class="custom-search-input">
-                          <input :id="'Stock_product_tree_id' + index" type="hidden" readonly
-                            class="custom-search-input">
+                          <input :id="'Stock_product_tree_id' + index" type="hidden" readonly class="custom-search-input">
 
 
                           <button @click="detect_index(index)" class="custom-search-botton" type="submit"
@@ -95,12 +94,12 @@
                         </select>
                       </div>
 
-                    
+
 
                     </div>
 
 
-                 
+
 
 
                   </div>
@@ -224,8 +223,8 @@
             </div>
           </div>
 
-          <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -282,6 +281,29 @@ export default {
   mixins: [tree, ReportOperation],
   data() {
     return {
+      all_products: '',
+      indexselected: '',
+      indexselectedproduct: '',
+      indexselectedstore: '',
+      last_nodes: '',
+      rank: 1,
+      parent: 0,
+      index: 0,
+
+      statusselected: 0,
+      unitselected: 0,
+      unitselectedname: '',
+      productselected: 0,
+      productselectedname: "",
+      storeselectedname: "",
+      storeselected: 0,
+      descselected: "",
+      operationselected: 0,
+      dateselected: 0,
+      typeselected: [],
+      checkselected: '',
+      moveselected: 0,
+
       type: '',
       supplier: "yes",
       product: "",

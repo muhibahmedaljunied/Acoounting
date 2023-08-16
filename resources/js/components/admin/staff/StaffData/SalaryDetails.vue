@@ -36,10 +36,12 @@
                   <th class="wd-15p border-bottom-0">الرقم الوظيفي</th>
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
                   <th class="wd-15p border-bottom-0">الراتب الاساسي</th>
-                  <th class="wd-15p border-bottom-0">البدلات </th>
-                  <th class="wd-15p border-bottom-0"> الاضافي</th>
-                  <th class="wd-15p border-bottom-0"> الخصومات</th>
-                  <th class="wd-15p border-bottom-0"> السلف</th>
+                  <th class="wd-15p border-bottom-0">بدلات </th>
+                  <th class="wd-15p border-bottom-0"> اضافي</th>
+                  <th class="wd-15p border-bottom-0"> خصومات</th>
+                  <th class="wd-15p border-bottom-0"> جزاءات</th>
+
+                  <!-- <th class="wd-15p border-bottom-0"> السلف</th> -->
                   <th class="wd-15p border-bottom-0"> الصافي</th>
                   <th>العمليات</th>
                 </tr>
@@ -58,28 +60,24 @@
 
                   <td>{{ salary.total_extra }}</td>
 
-                  <td>{{ salary.total_discount }}</td>
+                  <td>{{ salary.all_discount }}</td>
 
 
 
 
 
-                  <td>{{ salary.total_advance }}</td>
+                  <td>{{ salary.total_sanction }}</td>
 
 
                   <td>{{ salary.total }}</td>
 
+                  <td>
+                    <button @click="salary_details(salary.id)" data-toggle="tooltip" data-placement="top" class="tn btn-info btn-sm waves-effect btn-agregar"> <i class="fa fa-eye"></i></button>
+                  <button  class="btn btn-success">   <i class="fa fa-plus"></i> </button>
 
-                  <button @click="salary_details(salary.id)" class="btn btn-success"> <i class="fa fa-eye"></i></button>
-                  <!-- <router-link 
-                  :to="{ name: 'salary_details', params: { id: salary.id } }"
-                    class="edit btn btn-success">
-                    <i class="fa fa-eye"></i></router-link> -->
-
-                  <!-- <router-link to="/salary_details" 
+                  </td>
+               
                  
-                    class="edit btn btn-success">
-                    <i class="fa fa-eye"></i></router-link> -->
 
                 </tr>
                 <tr>

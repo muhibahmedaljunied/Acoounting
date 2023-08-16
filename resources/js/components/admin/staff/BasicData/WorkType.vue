@@ -199,11 +199,22 @@ export default {
 
     Add_new() {
 
-      $this.Add({
+      this.axios
+        .post(`/store_work_type`, {
+          type: this.type,
         count: this.counts,
         name: this.name,
 
-      });
+      }
+        )
+        .then((response) => {
+          console.log(response);
+          toastMessage("تم الاضافه بنجاح");
+          // this.$router.go(0);
+        });
+
+
+  
     },
     list(page = 1) {
       this.axios

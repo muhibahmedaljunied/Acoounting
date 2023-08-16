@@ -42,20 +42,20 @@
                 <tr>
 
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
-                  <th class="wd-15p border-bottom-0"> نوع الخصم</th>
-                  <th class="wd-15p border-bottom-0">قيمه الخصم</th>
                   <th class="wd-15p border-bottom-0">التاريخ</th>
 
-                  <!-- <th class="wd-15p border-bottom-0"> ملاجظه</th> -->
+                  <th class="wd-15p border-bottom-0"> نوع الخصم</th>
+                  <th class="wd-15p border-bottom-0">قيمه الخصم</th>
+
+                  <th class="wd-15p border-bottom-0" style="color:red"> الاجمالي</th>
 
 
-                  <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
                 </tr>
               </thead>
               <tbody v-if="list_data && list_data.data.length > 0">
                 <tr v-for="(discount, index) in list_data.data" :key="index">
-                  <!-- <div v-if="discount.discount"> -->
                   <td>{{ discount.name }}</td>
+                  <td>{{ discount.date }}</td>
 
                   <td>
 
@@ -71,27 +71,12 @@
                     </div>
                   </td>
 
-                  <td>{{ discount.date }}</td>
-                  <!-- <td>{{ discount.note }}</td> -->
+                  <td style="color:red">{{ discount.sum_discount }}</td>
 
-
-                  <!-- <td>
-                    <button type="button" @click="delete_discount(discount.id)" class="btn btn-danger">
-                      <i class="fa fa-trash"></i>
-                    </button>
-
-                    <router-link :to="{
-                      name: 'edit_discount',
-                      params: { id: discount.id },
-                    }" class="edit btn btn-success">
-                      <i class="fa fa-edit"></i></router-link>
-                    <router-link :to="{
-                      name: 'edit_advance',
-                    
-                    }" class="edit btn btn-success">
-                      <i class="fa fa-eye"></i></router-link>
-                  </td> -->
-                  <!-- </div> -->
+                </tr>
+                <tr>
+                  <td colspan="4" style="color:red;font-size: x-large;">الاجمالي</td>
+                  
                 </tr>
               </tbody>
               <tbody v-else>

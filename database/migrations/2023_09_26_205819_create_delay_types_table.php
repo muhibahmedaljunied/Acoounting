@@ -17,7 +17,7 @@ class CreateDelayTypesTable extends Migration
 
             $table->Increments('id');
             $table->string('name')->nullable();
-
+            $table->string('code')->nullable();
             // $table->int('from_time',30);
             // $table->int('into_time',50)->unique()->nullable();
 

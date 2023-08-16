@@ -175,7 +175,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\SanctionServiceProvider::class,
+        // App\Providers\TemporaleServiceProvider::class,
+        App\Providers\DetailServiceProvider::class,
+        App\Providers\StockServiceProvider::class,
+        App\Providers\ReturnServiceProvider::class,
+        App\Providers\PayrollServiceProvider::class,
+        App\Providers\HRServiceProvider::class,
+
+        // Maatwebsite\Excel\ExcelServiceProvider::class,
  
 
     ],

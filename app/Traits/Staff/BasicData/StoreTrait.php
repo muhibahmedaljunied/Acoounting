@@ -4,7 +4,7 @@ namespace App\Traits\Staff\BasicData;
 
 use App\Models\AllowanceType;
 use Illuminate\Http\Request;
-use App\Models\WorkSystem;
+use App\Models\PeriodWorkType;
 use App\Models\WorkType;
 use App\Models\Branch;
 use App\Models\Nationality;
@@ -14,6 +14,7 @@ use App\Models\StaffReligion;
 use App\Models\VacationType;
 use App\Models\AbsenceType;
 use App\Models\DelayType;
+use App\Models\StaffType;
 use App\Models\ExtraType;
 use App\Models\ExtraPart;
 
@@ -36,16 +37,17 @@ trait StoreTrait
 
             if ($request->post('type') == 'work_system') {
 
-                $temporale = new WorkSystem();
-                $temporale->work_type_id = $request['work_type'][$value];
+                $temporale = new PeriodWorkType();
+                // $temporale->work_type_id = $request['work_type'][$value];
+                $temporale->work_type_id = $request['work_type'];
+
                 $temporale->period_id = $request['period'][$value];
-                $temporale->rest_id = $request['rest'][$value];
+                // $temporale->rest_id = $request['rest'][$value];
                 $temporale->day_id = json_encode($request['day'][$value]);
                 $temporale->save();
             }
 
             if ($request->post('type') == 'work_type') {
-
 
                 $temporale = new WorkType();
                 $temporale->name = $request['name'][$value];
@@ -115,6 +117,14 @@ trait StoreTrait
                 $temporale = new VacationType();
                 $temporale->name = $request['name'][$value];
                 $temporale->duration = $request['duration'][$value];
+
+                $temporale->save();
+            }
+            if ($request->post('type') == 'staff_type') {
+
+
+                $temporale = new StaffType();
+                $temporale->name = $request['name'][$value];
 
                 $temporale->save();
             }

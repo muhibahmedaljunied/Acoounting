@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Providers;
-
-use App\Services\ReturnService;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\ServiceProvider;
+
+
+use App\Services\CoreService;
 
 class AppServiceProvider extends ServiceProvider
 {
+
+
     /**
      * Register any application services.
      *
@@ -16,11 +19,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        
-        $this->app->bind('return',function($app){
 
-            return new ReturnService();
+
+      
+        $this->app->singleton(CoreService::class, function() {
+            return new CoreService();
         });
+
+        
+        
+   
 
     }
 
@@ -31,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        DB::listen(function($query) {
+        DB::listen(function ($query) {
             Log::info(
                 $query->sql,
                 $query->bindings,

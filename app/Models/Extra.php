@@ -17,10 +17,17 @@ class Extra extends Model
         return $this->belongsTo(ExtraType::class);
     }
 
-    public function extra_sanction()
+    public function extra_detail()
     {
-        return $this->belongsTo(ExtraSanction::class);
+        return $this->hasMany(ExtraDetail::class);
     }
+
+    // public function extra_sanction()
+    // {
+    //     return $this->belongsTo(ExtraSanction::class);
+    // }
+
+    
 
     public function scopeWhereExtra($query, $value)
 

@@ -23,9 +23,9 @@
                           >
                         
                         </li>
-                      <li class="nav-item">
+                      <!-- <li class="nav-item">
                       <a href="#tab2" class="nav-link" data-toggle="tab"
-                            > التأخير والاتصراف المبكر</a
+                            > الاجازات</a
                           >
                         </li>
                      
@@ -42,24 +42,21 @@
                           >
                         </li>
 
-                             <!-- <li class="nav-item">
+                            <li class="nav-item">
                         <a href="#tab5" class="nav-link" data-toggle="tab"
-                            >الحضور والغياب</a
+                            >التأخير</a
                           >
                         </li>
 
                         <li class="nav-item">
-                          <a href="#tab6" class="nav-link" data-toggle="tab"> الاضافي</a>
+                          <a href="#tab6" class="nav-link" data-toggle="tab"> الغياب</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab7" class="nav-link" data-toggle="tab"> الخصم</a>
+                          <a href="#tab7" class="nav-link" data-toggle="tab"> الانصراف المبكر</a>
                         </li>
-                        <li class="nav-item">
-                          <a href="#tab8" class="nav-link" data-toggle="tab">القرض</a>
-                        </li> -->
 
                       
-                      
+                       -->
                       </ul>
                     </div>
                   </div>
@@ -74,7 +71,7 @@
                     <div class="tab-content">
                       <div class="tab-pane active" id="tab1"> <attendance-report></attendance-report></div>
                     
-                  <div class="tab-pane" id="tab2">
+                  <!-- <div class="tab-pane" id="tab2">
                              <leave-report></leave-report>
                       </div>
                          <div class="tab-pane" id="tab3">
@@ -85,7 +82,7 @@
                           <div class="tab-pane" id="tab4">
                              <extra-report></extra-report>
              
-                      </div>
+                      </div> -->
 
                          <!--<div class="tab-pane" id="tab5">
                              <attendance></attendance>
@@ -128,9 +125,9 @@
 <script>
 
 import AttendanceReport from "./Report/AttendanceReport";
-import LeaveReport from "./Report/LeaveReport";
-import AllowanceReport from "./Report/AllowanceReport";
-import ExtraReport from "./Report/ExtraReport";
+// import LeaveReport from "./Report/LeaveReport";
+// import AllowanceReport from "./Report/AllowanceReport";
+// import ExtraReport from "./Report/ExtraReport";
 // -------------
 
 // import Salary from "./StaffData/Salary";
@@ -154,9 +151,9 @@ import ExtraReport from "./Report/ExtraReport";
 export default {
   components: {
     AttendanceReport,
-    LeaveReport,
-    AllowanceReport,
-    ExtraReport,
+    // LeaveReport,
+    // AllowanceReport,
+    // ExtraReport,
     // ---------------------
     // Salary,
     // Holiday,

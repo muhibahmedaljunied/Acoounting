@@ -204,7 +204,7 @@ export default {
 
     Add_new() {
 
-      $this.Add({
+      this.Add({
         count: this.counts,
         type: this.type,
         from_rest: this.from_rest,

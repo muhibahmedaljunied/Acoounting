@@ -28,4 +28,14 @@ class WorkType extends Model
 
 
 
+            
+    public function periods()
+    {
+        return $this->belongsToMany(Period::class, 'period_work_types', 'work_type_id','period_id')->withPivot('day_id');
+    }
+
+
+
+
+
 }

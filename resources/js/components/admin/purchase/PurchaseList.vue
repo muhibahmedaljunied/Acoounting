@@ -100,27 +100,7 @@
                         </select>
                       </div>
 
-                      <!-- 
-                    <router-link
-                      :to="`/purchase_details/${purchase.purchases_id}`"
-                      class="btn btn-success"
-                    >
-                      <span><i class="fa fa-search-plus"></i></span>
-                    </router-link>
 
-                    <router-link
-                      :to="`/return_purchase/${purchase.purchases_id}`"
-                      class="btn btn-success"
-                    >
-                      <span> ارجاع</span>
-                    </router-link>
-
-                     <router-link
-                    :to="`/purchase_invoice/${purchase.purchases_id}`"
-                        class="btn btn-success">
-                    
-                      <span>فاتوره</span>
-                    </router-link> -->
                     </td>
                   </tr>
                 </tbody>
@@ -173,34 +153,7 @@
                       <div v-for="temx in purchase_details.units">
 
 
-
-                        <span v-if="temx.unit_type == 0">
-
-                          <span v-if="purchase_details.qty / purchase_details.rate >= 1">
-                            {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
-                              purchase_details.units[0].name
-                            }}
-                          </span>
-
-                          <span v-if="purchase_details.qty % purchase_details.rate >= 1">
-                            {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
-                              purchase_details.units[1].name
-                            }}
-                          </span>
-                        </span>
-
-                      </div>
-
-                      <!-- <div v-for="temx in purchase_details.units">
-
-                        <span v-if="temx.name == purchase_details.unit">
-
-                          <span v-if="temx.unit_type == 1">
-
-                            {{ purchase_details.qty }} {{ temx.name }}
-
-                          </span>
-
+                        <span v-if="purchase_details.unit_id == temx.id">
                           <span v-if="temx.unit_type == 0">
 
                             <span v-if="purchase_details.qty / purchase_details.rate >= 1">
@@ -210,18 +163,19 @@
                             </span>
 
                             <span v-if="purchase_details.qty % purchase_details.rate >= 1">
-                              و
                               {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
                                 purchase_details.units[1].name
                               }}
                             </span>
                           </span>
 
+                          <span v-if="temx.unit_type == 1">
+                            {{ purchase_details.qty }} {{ temx.name }}
+                          </span>
                         </span>
+                      </div>
 
 
-
-                      </div> -->
 
                     </td>
 
@@ -238,11 +192,7 @@
                     <td colspan="7" style="text-align:center;color:red;font-size:large">الاجمالي</td>
                     <td>{{ total }}</td>
                   </tr>
-                  <!-- <a 
-                      @click="$router.go(-1)"
-                      class="btn btn-success"
-                      ><span> تراجع</span></a
-                    > -->
+
                 </tbody>
 
               </table>

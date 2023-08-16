@@ -15,15 +15,10 @@ class CreateLeaveTypesTable extends Migration
         Schema::create('leave_types', function (Blueprint $table) {
 
             $table->Increments('id');
-
-       
-
-         
             $table->string('name')->nullable();
-
-            $table->time('from_time')->nullable();
-
-            $table->time('into_time')->nullable();
+            $table->string('code')->nullable();
+            // $table->time('from_time')->nullable();
+            // $table->time('into_time')->nullable();
 
        
             $table->timestamps();

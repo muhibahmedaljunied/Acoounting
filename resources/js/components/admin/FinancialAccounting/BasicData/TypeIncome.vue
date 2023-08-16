@@ -49,13 +49,18 @@
                      </div>
                      </td>
   
+                  
                      <td>
-                     
-                     <div >
-                       
-                       <hr>
-                     </div>
-                     </td>
+                                        <button data-toggle="modal" data-target="#modal_vaciar1"
+                                    
+                                            class="tn btn-danger btn-sm waves-effect btn-agregar">
+                                            <i class="fa fa-trash"></i></button>
+                                 
+                                        <router-link to="/temporale_supply"
+                                            class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="tooltip"
+                                            title="تعديل">
+                                            <i class="fa fa-edit"></i></router-link>
+                                    </td>
   
                     
                   </tr>

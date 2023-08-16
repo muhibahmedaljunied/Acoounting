@@ -29,9 +29,9 @@ class CreateDailyDetailsTable extends Migration
 
             $table->string('description')->nullable();
 
-            $table->integer('debit')->nullable();
+            $table->integer('debit')->nullable()->default(0);
 
-            $table->integer('credit')->nullable();
+            $table->integer('credit')->nullable()->default(0);
             $table->timestamps();
         });
     }

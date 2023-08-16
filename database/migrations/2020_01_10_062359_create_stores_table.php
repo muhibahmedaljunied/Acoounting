@@ -16,10 +16,11 @@ class CreateStoresTable extends Migration
         Schema::create('stores', function (Blueprint $table) {
             $table->Increments('id');
             $table->string('text');
-            $table->unsignedInteger('parent_id');
+            $table->unsignedInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('stores');
+
             $table->integer('rank')->nullable();
-            $table->integer('type_branch');
+            $table->string('status');
 
             $table->timestamps();
 

@@ -192,12 +192,22 @@ export default {
 
     Add_new() {
 
-      $this.Add({
+      this.axios
+          .post(`/store_qualification`, {
         count: this.counts,
         type: this.type,
         name: this.name,
 
-      });
+      }
+          )
+          .then((response) => {
+            console.log(response);
+            toastMessage("تم الاضافه بنجاح");
+            // this.$router.go(0);
+          });
+
+
+     
     },
     list(page = 1) {
       this.axios

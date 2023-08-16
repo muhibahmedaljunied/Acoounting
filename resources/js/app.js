@@ -2,9 +2,6 @@ require('./bootstrap');
 require('./operation');
 require('./staff/operation');
 require('./contextmenu.js');
-// require('./tree.js');
-
-
 window.Vue = require('vue');			//import vue same as(import Vue from 'vue')
 
 import VueRouter from 'vue-router';		//import vue router
@@ -16,22 +13,22 @@ import swal from 'sweetalert2'
 window.swal = swal;
 
 const toast = swal.mixin({
-    toast: true,
-    position: 'top-center',
-    showConfirmButton: false,
-    timer: 3000
-  });
-  window.toast = toast;
-  // -----------------------------------This for alert messages ----------------------------------------------
+  toast: true,
+  position: 'top-center',
+  showConfirmButton: false,
+  timer: 3000
+});
+window.toast = toast;
+// -----------------------------------This for alert messages ----------------------------------------------
 
-window.toastMessage = function (title=null,text=null){
+window.toastMessage = function (title = null, text = null, icon = 'success') {
 
 
   return toast.fire({
     title: title,
-    text:text,
+    text: text,
     button: "Close", // Text on button
-    icon: "success", //built in icons: success, warning, error, info
+    icon: icon, //built in icons: success, warning, error, info
     timer: 3000, //timeOut for auto-close
     buttons: {
       confirm: {
@@ -54,10 +51,6 @@ window.toastMessage = function (title=null,text=null){
 
 }
 
-// ----------------------------------------------------------------------------------------------
-// window.printDiv = printDiv;
-// window.treefunc = treefunc;
-// ------------------------------------------------------------------------------------------------
 Vue.use(VueAxios, axios);
 Vue.use(VueRouter);
 // ---------------------------------------------------------------------------------------
@@ -84,13 +77,6 @@ const store = new Vuex.Store(
   storeData
 )
 
-
-
-
-
-
-
-// -------------------------------------------------------------------------------------------------
 Vue.component('footer-section', require('./components/admin/layouts/Footer.vue').default);
 Vue.component('main-header', require('./components/admin/layouts/MainHeader.vue').default);
 Vue.component('main-sidebar', require('./components/admin/layouts/MainSidebar.vue').default);
@@ -127,26 +113,25 @@ Vue.use(VueHtmlToPaper);
 
 //router instance and pass the `routes` option
 const router = new VueRouter({
-    routes,
-    mode:'history',
-    scrollBehavior (to, from, savedPosition) {
-      if (savedPosition) {
-        return savedPosition
-      } else {
-        return { x: 0, y: 0 }
-      }
+  routes,
+  mode: 'history',
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
     }
+  }
 })
 
 //vue instance
 const app = new Vue({
-    el: '#app',
-    data: {
-      logo: 'Dashboard'
-    },
-    
-    router,
-    store,
+  el: '#app',
+  data: {
+    logo: 'Dashboard'
+  },
+  router,
+  store,
 
 
 });

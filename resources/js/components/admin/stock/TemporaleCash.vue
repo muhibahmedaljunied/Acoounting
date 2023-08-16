@@ -38,7 +38,7 @@
                                 <th>الكميه المنوفره</th>
                                 <th>الوحده</th>
                                 <th>التكلفه</th>
-                                                                <th>كميه الصرف</th>
+                                <th>كميه الصرف</th>
 
                                 <th>الاجمالي</th>
                                 <th>اضافه</th>
@@ -123,26 +123,26 @@
 
                                     </div>
                                 </td>
-                                    
+
                                 <td>
                                     <!-- <input type="number" v-model="product.quantity" min="1" :max="product.availabe_qty"
                                         step="1" class="form-control input_cantidad" /> -->
 
-                                    <input type="number" v-model="price[index]" step="1"
+                                    <input type="number" v-model="product.cost" step="1"
                                         class="form-control input_cantidad" />
 
                                 </td>
 
                                 <td>
                                     <input type="number"
-                                        @input="on_input(qty[index], product.availabe_qty), calculate_price(price[index], qty[index], index)"
+                                        @input="on_input(qty[index], product.availabe_qty), calculate_price(product.cost, qty[index], index)"
                                         v-model="qty[index]" id="qty" class="form-control input_cantidad"
                                         onkeypress="return " />
                                 </td>
-                            
-                           
 
-                         
+
+
+
                                 <td>
                                     <input type="number" v-model="total[index]" class="form-control input_cantidad"
                                         onkeypress="return " />
@@ -156,13 +156,15 @@
                                             product.product_id,
                                             qty[index],
                                             product.desc,
+                                            product.price,
                                             product.availabe_qty,
                                             product.store_id,
                                             product.status_id,
                                             index,
                                             total[index]
                                         )
-                                    " type="checkbox" v-model="check_state[index]" class="btn btn-info waves-effect" />
+                                        " type="checkbox" v-model="check_state[index]"
+                                        class="btn btn-info waves-effect" />
 
 
                                 </td>
@@ -182,8 +184,8 @@
 
 
             </div>
-            <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -220,8 +222,72 @@ export default {
     data() {
 
         return {
+            product: [],
+            qty: [],
+            unit: [],
+            desc: [],
+            store: [],
+            status: [],
+            counts: {},
+            count: 1,
+            date: new Date().toISOString().substr(0, 10),
+            dateselected: new Date().toISOString().substr(0, 10),
+            expiry_date: new Date().toISOString().substr(0, 10),
+            table: '',
+            type: '',
+            type_refresh: '',
+            note: "",
+            detail: '',
+            Total_quantity: 0,
+            total_quantity: 0,
+            check_state: [],
+            return_qty: [],
+            price: [],
+            tax: [],
+            products: '',
+            stores: '',
+            statuses: '',
+            stores: '',
+            statuses: '',
+            units: '',
+            opening: '',
+            availabe_qty: [],
+            word_search: '',
+            total: [],
+            customer: [],
+            supplier: [],
+            suppliers: '',
+            customers: '',
+            seen: false,
+            id: '',
+
+            all_products: '',
+            jsonTreeData: '',
+            type_of_tree: 1,
+            indexselected: '',
+            indexselectedproduct: '',
+            indexselectedstore: '',
+            last_nodes: '',
+            rank: 1,
+            parent: 0,
+            index: 0,
+
+            statusselected: 0,
+            unitselected: 0,
+            unitselectedname: '',
+            productselected: 0,
+            productselectedname: "",
+            storeselectedname: "",
+            storeselected: 0,
+            descselected: "",
+            operationselected: 0,
+            dateselected: 0,
+            typeselected: [],
+            checkselected: '',
+            moveselected: 0,
+
             text_message: '',
-           
+
             total_quantity: 0,
             grand_total: 0,
             sub_total: 0,
@@ -261,7 +327,7 @@ export default {
     methods: {
 
 
-         calculate_price(price, qty, index) {
+        calculate_price(price, qty, index) {
             // console.log(this.unit[index][2]);
 
             if (this.unit[index][2] == 0) {
@@ -312,8 +378,9 @@ export default {
             product_id,
             qty = 0,
             desc,
+            price,
             availabe_qty,
-    
+
             store,
             status,
             index,
@@ -335,7 +402,7 @@ export default {
                         this.product[index] = product_id;
                         this.qty[index] = qty;
                         this.desc[index] = desc;
-                   
+                        this.price[index] = price;
 
                         this.store[index] = store;
                         this.status[index] = status;
@@ -354,6 +421,8 @@ export default {
                 this.$delete(this.product, index);
                 this.$delete(this.qty, index);
                 this.$delete(this.desc, index);
+                this.$delete(this.price, index);
+
                 this.$delete(this.product_name, index);
                 this.$delete(this.store, index);
                 this.$delete(this.status, index);
@@ -366,6 +435,7 @@ export default {
             console.log(this.product);
             console.log(this.qty);
             console.log(this.desc);
+            console.log(this.price);
             console.log(this.product_name);
             console.log(this.store);
             console.log(this.status);

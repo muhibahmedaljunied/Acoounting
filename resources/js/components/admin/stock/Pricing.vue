@@ -12,8 +12,7 @@
                         <div class="custom-search">
 
                             <input :id="'Sale_product_tree' + index" type="text" readonly class="custom-search-input">
-                            <input :id="'Sale_product_tree_id' + index" type="hidden" readonly
-                                class="custom-search-input">
+                            <input :id="'Sale_product_tree_id' + index" type="hidden" readonly class="custom-search-input">
 
                             <button class="custom-search-botton" type="button" data-toggle="modal"
                                 data-target="#exampleModalProduct" @click="detect_index(index)"> <i
@@ -32,8 +31,8 @@
                                     <th>التكلفه</th>
                                     <th>سعر الجمله</th>
                                     <th>سعر التجزيه</th>
-                             
-                            
+
+                                    <th>سعر خاص</th>
                                     <th>اضافه</th>
                                 </tr>
                             </thead>
@@ -73,7 +72,7 @@
                                         <div id="factura_producto" class="input_nombre" v-if="product.availabe_qty">
 
 
-                                       
+
 
 
 
@@ -106,25 +105,29 @@
                                     </td>
 
 
-                                 
+
                                     <td>
-                                        <input type="number" v-model="price[index]" id="price"
-                                            class="form-control input_cantidad" onkeypress="return " />
+                                        <input type="number" v-model="product.cost" id="price"
+                                            class="form-control input_cantidad" onkeypress="return " readonly/>
                                     </td>
-                                  
+
                                     <td>
-                                        <input type="number" v-model="price[index]" id="qty"
+                                        <input type="number" v-model="price_all[index]" id="qty"
                                             class="form-control input_cantidad" onkeypress="return " />
                                     </td>
 
                                     <td>
-                                        <input type="number" v-model="price[index]" id="qty"
-                                            class="form-control input_cantidad" onkeypress="return " readonly />
+                                        <input type="number" v-model="price_part[index]" id="qty"
+                                            class="form-control input_cantidad" onkeypress="return "  />
+                                    </td>
+                                    <td>
+                                        <input type="number" v-model="price_part[index]" id="qty"
+                                            class="form-control input_cantidad" onkeypress="return "  />
                                     </td>
 
                                     <td>
                                         <input v-model="check_state[index]" @change="add_one_sale(
-                                        
+
                                             product.product_id,
                                             qty[index],
                                             product.desc,
@@ -132,13 +135,15 @@
                                             unit[index],
                                             product.store_id,
                                             product.status_id,
-                                            price[index],
+                                            product.price,
+                                            price_all[index],
+                                            price_part[index],
                                             tax[index],
                                             index,
                                             total
-                                        
-                                        
-                                        
+
+
+
                                         )" type="checkbox" class="btn btn-info waves-effect">
                                     </td>
 
@@ -197,34 +202,8 @@ export default {
     data() {
         return {
             index: 0,
-            // indexselectedproduct: '',
-            // type: '',
-            // count: 1,
-            // counts: {},
-            // product: [],
-            // products: '',
-            // stores: '',
-            // statuses: '',
-            // stores: '',
-            // statuses: '',
-            // units: '',
-            // desc: [],
-            // status: [],
-            // store: [],
-            // check_state: [],
-            // qty: [],
-            // type: '',
-            // price: [],
-            // tax: [],
-            // unit: [],
-            // rate: [],
-            // unit_type: [],
-            // availabe_qty: [],
-            // all_products: '',
-            // jsonTreeData: '',
-            // type_of_tree: 1,
-            // total: [],
-
+            price_all:[],
+            price_part:[],
 
 
         };
@@ -236,105 +215,14 @@ export default {
         this.showtree('product');
         this.type = 'Sale';
         this.type_refresh = 'increment';
-        // this.$Progress.start();
-        // this.$store.dispatch("getAllnewsale");
-        // this.$Progress.finish();
+
     },
 
     methods: {
 
 
 
-        // showtree(df) {
 
-        //     let gf = this;
-        //     this.axios.post(`/tree_product`).then((response) => {
-        //         this.jsonTreeData = response.data.trees;
-
-
-        //         $('#treeview_json_product').jstree({
-        //             core: {
-        //                 themes: {
-        //                     responsive: false,
-        //                 },
-        //                 // so that create works
-        //                 check_callback: true,
-        //                 data: this.jsonTreeData,
-        //             },
-        //             types: {
-        //                 default: {
-        //                     icon: "fa fa-folder text-primary",
-        //                 },
-        //                 file: {
-        //                     icon: "fa fa-file  text-primary",
-        //                 },
-        //             },
-        //             checkbox: {
-        //                 three_state: false,
-
-        //             },
-        //             state: {
-        //                 key: "demo2"
-        //             },
-        //             search: {
-        //                 case_insensitive: true,
-        //                 show_only_matches: true
-        //             },
-        //             plugins: ["checkbox",
-        //                 "contextmenu",
-        //                 "dnd",
-        //                 "massload",
-        //                 "search",
-        //                 "sort",
-        //                 "state",
-        //                 "types",
-        //                 "unique",
-        //                 "wholerow",
-        //                 "changed",
-        //                 "conditionalselect"],
-        //             contextmenu: {
-        //                 items: contextmenu
-        //             },
-
-
-
-
-
-
-        //         }).on("changed.jstree", function (e, data) {
-
-
-        //             console.log(data.node.id);
-        //             $(`#Sale_product_tree${gf.indexselectedproduct}`).val(data.node.text)
-        //             $(`#Sale_product_tree_id${gf.indexselectedproduct}`).val(data.node.id)
-        //             //  modal-title-store
-        //             gf.get_product(data.node.id);
-
-
-
-
-
-
-
-        //         });
-
-        //     });
-
-        // },
-        // get_product(id) {
-        //     this.axios.post(`/sale/newsale/${id}`).then((responce) => {
-
-
-        //         // console.log(responce.responce.data.products.data);
-        //         this.all_products = responce.data.products.data;
-
-
-
-
-
-
-        //     });
-        // },
         calculate_price(price, qty, index) {
             // console.log(this.unit[index][2]);
 
@@ -353,7 +241,7 @@ export default {
         },
         list(page = 1) {
 
-            this.axios.post(`/sale/newsale?page=${page}`).then((responce) => {
+            this.axios.post(`/Warehouse/pricing?page=${page}`).then((responce) => {
 
 
                 console.log(responce.data);
@@ -399,6 +287,8 @@ export default {
             store,
             status,
             price,
+            price_all,
+            price_part,
             tax,
             index,
             total
@@ -413,6 +303,8 @@ export default {
             console.log(status, index);
             console.log(availabe_qty, index);
             console.log(price, index);
+            console.log(price_all, index);
+            console.log(price_part, index);
             console.log(tax, index);
             console.log(total, index);
 
@@ -429,6 +321,8 @@ export default {
                         this.unit[index] = unit;
                         this.tax[index] = tax;
                         this.price[index] = price;
+                        this.price_all[index] = price_all;
+                        this.price_part[index] = price_part;
                         this.desc[index] = desc;
                         this.store[index] = store;
                         this.status[index] = status;
@@ -443,16 +337,7 @@ export default {
             else if (this.check_state[index] == false) {
 
                 this.$delete(this.counts, index);
-                // this.$delete(this.product, index);
-                // this.$delete(this.qty, index);
-                // this.$delete(this.unit, index);
-                // this.$delete(this.desc, index);
-                // this.$delete(this.store, index);
-                // this.$delete(this.status, index);
-                // this.$delete(this.availabe_qty, index);
-                // this.$delete(this.price, index);
-                // this.$delete(this.tax, index);
-                // this.$delete(this.total, index);
+
 
             }
             console.log(this.counts, index);
@@ -464,6 +349,8 @@ export default {
             console.log(this.status, index);
             console.log(this.availabe_qty, index);
             console.log(this.price, index);
+            console.log(this.price_all, index);
+            console.log(this.price_part, index);
             console.log(this.tax, index);
             console.log(this.total, index);
         },

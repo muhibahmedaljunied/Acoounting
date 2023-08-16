@@ -542,7 +542,7 @@ export default {
     list(page = 1) {
 
       this.axios
-        .post(`/extra?page=${page}`)
+        .post(`/extra?page=${page}`,{ type: 'extra'})
         .then(({ data }) => {
           console.log(data);
           this.value_list = data.list;

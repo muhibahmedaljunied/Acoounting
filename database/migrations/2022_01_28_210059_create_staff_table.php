@@ -22,8 +22,8 @@ class CreateStaffTable extends Migration
 
            
 
-            $table->unsignedInteger('work_id');
-            $table->foreign('work_id')->references('id')->on('work_systems');
+            $table->unsignedInteger('work_type_id');
+            $table->foreign('work_type_id')->references('id')->on('work_types');
 
 
 

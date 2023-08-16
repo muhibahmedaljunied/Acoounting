@@ -16,8 +16,8 @@ class CreateExtraSanctionsTable extends Migration
 
             $table->Increments('id');
 
-            $table->unsignedInteger('staff_id');
-            $table->foreign('staff_id')->references('id')->on('staff');
+            // $table->unsignedInteger('staff_id');
+            // $table->foreign('staff_id')->references('id')->on('staff');
 
 
             $table->unsignedInteger('extra_type_id');
@@ -25,8 +25,10 @@ class CreateExtraSanctionsTable extends Migration
 
 
 
-            $table->unsignedInteger('extra_part_id');
-            $table->foreign('extra_part_id')->references('id')->on('extra_parts');
+            // $table->unsignedInteger('extra_part_id');
+            // $table->foreign('extra_part_id')->references('id')->on('extra_parts');
+            $table->unsignedInteger('part_id');
+            $table->foreign('part_id')->references('id')->on('parts');
 
             $table->unsignedInteger('sanction_discount_id');
             $table->foreign('sanction_discount_id')->references('id')->on('sanction_discounts');
@@ -35,7 +37,7 @@ class CreateExtraSanctionsTable extends Migration
             $table->integer('iteration')->nullable();
 
 
-            $table->integer('sanctions')->nullable();
+            $table->integer('sanction')->nullable();
 
        
             $table->timestamps();

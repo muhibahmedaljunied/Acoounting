@@ -59,8 +59,8 @@
 
                                         <td>
                                             <div id="factura_producto">
-                                                <select v-model="status[index]" name="type" id="type"
-                                                    class="form-control" required>
+                                                <select v-model="status[index]" name="type" id="type" class="form-control"
+                                                    required>
 
                                                     <option v-for="status in statuses" v-bind:value="status.id">
                                                         {{ status.name }}
@@ -71,8 +71,7 @@
 
                                         <td>
                                             <div id="factura_producto">
-                                                <input type="text" v-model="desc[index]" id="desc"
-                                                    class="form-control" />
+                                                <input type="text" v-model="desc[index]" id="desc" class="form-control" />
                                             </div>
                                         </td>
 
@@ -119,8 +118,8 @@
                                         </td>
 
                                         <td>
-                                            <input @input="calculate_price(price[index], qty[index], index)"
-                                                type="number" v-model="qty[index]" id="qty" class="form-control" />
+                                            <input @input="calculate_price(price[index], qty[index], index)" type="number"
+                                                v-model="qty[index]" id="qty" class="form-control" />
                                         </td>
 
 
@@ -212,8 +211,7 @@
                 <div class="row" style="font-size: 10pt">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered text-right m-t-30"
-                                style="width: 100%; font-size: x-small">
+                            <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
                                 <thead>
                                     <tr>
                                         <th style="width: 60px">#</th>
@@ -227,15 +225,15 @@
                                         <th style="width: 60px">العمليات</th>
                                     </tr>
                                 </thead>
-                                <!-- <tbody v-if="opening && opening.data.length > 0">
+                                <tbody v-if="opening && opening.data.length > 0">
                                     <tr v-for="(openings, index) in opening.data" :key="index">
                                         <td style="width: 40px">{{ index + 1 }}</td>
                                         <td style="width: 40px">{{ openings.product }}</td>
-                               
+
                                         <td style="width: 40px">
                                             {{ openings.store }}
                                         </td>
-                             
+
                                         <td style="width: 40px">{{ openings.status }}</td>
                                         <td style="width: 40px">{{ openings.desc }}</td>
 
@@ -247,14 +245,21 @@
                                                 @click="show_modal(openings.product_id)"
                                                 class="tn btn-danger btn-sm waves-effect btn-agregar">
                                                 <i class="fa fa-trash"></i></button>
-                                       
+
                                             <router-link to="/opening_supply"
-                                                class="tn btn-info btn-sm waves-effect btn-agregar"
-                                                data-toggle="tooltip" title="تعديل">
+                                                class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="tooltip"
+                                                title="تعديل">
                                                 <i class="fa fa-edit"></i></router-link>
                                         </td>
                                     </tr>
-                                </tbody> -->
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td align="center" colspan="7">
+                                            <h3> لايوجد بيانات </h3>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -274,6 +279,38 @@ export default {
     },
 
     mixins: [tree, operation],
+
+    data(){
+
+        return{
+
+                  all_products: '',
+            jsonTreeData: '',
+            type_of_tree: 1,
+            indexselected: '',
+            indexselectedproduct: '',
+            indexselectedstore: '',
+            last_nodes: '',
+            rank: 1,
+            parent: 0,
+            index: 0,
+
+            statusselected: 0,
+            unitselected: 0,
+            unitselectedname: '',
+            productselected: 0,
+            productselectedname: "",
+            storeselectedname: "",
+            storeselected: 0,
+            descselected: "",
+            operationselected: 0,
+            dateselected: 0,
+            typeselected: [],
+            checkselected: '',
+            moveselected: 0,
+
+        }
+    },
 
 
     mounted() {

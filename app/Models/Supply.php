@@ -10,7 +10,10 @@ class Supply extends Model
         'supplier_id','supplier_name','date'
     ];
 
-
+    public function stock()
+    {
+        return $this->morphMany(Stock::class, 'stockable');
+    }
     // public function scopeAll_where($query,$data,$type)
     // {
 

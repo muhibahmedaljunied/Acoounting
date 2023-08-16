@@ -60,7 +60,8 @@
                         :to="`/transfer_details/${transfer.id}`"
                         class="btn btn-success"
                       >
-                        تفاصيل
+                      <i class="fa fa-eye"></i>
+                    
                       </router-link>
                     </td>
                   </tr>

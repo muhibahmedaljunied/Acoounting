@@ -28,9 +28,9 @@
                   <tr>
                     <th class="wd-15p border-bottom-0">#</th>
                     <th class="wd-15p border-bottom-0">الاسم</th>
-                    <!-- <th class="wd-15p border-bottom-0">تاريخ البدء</th>
+                   <th class="wd-15p border-bottom-0">تاريخ البدء</th>
                     <th class="wd-15p border-bottom-0">تاريخ الانتهاء</th>
-                    <th class="wd-15p border-bottom-0">المده</th> -->
+                    <th class="wd-15p border-bottom-0">المده</th> 
   
   
                     <th class="wd-15p border-bottom-0">العمليات</th>
@@ -40,9 +40,9 @@
                   <tr v-for="(official_holidays, index) in official_holiday.data" :key="index">
                     <td>{{ index+ 1 }}</td>
                     <td>{{ official_holidays.name }}</td>
-                    <!-- <td>{{ official_holidays.start_date }}</td>
-                    <td>{{ official_holidays.end_date }}</td>
-                    <td>{{ official_holidays.duration }}</td> -->
+                     <td>{{ official_holidays.from_date }}</td>
+                    <td>{{ official_holidays.into_date }}</td>
+                    <td>{{ official_holidays.duration }}</td> 
                     <td>
                       <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
                       <button type="button" @click="delete_extra_type(official_holidays.id)" class="btn btn-sm waves-effect btn-danger">
@@ -102,8 +102,11 @@
 
                                   <th> الاسم</th>
 
+                                  <th> من</th>
+                                  <th> الي</th>
 
-                    
+                                  <th> المده</th>
+
                         
 
                               
@@ -118,7 +121,18 @@
 
                                   </td>
                             
-                            
+                                  <td>
+                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name" required />
+
+                                  </td>
+                                  <td>
+                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name" required />
+
+                                  </td>
+                                  <td>
+                                    <input v-model="name[index]" type="text" class="form-control" name="name" id="name" required />
+
+                                  </td>
                                
                              
 

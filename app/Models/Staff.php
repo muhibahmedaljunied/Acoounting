@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Staff extends Model
 {
+
     protected $fillable = [
         'name', 'personal_card', 'job_id', 'branch_id', 'department_id', 'phone',
         'salary_id', 'register_id', 'date', 'staff_status', 'qualification_id',
@@ -117,6 +118,13 @@ class Staff extends Model
 
         return $this->belongsTo(Nationality::class);
     }
+
+    public function staff_sanction()
+    {
+        return $this->hasMany(StaffSanction::class);
+    }
+
+
 
 
 

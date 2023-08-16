@@ -26,14 +26,15 @@ class CreateStoreProductsTable extends Migration
             $table->unsignedInteger('store_id')->unsigned()->nullable();
             $table->foreign('store_id')->references('id')->on('stores');
 
-            $table->unsignedInteger('unit_id')->unsigned()->nullable();
-            $table->foreign('unit_id')->references('id')->on('units');
+            // $table->unsignedInteger('unit_id')->unsigned()->nullable();
+            // $table->foreign('unit_id')->references('id')->on('units');
 
             $table->unsignedInteger('status_id')->unsigned()->nullable();
             $table->foreign('status_id')->references('id')->on('statuses');
             
             $table->string('desc')->nullable();
             $table->integer('quantity')->default(0);
+            $table->float('cost')->default(0);
 
             $table->string('description')->nullable();
 

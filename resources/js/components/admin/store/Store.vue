@@ -68,16 +68,37 @@
                       </div>
                       <div class="form-group">
                         <label for="store">اسم المخزن</label>
-                        <input v-model="text" type="text" name="store" id="store" class="form-control" required /><span style="color:red">{{ error_text[0] }}</span>
+                        <input v-model="text" type="text" name="store" id="store" class="form-control" required /><span
+                          style="color:red">{{ error_text[0] }}</span>
 
                       </div>
+
+                      <div class="form-group">
+                        <label for="cliente">اسم الحساب</label>
+
+
+                        <div class="custom-search">
+
+                          <input :id="'Store_account_tree'" type="text" class="custom-search-input">
+                          <input :id="'Store_account_tree_id'" type="hidden" readonly
+                                        class="custom-search-input">
+                          <button class="custom-search-botton" type="button" data-toggle="modal"
+                            data-target="#exampleModalaccount"> <i
+                              class="fa fa-plus-circle"></i></button>
+
+                        </div>
+
+
+
+                      </div>
+
 
 
 
                       <div class="form-group">
                         <label for="radio-example-one">متفرع </label>
 
-                        <input type="checkbox" name='fieldset2' v-model="status"  id="status">
+                        <input type="checkbox" name='fieldset2' v-model="status" id="status">
 
                         <input id='parent' type="hidden" />
 
@@ -101,13 +122,33 @@
         <!--/div-->
       </div>
 
-    
+
 
       <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             حذف
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="well" id="treeview_json_account"></div>
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -128,9 +169,9 @@ export default {
 
     return {
       d: 0,
-      error_text:'',
+      error_text: '',
       show: false,
-      status:false,
+      status: false,
       id: 1,
       parent: 0,
       store_id: [],
@@ -138,13 +179,14 @@ export default {
       store_name_en: [],
       rank: [],
       store: '',
-      status_product:false,
+      status_product: false,
       // store_first_level: '',
 
       tree: {
         child: [],
       },
-
+   
+      account: '',
       store_main: '',
       trees: "",
       // jsonTreeData: [],
@@ -155,113 +197,23 @@ export default {
     };
   },
 
+  mounted() {
+    this.type = 'Store';
+    this.showtree('account');
 
+  },
   created() {
 
-    this.type_of_tree=0;
+    this.type_of_tree = 0;
     localStorage.setItem('id', 0);
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'store');
-
-
     this.showtree('store');
 
   },
   methods: {
-    // showtree() {
-
-
-    //   this.axios.post(`/tree_store`).then((response) => {
-    //     this.trees = response.data.stores;
-    //     this.jsonTreeData = response.data.stores;
-    //     this.last_nodes = response.data.last_nodes;
-
-    //     // $(`#store_number_first_level`).val(response.data.last_nodes + 1);
-    //     $(`#store_number`).val(response.data.last_nodes + 1);
-
-
-    //     $('#treeview_json').jstree({
-    //       core: {
-    //         themes: {
-    //           responsive: false,
-    //         },
-    //         // so that create works
-    //         check_callback: true,
-    //         data: this.jsonTreeData,
-    //       },
-    //       types: {
-    //         default: {
-    //           icon: "fa fa-folder text-primary",
-    //         },
-    //         file: {
-    //           icon: "fa fa-file  text-primary",
-    //         },
-    //       },
-    //       checkbox: {
-    //         three_state: false,
-
-    //       },
-    //       state: {
-    //         key: "demo2"
-    //       },
-    //       search: {
-    //         case_insensitive: true,
-    //         show_only_matches: true
-    //       },
-    //       plugins: ["checkbox",
-    //         "contextmenu",
-    //         "dnd",
-    //         "massload",
-    //         "search",
-    //         "sort",
-    //         "state",
-    //         "types",
-    //         "unique",
-    //         "wholerow",
-    //         "changed",
-    //         "conditionalselect"],
-    //       contextmenu: {
-    //         items: contextmenu
-    //       },
-
-
-
-
-
-
-    //     }).on('rename_node.jstree', function (e, data) {
-    //       let currentObj = this;
-    //       const config = {
-    //         headers: {
-    //           "content-type": "multipart/form-data",
-    //         },
-    //       };
-
-
-    //       let formData = new FormData();
-    //       formData.append("text", data.node.text);
-
-    //       let url = `/store_rename_node/${data.node.id}`;
-    //       axios.post(url, formData).then((response) => {
-
-    //         currentObj.success = response.data.success;
-    //         currentObj.filename = "";
-    //         this.$router.go(0);
-    //       }).catch(function (error) {
-    //         currentObj.output = error;
-    //       });
-    //     }).on("changed.jstree", function (e, data) {
-
-
-    //     });
-
-    //   });
-    // },
-    // first_level(e) {
-    //   e.preventDefault();
-    //   addnode_first(this.store);
-
-    // },
+    
+   
     // add_store(e) {
 
 

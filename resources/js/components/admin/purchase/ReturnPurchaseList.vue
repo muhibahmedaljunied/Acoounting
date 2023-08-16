@@ -145,7 +145,7 @@
 
                       <div v-for="temx in return_details.units">
 
-                        <span v-if="temx.name == return_details.unit">
+                        <span v-if="temx.id == return_details.unit_id">
 
                           <span v-if="temx.unit_type == 1">
 

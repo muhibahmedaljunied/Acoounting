@@ -18,9 +18,9 @@ class CreateOfficialHolidaysTable extends Migration
 
             $table->string('name');
 
-            // $table->date('start_date');
-            // $table->date('end_date');
-            // $table->int('duration');
+            $table->date('from_date')->nullable();
+            $table->date('into_date')->nullable();
+            $table->int('duration')->nullable();
 
             // $table->int('number_of_days');
 

@@ -211,6 +211,11 @@
                           </td>
                         </tr>
                       </tbody>
+                      <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="3">لايوجد بياتات.</td>
+                  </tr>
+                </tbody>
                     </table>
                   </div>
                 </div>
@@ -508,7 +513,7 @@
                 <i class="fa fa-thumbs-down"></i>
               </button>
               <button type="button" class="btn btn-success" id="confirmar_vaciar" style="font-size: 12pt"
-                @click="delete_temporale">
+             >
                 <i class="fa fa-thumbs-up"></i>
               </button>
             </div>
@@ -534,7 +539,7 @@
                 <i class="fa fa-thumbs-down"></i>
               </button>
               <button type="button" class="btn btn-success" id="confirmar_vaciar" style="font-size: 12pt"
-                @click="delete_one_temporale()">
+              >
                 <i class="fa fa-thumbs-up"></i>
               </button>
             </div>

@@ -350,7 +350,7 @@ export default {
     list(page = 1) {
 
       this.axios
-        .post(`/allowance?page=${page}`)
+        .post(`/allowance?page=${page}`,{ type: 'allowance'})
         .then(({ data }) => {
           console.log(data);
           this.staffs = data.staffs;

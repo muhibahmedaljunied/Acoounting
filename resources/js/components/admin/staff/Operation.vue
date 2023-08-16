@@ -23,7 +23,9 @@
                           <a href="#tab2" class="nav-link" data-toggle="tab">التاخير</a>
                         </li> -->
 
-
+                        <li class="nav-item">
+                          <a href="#tab11" class="nav-link" data-toggle="tab"> اضافه موظف </a>
+                        </li>
                         <li class="nav-item">
                           <a href="#tab3" class="nav-link" data-toggle="tab"> الاضافي</a>
                         </li>
@@ -57,11 +59,9 @@
                         <li class="nav-item">
                           <a href="#tab10" class="nav-link" data-toggle="tab"> البدلات </a>
                         </li>
-                        <li class="nav-item">
-                          <a href="#tab11" class="nav-link" data-toggle="tab"> اضافه موظف </a>
-                        </li>
+                    
 
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                           <a href="#tab12" class="nav-link" data-toggle="tab"> جزاءات الغياب</a>
                         </li>
                         <li class="nav-item">
@@ -75,18 +75,8 @@
 
                         <li class="nav-item">
                           <a href="#tab15" class="nav-link" data-toggle="tab"> جزاءات الانصراف المبكر</a>
-                        </li>
-
-                        <li class="nav-item">
-                          <a href="#tab16" class="nav-link" data-toggle="tab"> طلب اجازه </a>
-                        </li>
-
-                    
-
-
-                        <!-- <li class="nav-item">
-                          <a href="#tab12" class="nav-link" data-toggle="tab"> الرواتب والبدلات </a>
                         </li> -->
+
 
                       </ul>
                     </div>
@@ -99,13 +89,6 @@
                         ">
                     <div class="tab-content">
 
-                      <!-- <div class="tab-pane active" id="tab1">
-                        <absence></absence>
-                      </div>
-                      <div class="tab-pane" id="tab2">
-                        <delay></delay>
-
-                      </div> -->
 
                       <div class="tab-pane" id="tab3">
                         <extra></extra>
@@ -113,9 +96,7 @@
                       <div class="tab-pane" id="tab4">
                         <discount></discount>
                       </div>
-                      <!-- <div class="tab-pane" id="tab5">
-                        <loan></loan>
-                      </div> -->
+                    
                       <div class="tab-pane" id="tab6">
                         <advance></advance>
                       </div>
@@ -136,7 +117,7 @@
                         <personal-information></personal-information>
                       </div>
 
-                      <div class="tab-pane" id="tab12">
+                      <!-- <div class="tab-pane" id="tab12">
                         <absence-sanction></absence-sanction>
                       </div>
 
@@ -153,7 +134,7 @@
 
                       <div class="tab-pane" id="tab15">
                         <leave-sanction></leave-sanction>
-                      </div>
+                      </div> -->
 
                      <!-- <div class="tab-pane" id="tab16">
                         <leave-sanction></leave-sanction>
@@ -196,10 +177,10 @@ import TransferBranch from "./Operation/TransferBranch";
 import PersonalInformation from "./Operation/PersonalInformation";
 import SalaryAllowance from "./Operation/SalaryAllowance";
 
-import DelaySanction from "./Operation/DelaySanction";
-import AbsenceSanction from "./Operation/AbsenceSanction";
-import ExtraSanction from "./Operation/ExtraSanction";
-import LeaveSanction from "./Operation/LeaveSanction";
+// import DelaySanction from "./Operation/DelaySanction";
+// import AbsenceSanction from "./Operation/AbsenceSanction";
+// import ExtraSanction from "./Operation/ExtraSanction";
+// import LeaveSanction from "./Operation/LeaveSanction";
 
 
 
@@ -217,10 +198,10 @@ export default {
     Allowance,
     PersonalInformation,
     SalaryAllowance,
-    DelaySanction,
-    AbsenceSanction,
-    ExtraSanction,
-    LeaveSanction
+    // DelaySanction,
+    // AbsenceSanction,
+    // ExtraSanction,
+    // LeaveSanction
 
 
   },

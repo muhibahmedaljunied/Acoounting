@@ -12,10 +12,9 @@ class ExtraSanction extends Model
 
     {
         return $query->where([
-            'staff_id' => $value['staff'],
             'extra_type_id' => $value['extra'],
             'iteration' => $value['iteration'],
-            'extra_part_id' => $value['extra_part'], 
+            'part_id' => $value['extra_part'], 
             'sanction_discount_id' => $value['discount_type'],
         ]);
 
@@ -24,12 +23,22 @@ class ExtraSanction extends Model
     }
 
 
-    public function extra()
+    // public function extra()
+    // {
+    //     return $this->hasMany(Extra::class);
+    // }
+
+    public function extra_detail()
     {
-        return $this->hasMany(Extra::class);
+        return $this->hasMany(ExtraDetail::class);
     }
 
 
+
+    public function staff_sanction()
+    {
+        return $this->morphMany(StaffSanction::class, 'sanctionable');
+    }
   
 
 }

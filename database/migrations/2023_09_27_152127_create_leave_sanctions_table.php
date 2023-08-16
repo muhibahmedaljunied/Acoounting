@@ -16,15 +16,18 @@ class CreateLeaveSanctionsTable extends Migration
 
             $table->Increments('id');
 
-            $table->unsignedInteger('staff_id');
-            $table->foreign('staff_id')->references('id')->on('staff');
+            // $table->unsignedInteger('staff_id');
+            // $table->foreign('staff_id')->references('id')->on('staff');
 
             $table->unsignedInteger('leave_type_id');
             $table->foreign('leave_type_id')->references('id')->on('leave_types');
 
             
-            $table->unsignedInteger('leave_part_id');
-            $table->foreign('leave_part_id')->references('id')->on('leave_parts');
+            // $table->unsignedInteger('leave_part_id');
+            // $table->foreign('leave_part_id')->references('id')->on('leave_parts');
+
+            $table->unsignedInteger('part_id');
+            $table->foreign('part_id')->references('id')->on('parts');
 
             $table->unsignedInteger('sanction_discount_id');
             $table->foreign('sanction_discount_id')->references('id')->on('sanction_discounts');
@@ -34,7 +37,7 @@ class CreateLeaveSanctionsTable extends Migration
 
             $table->integer('iteration')->nullable();
 
-            $table->integer('sanctions')->nullable();
+            $table->integer('sanction')->nullable();
 
        
             $table->timestamps();

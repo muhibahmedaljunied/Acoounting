@@ -1,11 +1,7 @@
 <?php
 
 namespace App\Traits\Unit;
-
 use DB;
-use Illuminate\Http\Request;
-use phpDocumentor\Reflection\PseudoTypes\LowercaseString;
-
 trait UnitsTrait
 {
 

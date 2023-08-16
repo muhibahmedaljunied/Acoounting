@@ -420,7 +420,7 @@ export default {
 
     list(page = 1) {
       this.axios
-        .post(`/discount?page=${page}`)
+        .post(`/discount?page=${page}`,{ type: 'discount'})
         .then(({ data }) => {
           this.value_list = data.list;
           this.discount_types = data.discount_types;

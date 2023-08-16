@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Attendance extends Model
 {
 
+
+    public function scopeDetails($query, $keyword)
+    {
+        if ($keyword != '') {
+            $query->join('attendance_details', 'attendance_details.attendance_id', '=', 'attendances.id');
+        }
+        return $query;
+    }
+
     public function staff()
     {
         return $this->belongsTo(Staff::class);

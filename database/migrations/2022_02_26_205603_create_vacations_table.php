@@ -24,7 +24,7 @@ class CreateVacationsTable extends Migration
 
             $table->string('status')->nullable();
             
-            $table->integer('total_days');
+            $table->integer('total_days')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();

@@ -11,7 +11,7 @@
         </div>
 
         <div class="card-body" id="printme">
-      
+
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -19,11 +19,11 @@
                   <th class="wd-15p border-bottom-0">الرقم الوظيفي</th>
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
                   <th class="wd-15p border-bottom-0">الراتب الاساسي</th>
-                  <th class="wd-15p border-bottom-0">بدلات الراتب</th>
+                  <th class="wd-15p border-bottom-0"> بدلات</th>
                   <th class="wd-15p border-bottom-0"> خصومات</th>
-
-                  <th class="wd-15p border-bottom-0"> ساعات اضافيه</th>
-                  <th class="wd-15p border-bottom-0">المبلغ المستحق</th>
+                  <th class="wd-15p border-bottom-0"> جزاءات</th>
+                  <th class="wd-15p border-bottom-0"> اضافي</th>
+                  <th class="wd-15p border-bottom-0"> الصافي</th>
                 </tr>
               </thead>
               <tbody v-if="list_data && list_data.data.length > 0">
@@ -50,12 +50,47 @@
                     </div>
                   </td>
 
+                  <td>
+
+                    <div v-for="(sanction, index) in salary.staff_sanction" :key="index" style="color:red;">
+                      <!-- {{ sanction.sanctionable.sanction }} : -->
+                      <span v-if="!sanction.sanctionable.extra_type_id">
+                        <span v-if="sanction.sanctionable.sanction != 0">
+                          {{ sanction.sanctionable.sanction }}
+
+                        </span>
+
+                      </span>
+
+
+                    </div>
+                  </td>
 
                   <td>
 
                     <div v-for="(extra, index) in salary.extra" :key="index" style="color:blue;">
-                      {{ extra.extra_type.name }} : {{ extra.number_hours }}
+                      <div v-for="(extra_sanc, index) in extra.extra_detail" :key="index">
+                        <!-- {{ extra_sanc.extra_sanction.sanction }} :  -->
+                        <span v-if="extra_sanc.extra_sanction.sanction != 0">
+                          {{ extra_sanc.extra_sanction.sanction }}
+
+                        </span>
+                       
+
+                      </div>
                     </div>
+                    <div v-for="(sanction, index) in salary.staff_sanction" :key="index" style="color:blue;">
+                          <!-- {{ sanction.sanctionable.sanction }} : -->
+                          <span v-if="sanction.sanctionable.extra_type_id">
+                            <span v-if="sanction.sanctionable.sanction != 0">
+                              {{ sanction.sanctionable.sanction }}
+
+                            </span>
+
+                          </span>
+
+
+                        </div>
                   </td>
 
 
@@ -73,13 +108,17 @@
                   </td>
 
                 </tr>
-                <tr>
+                <tr v-for="(salary, index) in list_data.data" :key="index">
                   <td colspan="2" style="color:red;font-size: x-large;">الاجمالي</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+
+                  <td style="color:green;font-size: x-large;">{{ salary.salary }}</td>
+                  <td style="color:green;font-size: x-large;">{{ salary.sum_allowance }}</td>
+                  <td style="color:green;font-size: x-large;">{{ salary.sum_discount }}</td>
+                  <td style="color:green;font-size: x-large;">{{ salary.sum_sanction }}</td>
+
+                  <td style="color:green;font-size: x-large;">{{ salary.sum_extra }}</td>
+                  <td style="color:green;font-size: x-large;">{{ salary.salary }}</td>
+
                 </tr>
               </tbody>
               <tbody v-else>

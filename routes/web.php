@@ -1,10 +1,17 @@
 <?php
 
+use App\Models\AbsenceSanction;
+use App\Models\DelaySanction;
+use App\Models\LeaveSanction;
+use App\Models\ExtraSanction;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use App\Models\Advance;
+use App\Models\StaffSanction;;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -65,8 +72,27 @@ use App\Models\Advance;
 // }
 // );
 // ---------------------------------------------------------------------------------------
+Route::get('/test-events', function () {
 
-Route::get('/test-event', 'AbsenceController@test');
+    $re = AbsenceSanction::find(1);
+    $re1 = DelaySanction::find(1);
+    $re2 = LeaveSanction::find(1);
+    $re3 = ExtraSanction::find(1);
+
+
+    $comment = new StaffSanction();
+    $comment->sanctionable()->associate($re3);
+    $comment->save();
+
+
+    // ---------------------------------------------------
+
+
+});
+
+// Route::get('/test-event', 'AbsenceController@test');
+Route::get('/test-event', 'AbsenceSanctionController@index');
+
 
 #######################customer##############################
 // Route::post('/dailys', 'DailyController@index');
@@ -76,28 +102,8 @@ Route::post('/store_daily', 'DailyController@store');
 
 
 // ################################################Cashing##################################
-// Route::post('/cash/newcash', 'CashController@index');
-
-// Route::post('/Cash/delete', 'CashController@destroy');
-
-// // Route::post('/add_Cash/{id}', 'CashController@store');
-
-// Route::post('/add_Cash', 'CashController@store');
-// Route::post('/paycash', 'CashController@payment');
-
-// Route::post('/cash/newcashsearch', 'CashController@search_new');
 
 
-// Route::post('/listcash', 'CashController@show');
-// Route::post('/cash_details/{id}', 'CashController@details');
-// Route::post('/invoice_cash/{id}', 'CashController@invoice_cash');
-// Route::post('/recive_cash/{id}', 'CashController@recive_cash');
-
-
-// Route::post('/Repocash', 'CashController@get_data_for_report');
-// Route::post('/repocash_by_customer', 'CashController@repocash_by_customer');
-// Route::post('/Repocashreturn', 'CashController@get_data_for_report');
-// Route::post('/repocashreturn_by_customer', 'CashController@repocashreturn_by_customer');
 
 
 ##################################################################################
@@ -149,4 +155,7 @@ Route::group(['middleware' => ['auth']], function () {
     require __DIR__ . '\account.php';
     require __DIR__ . '\warehouse.php';
     require __DIR__ . '\hr.php';
+    require __DIR__ . '\sale.php';
+    require __DIR__ . '\purchase.php';
+
 });

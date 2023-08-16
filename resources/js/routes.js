@@ -15,6 +15,8 @@ import SalaryDetails from './components/admin/staff/SalaryDetails'
 import AdministrativeStructure from './components/admin/staff/AdministrativeStructure'
 import BasicData from './components/admin/staff/BasicData'
 import Staff from './components/admin/staff/Staff'
+import Sanction from './components/admin/staff/Sanction'
+
 import Operation from './components/admin/staff/Operation'
 import StaffReport from './components/admin/staff/StaffReport'
 // ----------------------------------Category----------------------------------------------------------------------------------------------------------------------
@@ -178,6 +180,11 @@ const routes = [
   {
     path: '/staff/staff',
     component: Staff
+
+  },
+  {
+    path: '/staff/sanction',
+    component: Sanction
 
   },
   {

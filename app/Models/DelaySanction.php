@@ -15,9 +15,8 @@ class DelaySanction extends Model
 
 
         return $query->where([
-            'staff_id' => $value['staff'],
             'delay_type_id' => $value['delay'],
-            'delay_part_id' => $value['delay_part'],
+            'part_id' => $value['delay_part'],
             'iteration' => $value['iteration'],
             'sanction_discount_id' => $value['discount_type'],
             'discount' => $value['discount']
@@ -33,4 +32,10 @@ class DelaySanction extends Model
     {
         return $this->belongsToMany(Attendance::class);
     }
+
+    public function staff_sanction()
+    {
+        return $this->morphMany(StaffSanction::class, 'sanctionable');
+    }
+
 }

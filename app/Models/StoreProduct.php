@@ -17,10 +17,19 @@ class StoreProduct extends Model
         return $query->join('products', 'store_products.product_id', '=', 'products.id')
                      ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
                      ->join('stores', 'store_products.store_id', '=', 'stores.id');
-                    //  ->join('units', 'store_products.unit_id', '=', 'units.id');
-              
-
     }
+
+    // public function scopeWhereall($query)
+
+    // {
+
+    //     return $query->where([
+    //         'store_products.product_id' => $this->core->data['product'][$this->core->value],
+    //         'store_products.store_id' => $this->core->data['store'][$this->core->value],
+    //         'store_products.status_id' => $this->core->data['status'][$this->core->value],
+    //         'store_products.desc' => $this->core->data['desc'][$this->core->value]
+    //     ]);
+    // }
 
 
    

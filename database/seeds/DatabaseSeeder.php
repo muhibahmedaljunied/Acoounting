@@ -257,28 +257,28 @@ class DatabaseSeeder extends Seeder
 
         ]);
         //     // -----------------------------departments---------------------------
-        DB::table('departments')->insert([
-            'id'        => 1,
-            'name'    => 'حاسوب',
+        // DB::table('departments')->insert([
+        //     'id'        => 1,
+        //     'name'    => 'حاسوب',
 
-        ]);
-        DB::table('departments')->insert([
-            'id'        => 2,
-            'name'    => 'هندسه',
+        // ]);
+        // DB::table('departments')->insert([
+        //     'id'        => 2,
+        //     'name'    => 'هندسه',
 
-        ]);
+        // ]);
         //   -----------------------job----------------------------------
 
-        DB::table('jobs')->insert([
-            'id'        => 1,
-            'name'    => 'IT',
+        // DB::table('jobs')->insert([
+        //     'id'        => 1,
+        //     'name'    => 'IT',
 
-        ]);
-        DB::table('jobs')->insert([
-            'id'        => 2,
-            'name'    => 'computer',
+        // ]);
+        // DB::table('jobs')->insert([
+        //     'id'        => 2,
+        //     'name'    => 'computer',
 
-        ]);
+        // ]);
         //   -----------------------stafftype----------------------------------
 
         DB::table('staff_types')->insert([
@@ -317,13 +317,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('absence_types')->insert([
-            'id'        => 2,
+            'id'        => 3,
             'name'    => 'بعد عطله اسبوعيه',
 
         ]);
 
         DB::table('absence_types')->insert([
-            'id'        => 2,
+            'id'        => 4,
             'name'    => 'بعد اجازه رسميه',
 
         ]);
@@ -379,12 +379,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //   -----------------------delay_parts----------------------------------
-        DB::table('delay_parts')->insert([
+        DB::table('parts')->insert([
             'id'        => 1,
             'name'    => ' ربع ساعه',
 
         ]);
-        DB::table('delay_types')->insert([
+        DB::table('parts')->insert([
             'id'        => 2,
             'name'    => 'نص ساعه',
 
@@ -415,56 +415,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        //   -----------------------extra_parts----------------------------------
-
-        DB::table('extra_parts')->insert([
-            'id'        => 1,
-            'name'    => 'ربع ساعه',
-            'from_time'    => '1',
-            'into_time'    => '15',
-
-        ]);
-        DB::table('extra_parts')->insert([
-            'id'        => 2,
-            'name'    => 'نص ساعه',
-            'from_time'    => '1',
-            'into_time'    => '30',
-
-        ]);
-
-        DB::table('extra_parts')->insert([
-            'id'        => 3,
-            'name'    => 'ساعه',
-            'from_time'    => '1',
-            'into_time'    => '60',
-
-        ]);
-
-        //   -----------------------leave_parts----------------------------------
-
-        DB::table('leave_parts')->insert([
-            'id'        => 1,
-            'name'    => 'ربع ساعه',
-            'from_time'    => '1',
-            'into_time'    => '15',
-
-        ]);
-        DB::table('leave_parts')->insert([
-            'id'        => 2,
-            'name'    => 'نص ساعه',
-            'from_time'    => '1',
-            'into_time'    => '30',
-
-        ]);
-
-        DB::table('leave_parts')->insert([
-            'id'        => 3,
-            'name'    => 'ساعه',
-            'from_time'    => '1',
-            'into_time'    => '60',
-
-        ]);
-
+      
         //   -----------------------leave_types----------------------------------
 
         DB::table('leave_types')->insert([
@@ -538,37 +489,52 @@ class DatabaseSeeder extends Seeder
         DB::table('official_holidays')->insert([
             'id'        => 1,
             'name'    => 'عيد الفطر',
+            'from'      =>'',
+            'into'      =>''
+
 
         ]);
         DB::table('official_holidays')->insert([
             'id'        => 2,
             'name'    => 'عيد الاضحي',
+            'from'      =>'',
+            'into'      =>''
 
         ]);
         DB::table('official_holidays')->insert([
             'id'        => 3,
             'name'    => 'عطله اسبوعيه',
+            'from'      =>'',
+            'into'      =>''
 
         ]);
         DB::table('official_holidays')->insert([
             'id'        => 4,
             'name'    => 'عيد 22 مايو',
+            'from'      =>'',
+            'into'      =>''
 
         ]);
         DB::table('official_holidays')->insert([
             'id'        => 5,
             'name'    => 'عيد 14 اكتوبر',
+            'from'      =>'',
+            'into'      =>''
 
         ]);
 
         DB::table('official_holidays')->insert([
             'id'        => 6,
             'name'    => 'عيد 30 نوفمبر',
+            'from'      =>'',
+            'into'      =>''
 
         ]);
         DB::table('official_holidays')->insert([
             'id'        => 7,
             'name'    => 'عيد 26 سبتمبر',
+            'from'      =>'',
+            'into'      =>''
 
         ]);
         //   -----------------------extra_types----------------------------------
@@ -598,6 +564,8 @@ class DatabaseSeeder extends Seeder
             'duration' => 5,
 
         ]);
+        
+        // ---------------------------------------
         //   -----------------------personality----------------------------------
 
         DB::table('nationalities')->insert([
@@ -652,38 +620,75 @@ class DatabaseSeeder extends Seeder
             'quantity'    => '200000',
 
         ]);
-        // --------------------------------WorkSyatem-------------------------------------------
-        DB::table('work_types')->insert([
-            'id'        => 1,
-            'name'    => 'فتره',
 
+        // ----------------------------------------------------------------------------------
+
+        DB::table('sanction_discounts')->insert([
+            'id'        => 1,
+            'name'    => 'من الراتب',
 
 
         ]);
+
+        DB::table('sanction_discounts')->insert([
+            'id'        => 2,
+            'name'    => 'من الاضافي',
+
+
+        ]);
+
+
+
+        DB::table('sanction_discounts')->insert([
+            'id'        => 3,
+            'name'    => 'من الاجازه المرضيه',
+
+
+        ]);
+
+
+
+        DB::table('sanction_discounts')->insert([
+            'id'        => 4,
+            'name'    => 'من البدلات',
+
+
+        ]);
+
+
+        // --------------------------------WorkSyatem-------------------------------------------
 
         DB::table('work_types')->insert([
             'id'        => 2,
-            'name'    => 'فترتين',
+            'name'    => 'فتره صباجيه',
 
 
         ]);
 
+
         DB::table('work_types')->insert([
             'id'        => 3,
-            'name'    => 'دوام حراس امن',
+            'name'    => 'فتره مسايه',
 
 
         ]);
 
         DB::table('work_types')->insert([
             'id'        => 4,
-            'name'    => 'دوام  مدراء',
+            'name'    => 'دوام حراس امن',
 
 
         ]);
 
         DB::table('work_types')->insert([
             'id'        => 5,
+            'name'    => 'دوام  مدراء',
+
+
+        ]);
+
+        DB::table('work_types')->insert([
+            'id'        => 6,
             'name'    => 'دوام  رمضان',
 
 

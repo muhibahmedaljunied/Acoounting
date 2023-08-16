@@ -163,14 +163,8 @@ export default {
         };
     },
     mounted() {
-        // this.list();
         this.type_of_tree = 0;
-        // this.axios.post("/unit").then((response) => {
-        //     // console.log(response);
-        //     this.units = response.data.units;
-
-
-        // });
+        
     },
     created() {
         localStorage.setItem('id', 0);

@@ -21,54 +21,36 @@
                 <thead>
                   <tr>
                     <th class="wd-15p border-bottom-0">#</th>
-                    <th class="wd-15p border-bottom-0">المنتج</th>
-                    <th class="wd-15p border-bottom-0"> الحاله</th>
-                    <th>المواصفات والطراز</th>
-                    <th class="wd-15p border-bottom-0">الكميه المتوفره</th>
-                    <th class="wd-15p border-bottom-0"> المخزن</th>
-                    <!-- <th class="wd-15p border-bottom-0"> الرف</th> -->
-  
-  
+                    <th class="wd-15p border-bottom-0">رقم الحساب</th>
+                    <th class="wd-15p border-bottom-0"> اسم الحساب</th>
+                    <th> مدين</th>
+                    <th class="wd-15p border-bottom-0"> داين</th>
+                
   
                     <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
                   </tr>
                 </thead>
-                <tbody v-if="stocks && stocks.data.length > 0">
-                  <tr v-for="(stock, index) in stocks.data" :key="index">
+                <tbody v-if="value_list && value_list.data.length > 0">
+                  <tr v-for="(daily, index) in value_list.data" :key="index">
+           
                     <td>{{ index + 1 }}</td>
-                    <td>{{ stock.product }}</td>
-                    <td>{{ stock.status }}</td>
-                    <td>{{ stock.desc }}</td>
-                    <td>{{ stock.quantity }}</td>
-                    <td>{{ stock.store }}</td>
-                    <!-- <td>{{ stock.shelve_name }}</td> -->
-  
-                    <!-- <td>
-                      <button
-                        type="button"
-      
-                        class="btn btn-danger"
-                      >
-                        <i class="mdi mdi-account-minus"></i>
-                      </button>
-                      <router-link
-                        :to="{ name: 'edit_supply', params: { id: stock.id } }"
-                        class="btn btn-success"
-                        ><i class="mdi mdi-account-minus"></i
-                      ></router-link>
-                    </td> -->
+                    <td>{{ daily.account_id }}</td>
+                    <td>{{ daily.text }}</td>
+                    <td>{{ daily.debit }}</td>
+                    <td>{{ daily.credit }}</td>
+                
                   </tr>
                 </tbody>
                 <tbody v-else>
                   <tr>
                     <td align="center" colspan="7">
-                      <h3> المحزن فارغ </h3>
+                      <h3> لايوجد بيانات </h3>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            <pagination align="center" :data="stocks" @pagination-change-page="list"></pagination>
+            <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
           </div>
         </div>
       </div>
@@ -87,7 +69,7 @@
       return {
         // stock:'yes',
   
-        stocks: {
+        value_list: {
           type: Object,
           default: null,
         },
@@ -112,10 +94,10 @@
       },
       list(page = 1) {
         this.axios
-          .post(`/stock?page=${page}`)
+          .post(`/account_list?page=${page}`)
           .then(({ data }) => {
-            console.log(data);
-            this.stocks = data;
+            console.log(data.daily_details);
+            this.value_list = data.daily_details;
           })
           .catch(({ response }) => {
             console.error(response);

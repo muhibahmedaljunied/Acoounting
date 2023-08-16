@@ -8,9 +8,10 @@ class Payment extends Model
     protected $fillable = ['order_id','payment_info','payment_status'];
 
 
-      // public function paymentable()
-    // {
-    //     return $this->morphTo('App\Purchase','App\Sale');
-    // }
+      public function paymentable()
+    {
+        return $this->morphTo('App\Purchase','App\Sale');
+    }
 
+    
 }

@@ -6,7 +6,7 @@
 
         <div class="card-header pb-0">
 
-          <h2> البيانات الشخصيه</h2>
+          <h2> بيانات الموظف</h2>
 
         </div>
         <div class="card-body" id="printme">

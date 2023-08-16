@@ -16,9 +16,8 @@ class CreateExtraTypesTable extends Migration
         Schema::create('extra_types', function (Blueprint $table) {
 
             $table->Increments('id');
-            
             $table->string('name');
-
+            $table->string('code')->nullable();
            
             
             $table->timestamps();

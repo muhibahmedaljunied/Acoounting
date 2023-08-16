@@ -19,22 +19,25 @@ class CreateSaleDetailsTable extends Migration
             $table->unsignedInteger('sale_id');
             $table->foreign('sale_id')->references('id')->on('sales')->onDelete('cascade');
 
-            $table->unsignedInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-
+          
             $table->unsignedInteger('store_product_id');
             $table->foreign('store_product_id')->references('id')->on('store_products');
 
-            $table->unsignedInteger('store_id')->unsigned()->nullable();
-            $table->foreign('store_id')->references('id')->on('stores');
+            // $table->unsignedInteger('product_id');
+            // $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+
+            // $table->unsignedInteger('store_id')->unsigned()->nullable();
+            // $table->foreign('store_id')->references('id')->on('stores');
+
+            // $table->unsignedInteger('status_id')->unsigned()->nullable();
+            // $table->foreign('status_id')->references('id')->on('statuses');
+
+            // $table->string('desc')->nullable();
 
             $table->unsignedInteger('unit_id')->unsigned()->nullable();
             $table->foreign('unit_id')->references('id')->on('units');
 
-            $table->unsignedInteger('status_id')->unsigned()->nullable();
-            $table->foreign('status_id')->references('id')->on('statuses');
-
-            $table->string('desc')->nullable();
+        
             
             $table->text('product_name')->nullable();
             $table->integer('qty');

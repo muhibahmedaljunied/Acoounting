@@ -67,9 +67,11 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
+
 $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
+
 
 // ob_start();
 // echo 'I am in app.php inside bootstrap<br>';
@@ -79,6 +81,7 @@ $response = $kernel->handle(
 
 // echo "<pre> $dump </pre>";
 // die($request);
+
 
 $response->send();
 

@@ -79,35 +79,125 @@
                         <table class="table table-striped custom-table table-nowrap mb-0">
                             <thead>
                                 <tr id="name_day">
-                                    <!-- <th>الموظف</th>
-                                    <th v-for="days in number_of_days">{{days}}</th>
-                                    -->
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(attendance, index) in list_data.data" :key="index">
+
+                                <!-- <tr id="body_day" >
+                                  
+
+
+
+                                </tr> -->
+
+                                <tr id="body_day" v-for="(attendance, index) in list_data.data" :key="index">
+
                                     <td>
-                                        <h5 class="table-avatar">
-                                            <!-- <a class="avatar avatar-xs"><img alt="" src="assets/img/ecommerce/01.jpg"></a> -->
-                                            <a>{{ attendance.name }}</a>
-                                        </h5>
+
+
+                                        <div>
+                                            <a class="btn btn-link" href="javascript:void(0);" data-toggle="modal"
+                                                data-target="#attendance_info"> {{ attendance.name }}
+                                            </a>
+                                        </div>
+
+
                                     </td>
 
-                                    <td v-for="attends in attendance.attendance">
-
-                                        <a class="btn btn-info" v-if="attends.attendance_status == 1"
-                                            href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info">P
-                                        </a>
-
-                                        <a class="btn btn-danger" v-if="attends.attendance_status == 0"
-                                            href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info">A
-                                        </a>
 
 
-                                        <a class="btn btn-warning" v-if="attends.attendance_status == 2"
-                                            href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info">H
-                                        </a>
+
+
+                                    <td v-for="(atten, index1) in date_compare" :key="index1">
+
+                                        <template v-for="attends in attendance.attendance">
+
+                                            <div v-if="attends.attendance_date == atten">
+
+                                                <a class="btn btn-info" v-if="attends.attendance_final == 'complete'"
+                                                    href="javascript:void(0);" data-toggle="modal"
+                                                    data-target="#attendance_info">حاضر
+                                                </a>
+
+                                                <a v-else class="btn btn-danger" href="javascript:void(0);"
+                                                    data-toggle="modal" data-target="#attendance_info">A
+                                                </a>
+
+
+
+                                            </div>
+
+
+
+                                        </template>
+                                        <div v-for="attends_fri in full_day_name">
+                                            <a v-if="attends_fri == atten" class="btn btn-danger" href="javascript:void(0);"
+                                                data-toggle="modal" data-target="#attendance_info">عطله نهايه الاسبوع
+                                            </a>
+                                        </div>
+
+                                        <div v-for="holiday in official_holidays">
+
+                                            <div v-if="holiday.code == 1">
+                                                <a v-if="holiday.from_date == atten" class="btn btn-secondary"
+                                                    href="javascript:void(0);" data-toggle="modal"
+                                                    data-target="#attendance_info">عيد الفطر
+                                                </a>
+
+                                            </div>
+
+
+                                            <div v-if="holiday.code == 2">
+                                                <a v-if="holiday.from_date == atten" class="btn btn-warning"
+                                                    href="javascript:void(0);" data-toggle="modal"
+                                                    data-target="#attendance_info">عيد الاضحي
+                                                </a>
+                                            </div>
+
+                                            <div v-if="holiday.code == 3">
+                                                <a v-if="holiday.from_date == atten" class="btn btn-success"
+                                                    href="javascript:void(0);" data-toggle="modal"
+                                                    data-target="#attendance_info">عيد 22 مايو
+                                                </a>
+                                            </div>
+
+
+                                            <div v-if="holiday.code == 4">
+                                                <a v-if="holiday.from_date == atten" class="btn btn-primary"
+                                                    href="javascript:void(0);" data-toggle="modal"
+                                                    data-target="#attendance_info">عيد 14 اكتوبر
+                                                </a>
+                                            </div>
+
+                                            <div v-if="holiday.code == 5">
+                                                <a v-if="holiday.from_date == atten" class="btn btn-light"
+                                                    href="javascript:void(0);" data-toggle="modal"
+                                                    data-target="#attendance_info">عيد 30 نوفمبر
+                                                </a>
+                                            </div>
+
+                                            <div v-if="holiday.code == 6">
+                                                <a v-if="holiday.from_date == atten" class="btn btn-link"
+                                                    href="javascript:void(0);" data-toggle="modal"
+                                                    data-target="#attendance_info">عيد 26 سبتمبر
+                                                </a>
+                                            </div>
+
+
+
+                                        </div>
+
+
+
+
+
+
                                     </td>
+
+
+
+
 
 
 
@@ -141,6 +231,10 @@ export default {
                 default: null,
             },
 
+            official_holidays: '',
+            count: '',
+            date_compare: [],
+            full_day_name: [],
             staff_selected: 1,
             start_date: "",
             end_date: "",
@@ -153,7 +247,7 @@ export default {
             staff_typeselected: 1,
             vacation_typeselected: 1,
             staffselected: 1,
-         
+
             staff_on_change: "",
             vactions: "",
             jobs: "",
@@ -166,24 +260,6 @@ export default {
     mounted() {
         this.list();
 
-        // var days = function (month, year) {
-        //     return new Date(year, month, 0).getDate();
-        // };
-        // console.log("Days in July: " + days(7, 2012)); // July month
-        // console.log("<br>Days in September: " + days(9, 2012)); // September Month
-
-
-        // // -----------------
-
-        // const date_str = "07/20/2021";
-        // const date = new Date(date_str);
-        // const full_day_name = date.toLocaleDateString('default', { weekday: 'long' });
-        // // -> to get full day name e.g. Tuesday
-        // console.log(full_day_name);
-        // const short_day_name = date.toLocaleDateString('default', { weekday: 'short' });
-        // console.log(short_day_name);
-        // -> TO get the short day name e.g. Tue
-
     },
     methods: {
 
@@ -194,64 +270,115 @@ export default {
             //     var arrayLength = response.data.attendance.length
 
 
-             this.get_day_name();
+            // this.get_day_name();
 
             // });
 
 
 
         },
-        get_day_name() {
+        append_head(html_head, i, full_day_name, date) {
 
-            var date_obj =new Date();
-            
-            var month =   date_obj.getMonth();
-            var year =   date_obj.getFullYear();
+
+            if (full_day_name == 'Fri') {
+                this.full_day_name[i - 1] = date;
+                html_head = html_head + `<th>
+                                                <span>${i}</span> <hr> 
+                                                <span style='color:red'>${full_day_name}</span>
+                                                     
+                                            </th>`
+            } else {
+                html_head = html_head + `<th>
+                                                <span>${i}</span> <hr> 
+                                                <span>${full_day_name}</span>
+                                                     
+                                            </th>`
+            }
+
+            return html_head;
+
+        },
+        append_body(html_body, i, data) {
+
+            html_body = html_body + `<td>
+                                            <span style='color:red'>${data}</span>
+                                                     
+                                    </td>`
+
+
+            return html_body;
+
+
+
+        },
+        convert_date(year, month, i) {
+
+
+            if (i < 10) {
+
+                this.date_compare[i - 1] = `${year}-0${month}-0${i}`
+
+            } else {
+                this.date_compare[i - 1] = `${year}-0${month}-${i}`
+
+            }
+
+        },
+        get_day_name(data) {
+
+            var date_obj = new Date();
+            var month = 6
+            // alert(month);
+            var year = date_obj.getFullYear();
 
             var html_head = `<th>الموظف</th>`;
+            var html_body = ``;
+            this.count = new Date(year, month, 0).getDate();
+            
+          
 
-
-
-            for (var i = 1; i <= new Date(year, month, 0).getDate(); i++) {
+            for (var i = 1; i <= this.count; i++) {
 
 
                 const date_str = `${month}/${i}/${year}`
                 const date = new Date(date_str);
                 const full_day_name = date.toLocaleDateString('default', { weekday: 'short' });
 
-                if (full_day_name == 'Fri') {
-                    html_head = html_head + `<th>
-                                                <span>${i}</span> <hr> 
-                                                <span style='color:red'>${full_day_name}</span>
-                                                     
-                                            </th>`
-                } else {
-                    html_head = html_head + `<th>
-                                                <span>${i}</span> <hr> 
-                                                <span>${full_day_name}</span>
-                                                     
-                                            </th>`
-                }
+                this.convert_date(year, month, i);
+                html_head = this.append_head(html_head, i, full_day_name, this.date_compare[i - 1]);
+                html_body = this.append_body(html_body, i, data);
 
+           
 
             }
+          
             $(`#name_day`).html(html_head);
+
+
 
         },
         list(page = 1) {
 
-          this.get_day_name();
             this.axios
                 .post(`/attendance?page=${page}`)
                 .then(({ data }) => {
-                    console.log(data.attendance)
+                    // var split_start = data.list.start_time[index].split(":");
+
+                    console.log('attendance', data.list.data[0].attendance[0])
+
                     this.list_data = data.list;
+                    this.official_holidays = data.official_holidays;
+
                     this.staffs = data.staffs;
-                   
+
                 })
                 .catch(({ response }) => {
                     console.error(response);
                 });
+
+            console.log('muhibbbbbbbbbb', this.list_data);
+            this.get_day_name(this.list_data.data);
+
         },
 
     },

@@ -27,7 +27,7 @@
               <thead>
                 <tr>
                   <th class="wd-15p border-bottom-0">#</th>
-                  <th class="wd-15p border-bottom-0">الفتره</th>
+                  <!-- <th class="wd-15p border-bottom-0">الفتره</th> -->
                   <th class="wd-15p border-bottom-0">من</th>
                   <th class="wd-15p border-bottom-0">الي</th>
                   <th class="wd-15p border-bottom-0"> عدد الساعات </th>
@@ -40,7 +40,7 @@
                 <tr v-for="(period, index) in periods" :key="index">
 
                   <td>{{ index + 1 }}</td>
-                  <td>{{ period.name }}</td>
+                  <!-- <td>{{ period.name }}</td> -->
                   <td>{{ period.from_time }}</td>
                   <td>{{ period.into_time }}</td>
                   <td>{{ period.duration }}</td>
@@ -204,10 +204,10 @@ export default {
         type: Object,
         default: null,
       },
-      period_name:[],
-      from_period:[],
-      into_period:[],
-      duration_period:[],
+      period_name: [],
+      from_period: [],
+      into_period: [],
+      duration_period: [],
 
     };
   },
@@ -221,15 +221,24 @@ export default {
 
     Add_new() {
 
-      $this.Add({
-        count: this.counts,
-        type: this.type,
-        period_name: this.period_name,
-        from_period: this.from_period,
-        into_period: this.into_period,
-        duration_period: this.duration_period,
+      this.axios
+        .post(`/store_period`, {
+          count: this.counts,
+          type: this.type,
+          period_name: this.period_name,
+          from_period: this.from_period,
+          into_period: this.into_period,
+          duration_period: this.duration_period,
 
-      });
+        }
+        )
+        .then((response) => {
+          console.log(response);
+          toastMessage("تم الاضافه بنجاح");
+          // this.$router.go(0);
+        });
+
+
     },
     calc_duration(index) {
 

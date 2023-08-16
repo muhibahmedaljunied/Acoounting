@@ -21,7 +21,7 @@
             </div>
             <div class="col-md-2">
               <label for="status"> من تأريخ</label>
-             <input v-model="from_date" type="date" name="" id="" class="form-control">
+              <input v-model="from_date" type="date" name="" id="" class="form-control">
             </div>
 
             <div class="col-md-2">
@@ -38,13 +38,15 @@
                 <tr>
 
                   <th class="wd-15p border-bottom-0">اسم المؤظف</th>
-                  <th class="wd-15p border-bottom-0"> نوع الاضافي</th>
-                  <th class="wd-15p border-bottom-0"> عدد الساعات</th>
-        
                   <th class="wd-15p border-bottom-0">التأريخ </th>
                   <th class="wd-15p border-bottom-0">وقت البدء</th>
                   <th class="wd-15p border-bottom-0">وقت الانتعاء</th>
-                  <th class="wd-15p border-bottom-0"> ملاجظه</th>
+                  <th class="wd-15p border-bottom-0"> نوع الاضافي</th>
+                  <th class="wd-15p border-bottom-0"> عدد الساعات</th>
+                  <th class="wd-15p border-bottom-0" style="color:red"> الاجمالي</th>
+
+
+                  <!-- <th class="wd-15p border-bottom-0"> ملاجظه</th> -->
 
 
                   <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
@@ -53,22 +55,6 @@
               <tbody v-if="list_data && list_data.data.length > 0">
                 <tr v-for="(extra, index) in list_data.data" :key="index">
                   <td>{{ extra.name }}</td>
-
-                  <td>
-
-                    <div v-for="(extra_names, index) in extra.extra" :key="index">
-                      {{ extra_names.extra_type.name }}
-                    </div>
-                  </td>
-
-                  <td>
-
-                    <div v-for="(extra_number_hours, index) in extra.extra" :key="index">
-                      {{ extra_number_hours.number_hours }}
-                    </div>
-                  </td>
-
-
                   <td>
 
                     <div v-for="(extra_start_date, index) in extra.extra" :key="index">
@@ -77,7 +63,7 @@
                   </td>
 
 
-               
+
 
 
                   <td>
@@ -94,30 +80,38 @@
                     </div>
                   </td>
 
+                  <td>
+
+                    <div v-for="(extra_names, index) in extra.extra" :key="index">
+                      {{ extra_names.extra_type.name }}
+                    </div>
+                  </td>
+
+                  <td>
+
+                    <div v-for="(extra_number_hours, index) in extra.extra" :key="index">
+                      {{ extra_number_hours.number_hours }}
+                    </div>
+                  </td>
+
+                  <td style="color:red">
+
+                      {{ extra.sum_number_hours }}
+               
+                  </td>
 
 
 
 
-                  <!-- <td>{{ extra.extra }}</td> -->
-                  <!-- <td>{{ extra.start_date }}</td>
-                  <td>{{ extra.end_date }}</td>
-                  <td>{{ extra.start_time }}</td>
-                  <td>{{ extra.end_time }}</td> -->
-                  <td>{{ extra.note }}</td>
+
+                  <!-- <td>{{ extra.note }}</td> -->
 
 
-                  <!-- <td>
-                    <button type="button" @click="delete_extra(extra.id)" class="btn btn-danger">
-                      <i class="fa fa-trash"></i>
-                    </button>
-
-                    <router-link :to="{
-                      name: 'edit_extra',
-                      params: { id: extra.id },
-                    }" class="edit btn btn-success">
-                      <i class="fa fa-edit"></i>
-                    </router-link>
-                  </td> -->
+                 
+                </tr>
+                <tr>
+                  <td colspan="6" style="color:red;font-size: x-large;">الاجمالي</td>
+                  
                 </tr>
               </tbody>
               <tbody v-else>
@@ -142,8 +136,8 @@
                 </div>
                 <div class="col-md-4">
                   <div class="col-sm-12">
-                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto"
-                      id="buscar_producto" v-model="word_search" @input="get_search()" />
+                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto" id="buscar_producto"
+                      v-model="word_search" @input="get_search()" />
                   </div>
                 </div>
               </div>

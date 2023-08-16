@@ -3,37 +3,40 @@
 use Illuminate\Support\Facades\Route;
 #######################account##############################
 
-Route::post('/tree_account', 'AccountController@tree_account');
-Route::post('/account/{id}', 'AccountController@edit');
-Route::post('/delete_account/{id}', 'AccountController@destroy');
-Route::post('/store_account', 'AccountController@store');
-Route::post('/account_list/{id}', 'AccountController@AccountStatement');
-Route::post('/account_details_node/{id}', 'AccountController@account_details_node');
-Route::post('/account_update_node/{id}', 'AccountController@account_update_node');
-Route::post('/account_edit_node/{id}', 'AccountController@account_edit_node');
+Route::post('/tree_account', 'Account\AccountController@tree_account');
+Route::post('/account/{id}', 'Account\AccountController@edit');
+Route::post('/delete_account/{id}', 'Account\AccountController@destroy');
+Route::post('/store_account', 'Account\AccountController@store');
+Route::post('/account_list', 'Account\DailyController@index');
+Route::post('/account_list/{id}', 'Account\AccountController@AccountStatement');
+Route::post('/account_details_node/{id}', 'Account\AccountController@account_details_node');
+Route::post('/account_update_node/{id}', 'Account\AccountController@account_update_node');
+Route::post('/account_edit_node/{id}', 'Account\AccountController@account_edit_node');
 // ------------------------------------------
-Route::post('/account_store_first_level', 'AccountController@account_store_first_level');
+Route::post('/account_store_first_level', 'Account\AccountController@account_store_first_level');
 
 
-Route::post('/account_rename_node/{id}', 'AccountController@account_rename_node');
-
+Route::post('/account_rename_node/{id}', 'Account\AccountController@account_rename_node');
+// Route::post('/dailys', 'DailyController@index');
+Route::post('/store_daily', 'Account\DailyController@store');
 // ---------------------------------------------
-Route::post('/get_account_main/{id}', 'AccountController@get_account_main');
-Route::post('/get_account_name/{id}', 'AccountController@get_account_name');
-Route::post('/auditBalance', 'AccountController@auditBalance');
+Route::post('/get_account_main/{id}', 'Account\AccountController@get_account_main');
+Route::post('/get_account_name/{id}', 'Account\AccountController@get_account_name');
+Route::post('/get_account_store/{id}', 'Account\AccountController@get_account');
+Route::post('/auditBalance', 'Account\AccountController@auditBalance');
 
 // --------------------------------banks------------------------------------------
-Route::post('/banks', 'BankController@show');
+Route::post('/banks', 'Account\BankController@show');
 // --------------------------------Currencies------------------------------------------
-Route::post('/currencies', 'CurrencyController@show');
+Route::post('/currencies', 'Account\CurrencyController@show');
 // --------------------------------treasuries------------------------------------------
-Route::post('/treasuries', 'TreasuryController@show');
+Route::post('/treasuries', 'Account\TreasuryController@show');
 // --------------------------------type_expence------------------------------------------
-Route::post('/type_expence', 'TypeExpenceController@show');
+Route::post('/type_expence', 'Account\TypeExpenceController@show');
 // --------------------------------type_income------------------------------------------
-Route::post('/type_income', 'TypeIncomeController@show');
+Route::post('/type_income', 'Account\TypeIncomeController@show');
 // --------------------------------expence_type------------------------------------------
-Route::post('/expence_type', 'ExpenceTypeController@show');
+Route::post('/expence_type', 'Account\ExpenceTypeController@show');
 
 
 
