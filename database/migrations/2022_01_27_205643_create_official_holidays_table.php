@@ -11,22 +11,25 @@ class CreateOfficialHolidaysTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('official_holidays', function (Blueprint $table) {
+
+     public function up()
+     {
+         Schema::create('official_holidays', function (Blueprint $table) {
+            
             $table->Increments('id');
 
             $table->string('name');
 
             $table->date('from_date')->nullable();
             $table->date('into_date')->nullable();
-            $table->int('duration')->nullable();
+            $table->integer('duration')->nullable();
 
             // $table->int('number_of_days');
 
             $table->timestamps();
-        });
-    }
+         });
+     }
+
 
     /**
      * Reverse the migrations.

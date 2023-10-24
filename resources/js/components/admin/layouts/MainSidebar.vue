@@ -321,7 +321,13 @@
 
           <ul class="slide-menu">
             <li>
-              <router-link class="slide-item" to="/staff/sanction">الجزاء والعقوبات</router-link>
+              <router-link class="slide-item" to="/staff/sanction">لوائح الجزاءات والعقوبات  والحوافز</router-link>
+            </li>
+          </ul>
+
+            <ul class="slide-menu">
+            <li>
+              <router-link class="slide-item" to="/staff/staff_sanction"> جزاءات وحوافز الموظف</router-link>
             </li>
           </ul>
 

@@ -5,10 +5,6 @@ namespace App\Http\Controllers\Warehouse;
 use App\Models\Store;
 use App\Models\StoreAccount;
 use Illuminate\Http\Request;
-use App\Exports\StoreExport;
-use App\Imports\StoreImport;
-use Maatwebsite\Excel\Facades\Excel;
-use Storage;
 use DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -69,31 +65,38 @@ class StoreController extends Controller
         
         // -------------------------------------------------------
 
-        $Store = new Store();
-        $Store->text = $request->post('text');
-        if($request->post('parent') != 0){
-            $Store->parent_id= $request->post('parent');
-        }
-     
-        $Store->rank = $request->post('rank');
-        $Store->status = $request->post('status');
-        $Store->save();
-
-
-        $Store_account = new StoreAccount();
-        $Store_account->store_id = $request->post('store_id');
-        $Store_account->account_id = $request->post('account');
-        $Store_account->save();
-
-
-        // Cache::forget(['tree_store_stores','tree_store_last_nodes']);
-
+        $this->add_store($request);
+        $this->add_store_account($request);
+   
         Cache::forget('tree_store_stores');
         Cache::forget('tree_store_last_nodes');
 
 
 
         return response()->json($request);
+    }
+    public function add_store($request){
+
+        $Store = new Store();
+        $Store->text = $request['text'];
+        if($request['parent'] != 0){
+            $Store->parent_id= $request['parent'];
+        }
+     
+        $Store->rank = $request['rank'];
+        $Store->status = $request['status'];
+        $Store->save();
+
+
+
+    }
+
+    public function add_store_account($request){
+
+        $Store_account = new StoreAccount();
+        $Store_account->store_id = $request['store_id'];
+        $Store_account->account_id = $request['account'];
+        $Store_account->save();
     }
     public function Store_details_node($id)
     {
@@ -142,43 +145,6 @@ class StoreController extends Controller
     
         $data = Store::find($id);
         return response()->json(['data' => $data]);
-    }
-
-
-
-
-
-    public function create()
-    {
-        //
-    }
-
-
-
-    // public function Export( )      
-    // {      
-    //     $filename = '-store.xlsx';
-    //     Excel::store(new StoreExport, $filename);
-    //     $fullPath = Storage::disk('local')->path($filename);
-
-    //     return response()->json([
-    //         'data' => $fullPath,
-    //         'message' => 'stores are successfully exported.'
-    //     ], 200);
-
-    // }
-
-    // public function Import(Request $request)
-    // {
-
-    //     $filename = '-store.xlsx';
-    //     return response()->json(Excel::import(new StoreImport, Storage::disk('local')->path($filename)));
-    // }
-
-
-
-    public function show($id)
-    {
     }
 
 

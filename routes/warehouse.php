@@ -21,7 +21,7 @@ Route::post('/get_product_main/{id}', 'Warehouse\ProductController@get_producte_
 Route::post('/get_product_name/{id}', 'Warehouse\ProductController@get_product_name');
 Route::post('/delete_product/{id}', 'Warehouse\ProductController@destroy');
 Route::post('/productsearch', 'Warehouse\ProductController@search');
-######################################################################
+//----------------------------------------------------------------------
 
 Route::post('/get_unit/{id}', 'Warehouse\UnitController@show');
 Route::post('/unit', 'Warehouse\UnitController@index');
@@ -31,7 +31,7 @@ Route::post('/update_unit/{id}', 'Warehouse\UnitController@upate');
 Route::post('/unit/{id}', 'Warehouse\UnitController@edit');
 Route::post('/delete_unit/{id}', 'Warehouse\UnitController@destroy');
 
-########################################################################
+//------------------------------------------------------------------------
 Route::post('/supply', 'Warehouse\SupplyController@index');
 
 // Route::post('/supplyreturn/check_qty/{id}', 'SupplyReturnController@check_qty');
@@ -60,9 +60,7 @@ Route::post('/returnsupply_details/{id}', 'Warehouse\SupplyReturnController@retu
 Route::post('/invoice_return_supply/{id}', 'Warehouse\SupplyReturnController@return_invoice');
 Route::post('/recive_return_supply/{id}', 'Warehouse\SupplyReturnController@return_recive');
 
-
-
-##########################Supplier#######################################
+//--------------------------Supplier---------------------------------------
 
 Route::post('/Cash/delete', 'CashController@destroy');
 
@@ -111,7 +109,7 @@ Route::post('/returncash_details/{id}', 'Warehouse\CashReturnController@return_d
 Route::post('/invoice_return_cash/{id}', 'Warehouse\CashReturnController@return_invoice');
 Route::post('/recive_return_cash/{id}', 'Warehouse\CashReturnController@return_recive');
 
-####################################################################
+//--------------------------------------------------------------------
 
 Route::post('/tree_store', 'Warehouse\StoreController@tree_store');
 
@@ -139,7 +137,7 @@ Route::post('/storesearch', 'Warehouse\StoreController@search');
 Route::post('/StoreExport', 'Warehouse\StoreController@Export');
 Route::post('/StoreImport', 'Warehouse\StoreController@Import');
 
-####################################################################
+//--------------------------------------------------------------------
 Route::post('/status', 'Warehouse\StatusController@index');
 Route::post('/store_status', 'Warehouse\StatusController@store');
 Route::post('/update_status/{id}', 'Warehouse\StatusController@update');
@@ -168,7 +166,7 @@ Route::post('/get_product', 'Warehouse\TransferController@get_product');
 Route::post('/transfersearch', 'Warehouse\TransferController@search');
 Route::post('/listtransfer', 'Warehouse\TransferController@index');
 Route::post('/details_transfer/{id}', 'Warehouse\TransferController@details_transfer');
-################################################Supply##################################
+//------------------------------------------------Supply----------------------------------
 Route::post('/supply/newsupply', 'Warehouse\SupplyController@index');
 
 Route::post('/Supply/delete', 'Warehouse\SupplyController@destroy');

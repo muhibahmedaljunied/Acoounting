@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Traits\GeneralTrait;
-use App\Traits\Temporale\TemporaleTrait;
+
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\Details\DetailsTrait;
 use App\Models\Cash;
@@ -25,7 +25,7 @@ use DB;
 
 class CashController extends Controller
 {
-    use GeneralTrait, TemporaleTrait, DetailsTrait, InvoiceTrait;
+    use GeneralTrait, DetailsTrait, InvoiceTrait;
 
     public function __construct(
         protected StockRepositoryInterface $stock,
@@ -41,7 +41,13 @@ class CashController extends Controller
     {
         $products = StoreProduct::where('store_products.quantity', '!=', 0)
             ->joinall()
-            ->select('products.*', 'products.text as product', 'products.rate', 'stores.text as store', 'statuses.name as status', 'store_products.quantity as availabe_qty', 'store_products.*')
+            ->select('products.*', 
+            'products.text as product', 
+            'products.rate', 
+            'stores.text as store', 
+            'statuses.name as status', 
+            'store_products.quantity as availabe_qty', 
+            'store_products.*')
             ->paginate(100);
         $this->units($products);
 
@@ -65,7 +71,11 @@ class CashController extends Controller
 
         $products = StoreProduct::where('products.text', 'LIKE', '%' . $request->post('word_search') . '%')
             ->joinall()
-            ->select('products.*', 'products.text as product', 'statuses.name as status', 'store_products.quantity as availabe_qty', 'store_products.*')
+            ->select('products.*', 
+            'products.text as product', 
+            'statuses.name as status', 
+            'store_products.quantity as availabe_qty', 
+            'store_products.*')
             ->paginate(1000);
 
 
@@ -101,61 +111,114 @@ class CashController extends Controller
 
         return response()->json(['message' => $request->all()]);
     }
+    // public function payment(Request $request)
+    // {
+
+
+    //     $cash_id =  $this->stock->add($request->all());
+    //     // -----------------------------------------------here ended-----------------------------------
+    //     $temporale = $this->check_temporale($request->post('type'));
+    //     // return response()->json(['message' => $temporale]);
+    //     if ($temporale != 0) {
+
+    //         foreach ($temporale as $value) {
+
+    //             $stock_f = 0;
+    //             $store_product_f = 0;
+    //             $store_product_f = $this->refresh_store(
+    //                 data: $value,
+    //             );
+    //             // return response()->json(['message' => $store_product_f]);
+    //             $id_store_product = $this->get($value);  //this get data from store_products
+
+    //             //----------------------------------------------------------------------------------------------------------------------------------------- 
+    //             if ($store_product_f == 0) {
+
+    //                 $id_store_product = $this->init_store(
+    //                     data: $value,
+    //                 );
+    //             }
+
+    //             $this->details->init_details(
+    //                 id: $cash_id,
+    //                 id_store_product: $id_store_product,
+    //                 data: $value,
+    //             ); // this make initial for details tables
+
+    //             $stock_f = $this->refresh_stock(
+    //                 id: $cash_id,
+    //                 data: $value,
+    //             ); // this make update for stock table
+
+    //             if ($stock_f == 0) {
+
+    //                 $this->init_stock(
+    //                     id: $cash_id,
+    //                     data: $value,
+    //                 ); //this make intial for stock table if it is empty 
+    //             }
+    //         }
+
+    //         Temporale::where('type_process', $request->post('type'))->delete(); //this removes data from temporale table after moving it 
+    //         return response()->json(['message' => 'success']);
+    //     }
+
+    //     return response()->json(['message' => 'faild']);
+    // }
+
+
     public function payment(Request $request)
     {
 
+       
+    //    dd($request->all());
+        $this->core->data = $request->all();
+        $this->core->discount = $request['discount'] * $request['grand_total'] / 100;
+ 
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
+     
+            $this->stock->add();
+         
+         
+         
+            foreach ($request->post('count') as $value) {
 
-        $cash_id =  $this->stock->add($request->all());
-        // -----------------------------------------------here ended-----------------------------------
-        $temporale = $this->check_temporale($request->post('type'));
-        // return response()->json(['message' => $temporale]);
-        if ($temporale != 0) {
+             
+                $this->core->value  = $value;
+               
+                $this->stock->decode_unit()->convert_qty(); 
+           
+                $this->sale->store();// this handle data in store_product table
+   
+                $this->details->init_details(); // this make initial for details table
+  
+                $this->sale->stock();// this handle data in stock table
 
-            foreach ($temporale as $value) {
-
-                $stock_f = 0;
-                $store_product_f = 0;
-                $store_product_f = $this->refresh_store(
-                    data: $value,
-                );
-                // return response()->json(['message' => $store_product_f]);
-                $id_store_product = $this->get($value);  //this get data from store_products
-
-                //----------------------------------------------------------------------------------------------------------------------------------------- 
-                if ($store_product_f == 0) {
-
-                    $id_store_product = $this->init_store(
-                        data: $value,
-                    );
-                }
-
-                $this->details->init_details(
-                    id: $cash_id,
-                    id_store_product: $id_store_product,
-                    data: $value,
-                ); // this make initial for details tables
-
-                $stock_f = $this->refresh_stock(
-                    id: $cash_id,
-                    data: $value,
-                ); // this make update for stock table
-
-                if ($stock_f == 0) {
-
-                    $this->init_stock(
-                        id: $cash_id,
-                        data: $value,
-                    ); //this make intial for stock table if it is empty 
-                }
             }
 
-            Temporale::where('type_process', $request->post('type'))->delete(); //this removes data from temporale table after moving it 
-            return response()->json(['message' => 'success']);
+            $this->payment_sale($this->core);
+      
+            $this->sale->daily();
+
+            // dd('dddddddd');
+         
+            // ------------------------------------------------------------------------------------------------------
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            
+     
+            return response([
+                'message' => "cash created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
-
-        return response()->json(['message' => 'faild']);
     }
-
 
     public function create()
     {
@@ -243,13 +306,23 @@ class CashController extends Controller
             $repocash =  CashDetail::where($all)
                 ->whereBetween('date', array($request->post('from_date'), $request->post('to_date')))
                 ->joincash()
-                ->select('cashes.*', 'cash_details.*', 'cash_details.qty as qty', 'products.name as product_name', 'statuses.name as status', 'stores.code')
+                ->select('cashes.*', 
+                'cash_details.*', 
+                'cash_details.qty as qty', 
+                'products.name as product_name', 
+                'statuses.name as status', 
+                'stores.code')
                 ->get();
         } else {
 
             $repocash =  CashDetail::whereBetween('date', array($request->post('from_date'), $request->post('to_date')))
                 ->joincash()
-                ->select('cashes.*', 'cash_details.*', 'cash_details.qty as qty', 'products.name as product_name', 'statuses.name as status', 'stores.code')
+                ->select('cashes.*', 
+                'cash_details.*', 
+                'cash_details.qty as qty', 
+                'products.name as product_name', 
+                'statuses.name as status', 
+                'stores.code')
                 ->get();
         }
 

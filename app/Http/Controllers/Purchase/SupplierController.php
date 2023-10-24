@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Purchase;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\Purchase;
-use App\Exports\SupplierExport;
-use App\Imports\SupplierImport;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 
@@ -41,15 +38,7 @@ class SupplierController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
     
-    }
 
 
  

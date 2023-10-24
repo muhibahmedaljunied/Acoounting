@@ -106,47 +106,47 @@ trait GeneralTrait
     }
 
 
-    public function payment_purchase($core)
-    {
+    // public function payment_purchase($core)
+    // {
 
-        $payment_status = 'pendding';
-        $payment_info = $core->data['type'];
-        if ($core->data['paid'] == 0) { $payment_status = 'pendding';}
-        if ($core->data['paid'] != 0 && $core->data['remaining'] != 0) {$payment_status = 'Partially';}
-        ($core->data['remaining'] == 1) ? $payment_info = $core->data['type'] : $payment_info = 'credit' ;$payment_status = 'paiding';
-        // -----------------------------------------------------------------------------------------
+    //     $payment_status = 'pendding';
+    //     $payment_info = $core->data['type'];
+    //     if ($core->data['paid'] == 0) { $payment_status = 'pendding';}
+    //     if ($core->data['paid'] != 0 && $core->data['remaining'] != 0) {$payment_status = 'Partially';}
+    //     ($core->data['remaining'] == 1) ? $payment_info = $core->data['type'] : $payment_info = 'credit' ;$payment_status = 'paiding';
+    //     // -----------------------------------------------------------------------------------------
 
-        $payment = PaymentPurchase::create(
-            [
-                'purchase_id' => $core->purchase_id,
-                'payment_info' => $payment_info,
-                'payment_status' => $payment_status,
-                'paid' => $core->data['paid'],
-                'remaining' => $core->data['remaining'],
+    //     $payment = PaymentPurchase::create(
+    //         [
+    //             'purchase_id' => $core->purchase_id,
+    //             'payment_info' => $payment_info,
+    //             'payment_status' => $payment_status,
+    //             'paid' => $core->data['paid'],
+    //             'remaining' => $core->data['remaining'],
 
-            ]
-        );
+    //         ]
+    //     );
 
-        return $payment->id;
-    }
-    public function payment_sale($core)
-    {
+    //     return $payment->id;
+    // }
+    // public function payment_sale($core)
+    // {
 
 
-        $payment_status = 'pendding';
-        $payment_info = $core->data['type'];
-        if ($core->data['paid'] == 0) { $payment_status = 'pendding';}
-        if ($core->data['paid'] != 0 && $core->data['remaining'] != 0) {$payment_status = 'Partially';}
-        ($core->data['remaining'] == 1) ? $payment_info = $core->data['type'] : $payment_info = 'credit' ;$payment_status = 'paiding';
-        $payment = new PaymentSale();
-        $payment->sale_id = $core->sale_id;
-        $payment->payment_info = $payment_info;
-        $payment->payment_status = $payment_status;
-        $payment->paid = $core->data['paid'];
-        $payment->remaining = $core->data['remaining'];
-        $payment->save();
-        return $payment->id;
-    }
+    //     $payment_status = 'pendding';
+    //     $payment_info = $core->data['type'];
+    //     if ($core->data['paid'] == 0) { $payment_status = 'pendding';}
+    //     if ($core->data['paid'] != 0 && $core->data['remaining'] != 0) {$payment_status = 'Partially';}
+    //     ($core->data['remaining'] == 1) ? $payment_info = $core->data['type'] : $payment_info = 'credit' ;$payment_status = 'paiding';
+    //     $payment = new PaymentSale();
+    //     $payment->sale_id = $core->sale_id;
+    //     $payment->payment_info = $payment_info;
+    //     $payment->payment_status = $payment_status;
+    //     $payment->paid = $core->data['paid'];
+    //     $payment->remaining = $core->data['remaining'];
+    //     $payment->save();
+    //     return $payment->id;
+    // }
 
 
     public function unit($data, $value)

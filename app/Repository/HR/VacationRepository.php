@@ -1,13 +1,21 @@
 <?php
-
 namespace App\Repository\HR;
-use App\Models\Vacation;
 use App\RepositoryInterface\HRRepositoryInterface;
+use App\Services\CoreStaffService;
+use App\Models\Vacation;
+
+
 use DB;
 
 class VacationRepository implements HRRepositoryInterface
 {
+    // public $core;
+    public function __construct(public CoreStaffService $core)
+    {
 
+        // $this->core = app(CoreStaffService::class);
+        
+    }
     function Sum($data)
     {
 
@@ -23,28 +31,23 @@ class VacationRepository implements HRRepositoryInterface
     }
     function add(...$list_data)
     {
-
-        $attendance_id  = 0;
-        $request = $list_data['request'];
-        $value = $list_data['value'];
-
-
-      
+    
         $temporale = new Vacation();
-        $temporale->staff_id = $request['staff'][$value];
-        $temporale->vacation_type_id = $request['leave_type'][$value];
-        $temporale->start_date = $request['start_date'][$value];
-        $temporale->end_date = $request['end_date'][$value];
-        $temporale->total_days = $request['days'][$value];
+        $temporale->staff_id = $this->core->data['staff'][$this->core->value];
+        $temporale->vacation_type_id = $this->core->data['leave_type'][$this->core->value];
+        $temporale->start_date = $this->core->data['start_date'][$this->core->value];
+        $temporale->end_date = $this->core->data['end_date'][$this->core->value];
+        $temporale->total_days = $this->core->data['days'][$this->core->value];
 
         $temporale->save();
-        return $temporale->id;
+        $this->core->id = $temporale->id;
     }
 
-    public function update($request,$value=null)
+    public function update()
     {
-        $temporale_f = tap(Advance::whereAdvance($request))
-        ->update(['quantity' => $request['qty'][$value]])
+    
+        $temporale_f = tap(Vacation::whereLeave($this->core->data))
+        ->update(['total_days' => $this->core->data['days'][$this->core->value]])
         ->get('id');
 
         return $temporale_f;

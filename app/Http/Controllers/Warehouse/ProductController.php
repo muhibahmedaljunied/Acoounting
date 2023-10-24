@@ -3,26 +3,16 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Models\Product;
-use App\Models\store;
-use App\Models\ProductUnit;
-use App\Exports\ProductExport;
-use App\Imports\ProductImport;
-use Maatwebsite\Excel\Facades\Excel;
-use Storage;
+use App\Services\Product\ProductService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
-
+use DB;
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function __construct()
+ 
+    public function __construct(protected ProductService $product)
     {
         // $this->middleware('Admin');
 
@@ -30,8 +20,6 @@ class ProductController extends Controller
     }
     public function index(Request $request)
     {
-
-
     }
 
     public function search(Request $request)
@@ -50,16 +38,14 @@ class ProductController extends Controller
     {
 
 
-        $products = Cache::rememberForever('tree_product_products',function(){
+        $products = Cache::rememberForever('tree_product_products', function () {
 
             return Product::where('parent_id', null)->with('children')->get();
-
         });
 
-        $last_nodes = Cache::rememberForever('tree_product_last_nodes',function(){
+        $last_nodes = Cache::rememberForever('tree_product_last_nodes', function () {
 
             return Product::where('parent_id', null)->select('products.*')->max('id');
-
         });
 
         return response()->json(['trees' => $products, 'last_nodes' => $last_nodes]);
@@ -90,69 +76,15 @@ class ProductController extends Controller
 
         // -------------------------------------------------------
 
-
-        // return response()->json($request->all());
-        $file_name = '';
-        if ($request->file('image') != 0) {
-
-
-            $file = $request->file('image');
-            $upload_path = public_path('assets/upload');
-            $file_name = $file->getClientOriginalName();
-            $generated_new_name = time() . '.' . $file->getClientOriginalExtension();
-            $file->move($upload_path, $file_name);
-        }
-
-        $product = new Product();
-        $product->text = $request->post('text');
-        if ($request->post('parent') != 0) {
-            $product->parent_id = $request->post('parent');
-        }
-        $product->id = $request->post('product_id');
-        $product->rank = $request->post('rank');
-        $product->product_minimum = $request->post('product_minimum');
-        $product->status = $request->post('status');
-        $product->rate = $request->post('hash_rate');
-
-        $product->image = $file_name;
-        $product->save();
-
-
-        // return response()->json($request->all());
-
-        if ($request->post('status') == 'false') {
-
-            $product_unit = new ProductUnit();
-            $product_unit->unit_id = $request->post('unit');
-            $product_unit->product_id = $product->id;
-            $product_unit->purchase_price = $request->post('purchase_price');
-            $product_unit->unit_type = 1;
-
-            $product_unit->save();
-
-
-            if ($request->post('retail_unit')) {
-
-                $product_unit = new ProductUnit();
-                $product_unit->unit_id = $request->post('retail_unit'); 
-           
-                $product_unit->product_id = $product->id;
-                $product_unit->purchase_price = $request->post('purchase_price_for_retail_unit');
-                // $product_unit->rate = $request->post('hash_rate');
-                $product_unit->unit_type = 0;
-
-                $product_unit->save();
-
-                // return response()->json($value);
-            }
-        }
-
+       
+       
+        $this->product->check()->product()->unit();
 
         Cache::forget('tree_product_products');
         Cache::forget('tree_product_last_nodes');
         Cache::forget('stock');
 
-        
+
 
 
         return response()->json($request->file('image'));

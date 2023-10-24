@@ -218,13 +218,13 @@ export default {
   data() {
     return {
       // show_retail_unit:false,
-      // check_state: '',
       // product_first_level: '',
       // last_nodes: '',
       // rank: 1,
       // parent: 0,
       // jsonTreeData: [],
       // type_of_tree:0,
+      check_state: '',
       error_text: '',
       error_hash_rate: '',
       error_purchase_price: '',
@@ -272,116 +272,12 @@ export default {
 
   methods: {
 
-    // showtree() {
-
-    //   let gthis = 'this';
-    //   this.axios.post(`/tree_product`).then((response) => {
-    //     this.trees = response.data.products;
-    //     this.jsonTreeData = response.data.products;
-    //     this.last_nodes = response.data.last_nodes;
-
-    //     // $(`#product_number_first_level`).val(response.data.last_nodes + 1);
-    //     $(`#product_number`).val(response.data.last_nodes + 1);
-
-
-    //     $('#treeview_json').jstree({
-    //       core: {
-    //         themes: {
-    //           responsive: false,
-    //         },
-    //         // so that create works
-    //         check_callback: true,
-    //         data: this.jsonTreeData,
-    //       },
-    //       types: {
-    //         default: {
-    //           icon: "fa fa-folder text-primary",
-    //         },
-    //         file: {
-    //           icon: "fa fa-file  text-primary",
-    //         },
-    //       },
-    //       checkbox: {
-    //         three_state: false,
-
-    //       },
-    //       state: {
-    //         key: "demo2"
-    //       },
-    //       search: {
-    //         case_insensitive: true,
-    //         show_only_matches: true
-    //       },
-    //       plugins: ["checkbox",
-    //         "contextmenu",
-    //         "dnd",
-    //         "massload",
-    //         "search",
-    //         "sort",
-    //         "state",
-    //         "types",
-    //         "unique",
-    //         "wholerow",
-    //         "changed",
-    //         "conditionalselect"],
-    //       contextmenu: {
-    //         items: contextmenu
-    //       },
-
-
-
-
-
-
-    //     }).on('rename_node.jstree', function (e, data) {
-    //       let currentObj = this;
-    //       const config = {
-    //         headers: {
-    //           "content-type": "multipart/form-data",
-    //         },
-    //       };
-
-
-    //       let formData = new FormData();
-    //       formData.append("text", data.node.text);
-
-    //       let url = `/product_rename_node/${data.node.id}`;
-    //       axios.post(url, formData).then((response) => {
-
-    //         currentObj.success = response.data.success;
-    //         currentObj.filename = "";
-
-    //       }).catch(function (error) {
-    //         currentObj.output = error;
-    //       });
-    //     }).on("changed.jstree", function (e, data) {
-
-
-    //     });
-
-    //   });
-    // },
-
-
-
-    // first_level(e) {
-
-    //   e.preventDefault();
-    //   addnode_first(this.product);
-    // },
-
+    
     onFileChange(e) {
       this.file = e.target.files[0];
     },
   
 
-    // updateproduct(e) {
-    //   e.preventDefault();
-    //   jtree.updatenode($("#update_product_number").val(), this.text);
-
-
-
-    // }
 
   },
 };

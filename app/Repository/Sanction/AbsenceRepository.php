@@ -6,7 +6,6 @@ use App\RepositoryInterface\SanctionRepositoryInterface;
 use App\Traits\Staff\Sanction\SanctionTrait;
 use App\Models\AbsenceSanction;
 use App\RepositoryInterface\SingleSanctionRepositoryInterface;
-use App\User;
 use DB;
 
 class AbsenceRepository implements SanctionRepositoryInterface,SingleSanctionRepositoryInterface {
@@ -15,30 +14,30 @@ class AbsenceRepository implements SanctionRepositoryInterface,SingleSanctionRep
 
     use SanctionTrait;
 
-    public function add($request,$value){
+    // public function add($request,$value){
 
-        $temporale = new AbsenceSanction();
-        $temporale->absence_type_id = $request['absence'][$value];
-        // $temporale->part_id = $request['absence_part'][$value];
-        $temporale->iteration = $request['iteration'][$value];
-        $temporale->sanction_discount_id = $request['discount_type'][$value];
-        $temporale->discount = $request['discount'][$value];
-        $temporale->sanction = $request['sanction'][$value];
-        $temporale->save();
-        return $temporale->id;
+    //     $temporale = new AbsenceSanction();
+    //     $temporale->absence_type_id = $request['absence'][$value];
+    //     // $temporale->part_id = $request['absence_part'][$value];
+    //     $temporale->iteration = $request['iteration'][$value];
+    //     $temporale->sanction_discount_id = $request['discount_type'][$value];
+    //     $temporale->discount = $request['discount'][$value];
+    //     $temporale->sanction = $request['sanction'][$value];
+    //     $temporale->save();
+    //     return $temporale->id;
 
-    }
+    // }
     
-    public function update($temporale, $request)
-    {
+    // public function update($temporale, $request)
+    // {
 
-        $temporale_f = tap(AbsenceSanction::whereAbsenceSanction($request))
-            ->update(['sanction' => $request['sanction']])
-            ->get('id');
+    //     $temporale_f = tap(AbsenceSanction::whereAbsenceSanction($request))
+    //         ->update(['sanction' => $request['sanction']])
+    //         ->get('id');
 
 
-        return $temporale_f;
-    }
+    //     return $temporale_f;
+    // }
 
 
     public function create($id, $request, $val)
@@ -67,17 +66,17 @@ class AbsenceRepository implements SanctionRepositoryInterface,SingleSanctionRep
         }
     
     }
-    public function get()
-    {
+    // public function get()
+    // {
 
-        $absence = DB::table('absence_sanctions')
-            ->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id')
-            // ->join('parts', 'parts.id', '=', 'absence_sanctions.part_id')
-            ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
-            ->select('absence_sanctions.*', 'absence_sanctions.id as absence_sanction_id', 'absence_types.*', 'sanction_discounts.*')
-            ->get();
-        return $absence;
-    }
+    //     $absence = DB::table('absence_sanctions')
+    //         ->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id')
+    //         // ->join('parts', 'parts.id', '=', 'absence_sanctions.part_id')
+    //         ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
+    //         ->select('absence_sanctions.*', 'absence_sanctions.id as absence_sanction_id', 'absence_types.*', 'sanction_discounts.*')
+    //         ->get();
+    //     return $absence;
+    // }
 
     public function handle($request,$absence_sanction_id,$val,$id){
 

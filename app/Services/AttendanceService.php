@@ -4,93 +4,132 @@ namespace App\Services;
 
 use App\RepositoryInterface\SanctionRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Models\AttendanceDetail;
-use App\Models\Attendance;
 use App\RepositoryInterface\HRRepositoryInterface;
-use App\Repository\Sanction\DelayRepository;
+use App\Traits\staff\AttendanceTrait;
+use App\Services\core\CoreStaffAttendanceService;
+use App\Services\AttendanceDetailService;
+use Illuminate\Http\Request;
 use DB;
 
 class AttendanceService
 {
 
+    use AttendanceTrait;
     public function __construct(
+
         protected DetailRepositoryInterface $details,
-        protected HRRepositoryInterface $hr
+        protected CoreStaffAttendanceService $attendance_core,
+        protected AttendanceDetailService $details_service,
+        protected HRRepositoryInterface $hr,
+
+
+        protected Request $request,
     ) {
-        $this->details = $details;
-        $this->hr = $hr;
+
+        $this->attendance_core->data = $request->all();
     }
 
-    public function absence($request, $value)
+    public function absence()
     {
 
 
-        $attendance_id = $this->get($request['attendance_date'], $request['staff'][$value]);
+        $this->get_attendance();
 
-        if ($attendance_id == 0) {
+        if ($this->attendance_core->attendance_id == 0) {
 
-            $attendance_id = $this->create($request, $value);
-            $this->sanction($attendance_id, $request, $value);
+            $this->attendance_core->attendance_id = $this->add_into_attendance_table();
+
+            $this->sanction();
         }
     }
 
-    public function attende($request, $value)
+    public function attende()
+    {
+
+        $this->check_attendance();
+        $this->get_attendance();
+        $this->add_attendance();
+        $this->details_service->add_and_refresh_details();
+    }
+
+
+    public function add_attendance()
+    {
+
+        ($this->attendance_core->attendance_id == 0) ?$this->add_into_attendance_table() : $this->refresh_attendance_table();
+
+
+
+    }
+
+
+    public function check_attendance()
     {
 
 
-        $updating_data = $this->check_attendance($request, $value);
-        $attendance_id = $this->get($request['attendance_date'], $request['staff'][$value]);
+        // dd($this->attendance_core->value);
+        if ($this->attendance_core->data['attendance_in_out'] == 1) {
 
-        if ($attendance_id == 0) {
+            $this->attendance_core->updating_data = [
+                // 'attendance_status' => $request->post('attendance_status')[$value],
+                'check_in' => $this->attendance_core->data['time_in'][$this->attendance_core->value]
 
-            $attendance_id = $this->add($request, $attendance_id, $value);
+            ];
+        } else {
+
+            $this->attendance_core->updating_data = [
+                // 'attendance_status' => $request->post('attendance_status')[$value],
+                'check_in' => $this->attendance_core->data['time_in'][$this->attendance_core->value],
+                'check_out' => $this->attendance_core->data['time_out'][$this->attendance_core->value],
+                'delay' => $this->attendance_core->data['delay'][$this->attendance_core->value],
+                'leave' => $this->attendance_core->data['leave'][$this->attendance_core->value],
+                'extra' => $this->attendance_core->data['extra'][$this->attendance_core->value],
+                'duration' => $this->attendance_core->data['duration'][$this->attendance_core->value],
+                // 'attendance_final' => $request->post('attendance_final')[$value]
+
+            ];
+        }
+    }
+
+
+    public function get_attendance()
+    {
+
+
+
+        $attendance_id  =  $this->get_from_attendance_table(
+            $this->attendance_core->data['attendance_date'],
+            $this->attendance_core->data['staff'][$this->attendance_core->value]
+        );
+
+        $this->return_attendance_id($attendance_id);
+    }
+
+
+
+    function return_attendance_id($attendance_id)
+    {
+
+
+
+        if ($attendance_id->isEmpty()) {
+
+            $this->attendance_core->attendance_id = 0;
         } else {
 
 
-            $this->handle_details($request, $updating_data, $attendance_id, $value);
+            foreach ($attendance_id as $values) {
 
-            if ($request->post('attendance_final') == 'complete') {
-
-                $this->sanction($attendance_id, $request, $value);
+                $this->attendance_core->attendance_id = $values['id'];
             }
+
+
         }
     }
 
-    function handle_details($request, $updating_data, $attendance_id, $value)
-    {
 
-
-        $temporale_f = $this->refresh_details($request, $updating_data, $attendance_id);
-
-        if ($temporale_f->isEmpty()) {
-
-            $this->details->init_details(data: $request, id: $attendance_id, value: $value);
-        }
-
-        return $temporale_f;
-    }
-
-    function add($request, $attendance_id, $value)
-    {
-
-
-        $attendance_id = $this->create($request, $value);
-        $this->details->init_details(data: $request, id: $attendance_id, value: $value);
-    }
-
-    function refresh_details($request, $data = null, $id)
-    {
-
-        $temporale_f = tap(AttendanceDetail::where([
-
-            'attendance_id' => $id,
-            'period_id' => $request['period']
-        ]))
-            ->update($data)
-            ->get('id');
-        return $temporale_f;
-    }
-    public function sanction($attendance_id, $request, $value)
+    
+    public function sanction()
     {
 
 
@@ -98,90 +137,17 @@ class AttendanceService
 
         foreach (config('sanction.data_sanction') as $value_sanction) {
 
+            $repo = app(SanctionRepositoryInterface::class)
+                ->get($value_sanction)
+                ->create(
 
-            $repo = app(SanctionRepositoryInterface::class)->get($value_sanction);
-
-            $repo->create($attendance_id, $request, $value, $value_sanction);
-        }
-    }
-
-    // public function update($id)
-    // {
-
-    //     $attend = tap(Attendance::where('id', $id))
-    //         ->update([
-    //             'attendance_final' => 'complete',
-    //         ])
-    //         ->get('id');
-    // }
-
-
-
-    public function check_attendance($request, $value)
-    {
-
-
-
-        if ($request['attendance_in_out'] == 1) {
-
-            $updating_data = [
-                // 'attendance_status' => $request->post('attendance_status')[$value],
-                'check_in' => $request->post('time_in')[$value]
-            ];
-        } else {
-
-            $updating_data = [
-                // 'attendance_status' => $request->post('attendance_status')[$value],
-                'check_in' => $request->post('time_in')[$value],
-                'check_out' => $request->post('time_out')[$value],
-                'delay' => $request->post('delay')[$value],
-                'leave' => $request->post('leave')[$value],
-                'extra' => $request->post('extra')[$value],
-                'duration' => $request->post('duration')[$value],
-                // 'attendance_final' => $request->post('attendance_final')[$value]
-
-            ];
-        }
-
-        return $updating_data;
-    }
-
-
-    public function get($date, $staff)
-    {
-
-
-
-        $attendance_id = Attendance::where(['attendance_date' => $date, 'staff_id' => $staff])
-            ->select('attendances.id')
-            ->get();
-
-        if ($attendance_id->isEmpty()) {
-
-            return $attendance_id = 0;
-        } else {
-
-
-            foreach ($attendance_id as $values) {
-                $attendance_id = $values['id'];
-            }
-
-            return $attendance_id;
+                    $this->attendance_core->attendance_id,
+                    $this->attendance_core->data,
+                    $this->attendance_core->value,
+                    $value_sanction
+                );
         }
     }
 
 
-
-
-    function create($request, $value)
-    {
-
-
-        $attendance = new Attendance();
-        $attendance->staff_id =  $request['staff'][$value];
-        $attendance->attendance_date = $request['attendance_date'];
-        $attendance->attendance_status = $request['attendance_status'][$value];
-        $attendance->save();
-        return $attendance->id;
-    }
 }

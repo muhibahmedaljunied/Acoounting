@@ -23,7 +23,7 @@ class CreateAllowancesTable extends Migration
             $table->unsignedInteger('allowance_type_id');
             $table->foreign('allowance_type_id')->references('id')->on('allowance_types');
 
-            $table->integer('status');
+            $table->integer('status')->nullable();
             $table->integer('qty');
             $table->date('date')->nullable();
             $table->timestamps();

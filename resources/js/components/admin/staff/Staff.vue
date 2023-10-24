@@ -19,7 +19,7 @@
                       <ul class="nav panel-tabs main-nav-line">
                         <li class="nav-item">
                       <a href="#tab2" class="nav-link" data-toggle="tab"
-                            >بيانات الموظف</a
+                            > الموظفين</a
 
                           >
                         </li>

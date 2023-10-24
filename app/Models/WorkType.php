@@ -10,29 +10,19 @@ class WorkType extends Model
 
 
 
-    
-    // public function period()
-    // {
-    //     return $this->belongsToMany(Period::class)->using(WorkSystem::class);
-    // }
 
-    // public function rest()
+    // public function staff()
     // {
-    //     return $this->belongsToMany(Rest::class)->using(WorkSystem::class);
+    //     return $this->hasMany(Staff::class);
     // }
-
-    public function staff()
-    {
-        return $this->hasMany(Staff::class);
-    }
 
 
 
             
-    public function periods()
-    {
-        return $this->belongsToMany(Period::class, 'period_work_types', 'work_type_id','period_id')->withPivot('day_id');
-    }
+    // public function periods()
+    // {
+    //     return $this->belongsToMany(Period::class, 'period_work_types', 'work_type_id','period_id')->withPivot('day_id');
+    // }
 
 
 

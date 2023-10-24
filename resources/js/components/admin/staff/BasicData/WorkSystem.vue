@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-header">
 
-          <span class="h2"> نظام وفترات الدوام</span>
+          <span class="h2"> نظام الدوام</span>
           <div style="display: flex;float: left; margin: 5px">
             <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addwork">
@@ -27,32 +27,39 @@
                 <tr>
                   <th class="wd-15p border-bottom-0">#</th>
                   <th class="wd-15p border-bottom-0">نظام الدوام</th>
+                  <th class="wd-15p border-bottom-0"> نوع الدوام</th>
                   <th class="wd-15p border-bottom-0"> من</th>
                   <th class="wd-15p border-bottom-0"> الي</th>
 
-                  <!-- <th class="wd-15p border-bottom-0">الاستراحه</th> -->
                   <th class="wd-15p border-bottom-0">ايام العمل</th>
 
 
                   <th class="wd-15p border-bottom-0">العمليات</th>
                 </tr>
               </thead>
-              <tbody v-if="work_systems && work_systems.length > 0">
-                <tr v-for="(work_system, index) in work_systems" :key="index">
+              <tbody v-if="value_list && value_list.data.length > 0">
+                <tr v-for="(work_system, index) in value_list.data" :key="index">
                   <td>{{ index + 1 }}</td>
 
-                  <td v-for="work_system_name in work_system.work_type">
+                  <td >
 
-                    {{ work_system_name.name }}
-                  </td>
-                  <td v-for="periods in work_system.period">
-
-                    {{ periods.from_time }}
+                    {{ work_system.name }}
                   </td>
 
-                  <td v-for="periods in work_system.period">
+                  <td>
 
-                    {{ periods.into_time }}
+                    {{ work_system.type }}
+                  </td>
+             
+
+                  <td >
+
+                    {{ work_system.from_time }}
+                  </td>
+
+                  <td >
+
+                    {{ work_system.into_time }}
                   </td>
 
 
@@ -71,7 +78,6 @@
                     </span>
 
                   </td>
-
 
 
                   <td>
@@ -104,7 +110,7 @@
             <div class="modal-dialog modal-fullscreen">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">نماذج الدوام</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">نظام الدوام</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -112,15 +118,23 @@
                 <div class="modal-body">
 
                   <div class="row row-sm">
-                    <div class="col-md-12">
-                      <label for="status"> نوع الدوام</label>
-                      <select style="background-color:beige" v-model="work_type_selected" class="form-control " required>
-                        <option v-for="work_type in work_types" v-bind:value="work_type.id">
-                          {{ work_type.name }}
-                        </option>
 
-                      </select>
+                    <div class="col-md-3">
+                      <label for="status"> نظام الدوام</label>
+                      <input type="text" class="form-control " style="background-color:beige"  v-model="work_system_value"/>
                     </div>
+                    <div class="col-md-3">
+                      <label for="status"> نوع الدوام</label>
+                    
+                      <select style="background-color:beige" v-model="work_type_selected"
+                                        class="form-control " required>
+                                        <option v-for="work_type in work_types" v-bind:value="work_type.id">
+                                          {{ work_type.name }}
+                                        </option>
+
+                                      </select>
+                    </div>
+
 
 
                   </div>
@@ -131,13 +145,7 @@
                     <div class="col-xl-12">
                       <!-- <form method="post"> -->
                       <div class="card">
-                        <!-- <div class="card-header pb-0">
-                          <div class="d-flex justify-content-between">
-                            <h4 class="modal-title" id="myLargeModalLabel"> نماذج الدوام </h4>
-
-                            <i class="mdi mdi-dots-horizontal text-gray"></i>
-                          </div>
-                        </div> -->
+                    
                         <div class="card-body">
 
                           <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
@@ -148,14 +156,13 @@
                                 <thead>
                                   <tr>
 
-                                    <!-- <th> انواع الدوام</th> -->
+                                    <!-- <th> نوع الدوام</th> -->
 
 
                                     <th>الوقت</th>
 
                                     <th>ايام العمل</th>
 
-                                    <th>الاستراحه</th>
 
 
                                     <th>اضافه</th>
@@ -163,15 +170,18 @@
                                 </thead>
                                 <tbody>
                                   <tr v-for="index in count" :key="index">
-                                    <!-- <td>
-                                      <select v-model="work_type_selected[index]" class="form-control " required>
+                              
+                                  
+                              
+                                      <!-- <select style="background-color:beige" v-model="work_type_selected[index]"
+                                        class="form-control " required>
                                         <option v-for="work_type in work_types" v-bind:value="work_type.id">
                                           {{ work_type.name }}
                                         </option>
 
-                                      </select>
+                                      </select> -->
+                     
 
-                                    </td> -->
                                     <td>
                                       <select v-model="period_selected[index]" class="form-control " required>
                                         <option v-for="period in periods" v-bind:value="period.id">
@@ -214,16 +224,7 @@
                                       <label for="radio-example-three">جمعه</label>
 
 
-                                    </td>
-                                    <td>
-                                      <select v-model="rest_selected[index]" class="form-control " required>
-                                        <option v-for="bbreak in breaks" v-bind:value="bbreak.id">
-                                          {{ bbreak.name }}
-                                        </option>
-
-                                      </select>
-
-                                    </td>
+                                
 
 
 
@@ -264,9 +265,7 @@
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
-                  <!-- <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"@click="submitForm()">
-                        حفظ
-                      </button> -->
+         
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
               </div>
@@ -304,12 +303,19 @@ export default {
       values: [
 
       ],
-      all_values: [],
-      work_systems: '',
 
+      value_list: {
+        type: Object,
+        default: null,
+      },
+
+      all_values: [],
+      // work_systems: '',
+      work_system_value:'',
       work_type_selected: [],
       period_selected: [],
       rest_selected: [],
+      
       fieldset1: [],
       fieldset2: [],
       fieldset3: [],
@@ -336,9 +342,10 @@ export default {
         .post(`/store_work_system`, {
           count: this.counts,
           type: this.type,
+          name:this.work_system_value,
           work_type: this.work_type_selected,
           period: this.period_selected,
-          rest: this.rest_selected,
+          // rest: this.rest_selected,
           day: this.all_values,
 
         }
@@ -394,10 +401,11 @@ export default {
         .post(`/work_system`)
         .then((responce) => {
 
-          this.work_systems = responce.data.work_systems;
+          console.log('work_system',responce.data.work_systems);
+          this.value_list = responce.data.work_systems;
           this.work_types = responce.data.work_types;
           this.periods = responce.data.periods;
-          this.breaks = responce.data.breaks;
+          // this.breaks = responce.data.breaks;
         })
         .catch(({ response }) => {
           console.error(response);

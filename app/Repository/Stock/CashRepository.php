@@ -2,17 +2,14 @@
 
 namespace App\Repository\Stock;
 use App\RepositoryInterface\StockRepositoryInterface;
-use App\RepositoryInterface\TemporaleRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Traits\Temporale\TemporaleTrait;
 use App\Models\Cash;
-use App\Models\Temporale;
 use App\Models\CashDetail;
 use DB;
-class CashRepository implements StockRepositoryInterface,TemporaleRepositoryInterface,DetailRepositoryInterface
+class CashRepository implements StockRepositoryInterface,DetailRepositoryInterface
 {
 
-    use TemporaleTrait;
+   
     public function add()
     {
 

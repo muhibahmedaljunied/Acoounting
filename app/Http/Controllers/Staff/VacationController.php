@@ -1,34 +1,27 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-use App\Http\Controllers\Controller;
-
-use App\Services\HrService;
 use App\RepositoryInterface\HRRepositoryInterface;
-use App\Models\Vacation;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\Controller;
+use App\Services\CoreStaffService;
+use App\Services\Core\HrService;
+use App\Models\VacationType;
+use Illuminate\Http\Request;
 use App\Models\Staff;
-
 use App\Models\Branch;
 use App\Models\StaffType;
-use App\Models\VacationType;
-use App\Services\PayrollService;
 use DB;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
 
 class VacationController extends Controller
 {
 
-    // use StoreTrait;
 
     public function __construct(
-        protected HRRepositoryInterface $hr
-        )
-    {
-        
-        $this->hr = $hr;
-   
-    
+        protected HRRepositoryInterface $hrRepo,        
+        protected CoreStaffService $core,
+        protected HrService $hr,
+    ) {
     }
 
     public function index()
@@ -36,10 +29,8 @@ class VacationController extends Controller
 
 
         $vacations = staff::with(['vacation', 'vacation.vacation_type'])->paginate(10);
-        $this->hr->Sum($vacations, 'vaction');
+        $this->hrRepo->Sum($vacations, 'vaction');
 
-        $branches = Branch::all();
-        $staff_types = StaffType::all();
         // ------------------------------------------------------------------------------------------------
         $staffs = Cache::rememberForever('staff', function () {
             return DB::table('staff')->get();
@@ -48,7 +39,13 @@ class VacationController extends Controller
 
 
         $vacation_types = VacationType::all();
-        return response()->json(['list' => $vacations, 'branches' => $branches, 'staff_types' => $staff_types, 'staffs' => $staffs, 'vacation_types' => $vacation_types]);
+        return response()->json([
+            'list' => $vacations,
+            'branches' => Branch::all(),
+            'staff_types' => StaffType::all(),
+            'staffs' => $staffs,
+            'vacation_types' => $vacation_types
+        ]);
     }
 
     public function select_staff(Request $request)
@@ -58,63 +55,55 @@ class VacationController extends Controller
         return response()->json(['list' => $staffs]);
     }
 
-    public function store(Request $request,PayrollService $payroll)
+    public function store(Request $request)
     {
 
-        foreach ($request->post('count') as $value) {
 
+        $this->core->data = $request->all();
 
-            $temporale_f = 0;
+        try {
 
-            // $temporale_f = tap(Vacation::whereLeave($request))
-            //     ->update(['total_days' => $request['days']])
-            //     ->get('id');
+            DB::beginTransaction();
 
-            $temporale_f = $this->hr->update($request->all());
-
-            if ($temporale_f->isEmpty()) {
-
-                $this->hr->add(request: $request->all(), value: $value, type: $request->post('type'));
-                // $this->refresh_payroll($request->all(), $value, $request->post('type'));
-                $payroll->refresh($request->all(), $value);
+            foreach ($request->post('count') as $value) {
+                $this->core->setValue($value);
+                $this->hr->store();
+                // $this->payroll->refresh($request->all(), $value);
 
             }
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "purchase created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
-
-
-
 
         return response()->json(['message' => $request->all()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function destroy($id)
     {
-        //
-    }
-    public function show(Vacation $vacation)
-    {
-        //
+
+        // DB::table('payrolls')->where('staff_id', '=', $id)->delete();
+
+        // $store = staff::find($id);
+
+        // $store->delete();
+
+        // Cache::forget('staff');
+
+
+
+        return response()->json('successfully deleted');
     }
 
-    
-    public function edit(Vacation $vacation)
-    {
-        //
-    }
-
-    
-    public function update(Request $request, Vacation $vacation)
-    {
-        //
-    }
-
-        public function destroy(Vacation $vacation)
-    {
-        //
-    }
+   
 }

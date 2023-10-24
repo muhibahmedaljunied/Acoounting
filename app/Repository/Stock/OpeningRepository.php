@@ -2,14 +2,11 @@
 
 namespace App\Repository\Stock;
 use App\Models\CashDetail;
-use App\Traits\Temporale\TemporaleTrait;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use DB;
 
 class OpeningRepository implements DetailRepositoryInterface
 {
-
-    use TemporaleTrait;
 
     public function init_details(...$list_data){
         

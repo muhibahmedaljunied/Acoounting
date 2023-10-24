@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Warehouse;
 
 use Illuminate\Support\Facades\Cache;
-use App\Stock;
+use App\Models\Stock;
 use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 use App\Traits\Unit\UnitsTrait;
@@ -28,7 +28,14 @@ class StockController extends Controller
                 ->join('products', 'store_products.product_id', '=', 'products.id')
                 ->join('product_units', 'product_units.product_id', '=', 'products.id')
                 ->join('units', 'units.id', '=', 'product_units.unit_id')
-                ->select('store_products.quantity', 'store_products.*', 'products.id', 'products.text as product', 'products.rate', 'statuses.name as status', 'stores.text as store', 'units.name as unit')
+                ->select('store_products.quantity',
+                 'store_products.*', 
+                 'products.id', 
+                 'products.text as product', 
+                 'products.rate', 
+                 'statuses.name as status', 
+                 'stores.text as store', 
+                 'units.name as unit')
                 ->paginate(10);
 
 
@@ -58,7 +65,12 @@ class StockController extends Controller
         $stocks = StoreProduct::where('products.text', 'LIKE', '%' . $request->post('word_search') . '%')
             ->where('store_products.quantity', '!=', 0)
             ->joinall()
-            ->select('store_products.quantity', 'store_products.*', 'products.id', 'products.text as product', 'statuses.name as status', 'stores.text as store')
+            ->select('store_products.quantity', 
+            'store_products.*', 
+            'products.id', 
+            'products.text as product', 
+            'statuses.name as status', 
+            'stores.text as store')
             ->paginate(10);
 
 
@@ -66,9 +78,6 @@ class StockController extends Controller
     }
 
 
-    public function create()
-    {
-    }
 
 
     public function store(Request $request)
@@ -90,25 +99,6 @@ class StockController extends Controller
     }
 
 
-    public function show()
-    {
-        //
-    }
-
-    public function edit()
-    {
-        //
-    }
-
-
-    public function update(Request $request)
-    {
-        //
-    }
-
-
-    public function destroy()
-    {
-        //
-    }
+  
+    
 }

@@ -1,35 +1,24 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-use App\Http\Controllers\Controller;
 
-use App\Models\Salary;
+use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Job;
 use App\Models\StaffType;
 use App\Models\Allowance;
 use App\Models\AllowanceType;
 use App\Models\Staff;
-use DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-
+use DB;
 class SalaryController extends Controller
 {
 
     public function index()
     {
-        $branches = Branch::all();
-        $staff_types = StaffType::all();
-        $allowances = Allowance::all();
-        // ----------------------------------------------------------------------------
         $staffs = Cache::rememberForever('staff', function () {
             return DB::table('staff')->get();
         });
-        // ----------------------------------------------------------------------------
-
-        $allowance_types = AllowanceType::all();
-
 
         $staff_allowances = Cache::rememberForever('staff_allowances', function () {
             return DB::table('payrolls')
@@ -40,13 +29,17 @@ class SalaryController extends Controller
 
 
 
-        return response()->json(['staff_allowances' => $staff_allowances, 'allowance_types' => $allowance_types, 'staffs' => $staffs, 'jobs' => $jobs, 'branches' => $branches, 'staff_types' => $staff_types, 'allowances' => $allowances]);
+        return response()->json([
+            'staff_allowances' => $staff_allowances,
+            'allowance_types' => AllowanceType::all(),
+            'staffs' => $staffs,
+            'branches' => Branch::all(),
+            'staff_types' => StaffType::all(),
+            'allowances' => Allowance::all()
+        ]);
     }
 
-    public function create()
-    {
-        //
-    }
+
 
     public function select_staff(Request $request)
     {
@@ -90,60 +83,77 @@ class SalaryController extends Controller
 
         // return response()->json($request->all());
 
+        $staff_allowance = $this->get_staff_allowance($request);
+
+        if (count($staff_allowance) == 0) {
+
+            $this->init_allowance($request);
+        }
+
+        $this->update_staff($request);
+
+        $this->update_allowance($request);
+
+        return response()->json($request->all());
+    }
 
 
+    public function get_staff_allowance($request)
+    {
 
-
-        $staff_allowance = Allowance::where('allowances.staff_id', $request->post('staff_id'))
+        $staff_allowance = Allowance::where('allowances.staff_id', $request['staff_id'])
             ->select('allowances.*')
             ->get();
 
-        if (count($staff_allowance) == 0) {
-            foreach ($request->post('allowance')  as $value) {
-
-
-                $staff_allowance = new Allowance();
-                $staff_allowance->staff_id = $value['name'];
-                $staff_allowance->allowance_id = $value['id'];
-                $staff_allowance->date = $request->post('date');
-                // $staff_allowance->salary = $request->post('salary');
-                $staff_allowance->checked = $value['check'];
-                $staff_allowance->qty = $value['qty'];
-                $staff_allowance->save();
-
-                // }
-
-
-
-            }
-            // return response()->json($request->all());
-        }
-
+        return $staff_allowance;
+    }
+    public function update_staff($request)
+    {
 
         DB::table('staff')
-            ->where('id', $request->post('staff_id'))
+            ->where('id', $request['staff_id'])
             ->update(array(
-                'salary' => $request->post('salary'),
+                'salary' => $request['salary'],
             ));
+    }
+    public function init_allowance($request)
+    {
 
 
-        foreach ($request->post('allowance')  as $value) {
+        foreach ($request['allowance']  as $value) {
+
+            $staff_allowance = new Allowance();
+            $staff_allowance->staff_id = $value['name'];
+            $staff_allowance->allowance_id = $value['id'];
+            $staff_allowance->date = $request['date'];
+            // $staff_allowance->salary = $request->post('salary');
+            $staff_allowance->checked = $value['check'];
+            $staff_allowance->qty = $value['qty'];
+            $staff_allowance->save();
+
+            // }
 
 
 
+        }
+    }
+
+    public function update_allowance($request)
+    {
+
+
+        foreach ($request['allowance']  as $value) {
 
             DB::table('allowances')
                 ->where('staff_id', $value['name'])
                 ->where('allowance_id', $value['id'])
                 ->update(array(
                     'checked' => $value['check'],
-                    'date' => $request->post('date'),
+                    'date' => $request['date'],
                     'qty' => $value['qty'],
                     // 'salary'=>$request->post('salary'),
                 ));
         }
-
-        return response()->json($request->all());
     }
 
     public function salary_details(Request $request)
@@ -192,12 +202,12 @@ class SalaryController extends Controller
 
         $this->sum($salaries);
 
-        $staffs = Staff::all();
 
-        return response()->json(['list' => $salaries, 'staffs' => $staffs]);
+        return response()->json(['list' => $salaries, 'staffs' => Staff::all()]);
     }
 
-    public function sum($salaries){
+    public function sum($salaries)
+    {
 
         foreach ($salaries as $sub) {
 
@@ -226,18 +236,15 @@ class SalaryController extends Controller
                 if ($value_sanction->sanctionable->delay_type_id) {
 
                     $sub->sum_sanction += $value_sanction->sanctionable->sanction;
-
                 }
                 if ($value_sanction->sanctionable->leave_type_id) {
 
                     $sub->sum_sanction += $value_sanction->sanctionable->sanction;
-
                 }
 
-                if($value_sanction->sanctionable->extra_type_id){
+                if ($value_sanction->sanctionable->extra_type_id) {
 
                     $sub->sum_extra += $value_sanction->sanctionable->sanction;
-
                 }
             }
             // --------------------------------------extra------------------------------------------------------
@@ -245,15 +252,11 @@ class SalaryController extends Controller
             foreach ($sub->extra as $key => $value_extra) {
 
                 foreach ($value_extra->extra_detail as $details) {
-                    
-                    $sub->sum_extra += $details->extra_sanction->sanction;
 
+                    $sub->sum_extra += $details->extra_sanction->sanction;
                 }
             }
         }
-
-
-
     }
     public function salary()
     {
@@ -280,29 +283,4 @@ class SalaryController extends Controller
 
         return response()->json(['list' => $salaries]);
     }
-
-
-    public function show(Salary $salary)
-    {
-        //
-    }
-
-
-    public function edit(Salary $salary)
-    {
-        //
-    }
-
-
-    public function update(Request $request, Salary $salary)
-    {
-        //
-    }
-
-
-    public function destroy(Salary $salary)
-    {
-        //
-    }
-    
 }

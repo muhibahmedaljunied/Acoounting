@@ -4,31 +4,36 @@ namespace App\Http\Controllers\Staff;
 
 use App\Models\Advance;
 use App\Models\Staff;
-use App\Services\HrService;
+use App\Services\Core\HrService;
+use App\Services\AdvanceServic;
+use App\Services\CoreStaffService;
+use App\RepositoryInterface\PayrollRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\Services\PayrollService;
 use DB;
+
 class AdvanceController extends Controller
 {
 
     public function __construct(
-        protected HRRepositoryInterface $hr,
-        protected PayrollService $payroll
+        protected HRRepositoryInterface $hrRepo,
+        protected HrService $hr,
+        protected PayrollRepositoryInterface $payroll,
+        protected CoreStaffService $core,
+        // protected AdvanceServic $advance,
     ) {
-
-        $this->hr = $hr;
-        $this->payroll = $payroll;
     }
     public function index()
     {
 
+
         $advances = Staff::with(['advance'])->paginate(10);
 
         // ---------------------------------
-        $this->hr->Sum($advances, 'advance');
+        $this->hrRepo->Sum($advances, 'advance');
 
         // ------------------------------------------------------------------------------------------------
         $staffs = Cache::rememberForever('staff', function () {
@@ -52,58 +57,51 @@ class AdvanceController extends Controller
 
     public function store(Request $request)
     {
+     
+        $this->core->setData($request->all());
 
-        foreach ($request->post('count') as $value) {
+        try {
 
-            $temporale_f = 0;
+            DB::beginTransaction();
 
-            // $temporale_f = tap(Advance::whereAdvance($request))
-            //     ->update(['quantity' => $request['qty'][$value]])
-            //     ->get('id');
-            $temporale_f = $this->hr->update($request->all());
-            // $this->refresh_payroll($request->all(), $value, $request->post('type'));
-            $this->payroll->refresh($request->all(), $value);
-
-            if ($temporale_f->isEmpty()) {
-
-                // $this->add(request:$request->all(), value:$value, type:$request->post('type'));
-                $this->hr->add(request: $request->all(), value: $value);
-                // $this->refresh_payroll($request->all(), $value, $request->post('type'));
-                $this->payroll->refresh($request->all(), $value);
+            foreach ($request->post('count') as $value) {
+            
+                $this->core->setValue($value);
+                $this->hr->store();
+                // $this->payroll->refresh();
             }
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            Cache::forget('staff_allowance');
+            return response([
+                'message' => "purchase created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
-
-
-
 
         return response()->json(['message' => $request->all()]);
     }
 
-    public function create()
+    public function destroy($id)
     {
-        //
+
+        // DB::table('payrolls')->where('staff_id', '=', $id)->delete();
+
+        // $store = staff::find($id);
+
+        // $store->delete();
+
+        // Cache::forget('staff');
+
+
+
+        return response()->json('successfully deleted');
     }
 
-
-    public function show(Advance $advance)
-    {
-        //
-    }
-
-
-    public function edit(Advance $advance)
-    {
-        //
-    }
-
-
-    public function update(Request $request, Advance $advance)
-    {
-        //
-    }
-
-    public function destroy(Advance $advance)
-    {
-        //
-    }
 }

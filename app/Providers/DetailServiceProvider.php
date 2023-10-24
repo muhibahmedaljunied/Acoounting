@@ -11,9 +11,10 @@ use App\Repository\Stock\PurchaseRepository;
 use App\Repository\Stock\SaleRepository;
 use App\Repository\Stock\SupplyRepository;
 use App\Repository\Stock\CashRepository;
-use App\Repository\HR\ExtraRepository;
 use App\Repository\HR\AttendanceRepository;
 use App\Repository\Stock\TransferRepository;
+use App\Services\CoreStaffService;
+use App\Repository\HR\ExtraRepository;
 
 class DetailServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,8 @@ class DetailServiceProvider extends ServiceProvider
     
         $this->app->bind(DetailRepositoryInterface::class, function () {
             $request = app(\Illuminate\Http\Request::class);
+
+            $core = app(CoreStaffService::class);
 
             if ($request->type == 'PurchaseReturn') {
 
@@ -69,7 +72,7 @@ class DetailServiceProvider extends ServiceProvider
             }
             if ($request->type == 'extra') {
 
-                return new ExtraRepository();
+                return new ExtraRepository($core);
             }
             if ($request->type == 'attendance') {
 

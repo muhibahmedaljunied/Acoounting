@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-#######################account##############################
 
 Route::post('/tree_account', 'Account\AccountController@tree_account');
 Route::post('/account/{id}', 'Account\AccountController@edit');
@@ -37,10 +36,6 @@ Route::post('/type_expence', 'Account\TypeExpenceController@show');
 Route::post('/type_income', 'Account\TypeIncomeController@show');
 // --------------------------------expence_type------------------------------------------
 Route::post('/expence_type', 'Account\ExpenceTypeController@show');
-
-
-
-################################################expence##################################
 Route::post('/expence/newexpence', 'ExpenceController@index');
 
 Route::post('/expence/delete', 'ExpenceController@destroy');

@@ -17,7 +17,7 @@ trait DailyTrait{
       //  dd($daily->id);
 
        $this->id = $daily->id;
-       return $this;
+      
       
     }
  

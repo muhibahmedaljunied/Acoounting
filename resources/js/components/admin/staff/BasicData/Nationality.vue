@@ -65,61 +65,7 @@
       </div>
       <pagination align="center" :data="nationalities" @pagination-change-page="list"></pagination>
     </div>
-    <!-- <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-      aria-hidden="true" style="display: none" id="addP">
-      <div class="modal-dialog modal-lg" style="width: 100%">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-              x
-            </button>
-            <div class="col-md-8">
-              <h4 class="modal-title" id="myLargeModalLabel">الجنسيه</h4>
-            </div>
-            <div class="col-md-4">
-              <div class="col-sm-12">
-                <input type="text" placeholder="بحث" class="form-control" name="buscar_producto" id="buscar_producto"
-                  v-model="word_search" @input="get_search()" />
-              </div>
-            </div>
-          </div>
-          <div class="modal-body">
-            <div class="row row-sm">
-              <div class="col-xl-12">
-                <div class="card">
-                  <div class="card-header pb-0">
-                  
-                  </div>
-                  <div class="card-body">
-                    <div class="form">
-                      <h3 class="text-center">أضافه </h3>
-                      <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
-                        <div class="form-group"></div>
-                        <div class="form-group">
-                          <label for="name">الجنسيه</label>
-                          <input type="text" class="form-control" name="name" id="name" required />
-                        </div>
 
-
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">
-                          حفظ
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-       
-            </div>
-          </div>
-
-          <pagination align="center" :data="nationalities" @pagination-change-page="list"></pagination>
-        </div>
- 
-      </div>
-
-   
-    </div> -->
 
     <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
       aria-hidden="true" style="display: none" id="addP">
@@ -266,7 +212,8 @@ export default {
       this.axios
         .post(`/nationality?page=${page}`)
         .then(({ data }) => {
-          this.nationalities = data;
+          console.log(data);
+          this.nationalities = data.nationalities;
         })
         .catch(({ response }) => {
           console.error(response);

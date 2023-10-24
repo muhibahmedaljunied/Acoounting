@@ -3,6 +3,7 @@
     <div class="row row-sm">
       <div class="col-lg-12 col-md-12">
         <div class="card" id="basic-alert">
+          <div class="card-header">شؤون الموظفين</div>
           <div class="card-body">
             <!-- <div>
 					<h6 class="card-title mb-1">Basic Style Tabs</h6>
@@ -16,66 +17,40 @@
                       <!-- Tabs -->
                       <ul class="nav panel-tabs main-nav-line">
 
-                        <!-- <li class="nav-item">
-                          <a href="#tab1" class="nav-link" data-toggle="tab">الغياب</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="#tab2" class="nav-link" data-toggle="tab">التاخير</a>
-                        </li> -->
+                   
 
                         <li class="nav-item">
                           <a href="#tab11" class="nav-link" data-toggle="tab"> اضافه موظف </a>
                         </li>
+                          
+
                         <li class="nav-item">
-                          <a href="#tab3" class="nav-link" data-toggle="tab"> الاضافي</a>
+                          <a href="#tab12" class="nav-link" data-toggle="tab"> دوام الموظف </a>
+                        </li>
+
+                        <li class="nav-item">
+                          <a href="#tab3" class="nav-link" data-toggle="tab"> اضافي</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab4" class="nav-link" data-toggle="tab"> الخصم</a>
+                          <a href="#tab4" class="nav-link" data-toggle="tab"> خصم</a>
                         </li>
-                        <!-- <li class="nav-item">
-                          <a href="#tab5" class="nav-link" data-toggle="tab">القرض</a>
-                        </li> -->
+                     
                         <li class="nav-item">
-                          <a href="#tab6" class="nav-link" data-toggle="tab">السلف</a>
+                          <a href="#tab6" class="nav-link" data-toggle="tab">سلف</a>
                         </li>
-                        <!-- <li class="nav-item">
-                          <a href="#tab7" class="nav-link" data-toggle="tab">العهد</a>
-                        </li> -->
-                        <!-- <li class="nav-item">
-                          <a href="#tab5" class="nav-link" data-toggle="tab">انهاء خدمه موظف</a>
-                        </li>
+                   
                         <li class="nav-item">
-                          <a href="#tab5" class="nav-link" data-toggle="tab"> ملاحظات الموظف</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="#tab6" class="nav-link" data-toggle="tab">تحويل راتب</a>
-                        </li> -->
-                        <li class="nav-item">
-                          <a href="#tab8" class="nav-link" data-toggle="tab">التحضير</a>
+                          <a href="#tab8" class="nav-link" data-toggle="tab">تحضير</a>
                         </li>
                         <li class="nav-item">
                           <a href="#tab9" class="nav-link" data-toggle="tab">اجازه</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab10" class="nav-link" data-toggle="tab"> البدلات </a>
+                          <a href="#tab10" class="nav-link" data-toggle="tab"> بدلات </a>
                         </li>
                     
 
-                        <!-- <li class="nav-item">
-                          <a href="#tab12" class="nav-link" data-toggle="tab"> جزاءات الغياب</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="#tab13" class="nav-link" data-toggle="tab"> جزاءات التأخير</a>
-                        </li>
-
-
-                        <li class="nav-item">
-                          <a href="#tab14" class="nav-link" data-toggle="tab"> جزاءات الاضافي</a>
-                        </li>
-
-                        <li class="nav-item">
-                          <a href="#tab15" class="nav-link" data-toggle="tab"> جزاءات الانصراف المبكر</a>
-                        </li> -->
+                 
 
 
                       </ul>
@@ -117,32 +92,11 @@
                         <personal-information></personal-information>
                       </div>
 
-                      <!-- <div class="tab-pane" id="tab12">
-                        <absence-sanction></absence-sanction>
+                      <div class="tab-pane" id="tab12">
+                        <staff-work></staff-work>
                       </div>
 
-                      <div class="tab-pane" id="tab13">
-                        <delay-sanction></delay-sanction>
-                      </div> 
-
-
-
-
-                      <div class="tab-pane" id="tab14">
-                        <extra-sanction></extra-sanction>
-                      </div>
-
-                      <div class="tab-pane" id="tab15">
-                        <leave-sanction></leave-sanction>
-                      </div> -->
-
-                     <!-- <div class="tab-pane" id="tab16">
-                        <leave-sanction></leave-sanction>
-                      </div>  -->
-                      <!-- 
-                      <div class="tab-pane active" id="tab12">
-                        <salary-allowance></salary-allowance>
-                      </div> -->
+               
 
                     </div>
                   </div>
@@ -162,12 +116,7 @@ import Attendance from "./Operation/Attendance";
 import Allowance from "./Operation/Allowance";
 
 import Leave from "./Operation/Leave";
-// import Absence from "./Operation/Absence";
-
 import Advance from "./Operation/Advance";
-
-// import Delay from "./Operation/Delay";
-
 import Extra from "./Operation/Extra";
 
 import Discount from "./Operation/Discount";
@@ -177,10 +126,7 @@ import TransferBranch from "./Operation/TransferBranch";
 import PersonalInformation from "./Operation/PersonalInformation";
 import SalaryAllowance from "./Operation/SalaryAllowance";
 
-// import DelaySanction from "./Operation/DelaySanction";
-// import AbsenceSanction from "./Operation/AbsenceSanction";
-// import ExtraSanction from "./Operation/ExtraSanction";
-// import LeaveSanction from "./Operation/LeaveSanction";
+import StaffWork from "./Operation/StaffWork";
 
 
 
@@ -188,9 +134,7 @@ export default {
   components: {
     Attendance,
     Leave,
-    // Absence,
     Advance,
-    // Delay,
     Extra,
     Discount,
     Loan,
@@ -198,10 +142,7 @@ export default {
     Allowance,
     PersonalInformation,
     SalaryAllowance,
-    // DelaySanction,
-    // AbsenceSanction,
-    // ExtraSanction,
-    // LeaveSanction
+    StaffWork
 
 
   },

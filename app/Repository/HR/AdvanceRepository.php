@@ -6,10 +6,18 @@ use App\Models\Advance;
 use App\Models\Payroll;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\RepositoryInterface\PayrollRepositoryInterface;
+use App\Services\CoreStaffService;
 use DB;
 
 class AdvanceRepository implements HRRepositoryInterface,PayrollRepositoryInterface
 {
+
+    public function __construct(public CoreStaffService $core)
+    {
+
+
+        
+    }
 
     function Sum($data)
     {
@@ -26,37 +34,35 @@ class AdvanceRepository implements HRRepositoryInterface,PayrollRepositoryInterf
     function add(...$list_data)
     {
 
-        $attendance_id  = 0;
-        $request = $list_data['request'];
-        $value = $list_data['value'];
+    
     
         $temporale = new Advance();
-        $temporale->staff_id = $request['staff'][$value];
+        $temporale->staff_id = $this->core->data['staff'][$this->core->value];
         // $temporale->extra_type_id = $request->post('extra_type')[$value];
-        $temporale->date = $request['date'][$value];
-        $temporale->quantity = $request['qty'][$value];
+        $temporale->date = $this->core->data['date'][$this->core->value];
+        $temporale->quantity = $this->core->data['qty'][$this->core->value];
              
         $temporale->save();
-        return $temporale->id;
+        $this->core->id = $temporale->id;
     }
     public function refresh($request, $value)
     {
         
 
-        $payroll = DB::table('advances')->where('staff_id', $request['staff'][$value])->sum('quantity');
+        $payroll = DB::table('advances')->where('staff_id', $this->core->data['staff'][$this->core->value])->sum('quantity');
         $data = ['total_advance' => $payroll];
 
-        $payroll = tap(Payroll::where(['staff_id' => $request['staff'][$value]]))
+        $payroll = tap(Payroll::where(['staff_id' => $this->core->data['staff'][$this->core->value]]))
         ->update($data)
         ->get('id');
 
         return $payroll;
     }
 
-    public function update($request,$value=null)
+    public function update()
     {
-        $temporale_f = tap(Advance::whereAdvance($request))
-        ->update(['quantity' => $request['qty'][$value]])
+        $temporale_f = tap(Advance::whereAdvance($this->core->data))
+        ->update(['quantity' => $this->core->data['qty'][$this->core->value]])
         ->get('id');
 
         return $temporale_f;
