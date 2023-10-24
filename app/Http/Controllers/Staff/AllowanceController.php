@@ -1,41 +1,51 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-use App\Http\Controllers\Controller;
-
-use App\RepositoryInterface\HRRepositoryInterface;
 use App\RepositoryInterface\PayrollRepositoryInterface;
-use App\Services\PayrollService;
-use App\Models\Allowance;
+use App\Http\Controllers\Controller;
+use App\Services\CoreStaffService;
+use App\Services\Core\HrService;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 use App\Models\AllowanceType;
 use App\Models\Staff;
 use DB;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
-
 class AllowanceController extends Controller
 {
 
     public function __construct(
-        protected HRRepositoryInterface $hr,
-        protected PayrollRepositoryInterface $payroll)
-    {
-        
-        $this->hr = $hr;
-        $this->payroll = $payroll;
-    
+        protected HrService $hr,
+        protected PayrollRepositoryInterface $payroll,
+        protected CoreStaffService $core,
+
+    ) {
     }
 
     public function index()
     {
 
-        // $staffs = Staff::all();
-        // ------------------------------------------------------------------------------------------------
+
+      
+        return response()->json([
+            'allowance_types' => AllowanceType::all(),
+            'staffs' => $this->get_staff(),
+            'list' =>$this->get_staff_allowance()
+        ]);
+    }
+
+
+    public function get_staff (){
+
+        
         $staffs = Cache::rememberForever('staff', function () {
             return DB::table('staff')->get();
         });
-        // --------------------------------------------------------------------------------------------------
 
+        return $staffs;
+
+    }
+    public function get_staff_allowance()
+    {
 
 
         $staff_allowances = Cache::rememberForever('staff_allowances', function () {
@@ -53,83 +63,70 @@ class AllowanceController extends Controller
                 ->paginate(10);
         });
 
-
-
-        $allowance_types = AllowanceType::all();
-        return response()->json(['allowance_types' => $allowance_types, 'staffs' => $staffs, 'list' => $staff_allowances]);
+        return $staff_allowances;
     }
-
-
     public function store(Request $request)
     {
+        $this->core->data = $request->all();
 
-        foreach ($request->post('count') as $value) {
+        try {
 
+            DB::beginTransaction();
 
-            // return response()->json(['message' => $request->all()]);
-            $temporale_f = 0;
-            // $temporale_f = tap(Allowance::whereAllowance($request))
-            //     ->update(['qty' => $request['qty'][$value]])
-            //     ->get('id');
-            $temporale_f = $this->hr->update($request->all());
-            // $this->refresh_payroll($request->all(), $value, $request->post('type'));
-            $this->payroll->refresh($request->all(), $value);
+            foreach ($request->post('count') as $value) {
 
-            if ($temporale_f->isEmpty()) {
+                $this->core->setValue($value);
+                $this->hr->store();
 
-                // $this->add(request: $request->all(), value: $value, type: $request->post('type'));
-                $this->hr->add(request:$request->all(), value:$value);
-                // $this->refresh_payroll($request->all(), $value, $request->post('type'));
-                $this->payroll->refresh($request->all(), $value);
+                Cache::forget('staff_allowances');
+
+                // $this->payroll->refresh();
             }
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             Cache::forget('staff_allowance');
+            return response([
+                'message' => "purchase created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
 
-            // }
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
-
-
-
 
         return response()->json(['message' => $request->all()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+     public function destroy($id)
     {
-        //
+
+        // DB::table('payrolls')->where('staff_id', '=', $id)->delete();
+
+        // $store = staff::find($id);
+
+        // $store->delete();
+
+        // Cache::forget('staff');
+
+
+
+        return response()->json('successfully deleted');
     }
 
 
+ 
 
 
 
 
 
 
-    public function show(Allowance $allowance)
-    {
-        //
-    }
 
 
-    public function edit(Allowance $allowance)
-    {
-        //
-    }
-
-
-    public function update(Request $request, Allowance $allowance)
-    {
-        //
-    }
-
-
-    public function destroy(Allowance $allowance)
-    {
-        //
-    }
+  
 }

@@ -1,15 +1,22 @@
 <?php
 
 namespace App\Repository\HR;
-use App\Models\Discount;
-use App\Models\Payroll;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\RepositoryInterface\PayrollRepositoryInterface;
+use App\Services\CoreStaffService;
+use App\Models\Discount;
+use App\Models\Payroll;
 use DB;
 
 class DiscountRepository implements HRRepositoryInterface,PayrollRepositoryInterface
 {
 
+    public function __construct(public CoreStaffService $core)
+    {
+
+
+        
+    }
 
     function Sum($data)
     {
@@ -26,39 +33,39 @@ class DiscountRepository implements HRRepositoryInterface,PayrollRepositoryInter
     function add(...$list_data)
     {
 
-        $attendance_id  = 0;
-        $request = $list_data['request'];
-        $value = $list_data['value'];
+     
 
         $temporale = new Discount();
-        $temporale->staff_id = $request['staff'][$value];
-        $temporale->discount_type_id = $request['discount_type'][$value];
-        $temporale->quantity = $request['qty'][$value];
-        $temporale->date = $request['date'][$value];
-
+        $temporale->staff_id = $this->core->data['staff'][$this->core->value];
+        $temporale->discount_type_id = $this->core->data['discount_type'][$this->core->value];
+        $temporale->quantity = $this->core->data['qty'][$this->core->value];
+        $temporale->date = $this->core->data['date'][$this->core->value];
         $temporale->save();
-        return $temporale->id;
+        $this->core->id = $temporale->id;
+    }
+
+    public function update()
+    {
+
+        $temporale_f = tap(Discount::whereDiscount($this->core->data))
+        ->update(['quantity' => $this->core->data['qty'][$this->core->value]])
+        ->get('id');
+
+        return $temporale_f;
     }
 
     public function refresh($request, $value)
     {
         
 
-        $payroll = DB::table('discounts')->where('staff_id', $request['staff'][$value])->sum('quantity');
+        $payroll = DB::table('discounts')->where('staff_id', $this->core->data['staff'][$this->core->value])->sum('quantity');
         $data = ['total_discount' => $payroll];
-        $payroll = tap(Payroll::where(['staff_id' => $request['staff'][$value]]))
+        $payroll = tap(Payroll::where(['staff_id' => $this->core->data['staff'][$this->core->value]]))
         ->update($data)
         ->get('id');
 
-        return $payroll;
+        // return $payroll;
 
     }
-    public function update($request,$value=null)
-    {
-        $temporale_f = tap(Advance::whereAdvance($request))
-        ->update(['quantity' => $request['qty'][$value]])
-        ->get('id');
-
-        return $temporale_f;
-    }
+ 
 }

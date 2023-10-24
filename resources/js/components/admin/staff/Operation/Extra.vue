@@ -40,7 +40,7 @@
                   <th class="wd-15p border-bottom-0"> المده</th>
                   <!-- <th class="wd-15p border-bottom-0"> اجر الساعه</th>
                   <th class="wd-15p border-bottom-0"> اجر اليةم</th> -->
-                  <th class="wd-15p border-bottom-0"> ملاجظه</th>
+                  <!-- <th class="wd-15p border-bottom-0"> ملاجظه</th> -->
 
 
                   <th class="wd-15p border-bottom-0">العمليات</th>
@@ -96,41 +96,7 @@
                   </td>
 
 
-                  <!-- <td>
-
-                    <div v-for="(extra_end_time, index) in extra.extra" :key="index">
-                      {{ extra_end_time.number_hours }}
-
-                      <button type="button" @click="delete_item(extra.id)" class="btn btn-danger">
-                      <i class="fa fa-trash"></i>
-                    </button>
-
-                    <router-link :to="{
-                      name: 'edit_extra',
-                      params: { id: extra.id },
-                    }" class="edit btn btn-success">
-                      <i class="fa fa-edit"></i>
-                    </router-link>
-                      <hr>
-                    </div>
-                  </td> -->
-
-                  <!-- <td>
-                   
-                   <div v-for="(extra_end_time, index) in extra.extra" :key="index">
-                     {{ extra_end_time.end_time }}
-                     <hr>
-                   </div>
-                   </td>
-
-                   <td>
-                   
-                   <div v-for="(extra_end_time, index) in extra.extra" :key="index">
-                     {{ extra_end_time.end_time }}
-                     <hr>
-                   </div>
-                   </td> -->
-                  <td>{{ extra.note }}</td>
+               
 
 
                   <td>
@@ -278,6 +244,7 @@
                 </div>
 
                 <div class="modal-footer">
+     
                   <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
                   <!-- <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"@click="submitForm()">
                         حفظ
@@ -419,14 +386,12 @@
                     </div>
                   </div>
                 </div>
-
+<!-- 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
-                  <!-- <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"@click="submitForm()">
-                        حفظ
-                      </button> -->
+             
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+                </div> -->
               </div>
             </div>
           </form>
@@ -503,14 +468,9 @@ export default {
 
     calc_duration(index) {
 
-      // console.log(this.start_time[index]);
-
-      // var word = this.start_time[index];
       var split_start = this.start_time[index].split(":");
       var split_end = this.end_time[index].split(":");
       var date = this.date[index].split("-");
-
-      // console.log(this.date[index]);
 
 
       var date1 = new Date(date[0], date[1], date[2], split_start[0], split_start[1]); // 9:00 AM
@@ -521,7 +481,7 @@ export default {
       var diff = date2 - date1;
       // 28800
 
-      // ---------------------
+      // ---------------------------------------------------------------------------------------------------------
       var msec = diff;
       var hh = Math.floor(msec / 1000 / 60 / 60);
       msec -= hh * 1000 * 60 * 60;
@@ -532,7 +492,7 @@ export default {
       // diff = 28800000 => hh = 8, mm = 0, ss = 0, msec = 0
 
       console.log(hh, mm);
-
+      // ---------------------------------------------------------------------------------------------------------
 
       var minutes = (hh * 60) + mm;
       this.duration[index] = [minutes];

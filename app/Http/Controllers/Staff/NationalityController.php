@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
+
 use App\Traits\Staff\BasicData\StoreTrait;
 use App\Http\Controllers\Controller;
 
@@ -20,9 +21,9 @@ class NationalityController extends Controller
     public function index()
     {
         $nationalities = DB::table('nationalities')
-        ->select('nationalities.*')
-        ->paginate(10);
-    return response()->json($nationalities);
+            ->select('nationalities.*')
+            ->paginate(10);
+        return response()->json(['nationalities'=>$nationalities]);
     }
 
     /**

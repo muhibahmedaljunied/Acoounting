@@ -2,108 +2,85 @@
 
 namespace App\Http\Controllers\Extra;
 
-use App\Services\SanctionService;
-use App\Models\Extra;
+use App\Services\Core\HrService;
+use App\Services\CoreStaffService;
 use App\Models\ExtraType;
 use App\Models\Part;
 use App\Models\SanctionDiscount;
-use App\Models\ExtraSanction;
 use App\Http\Controllers\Controller;
-
-use App\RepositoryInterface\SingleSanctionRepositoryInterface;
-use DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use DB;
+
 class ExtraSanctionController extends Controller
 {
-  
+
+    public function __construct(
+        protected CoreStaffService $core,
+        protected HrService $hr,
+    ) {
+    }
     public function index()
     {
 
 
-        $extra_sanctions = Cache::rememberForever('extra_sanctions_index',function(){
-            
-            return DB::table('extra_sanctions')
-            ->join('extra_types','extra_types.id', '=', 'extra_sanctions.extra_type_id')
-            ->join('parts','parts.id', '=', 'extra_sanctions.part_id')
-            ->join('sanction_discounts','sanction_discounts.id', '=', 'extra_sanctions.sanction_discount_id')
-            ->select('extra_sanctions.*','parts.name as duration','extra_types.name as extra','sanction_discounts.name as discount_name')
-            ->paginate(10);
-
+        $staffs = Cache::rememberForever('staff', function () {
+            return DB::table('staff')->get();
         });
 
-        $extra_types = ExtraType::all();
-        $discount_types = SanctionDiscount::all();
-
-        $extra_parts = Part::all();
-         // ------------------------------------------------------------------------------------------------
-         $staffs = Cache::rememberForever('staff', function () {
-             return DB::table('staff')->get();
-         });
-         // --------------------------------------------------------------------------------------------------
-        
-
-        return response()->json(['list'=>$extra_sanctions,
-                                'extra_types'=>$extra_types,
-                                'staffs'=>$staffs,
-                                'discount_types'=>$discount_types,
-                                'extra_parts'=>$extra_parts]);
+        return response()->json([
+            'list' => $this->get_extra_sanction(),
+            'extra_types' => ExtraType::all(),
+            'staffs' => $staffs,
+            'discount_types' => SanctionDiscount::all(),
+            'extra_parts' => Part::all()
+        ]);
     }
 
 
-    public function store(Request $request,SingleSanctionRepositoryInterface $sanction)
+    public function get_extra_sanction()
     {
-       
 
-        foreach ($request->post('count') as $value) {
+        $extra_sanctions =  DB::table('extra_sanctions')
+            ->join('extra_types', 'extra_types.id', '=', 'extra_sanctions.extra_type_id')
+            ->join('parts', 'parts.id', '=', 'extra_sanctions.part_id')
+            ->join('sanction_discounts', 'sanction_discounts.id', '=', 'extra_sanctions.sanction_discount_id')
+            ->select('extra_sanctions.*', 'parts.name as duration', 'extra_types.name as extra', 'sanction_discounts.name as discount_name')
+            ->paginate(10);
 
-            $temporale_f = 0;
+        return $extra_sanctions;
+    }
+    public function store(Request $request)
+    {
 
-            // $temporale_f = $sanction->update($temporale_f,$request,$request->post('type'));
-            $temporale_f = $sanction->update($temporale_f,$request);
+        $this->core->data = $request->all();
 
+        try {
 
-            if ($temporale_f->isEmpty()) {
+            DB::beginTransaction();
 
-                $sanction->add($request->all(),$value);
+            foreach ($request->post('count') as $value) {
 
-
+                $this->core->setValue($value);
+                $this->hr->store();
             }
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "purchase created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
 
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
 
+
         Cache::forget('extra_sanctions_index');
+        Cache::forget('staff');
         return response()->json(['message' => $request->all()]);
-    }
-
-    
-    public function create()
-    {
-        //
-    }
-
-
-  
-    public function show(Extra $absence)
-    {
-        //
-    }
-
-
-    public function edit(Extra $absence)
-    {
-        //
-    }
-
- 
-    public function update(Request $request, Extra $absence)
-    {
-        //
-    }
-
-
-    public function destroy(Extra $absence)
-    {
-        //
     }
 }

@@ -1,15 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-use App\Http\Controllers\Controller;
-
 use App\Traits\Staff\BasicData\StoreTrait;
+use App\Http\Controllers\Controller;
+use App\Models\WorkSystemDetail;
+use App\Models\WorkSystem;
+use App\Models\PeriodTime;
 use App\Models\Absence;
 use App\Models\WorkType;
-use App\Models\PeriodWorkType;
-use App\Models\Rest;
-use App\Models\Period;
-use App\Models\ProductUnit;
 use DB;
 use Illuminate\Http\Request;
 
@@ -21,54 +19,73 @@ class WorkSystemController extends Controller
     {
 
 
-        $work_types = WorkType::all();
-        // $breaks = Rest::all();
-        $periods = Period::all();
-      
+        $work_systems = WorkSystem::join('work_system_details', 'work_system_details.work_system_id', '=', 'work_systems.id')
+        ->join('work_types', 'work_types.id', '=', 'work_system_details.work_type_id')
+        ->join('period_times', 'period_times.id', '=', 'work_system_details.period_time_id')
+        ->select(
+            'work_systems.name',
+            'work_types.name as type',
+            'period_times.id as period_id',
+            'period_times.*',
+            'work_system_details.day_id as days',
+
+        )
+        ->paginate(10);
+
+        
+        // $work_systms = WorkSystem::select('*')->get();
+
+        // foreach ($work_systms as $value) {
 
 
-        $work_systms = PeriodWorkType::select('*')->get();
-        // $work_systms = WorkType::with(['work_types'])->get();
+        //     $period = PeriodTime::where('id', $value->period_time_id)->get();
+        //     $value->period = $period;
 
-        // $array_data = [];
-        foreach ($work_systms as $value) {
-
-
-            $period = Period::where('id', $value->period_id)->get();
-            $value->period = $period;
-
-            $work_type = WorkType::where('id', $value->work_type_id)->get();
-            $value->work_type = $work_type;
+        //     $work_type = WorkType::where('id', $value->work_type_id)->get();
+        //     $value->work_type = $work_type;
 
 
-            $value->days =  json_decode($value->day_id);
-        }
+        //     $value->days =  json_decode($value->day_id);
+        // }
 
-        return response()->json(['work_types' => $work_types, 'periods' => $periods, 'work_systems' => $work_systms]);
+        return response()->json([
+            'work_types' => WorkType::all(),
+            'periods' => PeriodTime::all(),
+            'work_systems' => $work_systems
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
     public function create()
     {
         //
     }
 
 
-    // public function store(Request $request)
-    // {
-    //     $absence = new Absence();
-    //     $absence->staff_id = $request->post('staff');
-    //     $absence->absence_type_id = $request->post('absence_type');
-    //     $absence->date = $request->post('date');
-    //     $absence->note = $request->post('note');
+    public function store(Request $request)
+    {
 
-    //     $absence->save();
-    //     return response()->json();
-    // }
+
+        $work_systm = new WorkSystem();
+
+        $work_systm->name = $request->post('name');
+        // $absence->work_type_id = $request->post('work_type');
+        
+        $work_systm->save();
+
+        foreach ($request->post('count') as $value) {
+
+
+            $absence = new WorkSystemDetail();
+            $absence->work_system_id = $work_systm->id;
+            $absence->work_type_id = $request->post('work_type');
+            $absence->period_time_id = $request->post('period')[$value];
+            $absence->day_id = json_encode($request->post('day')[$value]);
+
+            $absence->save();
+        }
+        return response()->json();
+    }
 
 
     public function show(Absence $absence)

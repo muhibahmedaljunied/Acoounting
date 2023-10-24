@@ -176,14 +176,16 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
         App\Providers\SanctionServiceProvider::class,
-        // App\Providers\TemporaleServiceProvider::class,
         App\Providers\DetailServiceProvider::class,
         App\Providers\StockServiceProvider::class,
         App\Providers\ReturnServiceProvider::class,
         App\Providers\PayrollServiceProvider::class,
         App\Providers\HRServiceProvider::class,
-
+        App\Providers\InventuryServiceProvider::class,
+        App\Providers\WarehouseServiceProvider::class,
+        App\Providers\UnitServiceProvider::class,
         // Maatwebsite\Excel\ExcelServiceProvider::class,
+        // Fhsinchy\Inspire\Providers\InspirationProvider::class,
  
 
     ],

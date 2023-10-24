@@ -113,7 +113,7 @@
       get_transfer() {
         let uri = `/listtransfer`;
         this.axios
-          .post(uri)
+          .post(uri,{type:'Transfer'})
           .then((responce) => {
             this.transfers = responce.data;
           })

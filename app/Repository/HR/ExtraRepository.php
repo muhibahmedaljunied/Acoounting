@@ -1,18 +1,24 @@
 <?php
 
 namespace App\Repository\HR;
-
-use App\Models\Extra;
-use App\Models\ExtraDetail;
-use App\Models\Payroll;
+use App\Services\CoreStaffService;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\RepositoryInterface\PayrollRepositoryInterface;
+use App\Models\Extra;
+use App\Models\ExtraDetail;
+use App\Models\Payroll;
 use DB;
 
 class ExtraRepository implements HRRepositoryInterface, DetailRepositoryInterface, PayrollRepositoryInterface
 {
+    
+    public function __construct(public CoreStaffService $core)
+    {
 
+
+        
+    }
 
     function Sum($data)
     {
@@ -27,36 +33,37 @@ class ExtraRepository implements HRRepositoryInterface, DetailRepositoryInterfac
             }
         }
     }
-    function add(...$list_data)
+    function add()
     {
 
-        $attendance_id  = 0;
-        $request = $list_data['request'];
-        $value = $list_data['value'];
-
+      
+     
         $temporale = new Extra();
-        $temporale->staff_id = $request['staff'][$value];
-        $temporale->extra_type_id = $request['extra_type'][$value];
-        $temporale->date = $request['date'][$value];
-        $temporale->start_time = $request['start_time'][$value];
-        $temporale->end_time = $request['end_time'][$value];
-        $temporale->number_hours = $request['duration'][$value][0];
-
+        $temporale->staff_id = $this->core->data['staff'][$this->core->value];
+        $temporale->extra_type_id = $this->core->data['extra_type'][$this->core->value];
+        $temporale->date = $this->core->data['date'][$this->core->value];
+        $temporale->start_time = $this->core->data['start_time'][$this->core->value];
+        $temporale->end_time = $this->core->data['end_time'][$this->core->value];
+        $temporale->number_hours = $this->core->data['duration'][$this->core->value][0];
         $temporale->save();
-        return $temporale->id;
+        $this->core->id = $temporale->id;
+     
     }
 
-    public function update($request, $value = null)
+    public function update()
     {
-        $temporale_f = tap(Extra::whereExtra($request))
+
+   
+   
+        $temporale_f = tap(Extra::whereExtra($this->core->data))
             ->update([
-                'date' => $request['date'][$value],
-                'start_time' => $request['start_time'][$value],
-                'end_time' => $request['end_time'][$value],
-                'number_hours' => $request['duration'][$value]
+                'date' => $this->core->data['date'][$this->core->value],
+                'start_time' => $this->core->data['start_time'][$this->core->value],
+                'end_time' => $this->core->data['end_time'][$this->core->value],
+                'number_hours' => $this->core->data['duration'][$this->core->value]
             ])
             ->get('id');
-
+         
         return $temporale_f;
     }
 
@@ -64,21 +71,22 @@ class ExtraRepository implements HRRepositoryInterface, DetailRepositoryInterfac
     {
 
 
-        $data = $list_data['request'];
-        $id = $list_data['id'];
+       
         $value = $list_data['value'];
-        $temporale = new ExtraDetail();
-        $temporale->extra_id = $id;
-        $temporale->extra_sanction_id = $value->extra_sanction_id;
-        $temporale->date = $data['date'][1];
-        $temporale->save();
+        $extra = new ExtraDetail();
+        $extra->extra_id = $this->core->id;
+        $extra->extra_sanction_id = $value->extra_sanction_id;
+        $extra->save();
+
+        $this->core->status_sanction = true;
+        
     }
-    public function refresh($id, $value)
+
+    public function refresh($id,$value)
     {
         
-      tap(Payroll::where('staff_id',$id))->increment('total_extra',$value->sanction)->get();
-
-       
+        // dd($value->sanction);
+      tap(Payroll::where('staff_id',$id))->increment('total_extra',$value->sanction)->get(); 
 
     }
 }

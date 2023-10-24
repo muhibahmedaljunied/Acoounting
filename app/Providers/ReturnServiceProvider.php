@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\RepositoryInterface\ReturnRepositoryInterface;
 use App\Repository\Return\PurchaseReturnRepository;
 use App\Repository\Return\SaleReturnRepository;
+use App\RepositoryInterface\DailyRepositoryInterface;
 
 class ReturnServiceProvider extends ServiceProvider
 {
@@ -39,6 +40,24 @@ class ReturnServiceProvider extends ServiceProvider
             return new PurchaseReturnRepository();
         });
 
+        $this->app->bind(DailyRepositoryInterface::class, function () {
+
+            $request = app(\Illuminate\Http\Request::class);
+
+            if ($request->type == 'PurchaseReturn') {
+
+                return new PurchaseReturnRepository();
+            }
+
+            if ($request->type == 'SaleReturn') {
+
+                return new SaleReturnRepository();
+            }
+
+          
+
+            return new PurchaseReturnRepository();
+        });
 
         
         

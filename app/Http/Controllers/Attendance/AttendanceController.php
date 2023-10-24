@@ -1,20 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\Attendance;
-
+use App\Services\core\CoreStaffAttendanceService;
+use App\RepositoryInterface\DetailRepositoryInterface;
+use App\Traits\Details\DetailsTrait;
+use App\Http\Controllers\Controller;
+use App\Services\CoreStaffService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Services\AttendanceService;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Models\Staff;
-use App\Models\OfficialHoliday;
+use App\Models\WorkSystem;
 use App\Models\WorkType;
-use App\Models\PeriodWorkType;
-use App\Traits\Details\DetailsTrait;
-use App\Http\Controllers\Controller;
-use App\Models\AttendanceDetail;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
+
 
 class AttendanceController extends Controller
 
@@ -24,31 +24,33 @@ class AttendanceController extends Controller
 
     public function __construct(
         protected AttendanceService $service,
-        protected DetailRepositoryInterface $details
+        protected DetailRepositoryInterface $details,
+        protected CoreStaffService $core,
+        protected CoreStaffAttendanceService $attendance_core,
+
     ) {
-        $this->service = $service;
-        $this->details = $details;
     }
 
 
     public function index(Request $request)
     {
 
-        $attendances =  Staff::with([
-            'attendance' => function ($query) {
-                $query->select('*');
-            }
-        ])->paginate(10);
-        $official_holidays = OfficialHoliday::all();
-        // ------------------------------------------------------------------------------------------------
-        $minutes = 60;
-        $staffs = Cache::remember('staff', $minutes, function () {
-            return DB::table('staff')->get();
-        });
-        // --------------------------------------------------------------------------------------------------
 
-        return response()->json(['list' => $attendances, 'staffs' => $staffs, 'official_holidays' => $official_holidays]);
+        $staff_list = Cache::rememberForever('staff_eager_load', function () {
+
+            return DB::table('staff')
+                ->select('staff.id as staff_id', 'staff.name')
+                ->paginate(10);
+        });
+
+        return response()->json([
+
+            'list' => $staff_list,
+            'work_systems' => WorkSystem::all(),
+
+        ]);
     }
+
 
     public function report(Request $request)
     {
@@ -72,20 +74,26 @@ class AttendanceController extends Controller
 
 
 
-        $periods = PeriodWorkType::where('period_work_types.work_type_id', $request->id)
-            ->join('work_types', 'work_types.id', '=', 'period_work_types.work_type_id')
-            ->join('periods', 'periods.id', '=', 'period_work_types.period_id')
-            ->select('periods.*', 'periods.id as period_id', 'periods.name as period_name', 'work_types.*')
+        $periods = WorkSystem::where('work_systems.id', $request->id)
+            ->join('work_system_details', 'work_system_details.work_system_id', '=', 'work_systems.id')
+            ->join('period_times', 'period_times.id', '=', 'work_system_details.period_time_id')
+            ->join('periods', 'periods.id', '=', 'period_times.period_id')
+            ->select(
+                'periods.*',
+                'period_times.id as period_id',
+                'period_times.*',
+
+            )
             ->get();
 
 
-        $staffs = staff::where('staff.work_type_id', $request->id)
-            ->select('staff.*')
-            ->get();
+        // dd($periods);
 
 
-
-        return response()->json(['periods' => $periods, 'staffs' => $staffs]);
+        return response()->json([
+            'periods' => $periods,
+            // 'staffs' => $staffs
+        ]);
     }
 
     public function search(Request $request)
@@ -186,8 +194,6 @@ class AttendanceController extends Controller
 
 
 
-        // ----------------------------------------------------------------
-        
         $period = DB::table('attendances')->where([
             'attendances.attendance_date' => $request['date']
         ])
@@ -197,18 +203,30 @@ class AttendanceController extends Controller
 
         foreach ($period as $key => $value) {
 
-            if ($value->attendance_status == 1) {
 
-                $periods = DB::table('attendance_details')->where([
-                    'attendance_details.period_id' => $request->id,
-                    'attendance_details.attendance_id' => $value->id,
-                ])
-                    ->select('attendance_details.*')
-                    ->get();
+            $periods = DB::table('attendance_details')->where([
+                'attendance_details.period_id' => $request->period_id,
+                'attendance_details.attendance_id' => $value->id,
+            ])
+                ->select('attendance_details.*')
+                ->get();
 
-                $value->details = $periods;
-            }
+            $value->details = $periods;
+            // }
         }
+
+        // -------------------------------------------------------------------------------------------
+        
+        if ($period->isEmpty()) {
+
+            $period =  DB::table('staff')
+                ->join('staff_work_systems', 'staff.id', '=', 'staff_work_systems.staff_id')
+                ->where('staff_work_systems.work_system_id', $request->work_system_id)
+                ->select('staff.id as staff_id', 'staff.name')
+                ->paginate(10);
+        }
+
+
         return response()->json(['periods' => $period]);
     }
 
@@ -216,27 +234,26 @@ class AttendanceController extends Controller
     {
 
 
-        // return response([
-        //     'message' => $request->all(),
-
-        // ]);
-
-    
+        // dd($request->all());
+        $this->attendance_core->data = $request->all();
         try {
 
             DB::beginTransaction();
             foreach ($request->post('count') as $value) {
 
-                if ($request['attendance_status'][$value] == 1) {
 
-                    $this->service->attende($request, $value);
+                $this->attendance_core->setValue($value);
+
+                if ($this->attendance_core->data['attendance_status'] == 1) {
+
+                    $this->service->attende();
                 } else {
-                    $this->service->absence($request, $value);
+                    $this->service->absence();
                 }
             }
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([
-                'message' => "purchase created successfully",
+                'message' => "attendance created successfully",
                 'status' => "success"
             ], 200);
         } catch (\Exception $exp) {

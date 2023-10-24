@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-header">
 
-          <span class="h2"> جزاءات الاضافي</span>
+          <span class="h2">  الاضافي</span>
           <div style="display: flex;float: left; margin: 5px">
             <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addSE">
@@ -262,7 +262,7 @@ export default {
         type: Object,
         default: null,
       },
-
+      word_search:'',
       iterationselected: [],
       discounttypeselected: [],
       sanctionselected: [],
@@ -299,11 +299,13 @@ export default {
       this.axios
         .post(`/extra_sanction?page=${page}`)
         .then(({ data }) => {
+          // console.log($data);
+          this.value_list = data.list;
           this.extra_types = data.extra_types;
           this.discount_types = data.discount_types;
           this.extra_parts = data.extra_parts;
           this.staffs = data.staffs;
-          this.value_list = data.list;
+        
         })
         .catch(({ response }) => {
           console.error(response);

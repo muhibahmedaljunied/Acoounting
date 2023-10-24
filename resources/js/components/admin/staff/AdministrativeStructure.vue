@@ -126,26 +126,19 @@
 
 <script>
 
-// import jtree from '../../../../js/jtree.js';
 import tree from '../../../../js/tree/tree.js';
 
 export default {
-    // mixins: [jtree],
-    mixins: [tree],
 
-    // mixins: [tree],
+    mixins: [tree],
     data() {
         return {
            
             error_text: '',
             error_hash_rate: '',
             error_purchase_price: '',
-        
             retail_unit: '',
             hash_rate: '',
-       
-      
-   
             file: '',
             text: '',
             staff: '',
@@ -154,11 +147,7 @@ export default {
             id: '',
             trees: "",
             errors: "",
-
             add: 0,
-
-
-
 
         };
     },

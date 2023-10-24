@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-##########################Supplier#######################################
+/*--------------------------Supplier---------------------------------------*/
 
 Route::post('/supplier', 'Purchase\SupplierController@index');
 Route::post('/store_supplier', 'Purchase\SupplierController@store');
@@ -15,7 +15,7 @@ Route::post('/SupplierExport', 'Purchase\SupplierController@Export');
 Route::post('/SupplierImport', 'Purchase\SupplierController@Import');
 
 
-################################################purchase##################################
+/*------------------------------------------------purchase----------------------------------*/
 
 Route::post('/purchase/newpurchase', 'Purchase\PurchaseController@index');
 Route::post('/Purchase/delete', 'Purchase\PurchaseController@destroy');

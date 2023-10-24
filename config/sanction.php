@@ -8,7 +8,7 @@ return [
         'extra_sanction',
         'leave_sanction',
         'delay_sanction',
-    
+
     ]
 
 ];

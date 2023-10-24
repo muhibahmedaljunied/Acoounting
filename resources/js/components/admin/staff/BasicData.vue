@@ -3,6 +3,9 @@
     <div class="row row-sm">
       <div class="col-lg-12 col-md-12">
         <div class="card" id="basic-alert">
+          <div class="card-header">
+            البيانات الاساسيه
+          </div>
           <div class="card-body">
             <!-- <div>
 					<h6 class="card-title mb-1">Basic Style Tabs</h6>
@@ -61,7 +64,7 @@
                           <a href="#tab10" class="nav-link" data-toggle="tab">انواع الاضافي</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab19" class="nav-link" data-toggle="tab"> اجزاء الاضافي</a>
+                          <a href="#tab19" class="nav-link" data-toggle="tab"> اجزاء الوقت</a>
                         </li>
 
                         <!-- <li class="nav-item">
@@ -74,14 +77,20 @@
 
                     
                         <li class="nav-item">
-                          <a href="#tab23" class="nav-link" data-toggle="tab"> انواع الدوام </a>
+                          <a href="#tab23" class="nav-link" data-toggle="tab"> فترات الدوام </a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab17" class="nav-link" data-toggle="tab"> نظام وفترات الدوام </a>
+                          <a href="#tab17" class="nav-link" data-toggle="tab"> نظام الدوام </a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab21" class="nav-link" data-toggle="tab"> فترات الدوام</a>
+                          <a href="#tab21" class="nav-link" data-toggle="tab"> اوقات فترات الدوام  </a>
                         </li>
+
+                        <li class="nav-item">
+                          <a href="#tab24" class="nav-link" data-toggle="tab"> انواع الدوام </a>
+                        </li>
+
+
                         <!-- <li class="nav-item">
                           <a href="#tab22" class="nav-link" data-toggle="tab"> اوقات الاستراحه</a>
                         </li>
@@ -123,9 +132,7 @@
                       <div class="tab-pane" id="tab9">
                         <delay-type></delay-type>
                       </div>
-                      <!-- <div class="tab-pane" id="tab20">
-                        <leave-sanction></leave-sanction>
-                      </div> -->
+           
 
                       <div class="tab-pane" id="tab10">
                         <extra-type></extra-type>
@@ -137,25 +144,6 @@
                       <div class="tab-pane" id="tab12">
                         <vacation-type></vacation-type>
                       </div>
-
-                      
-<!-- 
-                      <div class="tab-pane" id="tab13">
-                        <delay-sanction></delay-sanction>
-                      </div> -->
-
-
-                      <!-- <div class="tab-pane" id="tab14">
-                        <absence-sanction></absence-sanction>
-                      </div> -->
-
-                      <!-- <div class="tab-pane" id="tab15">
-                        <extra-sanction></extra-sanction>
-                      </div> -->
-
-                      <!-- <div class="tab-pane" id="tab16">
-                        <leave-sanction></leave-sanction>
-                      </div> -->
 
                     
                       <div class="tab-pane" id="tab17">
@@ -171,17 +159,20 @@
                       </div>
 
                       <div class="tab-pane" id="tab21">
+                        <period-time></period-time> 
+                      </div>
+
+
+             
+
+                      <div class="tab-pane" id="tab23">
                         <period></period> 
                       </div>
 
-
-                      <!-- <div class="tab-pane" id="tab22">
-                        <break></break> 
-                      </div> -->
-
-                      <div class="tab-pane" id="tab23">
+                      <div class="tab-pane" id="tab24">
                         <work-type></work-type> 
                       </div>
+
 
                     </div>
                   </div>
@@ -207,16 +198,12 @@ import Qualifications from "./BasicData/Qualifications";
 import Religion from "./BasicData/Religion";
 import Allowance from "./BasicData/Allowance";
 import Nationality from "./BasicData/Nationality";
-// import DelaySanction from "./BasicData/DelaySanction";
-// import AbsenceSanction from "./BasicData/AbsenceSanction";
-// import ExtraSanction from "./BasicData/ExtraSanction";
 import OfficialHoliday from "./BasicData/OfficialHoliday";
 import ExtraPart from "./BasicData/ExtraPart";
-// import LeaveSanction from "./BasicData/LeaveSanction";
 import WorkSystem from "./BasicData/WorkSystem";
 import WorkType from "./BasicData/WorkType";
-// import Break from "./BasicData/Break";
 import Period from "./BasicData/Period";
+import PeriodTime from "./BasicData/PeriodTime";
 
 
 
@@ -231,18 +218,14 @@ export default {
     Allowance,
     DelayType,
     VacationType,
-    // DelaySanction,
-    // AbsenceSanction,
-    // ExtraSanction,
     ExtraType,
     Nationality,
     OfficialHoliday,
     ExtraPart,
-    // LeaveSanction,
     WorkSystem,
     WorkType,
-    // Break,
-    Period
+    Period,
+    PeriodTime,
 
 
   },

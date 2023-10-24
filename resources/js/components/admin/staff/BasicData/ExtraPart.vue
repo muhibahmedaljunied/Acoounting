@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-header">
 
-          <span class="h2">اجزاء الاضافي</span>
+          <span class="h2">اجزاء الوقت</span>
           <div style="display: flex;float: left; margin: 5px">
             <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addEP">
@@ -28,8 +28,8 @@
                 <tr>
                   <th class="wd-15p border-bottom-0">#</th>
                   <th class="wd-15p border-bottom-0">الجزء</th>
-                  <th class="wd-15p border-bottom-0">من</th>
-                  <th class="wd-15p border-bottom-0">الي</th>
+                  <th class="wd-15p border-bottom-0">المده</th>
+                  <!-- <th class="wd-15p border-bottom-0">الي</th> -->
 
 
                   <th class="wd-15p border-bottom-0">العمليات</th>
@@ -39,8 +39,8 @@
                 <tr v-for="(extra_part, index) in extra_parts" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ extra_part.name }}</td>
-                  <td>{{ extra_part.from_time }}</td>
-                  <td>{{ extra_part.into_time }}</td>
+                  <td>{{ extra_part.duration }}</td>
+                  <!-- <td>{{ extra_part.into_time }}</td> -->
                   <td>
                     <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
                     <button type="button" @click="delete_extra_type(extra_part.id)"

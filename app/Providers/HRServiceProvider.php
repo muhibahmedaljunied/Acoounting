@@ -1,16 +1,19 @@
 <?php
 
 namespace App\Providers;
-
-
-use App\Repository\HR\ExtraRepository;
+use App\RepositoryInterface\HRRepositoryInterface;
+use App\Repository\HR\DelaySanctionRepository;
+use App\Repository\HR\LeaveSanctionRepository;
+use App\Repository\HR\ExtraSanctionRepository;
 use App\Repository\HR\AdvanceRepository;
 use App\Repository\HR\AllowanceRepository;
 use App\Repository\HR\DiscountRepository;
 use App\Repository\HR\VacationRepository;
-use App\RepositoryInterface\HRRepositoryInterface;
-
+use App\Repository\HR\ExtraRepository;
+use App\Services\CoreStaffService;
 use Illuminate\Support\ServiceProvider;
+
+
 
 class HRServiceProvider extends ServiceProvider
 {
@@ -22,38 +25,60 @@ class HRServiceProvider extends ServiceProvider
     public function register()
     {
 
+        
         $this->app->bind(HRRepositoryInterface::class, function () {
 
             $request = app(\Illuminate\Http\Request::class);
 
+
+            $core = app(CoreStaffService::class);
+
             if ($request->type == 'extra') {
 
-                return new ExtraRepository();
+                return new ExtraRepository($core);
             }
 
             if ($request->type == 'advance') {
 
-                return new AdvanceRepository();
+                return new AdvanceRepository($core);
             }
 
             if ($request->type == 'discount') {
 
-                return new DiscountRepository();
+                return new DiscountRepository($core);
             }
 
 
-            if ($request->type == 'vacation') {
+            if ($request->type == 'leave') {
 
-                return new VacationRepository();
+                return new VacationRepository($core);
             }
+
+            if ($request->type == 'leave_sanction') {
+
+                return new LeaveSanctionRepository($core);
+            }
+
+
+            if ($request->type == 'delay_sanction') {
+
+                return new DelaySanctionRepository($core);
+            }
+
+            if ($request->type == 'extra_sanction') {
+
+                return new ExtraSanctionRepository($core);
+            }
+
+
 
             if ($request->type == 'allowance') {
 
-                return new AllowanceRepository();
+                return new AllowanceRepository($core);
             }
 
 
-            return new ExtraRepository();
+            return new ExtraRepository($core);
         });
 
     }

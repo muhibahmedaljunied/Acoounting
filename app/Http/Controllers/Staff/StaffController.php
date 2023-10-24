@@ -1,38 +1,31 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-
-use App\Models\Branch;
-use App\Models\Staff;
+use App\RepositoryInterface\HRRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 use App\Models\AdministrativeStructure;
 use App\Http\Controllers\Controller;
+use App\Models\PeriodTime;
+use App\Models\WorkSystem;
 use App\Models\Qualification;
+use App\Models\Branch;
+use App\Models\Staff;
 use App\Models\Nationality;
 use App\Models\StaffType;
 use App\Models\StaffReligion;
-use App\Services\HrService;
-use App\Models\Payroll;
-use App\Models\WorkType;
-use App\RepositoryInterface\PayrollRepositoryInterface;
-use App\RepositoryInterface\HRRepositoryInterface;
-use DB;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use DB;
 
 class StaffController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function index()
     {
 
 
-        $staff_list = Cache::rememberForever('staff_eager_load', function () {
+        $staff_list = Cache::rememberForever('staff_eager_load_e', function () {
 
-            return  Staff::with([
+            return Staff::with([
 
                 'department' => function ($query) {
                     $query->select('*');
@@ -49,9 +42,9 @@ class StaffController extends Controller
                 'staff_type' => function ($query) {
                     $query->select('*');
                 },
-                'work_type' => function ($query) {
-                    $query->select('*');
-                },
+                // 'work_type' => function ($query) {
+                //     $query->select('*');
+                // },
                 'staff_religion' => function ($query) {
                     $query->select('*');
                 },
@@ -63,25 +56,31 @@ class StaffController extends Controller
                 ->paginate(10);
         });
 
-        // ------------------------------------------------------------------------------------------------
-        $staffs = $this->get_staff();
-        // --------------------------------------------------------------------------------------------------
+        // dd($staff_list);
 
-        $work_systems = WorkType::all();
-        $qualifications = Qualification::all();
-        $nationalities = Nationality::all();
-        $staff_types = StaffType::all();
-        $staff_religions = StaffReligion::all();
-        $branches = Branch::all();
+        $period_times = PeriodTime::join('periods', 'periods.id', '=', 'period_times.period_id')
+        ->select(
+            'periods.*',
+            'periods.id as period_id',
+            'period_times.*',
+            'period_times.id as period_time_id',
+        )
+        ->get();
+
+
+   
         return response()->json([
-            'qualifications' => $qualifications,
-            'nationalities' => $nationalities,
-            'staff_types' => $staff_types,
-            'staff_religions' => $staff_religions,
+
+            'qualifications' => Qualification::all(),
+            'nationalities' => Nationality::all(),
+            'staff_types' => StaffType::all(),
+            'staff_religions' => StaffReligion::all(),
             'list' => $staff_list,
-            'branches' => $branches,
-            'staffs' => $staffs,
-            'work_systems' => $work_systems
+            'branches' => Branch::all(),
+            'staffs' => $this->get_staff(),
+            'work_systems' =>WorkSystem::all(),
+            'period_times'=>$period_times
+            
         ]);
     }
 
@@ -139,7 +138,7 @@ class StaffController extends Controller
         $staff->branch_id = $request->post('branch');
         $staff->department_id = $request->post('department');
         $staff->phone = $request->post('phone');
-        $staff->work_type_id = $request->post('work');
+        // $staff->work_type_id = $request->post('work');
         $staff->date = $request->post('date');
         $staff->staff_status = $request->post('staff_status');
         $staff->qualification_id = $request->post('qualification');
@@ -150,17 +149,17 @@ class StaffController extends Controller
         $staff->religion_id = $request->post('religion');
         $staff->social_status = $request->post('social_status');
         $staff->email = $request->post('email');
-        $staff->salary = $request->post('salary');
+        // $staff->salary = $request->post('salary');
         $staff->save();
 
         //----------------------------------------------------------------------------------------------- 
-        $payroll = new Payroll();
-        $payroll->staff_id = $staff->id;
-        $payroll->net_salary = $request->post('salary');
-        $payroll->save();
+        // $payroll = new Payroll();
+        // $payroll->staff_id = $staff->id;
+        // $payroll->net_salary = $request->post('salary');
+        // $payroll->save();
 
         Cache::forget('staff');
-        Cache::forget('staff_eager_load');
+        Cache::forget('staff_eager_load_e');
 
 
 
@@ -292,8 +291,19 @@ class StaffController extends Controller
         //
     }
 
-    public function destroy(Staff $staff)
+    public function destroy($id)
     {
-        //
+
+        // DB::table('payrolls')->where('staff_id', '=', $id)->delete();
+
+        $store = staff::find($id);
+
+        $store->delete();
+
+        Cache::forget('staff');
+        Cache::forget('staff_eager_load_e');
+
+
+        return response()->json('successfully deleted');
     }
 }

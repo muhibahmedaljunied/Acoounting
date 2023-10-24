@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-##########################Supplier#######################################
 Route::post('/customer', 'Sale\CustomerController@index');
 Route::post('/store_customer', 'Sale\CustomerController@store');
 Route::post('/sale/newsale', 'Sale\SaleController@index');

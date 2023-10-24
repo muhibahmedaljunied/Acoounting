@@ -221,9 +221,11 @@ export default {
       total: 0,
       word_search: "",
       table: 'purchase_details',
+      type:'',
     };
   },
   mounted() {
+    this.type = 'Purchase';
     this.list();
   },
   methods: {
@@ -266,11 +268,14 @@ export default {
           this.purchases = data.purchases;
         });
     },
-    list(page = 1) {
+    list(page = 1) 
+    {
+
+      // alert('dddddddddddddddddddddddddd');
+
       this.axios
-        .post(`/listpurchase?page=${page}`)
+        .post(`/listpurchase?page=${page}`,{ type: this.type })
         .then(({ data }) => {
-          console.log(data.purchases);
           this.purchases = data.purchases;
         })
         .catch(({ response }) => {

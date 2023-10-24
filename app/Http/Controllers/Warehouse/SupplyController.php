@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
-
 use App\Traits\GeneralTrait;
-use App\Traits\Temporale\TemporaleTrait;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\Details\DetailsTrait;
 use App\Models\StoreProduct;
@@ -16,7 +14,6 @@ use App\Models\Unit;
 use App\Models\Temporale;
 use App\Http\Controllers\Controller;
 use App\RepositoryInterface\StockRepositoryInterface;
-use App\RepositoryInterface\TemporaleRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Services\InventureService;
 use App\Models\Stock;
@@ -30,16 +27,16 @@ use DB;
 class SupplyController extends Controller
 {
 
-    use TemporaleTrait, InvoiceTrait, DetailsTrait, GeneralTrait;
+    use InvoiceTrait, DetailsTrait, GeneralTrait;
 
     public function __construct(protected StockRepositoryInterface $stock,
-                                protected TemporaleRepositoryInterface $temporale,
+                              
                                 protected DetailRepositoryInterface $details,
                                 protected InventureService $inventury)
     {
-        $this->inventury = $inventury;
-        $this->stock = $stock;
-        $this->temporale = $temporale;
+        // $this->inventury = $inventury;
+        // $this->stock = $stock;
+  
     }
 
     public function index()
@@ -81,6 +78,7 @@ class SupplyController extends Controller
         return response()->json(['products' => $products]);
     }
 
+    
     public function store(Request $request)
     {
 
@@ -109,71 +107,134 @@ class SupplyController extends Controller
     }
 
 
+    // public function payment(Request $request)
+    // {
+
+
+
+    //     $supply_id =  $this->stock->add($request->all());
+    //     $temporale = $this->check_temporale($request->post('type'));
+        
+    //     if ($temporale != 0) {
+
+
+    //         foreach ($temporale as $value) {
+
+    //             $stock_f = 0;
+    //             $store_product_f = 0;
+
+    //             $store_product_f = $this->refresh_store(
+    //                 data: $value,
+
+    //             ); // this make updating for store_products
+              
+    //             $id_store_product = $this->get($value);  //this get data from store_products
+    //             //----------------------------------------------------------------------------------------------------------------------------------------- 
+    //             if ($store_product_f == 0) {
+
+    //                 $id_store_product = $this->init_store(
+    //                     data: $value,
+    //                 );
+
+
+    //                 // $id_store_product = $this->init_store(value:$value, type:$request->post('type')); // this make intial for store_products if it is empty
+    //             }
+
+    //             $this->details->init_details(
+    //                 id: $supply_id,
+    //                 id_store_product: $id_store_product,
+    //                 data: $value,
+
+    //             ); // this make initial for details tables
+
+    //             $this->inventury->refresh_price($id_store_product); //this make refresh for cost of product
+
+
+    //             $stock_f = $this->refresh_stock(
+    //                 id: $supply_id,
+    //                 data: $value,
+
+    //             ); // this make update for stock table
+
+    //             if ($stock_f == 0) {
+
+    //                 $this->init_stock(
+    //                     id: $supply_id,
+    //                     data: $value,
+
+    //                 ); //this make intial for stock table if it is empty 
+    //             }
+    //         }
+
+    //         Temporale::where('type_process', $request->post('type'))->delete(); //this removes data from temporale table after moving it 
+    //         return response()->json(['message' => 'success']);
+    //     }
+
+    //     return response()->json(['message' => 'faild']);
+    // }
     public function payment(Request $request)
     {
 
 
 
-        $supply_id =  $this->stock->add($request->all());
-        $temporale = $this->check_temporale($request->post('type'));
-        
-        if ($temporale != 0) {
+        $this->core->data = $request->all();
+
+        $this->core->discount = $request['discount'] * $request['grand_total'] / 100;
+
+        // $result  = $this->daily->check_account();
+
+        // if ($result == 0) {
+
+        //     return response([
+        //         'message' => $this->daily->message,
+        //         'status' => 'failed'
+        //     ], 400);
+        // }
 
 
-            foreach ($temporale as $value) {
 
-                $stock_f = 0;
-                $store_product_f = 0;
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-                $store_product_f = $this->refresh_store(
-                    data: $value,
+            $this->stock->add(); // this insert data into purchase table
 
-                ); // this make updating for store_products
-              
-                $id_store_product = $this->get($value);  //this get data from store_products
-                //----------------------------------------------------------------------------------------------------------------------------------------- 
-                if ($store_product_f == 0) {
+            foreach ($request->post('count') as $value) {
 
-                    $id_store_product = $this->init_store(
-                        data: $value,
-                    );
+                $this->core->value  = $value + 1;
 
+                $this->stock->decode_unit()->convert_qty(); // this make decode for unit and convert qty into miqro
 
-                    // $id_store_product = $this->init_store(value:$value, type:$request->post('type')); // this make intial for store_products if it is empty
-                }
+                $this->purchase->store(); // this handle data in store_product table
 
-                $this->details->init_details(
-                    id: $supply_id,
-                    id_store_product: $id_store_product,
-                    data: $value,
+                $this->details->init_details(); // this make initial for details table
 
-                ); // this make initial for details tables
-
-                $this->inventury->refresh_price($id_store_product); //this make refresh for cost of product
-
-
-                $stock_f = $this->refresh_stock(
-                    id: $supply_id,
-                    data: $value,
-
-                ); // this make update for stock table
-
-                if ($stock_f == 0) {
-
-                    $this->init_stock(
-                        id: $supply_id,
-                        data: $value,
-
-                    ); //this make intial for stock table if it is empty 
-                }
+                $this->purchase->stock(); // this handle data in stock table
             }
 
-            Temporale::where('type_process', $request->post('type'))->delete(); //this removes data from temporale table after moving it 
-            return response()->json(['message' => 'success']);
-        }
+            $this->payment_purchase($this->core);
 
-        return response()->json(['message' => 'faild']);
+            $this->purchase->daily();
+
+            // dd('ddddddddddddd');
+            // ------------------------------------------------------------------------------------------------------
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
+            return response([
+                'message' => "supply created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+
+
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
     }
+
 
 
     public function create()

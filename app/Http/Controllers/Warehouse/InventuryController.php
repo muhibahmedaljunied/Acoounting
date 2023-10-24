@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
+
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Traits\GeneralTrait;
-use App\Traits\Temporale\TemporaleTrait;
 use App\Http\Controllers\Controller;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\Details\DetailsTrait;
@@ -17,13 +17,9 @@ use DB;
 
 class InventuryController extends Controller
 {
-    use TemporaleTrait, InvoiceTrait, DetailsTrait, GeneralTrait;
-
-    public function __construct(protected DetailRepositoryInterface $details)
-    {
-        $this->details = $details;
-        
-    }
+    use InvoiceTrait, DetailsTrait, GeneralTrait;
+    protected DetailRepositoryInterface $details;
+  
     public function index()
     {
 
@@ -31,7 +27,7 @@ class InventuryController extends Controller
         $statuses = Status::all();
 
         return response()->json([
-            // 'temporales' => $temporale, 
+     
             'statuses' => $statuses
         ]);
     }
@@ -52,17 +48,13 @@ class InventuryController extends Controller
 
 
 
-                // dd(array_values($request->all()));
-                // dd($data);
-
                 $stock_f = 0;
                 $store_product_f = 0;
-                
+
                 $store_product_f = $this->refresh_store(data: $data); // this make updating for store_products
 
                 $id_store_product = $this->get($data);  //this get data from store_products
 
-                // //----------------------------------------------------------------------------------------------------------------------------------------- 
                 if ($store_product_f == 0) {
                     $id_store_product = $this->init_store(data: $data);
                 } // this make intial for store_products if it is empty
@@ -105,17 +97,30 @@ class InventuryController extends Controller
         $sales = DB::table('sales')
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
             ->join('payment_sales', 'payment_sales.sale_id', '=', 'sales.id')
-            ->select('sales.*', 'sales.id as sale_id', 'customers.*', 'payment_sales.*')
+            ->select(
+                'sales.*',
+                'sales.id as sale_id',
+                'customers.*',
+                'payment_sales.*'
+            )
             ->paginate(10);
 
         return response()->json(['sales' => $sales]);
     }
 
-    public function pricing(){
+    public function pricing()
+    {
 
         $products = StoreProduct::where('store_products.quantity', '!=', '0')
             ->joinall()
-            ->select('products.*','products.text as product', 'stores.text as store', 'statuses.name as status', 'store_products.quantity as availabe_qty', 'store_products.*')
+            ->select(
+                'products.*',
+                'products.text as product',
+                'stores.text as store',
+                'statuses.name as status',
+                'store_products.quantity as availabe_qty',
+                'store_products.*'
+            )
             ->paginate(100);
         $units = $this->units($products);
 
@@ -123,7 +128,6 @@ class InventuryController extends Controller
             // 'temporales' => $temporale, 
             'products' => $products
         ]);
-
     }
     public function destroy(Request $request)
     {

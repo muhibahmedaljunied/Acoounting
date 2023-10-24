@@ -1,40 +1,42 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-use App\Services\HrService;
-use App\Http\Controllers\Controller;
 
+use App\Services\Core\HrService;
+use App\Http\Controllers\Controller;
+use App\Services\DiscountService;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\RepositoryInterface\PayrollRepositoryInterface;
+use App\Services\CoreStaffService;
 use App\Services\PayrollService;
 use App\Models\Discount;
 use App\Models\Staff;
 use App\Models\DiscountType;
+use App\Services\Core\HrService as CoreHrService;
 use DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class DiscountController extends Controller
 {
-    
- 
+
+
     public function __construct(
-        protected HRRepositoryInterface $hr,
-        protected PayrollRepositoryInterface $payroll)
-    {
-        
-        $this->hr = $hr;
-        $this->payroll = $payroll;
-    
+        protected HRRepositoryInterface $hrRepo,
+        protected HrService $hr,
+        protected PayrollRepositoryInterface $payroll,
+        // protected DiscountService $discount,
+        protected CoreStaffService $core,
+    ) {
     }
 
 
-    public function index(HrService $hr)
+    public function index()
     {
 
-        $discounts = staff::with(['discount','discount.discount_type'])->paginate(10);
+        $discounts = staff::with(['discount', 'discount.discount_type'])->paginate(10);
 
-        $this->hr->Sum($discounts,'discount');
+        $this->hrRepo->Sum($discounts, 'discount');
         $discount_types = DiscountType::all();
         // ------------------------------------------------------------------------------------------------
         $minutes = 60;
@@ -46,75 +48,66 @@ class DiscountController extends Controller
         return response()->json(['discount_types' => $discount_types, 'staffs' => $staffs, 'list' => $discounts]);
     }
 
-    public function select_staff(Request $request){
-
-        $staffs = staff::where('id', $request->id)->with(['discount','discount.discount_type'])->paginate(10);
-
-        return response()->json(['list'=>$staffs]);
-    
-    
-        }
-
-        public function store(Request $request)
+    public function select_staff(Request $request)
     {
 
-        foreach ($request->post('count') as $value) {
+        $staffs = staff::where('id', $request->id)->with(['discount', 'discount.discount_type'])->paginate(10);
 
+        return response()->json(['list' => $staffs]);
+    }
 
-            $temporale_f = 0;
+    public function store(Request $request)
+    {
 
-                // return response()->json(['message' => $request->all()]);
-            $temporale_f = $this->hr->update($request->all());
-            $this->payroll->refresh($request->all(), $value);
-        
+        $this->core->data = $request->all();
+        // dd($this->core->data);
+        try {
 
-            if ($temporale_f->isEmpty()) {
+            DB::beginTransaction();
 
-                // $this->add(request:$request->all(), value:$value, type:$request->post('type'));
-                $this->hr->add(request:$request->all(), value:$value);
-                $this->payroll->refresh($request->all(), $value);
+            foreach ($request->post('count') as $value) {
+
+                $this->core->setValue($value);
+                $this->hr->store();
+
+                // $this->payroll->refresh($request->all(), $value);
             }
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "purchase created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
-
-
 
 
         return response()->json(['message' => $request->all()]);
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function destroy($id)
     {
-        //
+
+        // DB::table('payrolls')->where('staff_id', '=', $id)->delete();
+
+        // $store = staff::find($id);
+
+        // $store->delete();
+
+        // Cache::forget('staff');
+
+
+
+        return response()->json('successfully deleted');
     }
 
-    
 
-    public function show(Discount $discount)
-    {
-        //
-    }
-
-    
-    public function edit(Discount $discount)
-    {
-        //
-    }
-
-    
-    public function update(Request $request, Discount $discount)
-    {
-        //
-    }
-
-   
-    public function destroy(Discount $discount)
-    {
-        //
-    }
+  
 }

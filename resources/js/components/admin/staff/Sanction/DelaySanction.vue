@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-header">
 
-          <span class="h2"> جزاءات التاخير</span>
+          <span class="h2">  التاخير</span>
           <div style="display: flex;float: left; margin: 5px">
             <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addSD">

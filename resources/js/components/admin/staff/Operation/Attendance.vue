@@ -10,8 +10,8 @@
                 </div>
                 <div class="card-body" id="printme">
                     <div class="row">
-                        <div class="col-md-1">
-                            <label for="status"> نوع التحضير</label>
+                        <div class="col-md-2">
+                            <label for="status"> وقت التحضير</label>
                             <select v-model="attendance_in_out" class="form-control " required>
                                 <option v-bind:value=1>
                                     دخول
@@ -21,24 +21,49 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
+                            <label for="status"> نوع التحضير</label>
+                            <select v-model="attendance_type" class="form-control " required>
+                                <option v-bind:value=1>
+                                    حاضر
+
+                                </option>
+
+                                <option v-bind:value=2>
+                                    غايب
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label for="status">نظام العمل</label>
-                            <select v-model="work_selected" name="type" class="form-control " required
-                                @change="get_period(work_selected)">
+                            <select @change="get_period(work_selected)" v-model="work_selected" name="type"
+                                class="form-control " required>
                                 <option v-for="work_system in work_systems" v-bind:value="work_system.id">
                                     {{ work_system.name }}
                                 </option>
                             </select>
+
+
+
+
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
+
+                    
+
                             <label for="status"> الفتره</label>
                             <select @change="get_time(period_selected)" id='select_period' v-model="period_selected"
                                 name="type" class="form-control " required>
 
                             </select>
+
+
+
+
+
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <label for="status"> التأريخ</label>
                             <input class="form-control" type="date" name="" id="" v-model="attendance_date">
 
@@ -47,9 +72,16 @@
 
 
 
+                    </div>
 
-                        <div class="col-md-2">
-                            <label> وقت الحضور</label>
+                    <div class="row">
+
+
+
+
+
+                        <div class="col-md-3">
+                            <label> بدايه الفتره</label>
 
                             <span id="start_period">
 
@@ -61,8 +93,9 @@
 
                         </div>
 
-                        <div class="col-md-2">
-                            <label> وقت الانصراف</label>
+                        <div class="col-md-3">
+                            <label> نهايه الفتره</label>
+
                             <span id="end_period">
                                 <input type="time" class="form-control">
 
@@ -74,7 +107,7 @@
 
 
 
-                        <div class="col-md-1">
+                        <div class="col-md-3">
                             <label for="status"> الموظف</label>
                             <select id='select_staff' v-model="staff_search" name="type" class="form-control " required>
 
@@ -82,7 +115,7 @@
                         </div>
 
 
-                        <div class="col-sm-6 col-md-2" style="margin-top: auto;">
+                        <div class="col-sm-6 col-md-3" style="margin-top: auto;">
                             <!-- <a href="#" onclick="get_time_for_all_staff(period_selected)"><img src="/assets/img/search.png"
                                     alt="" style="width: 15%;"> </a> -->
 
@@ -103,7 +136,7 @@
                                         <th class="wd-10p border-bottom-0">اسم المؤظف</th>
                                         <!-- <th class="wd-10p border-bottom-0">الوظيفه</th> -->
                                         <!-- <th class="wd-10p border-bottom-0">التاريخ</th> -->
-                                        <th class="wd-10p border-bottom-0">نوع الحضور</th>
+                                        <!-- <th class="wd-10p border-bottom-0">نوع الحضور</th> -->
 
 
                                         <th class="wd-10p border-bottom-0">الوقت</th>
@@ -124,30 +157,7 @@
                                         <!-- <input v-model="staff_id = staff.id" type="hidden" name="name" id="name"
                                             class="form-control" /> -->
                                         <td>{{ staff.name }}</td>
-                                        <!-- <td>{{ staff.job.text }}</td> -->
-                                        <!-- <td>
-                                            <input type="date" name="" id="" v-model="attendance_date[index]">
-                                        </td> -->
-                                        <td>
 
-                                            <input v-if="staff.attendance_status == 0" type="checkbox" name='fieldset1'
-                                                v-bind:id='"absence" + indexs' @change="check($event, indexs)" checked />
-                                            <input v-else type="checkbox" name='fieldset1' v-bind:id='"absence" + indexs'
-                                                @change="check($event, indexs)" />
-
-                                            <label for="radio-example-one">غايب </label>
-
-                                            <input v-if="staff.attendance_status == 1" type="checkbox" name='fieldset1'
-                                                v-bind:id='"attend" + indexs' @change="check($event, indexs)" checked />
-                                            <input v-else type="checkbox" name='fieldset1' v-bind:id='"attend" + indexs'
-                                                @change="check($event, indexs)" />
-
-                                            <label for="radio-example-two">حاضر </label>
-
-
-
-
-                                        </td>
 
                                         <template v-if="staff.details">
 
@@ -187,29 +197,32 @@
 
 
                                                 <input @keypress="calc_time(indexs)" type="text" class="form-control"
-                                                    name="name" v-bind:id='"attendance_duration" + indexs' :value=0 />
+                                                    name="name" v-bind:id='"attendance_duration" + indexs' />
                                                 <input v-bind:id='"attendance_duration_hidden" + indexs' type="hidden"
                                                     class="form-control" name="name" :value="details_duration.duration">
 
 
                                             </td>
                                             <td v-for="details_delay in staff.details">
+
                                                 <input v-bind:id='"attendance_delay" + indexs' type="text"
-                                                    class="form-control" :value=0>
+                                                    class="form-control">
                                                 <input type="hidden" v-bind:id='"attendance_delay_hidden" + indexs'
                                                     class="form-control" name="name" :value="details_delay.delay">
 
                                             </td>
                                             <td v-for="details_leave in staff.details">
+
                                                 <input v-bind:id='"attendance_leave" + indexs' type="text"
-                                                    class="form-control" :value=0>
+                                                    class="form-control">
                                                 <input type="hidden" v-bind:id='"attendance_leave_hidden" + indexs'
                                                     class="form-control" readonly :value="details_leave.leave">
 
                                             </td>
                                             <td v-for="details_extra in staff.details">
+
                                                 <input v-bind:id='"attendance_extra" + indexs' type="text"
-                                                    class="form-control" :value=0>
+                                                    class="form-control">
                                                 <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
                                                     class="form-control" readonly :value="details_extra.extra">
 
@@ -227,7 +240,7 @@
 
                                                 <td>
                                                     <label for="in" style="color:red"> حضور</label>
-                                                    <input type="time" name="in" v-bind:id='"in" + indexs' :value=0>
+                                                    <input type="time" name="in" v-bind:id='"in" + indexs'>
 
 
                                                 </td>
@@ -235,7 +248,7 @@
 
                                                 <td>
                                                     <label for="out" style="color:red"> انصراف</label>
-                                                    <input type="time" name="out" v-bind:id='"out" + indexs' :value=0>
+                                                    <input type="time" name="out" v-bind:id='"out" + indexs'>
 
 
                                                 </td>
@@ -251,7 +264,7 @@
 
 
                                                 <input @keypress="calc_time(indexs)" type="text" class="form-control"
-                                                    name="name" v-bind:id='"attendance_duration" + indexs' :value=0 />
+                                                    name="name" v-bind:id='"attendance_duration" + indexs' />
                                                 <input v-bind:id='"attendance_duration_hidden" + indexs' type="hidden"
                                                     class="form-control" name="name">
 
@@ -259,21 +272,21 @@
                                             </td>
                                             <td>
                                                 <input v-bind:id='"attendance_delay" + indexs' type="text"
-                                                    class="form-control" :value=0>
+                                                    class="form-control">
                                                 <input type="hidden" v-bind:id='"attendance_delay_hidden" + indexs'
                                                     class="form-control" name="name">
 
                                             </td>
                                             <td>
                                                 <input v-bind:id='"attendance_leave" + indexs' type="text"
-                                                    class="form-control" :value=0>
+                                                    class="form-control">
                                                 <input type="hidden" v-bind:id='"attendance_leave_hidden" + indexs'
                                                     class="form-control" readonly>
 
                                             </td>
                                             <td>
                                                 <input v-bind:id='"attendance_extra" + indexs' type="text"
-                                                    class="form-control" :value=0>
+                                                    class="form-control">
                                                 <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
                                                     class="form-control">
 
@@ -339,7 +352,7 @@ export default {
                 type: Object,
                 default: null,
             },
-
+            attendance_type: '',
             attendance_date: new Date().toISOString().substr(0, 10),
             attendance_final: 'pendding',
             show: true,
@@ -379,6 +392,8 @@ export default {
 
         Add_new() {
 
+
+
             var type = this.get_type_of_leave_delay();
 
             this.axios
@@ -387,10 +402,10 @@ export default {
                     count: this.counts,
                     staff: this.staff,
                     period: this.period_selected,
-                    staff: this.staff,
                     attendance_date: this.attendance_date,
                     attendance_final: this.attendance_final,
-                    attendance_status: this.status,
+                    // attendance_status: this.status,
+                    attendance_status: this.attendance_type,
                     time_in: this.check_in,
                     time_out: this.check_out,
                     duration: this.duration,
@@ -426,7 +441,7 @@ export default {
             const date_str = `${month}/${day}/${year}`
             const date = new Date(date_str);
             const full_day_name = date.toLocaleDateString('default', { weekday: 'short' });
-          
+
 
             return full_day_name;
 
@@ -437,23 +452,24 @@ export default {
         calc_time(index) {
 
             var time, mm, hh;
-           
+
             if ($(`#in${index}`).val() && $(`#out${index}`).val()) {
 
                 this.attendance_final = 'complete';
             } else {
 
+
                 return 0;
+
             }
 
 
-
+            // console.log($(`#in${index}`).val(),$(`#out${index}`).val(),this.attendance_final);
 
             this.check_in[index] = $(`#in${index}`).val();
             this.check_out[index] = $(`#out${index}`).val();
 
-
-            console.log('----------', split_in, split_out);
+            // console.log('----------', split_in, split_out);
 
             var split_in = this.check_in[index].split(":");
             var split_out = this.check_out[index].split(":");
@@ -461,7 +477,7 @@ export default {
             var date = this.attendance_date.split("-");
             var date1 = new Date(date[0], date[1], date[2], split_in[0], split_in[1]); // 9:00 AM
             var date2 = new Date(date[0], date[1], date[2], split_out[0], split_out[1]); // 5:00 PM
-       
+
             if (date2 < date1) {
                 date2.setDate(date2.getDate() + 1);
             }
@@ -485,12 +501,19 @@ export default {
 
             var time, mm, hh;
             var date1, date2;
+            var split_in, split_out;
+
+            console.log(this.period_times);
             for (let i = 0; i < this.period_times.length; i++) {
 
+                console.log(this.period_times[i].period_id, this.period_selected);
                 if (this.period_times[i].period_id == this.period_selected) {
 
-                    var split_in = this.period_times[i].from_time.split(":");
-                    var split_out = this.check_in[index].split(":");
+                    console.log('eeeeeee');
+                    split_in = this.period_times[i].from_time.split(":");
+                    split_out = this.check_in[index].split(":");
+
+
 
                 }
 
@@ -505,7 +528,7 @@ export default {
 
                 [time, mm, hh] = this.get_diff(date2, date1);
 
-               
+
 
                 $(`#attendance_delay${index}`).val(`${0}ساعه,${0}دقيقه`);
                 $(`#attendance_delay_hidden${index}`).val(0);
@@ -525,9 +548,9 @@ export default {
             }
 
         },
-        calc_extra(index){
+        calc_extra(index) {
 
-            
+
             var time, mm, hh;
             var date1, date2;
             for (let i = 0; i < this.period_times.length; i++) {
@@ -540,6 +563,8 @@ export default {
                 }
 
             }
+
+
             var date = this.attendance_date.split("-");
             var date1 = new Date(date[0], date[1], date[2], split_in[0], split_in[1]); // 9:00 AM
             var date2 = new Date(date[0], date[1], date[2], split_out[0], split_out[1]); // 5:00 PM
@@ -553,7 +578,7 @@ export default {
                 this.extra[index] = time;
                 $(`#attendance_extra${index}`).val(`${hh}ساعه,${mm}دقيقه`);
                 $(`#attendance_extra_hidden${index}`).val(time);
-       
+
 
             } else {
 
@@ -569,6 +594,7 @@ export default {
 
         },
         calc_leave(index) {
+
             var time, mm, hh;
             var date1, date2;
             for (let i = 0; i < this.period_times.length; i++) {
@@ -588,8 +614,6 @@ export default {
             var date2 = new Date(date[0], date[1], date[2], split_out[0], split_out[1]); // 5:00 PM
 
 
-
-   
             [time, mm, hh] = this.get_diff(date2, date1);
 
 
@@ -642,6 +666,7 @@ export default {
 
             for (var i = 0; i < this.period_times.length; i++) {
 
+                console.log(this.period_times[i]);
 
                 if (this.period_times[i].period_id == period) {
 
@@ -656,7 +681,11 @@ export default {
         },
         get_time_for_all_staff(id) {
 
-            axios.post(`/attendance/get_time/${id}`, { date: this.attendance_date }).then( //get_time_for_current_period
+            axios.post(`/attendance/get_time/${id}`, {
+                date: this.attendance_date,
+                work_system_id: this.work_selected,
+                period_id: this.period_selected
+            }).then( //get_time_for_current_period
                 (response) => {
 
                     this.value_list = response.data.periods;
@@ -764,54 +793,32 @@ export default {
             // ----------------------
 
         },
-        get_period(id) {
 
-            // alert(id);
-            axios.post(`/attendance/get_period/${id}`).then((response) => {
-
-
-                console.log('muhib', response.data.periods);
-                this.period_times = response.data.periods
-                var arrayLength = response.data.periods.length
-                var arrayLength2 = response.data.staffs.length
-                var html = '';
-                var html2 = '';
-
-
-                for (var i = 0; i < arrayLength; i++) {
-                    // console.log('muhib', response.data.periods[i].name);
-
-                    html = html + `<option data-period-${id}= ${response.data.periods[i].period_id}   value= ${response.data.periods[i].period_id} >${response.data.periods[i].period_name}</option>`
-
-                }
-
-                for (var i = 0; i < arrayLength2; i++) {
-                    console.log('muhib', response.data.staffs[i].name);
-
-                    html2 = html2 + `<option data-staff-${id}= ${response.data.staffs[i].id}   value= ${response.data.staffs[i].id} >${response.data.staffs[i].name}</option>`
-
-                }
-
-                $(`#select_period`).html(html);
-                $(`#select_staff`).html(html2);
-
-
-            });
-
-
-
-
-        },
 
 
         add_one_attendance(staff_id, attendance_status, index) {
 
-            // console.log(this.check_attend[index]);
+            // console.log(staff_id, attendance_status, index);
+
+            if ($(`#in${index}`).val() && $(`#out${index}`).val()) {
+
+                this.attendance_final = 'complete';
+
+            } else {
+
+                this.attendance_final = 'pennding';
+
+
+            }
+
+
+
             if (this.check_state[index] == true) {
+
                 this.counts[index] = index;
                 this.staff[index] = staff_id;
                 // this.status[index] = this.check_attend[index];
-                this.status[index] = attendance_status;
+                // this.status[index] = attendance_status;
 
                 this.duration[index] = $(`#attendance_duration_hidden${index}`).val();
                 this.delay[index] = $(`#attendance_delay_hidden${index}`).val();
@@ -821,61 +828,71 @@ export default {
                 this.check_out[index] = $(`#out${index}`).val();
             }
             else if (this.check_state[index] == false) {
+
                 this.$delete(this.counts[index], index);
 
 
             }
             console.log(this.counts);
             console.log(this.staff, 'staff');
-            console.log(this.duration);
-            console.log(this.delay);
-            console.log(this.leave);
-            console.log(this.status);
-            console.log(this.check_in);
-            console.log(this.check_out);
+            console.log(this.duration, 'duration');
+            console.log(this.delay, 'delay');
+            console.log(this.leave, 'leave');
+            // console.log(this.status,'status');
+            console.log(this.check_in, 'check_in');
+            console.log(this.check_out, 'check_out');
+            console.log(this.attendance_final, 'attendance_final');
 
 
 
         },
-        // check(e, index) {
 
 
-        //     if (e.target.id == `attend${index}`) {
-        //         this.check_attend[index] = 1;
-        //         // document.getElementById(`absence${index}`).removeAttribute('checked');
+        get_period(id) {
 
+            // alert(id);
+            axios.post(`/attendance/get_period/${id}`).then((response) => {
 
-
-
-        //     }
-        //     if (e.target.id == `absence${index}`) {
-
-        //         this.check_attend[index] = 0;
-        //         // document.getElementById(`attend${index}`).removeAttribute('checked');
-
-        //     }
+                console.log('muhib', response.data.periods);
+                this.period_times = response.data.periods
+                var arrayLength = response.data.periods.length
+                var html = '';
 
 
 
+                for (var i = 0; i < arrayLength; i++) {
 
+                    html = html + `<option>------------</option><option data-period-${id}= ${response.data.periods[i].period_id}   value= ${response.data.periods[i].period_id} >${response.data.periods[i].name} من   ${response.data.periods[i].from_time}  الي ${response.data.periods[i].into_time}</option>`
+
+                }
+
+
+                $(`#select_period`).html(html);
+
+
+
+            });
+        },
+        // get_search(word_search) {
+        //     this.axios
+        //         .post(`/staffsearch`, { word_search: this.word_search })
+        //         .then(({ data }) => {
+        //             this.staffs = data.staffs;
+
+
+        //         });
         // },
-
-        get_search(word_search) {
-            this.axios
-                .post(`/staffsearch`, { word_search: this.word_search })
-                .then(({ data }) => {
-                    this.staffs = data.staffs;
-
-
-                });
-        },
 
         list(page = 1) {
             this.axios
-                .post(`/staff?page=${page}`, { type: 'attendance' })
+                .post(`/attendance?page=${page}`, { type: 'attendance' })
                 .then(({ data }) => {
+
                     this.value_list = data.list;
                     this.work_systems = data.work_systems;
+                    // this.period_times = data.period_times;
+                    // this.period_times = response.data.periods
+
 
                 })
                 .catch(({ response }) => {

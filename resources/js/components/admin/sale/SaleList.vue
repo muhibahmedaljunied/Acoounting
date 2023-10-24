@@ -196,9 +196,11 @@ export default {
       total: 0,
       word_search: "",
       table: '',
+      type:'',
     };
   },
   mounted() {
+    this.type = 'Purchase';
     this.table = 'sale_details';
     this.list();
 
@@ -243,7 +245,7 @@ export default {
     },
     list(page = 1) {
       this.axios
-        .post(`/listsale?page=${page}`)
+        .post(`/listsale?page=${page}`,{ type: this.type })
         .then(({ data }) => {
           //  console.log(data.sales);
           this.sales = data.sales;

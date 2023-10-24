@@ -16,7 +16,7 @@ import AdministrativeStructure from './components/admin/staff/AdministrativeStru
 import BasicData from './components/admin/staff/BasicData'
 import Staff from './components/admin/staff/Staff'
 import Sanction from './components/admin/staff/Sanction'
-
+import StaffSanction from './components/admin/staff/StaffSanction'
 import Operation from './components/admin/staff/Operation'
 import StaffReport from './components/admin/staff/StaffReport'
 // ----------------------------------Category----------------------------------------------------------------------------------------------------------------------
@@ -187,6 +187,12 @@ const routes = [
     component: Sanction
 
   },
+  {
+    path: '/staff/staff_sanction',
+    component: StaffSanction
+
+  },
+
   {
     path: '/staff/operation',
     component: Operation

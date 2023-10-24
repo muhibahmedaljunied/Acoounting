@@ -25,18 +25,13 @@ export default {
       staff_id: '',
       salary: '',
 
-      // allowance_types: "",
-
-      // date: new Date().toISOString().substr(0, 10),
-      // from_date: new Date().toISOString().substr(0, 10),
-      // into_date: new Date().toISOString().substr(0, 10),
 
     }
   },
   methods: {
 
     Add(data) {
-      alert('sdsdsd');
+      // alert(this.type);
 
       // console.log(data);
       this.axios

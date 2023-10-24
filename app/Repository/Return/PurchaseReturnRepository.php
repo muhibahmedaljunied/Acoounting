@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Repository\Return;
-use App\RepositoryInterface\StoreProductRepositoryInterface;
-use App\RepositoryInterface\DailyReturnRepositoryInterface;
+use App\RepositoryInterface\WarehouseRepositoryInterface;
+use App\RepositoryInterface\DailyRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\RepositoryInterface\ReturnRepositoryInterface;
-use App\RepositoryInterface\StockRepositoryInterface;
 use App\Models\PurchaseReturn;
 use App\Services\CoreService;
 use App\RepositoryInterface\Daily;
@@ -16,7 +15,7 @@ use App\Traits\DailyTrait;
 
 use DB;
 
-class PurchaseReturnRepository extends Daily implements DailyReturnRepositoryInterface,  StockRepositoryInterface, DetailRepositoryInterface, ReturnRepositoryInterface, DetailRefreshRepositoryInterface, StoreProductRepositoryInterface
+class PurchaseReturnRepository extends Daily implements DailyRepositoryInterface,  WarehouseRepositoryInterface, DetailRepositoryInterface, ReturnRepositoryInterface, DetailRefreshRepositoryInterface
 {
 
     use DailyTrait;
@@ -61,7 +60,7 @@ class PurchaseReturnRepository extends Daily implements DailyReturnRepositoryInt
             }
         }
 
-        dd($this->data_store);
+        // dd($this->data_store);
 
         // $this->db_create()->db_store();
     }
@@ -105,47 +104,7 @@ class PurchaseReturnRepository extends Daily implements DailyReturnRepositoryInt
         $Details->qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
         $Details->save();
     }
-    public function refresh_store_product(...$list_data)
-    {
 
-
-        $this->core->store_product_f =  DB::table('store_products')
-            ->where(['id' => $this->core->id_store_product])
-            ->decrement('quantity', $this->core->micro_unit_qty);
-    }
-    public function init_store_product()
-    {
-    }
-
-    public function get_store_product()
-    {
-    }
-
-    public function decode_unit()
-    {
-
-        $this->core->unit_array = $this->core->data['unit'][$this->core->value];
-        $this->core->unit_value = $this->core->unit_array[0];
-        // dd($this->core->unit_value);
-
-        return $this;
-        // return $unit[0];
-
-    }
-
-    function convert_qty()
-    {
-
-        // dd($this->core->data['old'][$this->core->value]['qty_return_now']);
-
-        if ($this->core->unit_array[2] == 1) {  //this means unit_type
-
-            $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'] * $this->core->unit_array[1];
-        } else {
-            $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
-        }
-        return $this;
-    }
     function refresh_details()
     {
 
@@ -203,4 +162,45 @@ class PurchaseReturnRepository extends Daily implements DailyReturnRepositoryInt
 
         return $detail;
     }
+
+    
+    // public function refresh_store_product(...$list_data)
+    // {
+
+
+    //     $this->core->store_product_f =  DB::table('store_products')
+    //         ->where(['id' => $this->core->id_store_product])
+    //         ->decrement('quantity', $this->core->micro_unit_qty);
+    // }
+   
+
+   
+
+    // public function decode_unit()
+    // {
+
+    //     $this->core->unit_array = $this->core->data['unit'][$this->core->value];
+    //     $this->core->unit_value = $this->core->unit_array[0];
+    //     // dd($this->core->unit_value);
+
+    //     return $this;
+    //     // return $unit[0];
+
+    // }
+
+    // function convert_qty()
+    // {
+
+    //     // dd($this->core->data['old'][$this->core->value]['qty_return_now']);
+
+    //     if ($this->core->unit_array[2] == 1) {  //this means unit_type
+
+    //         $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'] * $this->core->unit_array[1];
+    //     } else {
+    //         $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
+    //     }
+    //     return $this;
+    // }
+
+
 }

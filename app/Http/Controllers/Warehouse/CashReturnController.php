@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
-use App\Traits\Temporale\TemporaleTrait;
+
 use App\Traits\Stock\StockTrait;
 use App\Traits\StoreProduct\StoreProductTrait;
 use Illuminate\Http\Request;
@@ -18,14 +18,15 @@ use DB;
 class CashReturnController extends Controller
 {
 
-    use TemporaleTrait;
+
     use StockTrait;
     use StoreProductTrait;
 
 
-    public function __construct(protected ReturnRepositoryInterface $return,
-                                protected ReturnService $service)
-    {
+    public function __construct(
+        protected ReturnRepositoryInterface $return,
+        protected ReturnService $service
+    ) {
         $this->return = $return;
         $this->service = $service;
     }
@@ -33,7 +34,13 @@ class CashReturnController extends Controller
     {
         $return_cashes = DB::table('cash_returns')->where('cash_returns.cash_id', $id)
             ->join('cashes', 'cashes.id', '=', 'cash_returns.cash_id')
-            ->select('cash_returns.*', 'cash_returns.date as return_date', 'cash_returns.id as return_id', 'cash_returns.quantity as quantity_return', 'cashes.*')
+            ->select(
+                'cash_returns.*',
+                'cash_returns.date as return_date',
+                'cash_returns.id as return_id',
+                'cash_returns.quantity as quantity_return',
+                'cashes.*'
+            )
             ->get();
 
         return response()->json(['return_cashes' => $return_cashes]);
@@ -79,7 +86,13 @@ class CashReturnController extends Controller
         $cash_returns = CashReturn::where('cash_returns.id', $id)
             ->join('cashes', 'cashes.id', '=', 'cash_returns.cash_id')
             ->join('customers', 'customers.id', '=', 'cashes.customer_id')
-            ->select('cashes.*', 'cashes.id as cash_id', 'customers.*', 'cash_returns.*', 'cash_returns.id as return_id')
+            ->select(
+                'cashes.*',
+                'cashes.id as cash_id',
+                'customers.*',
+                'cash_returns.*',
+                'cash_returns.id as return_id'
+            )
             ->get();
 
 
@@ -93,7 +106,16 @@ class CashReturnController extends Controller
 
             ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
             ->join('stores', 'store_products.store_id', '=', 'stores.id')
-            ->select('cash_return_details.*', 'cash_return_details.quantity as qty_return', 'cash_returns.*', 'statuses.*', 'statuses.name as status', 'stores.*', 'stores.text as store', 'products.text as product')
+            ->select(
+                'cash_return_details.*',
+                'cash_return_details.quantity as qty_return',
+                'cash_returns.*',
+                'statuses.*',
+                'statuses.name as status',
+                'stores.*',
+                'stores.text as store',
+                'products.text as product'
+            )
             ->get();
 
         $users = Auth::user();

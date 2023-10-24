@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Absence;
 use App\Events\TestEvent;
 use App\Models\Absence;
 use App\Models\AbsenceType;
-use App\Models\Staff;
 use App\Models\SanctionDiscount;
 use App\Http\Controllers\Controller;
 
@@ -23,6 +22,7 @@ class AbsenceController extends Controller
 
     public function test()
     {
+        // return 111;
         event(new TestEvent('One Click'));
         return response()->json(['absence_types' => 'Hooray!!! You have fired your Event successfully']);
     }
@@ -62,26 +62,4 @@ class AbsenceController extends Controller
     }
 
 
-    public function show(Absence $absence)
-    {
-        //
-    }
-
-
-    public function edit(Absence $absence)
-    {
-        //
-    }
-
-
-    public function update(Request $request, Absence $absence)
-    {
-        //
-    }
-
-
-    public function destroy(Absence $absence)
-    {
-        //
-    }
 }
