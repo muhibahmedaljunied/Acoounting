@@ -27,7 +27,6 @@ class VacationController extends Controller
     public function index()
     {
 
-
         $vacations = staff::with(['vacation', 'vacation.vacation_type'])->paginate(10);
         $this->hrRepo->Sum($vacations, 'vaction');
 
@@ -46,6 +45,26 @@ class VacationController extends Controller
             'staffs' => $staffs,
             'vacation_types' => $vacation_types
         ]);
+    }
+
+    public function report(Request $request){
+
+        
+        $vacations = Staff::with(['vacation' => function ($query) use ($request) {
+            $query->select('vacations.*')
+            ->where('vacations.staff_id','=', $request->staff)
+            ->whereBetween('vacations.date', array($request->post('from_date'), $request->post('into_date')));
+
+        }])
+        ->select('*')
+        ->paginate(10);
+        // dd($advances);
+        $this->hrRepo->Sum($vacations);
+
+        // dd($advances);
+        return response()->json(['list' => $vacations]);
+
+
     }
 
     public function select_staff(Request $request)

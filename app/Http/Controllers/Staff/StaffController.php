@@ -171,15 +171,6 @@ class StaffController extends Controller
     {
 
 
-        // $extra_details = DB::table('extras')->where('extras.staff_id', 1)
-        //         ->join('extra_details', 'extra_details.extra_id', '=', 'extras.id')
-        //         ->select('extra_details.*')
-        //         ->get();   
-
-
-
-        //         dd($extra_details);
-
         $staff = DB::table('staff_sanctions')
             ->join('staff', 'staff.id', '=', 'staff_sanctions.staff_id')
             ->select('staff_sanctions.*', 'staff_sanctions.date as sanction_date', 'staff.*')
@@ -211,32 +202,32 @@ class StaffController extends Controller
                 $value->DelaySanction = $delay;
                 $value->type = 'تأخير';
             }
-            if ($request->post('value_search') == 4) {
+            // if ($request->post('value_search') == 4) {
 
 
-                if ($value->sanctionable_type == 'App\\Models\\ExtraSanction') {
+            //     if ($value->sanctionable_type == 'App\\Models\\ExtraSanction') {
 
-                    $extra_sanction = DB::table('extra_sanctions')->where('extra_sanctions.id', $value->sanctionable_id)
-                        ->join('extra_types', 'extra_types.id', '=', 'extra_sanctions.extra_type_id')
-                        ->select('extra_sanctions.*', 'extra_types.*')
-                        ->get();
-
-
-                    $value->ExtraSanction = $extra_sanction;
-                }
+            //         $extra_sanction = DB::table('extra_sanctions')->where('extra_sanctions.id', $value->sanctionable_id)
+            //             ->join('extra_types', 'extra_types.id', '=', 'extra_sanctions.extra_type_id')
+            //             ->select('extra_sanctions.*', 'extra_types.*')
+            //             ->get();
 
 
-                $extra_details = DB::table('extras')->where('extra_sanctions.id',$value->sanctionable_id)
-                    ->join('extra_details', 'extra_details.extra_id', '=', 'extras.id')
-                    ->join('extra_sanctions', 'extra_sanctions.id', '=', 'extra_details.extra_sanction_id')
-                    ->join('extra_types', 'extra_types.id', '=', 'extra_sanctions.extra_type_id')
-                    ->select('extra_details.*','extra_sanctions.*','extra_types.*')
-                    ->get();
+            //         $value->ExtraSanction = $extra_sanction;
+            //     }
 
-                $value->ExtraDetails = $extra_details;
 
-                $value->type = 'اضافي';
-            }
+            //     $extra_details = DB::table('extras')->where('extra_sanctions.id',$value->sanctionable_id)
+            //         ->join('extra_details', 'extra_details.extra_id', '=', 'extras.id')
+            //         ->join('extra_sanctions', 'extra_sanctions.id', '=', 'extra_details.extra_sanction_id')
+            //         ->join('extra_types', 'extra_types.id', '=', 'extra_sanctions.extra_type_id')
+            //         ->select('extra_details.*','extra_sanctions.*','extra_types.*')
+            //         ->get();
+
+            //     $value->ExtraDetails = $extra_details;
+
+            //     $value->type = 'اضافي';
+            // }
             if ($request->post('value_search') == 3 && $value->sanctionable_type == 'App\\Models\\LeaveSanction') {
 
                 $leave = DB::table('leave_sanctions')->where('leave_sanctions.id', $value->sanctionable_id)

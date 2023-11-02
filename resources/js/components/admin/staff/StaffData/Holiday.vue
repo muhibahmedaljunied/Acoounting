@@ -30,7 +30,7 @@
               <input v-model="from_date" type="date" name="" id="" class="form-control">
             </div>
             <div class="col-sm-6 col-md-3" style="margin-top: auto;">
-              <a href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
+              <a href="#" @click="report()"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
             </div>
           </div>
           <div class="table-responsive">
@@ -144,6 +144,7 @@ export default {
         default: null,
       },
 
+      type:'',
       staff_selected: 1,
       start_date: "",
       end_date: "",
@@ -170,6 +171,7 @@ export default {
   },
   mounted() {
     this.list();
+    this.type='vacation';
   },
   methods: {
 
@@ -183,6 +185,21 @@ export default {
         });
     },
 
+
+    
+    report() {
+      this.axios
+        .post(`/vacation_report`, { 
+          type:this.type,
+          staff: this.staff_selected,
+          from_date: this.from_date,
+          into_date: this.into_date, 
+        })
+        .then(({ data }) => {
+          this.list_data = data.list;
+
+        });
+    },
 
     list(page = 1) {
       this.axios

@@ -58,6 +58,51 @@ class LeaveSanctionController extends Controller
 
     }
 
+
+    public function get_staff_leave_sanction(Request $request){
+
+
+        $staff = DB::table('staff_sanctions')
+        ->join('staff', 'staff.id', '=', 'staff_sanctions.staff_id')
+        ->select(
+            'staff_sanctions.date as sanction_date',
+            'staff_sanctions.sanctionable_type',
+            'staff_sanctions.sanctionable_id',
+            'staff.name',
+            'staff.id'
+        )
+        ->paginate(100);
+
+        
+        foreach ($staff as $value) {
+
+      
+            if ($value->sanctionable_type == 'App\\Models\\LeaveSanction') {
+
+                $leave = DB::table('leave_sanctions')->where('leave_sanctions.id', $value->sanctionable_id)
+                    ->join('sanction_discounts', 'sanction_discounts.id', '=', 'leave_sanctions.sanction_discount_id')
+                    ->join('leave_types', 'leave_types.id', '=', 'leave_sanctions.leave_type_id')
+                    ->join('parts', 'parts.id', '=', 'leave_sanctions.part_id')
+                    ->select(
+                        'leave_sanctions.*', 
+                    'leave_types.name as type_name',
+                    'parts.name as parts_name',
+                    'sanction_discounts.name as discount_name'
+                    )
+                    ->get();
+
+
+                $value->LeaveSanction = $leave;
+            }
+         
+        }
+
+        return response()->json(['list' => $staff]);
+
+    }
+
+
+
     public function store(Request $request)
     {
         $this->core->data = $request->all();

@@ -123,6 +123,8 @@ Route::post('/update_absence_type/{id}', 'Absence\AbsenceController@update');
 Route::post('/absence_type/{id}', 'Absence\AbsenceController@edit');
 Route::post('/delete_absence_type/{id}', 'Absence\AbsenceController@destroy');
 Route::post('/absence_typesearch', 'Absence\AbsenceController@search');
+
+
 /* --------------------------------------------------------------------------------*/
 /*  ---------------------------------------allowance_type-----------------------------*/
 Route::post('/allowance', 'Staff\AllowanceController@index');
@@ -160,30 +162,28 @@ Route::post('/update_delay_type/{id}', 'Delay\DelayController@update');
 Route::post('/delay_type/{id}', 'Delay\DelayController@edit');
 Route::post('/delete_delay_type/{id}', 'Delay\DelayController@destroy');
 Route::post('/delay_typesearch', 'Delay\DelayController@search');
-
-Route::post('/delay_sanction', 'Delay\DelaySanctionController@index');
-Route::post('/store_delay_sanction', 'Delay\DelaySanctionController@store');
-
-
-
-
 /* --------------------------------------------------------Absence---------------------------------------------------------------------*/
 Route::post('/absence', 'Absence\AbsenceController@index');
 Route::post('/store_absence', 'Absence\AbsenceController@store');
 Route::post('/absence_sanction', 'Absence\AbsenceSanctionController@index');
 Route::post('/store_absence_sanction', 'Absence\AbsenceSanctionController@store');
-
+Route::post('/staff_absence_sanction','Absence\AbsenceController@get_staff_absence_sanction');
 /* --------------------------------------------------------Delay---------------------------------------------------------------------*/
 Route::post('/delay', 'Delay\DelayController@index');
 Route::post('/store_delay', 'Delay\DelayController@store');
+Route::post('/delay_sanction', 'Delay\DelaySanctionController@index');
+Route::post('/store_delay_sanction', 'Delay\DelaySanctionController@store');
+Route::post('/staff_delay_sanction','Delay\DelaySanctionController@get_staff_delay_sanction');
 /* --------------------------------------------------------Extra---------------------------------------------------------------------*/
 Route::post('/extra', 'Extra\ExtraController@index');
 Route::post('/store_extra', 'Extra\ExtraController@store');
 Route::post('/extra/select_staff', 'Extra\ExtraController@select_staff');
 Route::post('/extra_sanction', 'Extra\ExtraSanctionController@index');
 Route::post('/store_extra_sanction', 'Extra\ExtraSanctionController@store');
+Route::post('/staff_extra_sanction','Extra\ExtraSanctionController@get_staff_extra_sanction');
 /* --------------------------------------------------------Discount---------------------------------------------------------------------*/
 Route::post('/discount', 'Staff\DiscountController@index');
+Route::post('/discount_report', 'Staff\DiscountController@report');
 Route::post('/store_discount', 'Staff\DiscountController@store');
 Route::post('/discount/select_staff', 'Staff\DiscountController@select_staff');
 /* --------------------------------------------------------vacation_type---------------------------------------------------------------------*/
@@ -192,10 +192,12 @@ Route::post('/vacation_type', 'Staff\VacationTypeController@index');
 Route::post('/store_vacation_type', 'Staff\VacationTypeController@store');
 /* --------------------------------------------------------Vacation---------------------------------------------------------------------*/
 Route::post('/vacation', 'Staff\VacationController@index');
+Route::post('/vacation_report', 'Staff\VacationController@report');
 Route::post('/store_leave', 'Staff\VacationController@store');
 Route::post('/vacation/select_staff', 'Staff\VacationController@select_staff');
 Route::post('/leave_sanction', 'Leave\LeaveSanctionController@index');
 Route::post('/store_leave_sanction', 'Leave\LeaveSanctionController@store');
+Route::post('/staff_leave_sanction','Leave\LeaveSanctionController@get_staff_leave_sanction');
 
 /* --------------------------------------------------------loan---------------------------------------------------------------------*/
 Route::post('/loan', 'Staff\LoanController@index');
@@ -204,7 +206,7 @@ Route::post('/store_loan', 'Staff\LoanController@store');
 Route::post('/advance', 'Staff\AdvanceController@index');
 Route::post('/store_advance', 'Staff\AdvanceController@store');
 Route::post('/advance/select_staff', 'Staff\AdvanceController@select_staff');
-
+Route::post('/advance_report', 'Staff\AdvanceController@report');
 Route::post('/staff_sanction','Staff\StaffController@sanction');
 
 Route::post('/staff_sanction_report','Staff\StaffController@sanction_report');

@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Account;
-
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\DailyDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use App\Http\Controllers\Controller;
-
-use Storage;
+use App\Exports\AccountExport;
+use App\Imports\AccountImport;
 use DB;
 
 use function PHPSTORM_META\type;
@@ -171,6 +171,25 @@ class AccountController extends Controller
     }
 
    
+    public function import(Request $request)
+    {
+   
+        Excel::import(new AccountImport, storage_path('account.xlsx'));
+
+        return response()->json([
+            'status' =>
+            'The file has been excel/csv imported to database in laravel 9'
+        ]);
+
+    }
+
+   
+    public function export()
+    {
+
+        return Excel::download(new AccountExport, 'account.xlsx');
+    }
+
 
     public function chick_node($value)
     {

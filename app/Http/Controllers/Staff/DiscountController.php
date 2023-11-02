@@ -48,6 +48,26 @@ class DiscountController extends Controller
         return response()->json(['discount_types' => $discount_types, 'staffs' => $staffs, 'list' => $discounts]);
     }
 
+    public function report(Request $request){
+
+        
+        $discounts = Staff::with(['discount' => function ($query) use ($request) {
+            $query->select('discounts.*')
+            ->where('discounts.staff_id','=', $request->staff)
+            ->whereBetween('discounts.date', array($request->post('from_date'), $request->post('into_date')));
+
+        }])
+        ->select('*')
+        ->paginate(10);
+        // dd($advances);
+        $this->hrRepo->Sum($discounts);
+
+        // dd($advances);
+        return response()->json(['list' => $discounts]);
+
+
+    }
+
     public function select_staff(Request $request)
     {
 

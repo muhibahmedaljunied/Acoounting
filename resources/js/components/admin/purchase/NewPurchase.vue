@@ -642,7 +642,7 @@ export default {
 
 
       this.axios.post(`/purchase/newpurchase?page=${page}`).then(({ data }) => {
-        // console.log(data.temporales);
+        console.log(data.suppliers);
         this.temporale = data.temporales;
 
        

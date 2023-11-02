@@ -1,15 +1,8 @@
 <?php
 
 namespace App\Repository\HR;
-
-use App\Models\Advance;
-use App\Models\Attendance;
-use App\Models\AttendanceDetail;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\AttendanceRepositoryInterface;
-use App\RepositoryInterface\HRRepositoryInterface;
 use DB;
-
 class AttendRepository implements AttendanceRepositoryInterface
 {
 

@@ -1,13 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
-
-use App\Models\Product;
+use Illuminate\Support\Facades\Validator;
 use App\Services\Product\ProductService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ProductImport;
+use App\Exports\ProductExport;
+use App\Models\Status;
+use App\Models\Product;
+use Illuminate\Http\Request;
+
 use DB;
 class ProductController extends Controller
 {
@@ -21,6 +25,13 @@ class ProductController extends Controller
     public function index(Request $request)
     {
     }
+
+    // public function import(Request $request)
+    // {
+    //     $file = $request->file('file');
+    //     Excel::import(new Status, $file);
+    //     return back()->with('success', 'Products imported successfully.');
+    // }
 
     public function search(Request $request)
     {
@@ -53,10 +64,23 @@ class ProductController extends Controller
 
 
 
-
-
-    public function create()
+    public function import(Request $request)
     {
+   
+        Excel::import(new ProductImport, storage_path('product.xlsx'));
+
+        return response()->json([
+            'status' =>
+            'The file has been excel/csv imported to database in laravel 9'
+        ]);
+
+    }
+
+   
+    public function export()
+    {
+
+        return Excel::download(new ProductExport, 'product.xlsx');
     }
 
     public function store(Request $request)

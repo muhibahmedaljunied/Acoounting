@@ -265,17 +265,7 @@ export default {
 
         search() {
 
-            // axios.post(`/attendance/get_period/${id}`).then((response) => {
-
-            //     var arrayLength = response.data.attendance.length
-
-
-            // this.get_day_name();
-
-            // });
-
-
-
+    
         },
         append_head(html_head, i, full_day_name, date) {
 

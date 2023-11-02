@@ -39,9 +39,7 @@
                           </li>
   
                          
-                          <li class="nav-item">
-                            <a href="#tab16" class="nav-link" data-toggle="tab"> جزاءات  الموظف</a>
-                          </li>
+                  
   
                       
   
@@ -82,9 +80,6 @@
                           <leave-sanction></leave-sanction>
                         </div>
   
-                        <div class="tab-pane" id="tab16">
-                          <staff-sanction></staff-sanction>
-                        </div>
   
                       </div>
                     </div>
@@ -100,27 +95,18 @@
   </template>
   <script>
  
-  
-  
-  
   import DelaySanction from "./Sanction/DelaySanction";
   import AbsenceSanction from "./Sanction/AbsenceSanction";
   import ExtraSanction from "./Sanction/ExtraSanction";
   import LeaveSanction from "./Sanction/LeaveSanction";
-  import StaffSanction from "./Sanction/StaffSanction";
-  
-  
-  
+
   export default {
     components: {
      
-    
       DelaySanction,
       AbsenceSanction,
       ExtraSanction,
       LeaveSanction,
-      StaffSanction
-  
   
     },
   

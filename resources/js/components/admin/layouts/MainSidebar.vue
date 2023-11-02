@@ -333,6 +333,12 @@
 
           <ul class="slide-menu">
             <li>
+              <router-link class="slide-item" to="/staff/salary">الرواتب</router-link>
+            </li>
+          </ul>
+
+          <ul class="slide-menu">
+            <li>
               <router-link class="slide-item" to="/staff/staff">التقارير</router-link>
             </li>
           </ul>
