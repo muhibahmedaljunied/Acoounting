@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Services;
-
-use App\RepositoryInterface\SanctionRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\Traits\staff\AttendanceTrait;
@@ -21,12 +19,10 @@ class AttendanceService
         protected CoreStaffAttendanceService $attendance_core,
         protected AttendanceDetailService $details_service,
         protected HRRepositoryInterface $hr,
-
-
         protected Request $request,
     ) {
 
-        $this->attendance_core->data = $request->all();
+       
     }
 
     public function absence()
@@ -46,6 +42,7 @@ class AttendanceService
     public function attende()
     {
 
+        
         $this->check_attendance();
         $this->get_attendance();
         $this->add_attendance();
@@ -67,7 +64,6 @@ class AttendanceService
     {
 
 
-        // dd($this->attendance_core->value);
         if ($this->attendance_core->data['attendance_in_out'] == 1) {
 
             $this->attendance_core->updating_data = [
@@ -129,25 +125,25 @@ class AttendanceService
 
 
     
-    public function sanction()
-    {
+    // public function sanction()
+    // {
 
 
-        // $this->update($attendance_id); //this must be observer
+    //     // $this->update($attendance_id); //this must be observer
 
-        foreach (config('sanction.data_sanction') as $value_sanction) {
+    //     foreach (config('sanction.data_sanction') as $value_sanction) {
 
-            $repo = app(SanctionRepositoryInterface::class)
-                ->get($value_sanction)
-                ->create(
+    //         $repo = app(SanctionRepositoryInterface::class)
+    //             ->get($value_sanction)
+    //             ->create(
 
-                    $this->attendance_core->attendance_id,
-                    $this->attendance_core->data,
-                    $this->attendance_core->value,
-                    $value_sanction
-                );
-        }
-    }
+    //                 $this->attendance_core->attendance_id,
+    //                 $this->attendance_core->data,
+    //                 $this->attendance_core->value,
+    //                 $value_sanction
+    //             );
+    //     }
+    // }
 
 
 }

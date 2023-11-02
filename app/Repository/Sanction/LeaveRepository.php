@@ -1,76 +1,55 @@
 <?php
 
 namespace App\Repository\Sanction;
+
 use App\Traits\Staff\Sanction\SanctionTrait;
-use App\RepositoryInterface\PayrollRepositoryInterface;
 use App\RepositoryInterface\SanctionRepositoryInterface;
+use App\Services\core\CoreStaffAttendanceService;
 use App\Traits\staff\Sanction\LeaveSanctionTrait;
 
 use DB;
 
-class LeaveRepository  implements SanctionRepositoryInterface, PayrollRepositoryInterface
+class LeaveRepository  implements SanctionRepositoryInterface
 {
 
-    use SanctionTrait,LeaveSanctionTrait;
-    // public function add($request, $value)
-    // {
-    //     $temporale = new LeaveSanction();
-    //     $temporale->leave_type_id = $request['leave'][$value];
-    //     $temporale->part_id = $request['leave_part'][$value];
-    //     $temporale->iteration = $request['iteration'][$value];
-    //     $temporale->sanction_discount_id = $request['discount_type'][$value];
-    //     $temporale->discount = $request['discount'][$value];
-    //     $temporale->sanction = $request['sanction'][$value];
+    use SanctionTrait, LeaveSanctionTrait;
+    public $attendance_core;
 
-    //     $temporale->save();
-    //     return $temporale->id;
-    // }
-
-    // public function update($temporale, $request)
-    // {
-
-    //     $temporale_f = tap(LeaveSanction::whereLeaveSanction($request))
-    //         ->update(['sanction' => $request['sanction']])
-    //         ->get('id');
-    //     return $temporale_f;
-    // }
-
-    public function create($attendance_id, $request, $val)
+    public function create($attendance_core)
     {
 
-        
-    
-        $data  = $this->get();
-        $leave_current = $this->current_attendance($attendance_id, 'leave');
+        $this->attendance_core = $attendance_core;
 
-        $iterat = $this->all_attendance($leave_current, 'leave');
-      
-   
+        $data  = $this->get();
+        $day = date('l', strtotime($attendance_core->data['attendance_date']));
+        $this->current_attendance($attendance_core->attendance_id, 'leave');
+
+        $iterat = $this->all_attendance('leave');
+
+
         foreach ($data as $key => $value) {
 
 
-            if ($value->code == $request['type_leave_delay'] && $value->duration == $request['leave'][$val]) {
+            // if ($value->code == $attendance_core->data['type_leave_delay'] && $value->duration == $attendance_core->data['leave'][$attendance_core->value]) {
+            if ($value->leave_type_id == 1 &&  $day == 'Saturday') {
 
-     
-             
+
                 if ($iterat == $value->iteration) {
-               
-                    $this->handle($request, $value->leave_sanction_id, $val, $attendance_id);
+
+                    $attendance_core->sanction_type_id = $value->leave_type_id;
+                    $this->handle();
                 }
             }
-
         }
     }
 
-   
 
-    public function handle($request, $leave_sanction_id, $val, $attendance_id)
+
+    public function handle()
     {
 
-
-        $de = $this->get_sanction($leave_sanction_id,'LeaveSanction');
-        $this->staff_sanction($request, $val, $attendance_id, $de);
-        $this->refresh($request, $de);
+        $this->get_sanction('LeaveSanction');
+        $this->staff_sanction();
+        $this->payroll();
     }
-   
 }

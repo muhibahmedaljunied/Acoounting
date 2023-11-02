@@ -184,7 +184,7 @@ return [
         App\Providers\InventuryServiceProvider::class,
         App\Providers\WarehouseServiceProvider::class,
         App\Providers\UnitServiceProvider::class,
-        // Maatwebsite\Excel\ExcelServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         // Fhsinchy\Inspire\Providers\InspirationProvider::class,
  
 

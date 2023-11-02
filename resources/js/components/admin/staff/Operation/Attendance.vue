@@ -47,6 +47,13 @@
 
 
                         </div>
+
+                        <div class="col-md-2">
+                            <label for="status">نوع العمل</label>
+
+                            <span id='select_work_type'></span>
+                           
+                        </div>
                         <div class="col-md-2">
 
                     
@@ -99,6 +106,7 @@
                             <span id="end_period">
                                 <input type="time" class="form-control">
 
+                            
                             </span>
 
 
@@ -374,11 +382,13 @@ export default {
             fieldset3: [],
             staff: [],
 
+            work_type_selected:'',
             staff_search: '',
             attendance_in_out: '',
             work_selected: '',
             period_selected: '',
             period_times: '',
+            work_types:'',
 
 
 
@@ -394,6 +404,7 @@ export default {
 
 
 
+            // alert($(`#code`).val());
             var type = this.get_type_of_leave_delay();
 
             this.axios
@@ -402,9 +413,10 @@ export default {
                     count: this.counts,
                     staff: this.staff,
                     period: this.period_selected,
+                    code: $(`#code`).val(),
                     attendance_date: this.attendance_date,
                     attendance_final: this.attendance_final,
-                    // attendance_status: this.status,
+                    work_type:this.work_type_selected,
                     attendance_status: this.attendance_type,
                     time_in: this.check_in,
                     time_out: this.check_out,
@@ -671,7 +683,7 @@ export default {
                 if (this.period_times[i].period_id == period) {
 
                     $(`#start_period`).html(`<input id='start_period_time' type='time'  value= ${this.period_times[i].from_time} class='form-control' readonly >`);
-                    $(`#end_period`).html(`<input  id ='end_period_time' type='time' value= ${this.period_times[i].into_time} class='form-control'  readonly>`);
+                    $(`#end_period`).html(`<input  id ='end_period_time' type='time' value= ${this.period_times[i].into_time} class='form-control'  readonly><input type='hidden' id ='code' value= ${this.period_times[i].code}>`);
 
                 }
 
@@ -853,21 +865,26 @@ export default {
             // alert(id);
             axios.post(`/attendance/get_period/${id}`).then((response) => {
 
-                console.log('muhib', response.data.periods);
+                console.log('muhib', response.data);
                 this.period_times = response.data.periods
+                this.work_types = response.data.work_types
                 var arrayLength = response.data.periods.length
-                var html = '';
+                var html = '<option></option>';
 
 
 
                 for (var i = 0; i < arrayLength; i++) {
 
-                    html = html + `<option>------------</option><option data-period-${id}= ${response.data.periods[i].period_id}   value= ${response.data.periods[i].period_id} >${response.data.periods[i].name} من   ${response.data.periods[i].from_time}  الي ${response.data.periods[i].into_time}</option>`
+                    html = html + `<option data-period-${id}= ${response.data.periods[i].period_id}   value= ${response.data.periods[i].period_id} >${response.data.periods[i].name} من   ${response.data.periods[i].from_time}  الي ${response.data.periods[i].into_time}</option>`
 
                 }
+                // html = html + `<input data-worktype-${id}= ${response.data.work_types.id}   value= ${response.data.work_types.id} >${response.data.work_types.name}  </option>`
 
+
+                $(`#select_work_type`).html(`<input id='work_type' type='text'  value= ${this.work_types[0].name} class='form-control' readonly >`);
 
                 $(`#select_period`).html(html);
+            
 
 
 

@@ -1,14 +1,21 @@
 <?php
 
+use App\Http\Controllers\Warehouse\ProductController;
+use App\Http\Controllers\Warehouse\StoreController;
 use Illuminate\Support\Facades\Route;
 
+//-------------------------------product--------------------------------------------------------------------------------------
+
+
+Route::post('import_product', [ProductController::class, 'import']);
+Route::post('export_product', [ProductController::class, 'export']);
 Route::post('/product', 'Warehouse\ProductController@index');
 Route::post('/create_product', 'Warehouse\ProductController@create');
 Route::post('/store_product', 'Warehouse\ProductController@store');
 Route::post('/update_product/{id}', 'Warehouse\ProductController@update');
 Route::get('/product/{id}', 'Warehouse\ProductController@edit');
 Route::post('/delete_product/{id}', 'Warehouse\ProductController@destroy');
-// -------------------------------------------------------
+
 
 // Route::post('/store_first_level', 'ProductController@store_first_level');
 Route::post('/tree_product', 'Warehouse\ProductController@tree_product');
@@ -21,7 +28,7 @@ Route::post('/get_product_main/{id}', 'Warehouse\ProductController@get_producte_
 Route::post('/get_product_name/{id}', 'Warehouse\ProductController@get_product_name');
 Route::post('/delete_product/{id}', 'Warehouse\ProductController@destroy');
 Route::post('/productsearch', 'Warehouse\ProductController@search');
-//----------------------------------------------------------------------
+//-------------------------------------Unit------------------------------------------------------------------------------
 
 Route::post('/get_unit/{id}', 'Warehouse\UnitController@show');
 Route::post('/unit', 'Warehouse\UnitController@index');
@@ -31,7 +38,7 @@ Route::post('/update_unit/{id}', 'Warehouse\UnitController@upate');
 Route::post('/unit/{id}', 'Warehouse\UnitController@edit');
 Route::post('/delete_unit/{id}', 'Warehouse\UnitController@destroy');
 
-//------------------------------------------------------------------------
+//-------------------------------------Supply-----------------------------------
 Route::post('/supply', 'Warehouse\SupplyController@index');
 
 // Route::post('/supplyreturn/check_qty/{id}', 'SupplyReturnController@check_qty');
@@ -109,7 +116,10 @@ Route::post('/returncash_details/{id}', 'Warehouse\CashReturnController@return_d
 Route::post('/invoice_return_cash/{id}', 'Warehouse\CashReturnController@return_invoice');
 Route::post('/recive_return_cash/{id}', 'Warehouse\CashReturnController@return_recive');
 
-//--------------------------------------------------------------------
+//-------------------------------store--------------------------------------------------------------------------------------
+
+Route::post('import_store', [StoreController::class, 'import']);
+Route::post('export_store', [StoreController::class, 'export']);
 
 Route::post('/tree_store', 'Warehouse\StoreController@tree_store');
 

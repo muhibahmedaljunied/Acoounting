@@ -22,7 +22,6 @@ class PurchaseService
 
     public function __construct(
         protected InventureService $inventury,
-        // protected UnitRepositoryInterface $unit,
         protected CoreService $core,
 
 

@@ -45,6 +45,26 @@ class AdvanceController extends Controller
     }
 
 
+    public function report(Request $request)
+    {
+        // 40036484981
+
+        $advances = Staff::with(['advance' => function ($query) use ($request) {
+            $query->select('advances.*')
+            ->where('advances.staff_id','=', $request->staff)
+            ->whereBetween('advances.date', array($request->post('from_date'), $request->post('into_date')));
+
+        }])
+        // 
+        // ->whereBetween('date', array($request->post('from_date'), $request->post('into_date')))
+        ->select('*')
+        ->paginate(10);
+        // dd($advances);
+        $this->hrRepo->Sum($advances, 'advance');
+
+        // dd($advances);
+        return response()->json(['list' => $advances]);
+    }
     public function select_staff(Request $request)
     {
 
@@ -57,7 +77,7 @@ class AdvanceController extends Controller
 
     public function store(Request $request)
     {
-     
+
         $this->core->setData($request->all());
 
         try {
@@ -65,7 +85,7 @@ class AdvanceController extends Controller
             DB::beginTransaction();
 
             foreach ($request->post('count') as $value) {
-            
+
                 $this->core->setValue($value);
                 $this->hr->store();
                 // $this->payroll->refresh();
@@ -103,5 +123,4 @@ class AdvanceController extends Controller
 
         return response()->json('successfully deleted');
     }
-
 }

@@ -50,6 +50,38 @@ class ExtraSanctionController extends Controller
 
         return $extra_sanctions;
     }
+
+    public function get_staff_extra_sanction(Request $request)
+    {
+
+
+        $staff_extra_sanction = DB::table('extras')
+            ->join('staff', 'staff.id', '=', 'extras.staff_id')
+            ->join('extra_types', 'extra_types.id', '=', 'extras.extra_type_id')
+            ->join('extra_details', 'extra_details.extra_id', '=', 'extras.id')
+            ->join('extra_sanctions', 'extra_sanctions.id', '=', 'extra_details.extra_sanction_id')
+            ->select(
+                'staff.id as staff_id',
+                'staff.name as staff_name',
+                'extras.id as extra_id',
+                'extras.date',
+                'extras.number_hours as number_hours',
+                'extra_details.*', 
+                'extra_sanctions.id as sanction_id', 
+                'extra_sanctions.sanction',
+                'extra_types.name as extra_type',
+                'extra_types.id as extra_type_id'
+                )
+            ->get();
+
+
+            // dd($staff_extra_sanction);
+        return response()->json(['list' => $staff_extra_sanction]);
+    }
+
+
+
+
     public function store(Request $request)
     {
 

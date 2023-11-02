@@ -9,6 +9,7 @@ use App\Repository\StoreInventury\StoreSaleRepository;
 use App\Repository\StockInventury\StockSaleRepository;
 use App\Repository\StoreInventury\StorePurchaseRepository;
 use App\Repository\StockInventury\StockPurchaseRepository;
+use App\Services\CoreService;
 
 class InventuryServiceProvider extends ServiceProvider
 {
@@ -28,36 +29,36 @@ class InventuryServiceProvider extends ServiceProvider
         $this->app->bind(InventuryStoreRepositoryInterface::class, function () {
 
             $request = app(\Illuminate\Http\Request::class);
-
+            $core = app(CoreService::class);
             if ($request->type == 'purchase') {
 
-                return new StorePurchaseRepository();
+                return new StorePurchaseRepository($core);
             }
 
             if ($request->type == 'sale') {
 
-                return new StoreSaleRepository();
+                return new StoreSaleRepository($core);
             }
 
-            return new StorePurchaseRepository();
+            return new StorePurchaseRepository($core);
         });
 
 
         $this->app->bind(InventuryStockRepositoryInterface::class, function () {
 
             $request = app(\Illuminate\Http\Request::class);
-
+            $core = app(CoreService::class);
             if ($request->type == 'purchase') {
 
-                return new StockPurchaseRepository();
+                return new StockPurchaseRepository($core);
             }
 
             if ($request->type == 'sale') {
 
-                return new StockSaleRepository();
+                return new StockSaleRepository($core);
             }
 
-            return new StockSaleRepository();
+            return new StockSaleRepository($core);
         });
         
 

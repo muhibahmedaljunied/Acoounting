@@ -55,3 +55,8 @@ Route::post('/listexpencesearch', 'ExpenceController@search');
 Route::post('/expence_details/{id}', 'ExpenceController@details_supply');
 Route::post('/invoice_expence/{id}', 'ExpenceController@invoice_supply');
 Route::post('/recive_expence/{id}', 'ExpenceController@recive_supply');
+
+
+
+Route::post('import_account', [AccountController::class, 'import']);
+Route::post('export_account', [AccountController::class, 'export']);

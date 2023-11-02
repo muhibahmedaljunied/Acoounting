@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Product;
+use App\models\Product;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class ProductImport implements ToModel
@@ -18,11 +18,22 @@ class ProductImport implements ToModel
             
 
             'id'     => $row[0],
-            'name'    => $row[1],
-            'category_id' => $row[2],
-            'image'     => $row[3],
-            'notes'    => $row[4],
+
+            'parent_id'    => $row[1],
+
+            'text' => $row[2],
+
+            'rank'     => $row[3],
+
+            'purchase_price'    => $row[4],
             'status'    => $row[5],
+
+            'rate'    => $row[6],
+
+            'image'    => $row[7],
+
+            'product_minimum'    => $row[8],
+
 
 
 

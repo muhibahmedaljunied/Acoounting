@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Providers;
-
+use App\Services\core\CoreStaffAttendanceService;
+use App\Repository\Sanction\DelayRepository;
+use App\Repository\Sanction\LeaveRepository;
+use App\Repository\Sanction\AbsenceRepository;
+use App\Repository\Sanction\ExtraRepository;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Repository\HR\AttendRepository;
-use App\Repository\HR\AbsenceRepository;
-use App\RepositoryInterface\AttendanceRepositoryInterface;
-use App\Services\core\CoreStaffAttendanceService;
 use App\Services\CoreStaffService;
 use App\Services\CoreService;
 
@@ -24,10 +24,34 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
 
-        // $this->app->singleton('return', function () {
-        //     return new MuhibService();
-        // });
+       
+   
+        $this->app->singleton(CoreStaffAttendanceService::class, function () {
+            
+            return new CoreStaffAttendanceService();
+        });
+     
+        $this->app->singleton('delay_sanction', function ()  {
+            
+            return new DelayRepository();
+        });
 
+
+        $this->app->singleton('absence_sanction', function (){
+            
+            return new AbsenceRepository();
+        });
+
+        $this->app->singleton('leave_sanction', function (){
+            
+            return new LeaveRepository();
+        });
+
+        $this->app->singleton('extra_sanction', function (){
+            
+      
+            return new ExtraRepository();
+        });
 
         $this->app->singleton(CoreService::class, function () {
             
@@ -39,25 +63,8 @@ class AppServiceProvider extends ServiceProvider
             return new CoreStaffService();
         });
 
-        $this->app->singleton(CoreStaffAttendanceService::class, function () {
-            
-            return new CoreStaffAttendanceService();
-        });
+   
 
-
-
-
-        // $this->app->bind(AttendanceRepositoryInterface::class, function () {
-        //     $request = app(\Illuminate\Http\Request::class);
-
-        //     if ($request['attendance_status'][$value] == 1) {
-
-        //         return new AttendRepository();
-        //     } else {
-
-        //         return new AbsenceRepository();
-        //     }
-        // });
     }
 
     /**

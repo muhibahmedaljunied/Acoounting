@@ -74,7 +74,7 @@
                   x
                 </button>
                 <div class="col-md-8">
-                  <h4 class="modal-title" id="myLargeModalLabel">اجزاء الاضافي</h4>
+                  <h4 class="modal-title" id="myLargeModalLabel">اجزاء الوقت</h4>
                 </div>
                 <div class="col-md-4">
                   <div class="col-sm-12">
@@ -87,32 +87,65 @@
                 <div class="row row-sm">
                   <div class="col-xl-12">
                     <div class="card">
-                      <div class="card-header pb-0">
-
-                      </div>
+                    
                       <div class="card-body">
-                        <div class="form">
-                          <h3 class="text-center">أضافه </h3>
-                          <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
-                            <div class="form-group"></div>
-                            <div class="form-group">
-                              <label for="name">من</label>
-                              <input type="text" class="form-control" name="name" id="name" required />
-                            </div>
+                        <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
 
-                            <div class="form-group">
-                              <label for="name">الي</label>
-                              <input type="text" class="form-control" name="name" id="name" required />
-                            </div>
+                          <div class="table-responsive">
+                            <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
+                              <thead>
+                                <tr>
+
+                                  <th> الجزء</th>
+
+
+                                  <th> المده</th>
 
 
 
-                          </form>
-                        </div>
+
+
+                                  <th>اضافه</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="index in count" :key="index">
+                                  <td>
+                                    <input v-model="name[index]" type="text" class="form-control" 
+                                      required />
+
+                                  </td>
+
+                             
+<td>
+  <input v-model="duration[index]" type="text" class="form-control" 
+                                      required />
+</td>
+
+
+                                  <td v-if="index == 1">
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="addComponent(count)">
+                                      <i class="fa fa-plus-circle"></i></a>
+
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="disComponent(count)">
+                                      <i class="fa fa-minus-circle"></i></a>
+                                  </td>
+
+
+
+                                </tr>
+
+                              </tbody>
+                            </table>
+                          </div>
+                        </form>
+
                       </div>
                     </div>
                   </div>
-                  <!--/div-->
+
                 </div>
               </div>
               <div class="modal-footer">
@@ -151,6 +184,8 @@ export default {
         type: Object,
         default: null,
       },
+      duration:[],
+      name:[],
 
 
     };

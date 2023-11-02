@@ -6,22 +6,6 @@
         <div class="card-header">
 
           <span class="h2"> السلف</span>
-
-          <!-- 
-          <div style="display: flex;float: left; margin: 5px">
-   
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-              data-target="#addAd">
-              <i class="fa fa-plus-circle"></i></a>
-
-
-              <input autocomplete="on" v-model="word_search" type="text" class="form-control input-text"
-              placeholder="بحث ...." aria-label="Recipient's username" aria-describedby="basic-addon2"
-              @input="get_search()">
-
-
-            <div></div>
-          </div> -->
         </div>
         <div class="card-body" id="printme">
           <div class="row">
@@ -41,10 +25,10 @@
 
             <div class="col-md-2">
               <label for="status">الي تأريخ</label>
-              <input v-model="from_date" type="date" name="" id="" class="form-control">
+              <input v-model="into_date" type="date" name="" id="" class="form-control">
             </div>
             <div class="col-sm-6 col-md-3" style="margin-top: auto;">
-              <a href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
+              <a href="#" @click="report()"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
             </div>
           </div>
           <div class="table-responsive">
@@ -110,7 +94,7 @@
                 </tr>
                 <tr>
                   <td colspan="3" style="color:red;font-size: x-large;">الاجمالي</td>
-                  
+
                 </tr>
               </tbody>
               <tbody v-else>
@@ -385,15 +369,30 @@ export default {
   methods: {
 
 
-    get_search(word_search) {
-      this.axios
-        .post(`/advancesearch`, { word_search: this.word_search })
-        .then(({ data }) => {
-          this.branches = data;
+    // get_search(word_search) {
+    //   this.axios
+    //     .post(`/advancesearch`, { word_search: this.word_search })
+    //     .then(({ data }) => {
+    //       this.branches = data;
 
-          // this.$root.logo = "Category";
+    //       // this.$root.logo = "Category";
+    //     });
+    // },
+
+    report() {
+      this.axios
+        .post(`/advance_report`, { 
+          type:this.type,
+          staff: this.staff_selected,
+          from_date: this.from_date,
+          into_date: this.into_date, 
+        })
+        .then(({ data }) => {
+          this.list_data = data.list;
+
         });
     },
+
 
     list(page = 1) {
       this.axios

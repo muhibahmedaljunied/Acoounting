@@ -8,52 +8,7 @@
 
         </div>
         <div class="card-body" id="printme">
-          <!-- <div class="row">
-            <div class="col-md-3">
-              <label for="status">اسم الموظف</label>
-              <select @change="select_staff" v-model="staff_selected" name="type" id="type" class="form-control "
-                required>
-                <option v-for="staff in staffs" v-bind:value="staff.id">
-                  {{ staff.name }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label for="status"> نوع الجزاء</label>
-              <select v-model="sanction_selected" name="type" id="type" class="form-control " required>
-                <option v-bind:value=1>
-                  غياب
-                </option>
-                <option v-bind:value=2>
-                  تأخير
-                </option>
-                <option v-bind:value=3>
-                  انصراف مبكر
-                </option>
-                <option v-bind:value=4>
-                  اضافي
-                </option>
-              </select>
-
-            </div>
-
-
-            <div class="col-md-2">
-              <label for="status">الشهر</label>
-
-              <select @change="select_staff" v-model="staff_selected" name="type" id="type" class="form-control "
-                required>
-                <option v-for="staff in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]">
-                  {{ staff }}
-                </option>
-              </select>
-
-            </div>
-            <div class="col-sm-6 col-md-3" style="margin-top: auto;">
-              <a href="#" @click="search(sanction_selected)"><img src="/assets/img/search.png" alt="" style="width: 10%;">
-              </a>
-            </div>
-          </div> -->
+          
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -76,175 +31,57 @@
                   <th class="wd-15p border-bottom-0">العمليات</th>
                 </tr>
               </thead>
-              <tbody v-if="list_data && list_data.data.length > 0">
-                <tr v-for="(advance, index) in list_data.data" :key="index">
-                  <template
-                    v-if="advance.LeaveSanction || advance.DelaySanction || advance.ExtraSanction || advance.ExtraDetails">
-
-                    <td>{{ advance.name }}</td>
-                    <td>
-
-                      {{ advance.type }}
-
-                    </td>
-                    <td>
+              <tbody v-if="value_list && value_list.data.length > 0">
+                                <tr v-for="(advance, index) in value_list.data" :key="index">
 
 
+                                    <td>{{ advance.name }}</td>
+                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
 
-                      {{ advance.sanction_date }}
+                                        تأخير {{ item.type_name }}
 
-                    </td>
-                    <template v-if="advance.DelaySanction">
-
-                      <td>
-
-                        <div v-for="(adv, index) in advance.DelaySanction" :key="index">
-                          {{ adv.name }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.DelaySanction" :key="index">
-                          {{ adv.parts_name }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.DelaySanction" :key="index">
-                          {{ adv.iteration }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.DelaySanction" :key="index">
-                          {{ adv.sanction }}
-                          <hr>
-                        </div>
-                      </td>
-
-                    </template>
-
-                    <template v-if="advance.LeaveSanction">
-                      <!-- <td>
-
-                                                <div v-for="(adv, index) in advance.LeaveSanction" :key="index">
-                                                    {{ adv.created_at }}
-                                                    <hr>
-                                                </div>
-                                            </td> -->
-                      <td>
-
-                        <div v-for="(adv, index) in advance.LeaveSanction" :key="index">
-                          {{ adv.name }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.LeaveSanction" :key="index">
-                          {{ adv.parts_name }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.LeaveSanction" :key="index">
-                          {{ adv.iteration }}
-                          <hr>
-                        </div>
-                      </td>
-
-                      <td>
-
-                        <div v-for="(adv, index) in advance.LeaveSanction" :key="index">
-                          {{ adv.sanction }}
-                          <hr>
-                        </div>
-                      </td>
-
-                    </template>
-
-
-                    <template v-if="advance.ExtraSanction">
-
-                      <td>
-
-                        <div v-for="(adv, index) in advance.ExtraSanction" :key="index">
-                          {{ adv.name }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.ExtraSanction" :key="index">
-                          {{ adv.iteration }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.ExtraSanction" :key="index">
-                          {{ adv.sanction }}
-                          <hr>
-                        </div>
-                      </td>
-
-                    </template>
-
-
-                    <template v-if="advance.ExtraDetails">
-
-                      <td>
-
-                        <div v-for="(adv, index) in advance.ExtraDetails" :key="index">
-                          {{ adv.name }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.ExtraDetails" :key="index">
-                          {{ adv.iteration }}
-                          <hr>
-                        </div>
-                      </td>
-                      <td>
-
-                        <div v-for="(adv, index) in advance.ExtraDetails" :key="index">
-                          {{ adv.sanction }}
-                          <hr>
-                        </div>
-                      </td>
-
-                    </template>
+                                    </td>
+                                    <td>
 
 
 
+                                        {{ advance.sanction_date }}
+
+                                    </td>
+
+                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
+
+                                        {{ item.discount_name }}
+
+                                    </td>
+                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
+
+                                        {{ item.parts_name }}
+
+                                    </td>
+                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
+
+                                        {{ item.iteration }}
+
+                                    </td>
+                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
+
+                                        {{ item.sanction }}
+
+                                    </td>
+
+                                    <td style="color:goldenrod">
+                                        <span class="badge text-bg-warning">غير معتمد</span>
+
+                                    </td>
 
 
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="color:red;font-size: x-large;">الاجمالي</td>
 
-
-
-                    <td style="color:goldenrod">
-                      <span class="badge text-bg-warning">غير معتمد</span>
-
-                    </td>
-                    <td style="color:goldenrod">
-
-                    </td>
-
-
-                  </template>
-
-                </tr>
-                <tr>
-                  <td colspan="3" style="color:red;font-size: x-large;">الاجمالي</td>
-
-                </tr>
-              </tbody>
+                                </tr>
+                            </tbody>
               <tbody v-else>
                 <tr>
                   <td align="center" colspan="3">لايوجد بياتات.</td>
@@ -396,14 +233,14 @@ export default {
         default: null,
       },
 
-      discountselected: [],
-      leaveselected: [],
-      leavepartselected: [],
-      iterationselected: [],
-      discounttypeselected: [],
-      sanctionselected: [],
+      // discountselected: [],
+      // leaveselected: [],
+      // leavepartselected: [],
+      // iterationselected: [],
+      // discounttypeselected: [],
+      // sanctionselected: [],
 
-      word_search: '',
+      // word_search: '',
     };
   },
   mounted() {
@@ -413,34 +250,15 @@ export default {
   },
   methods: {
 
-    Add_new() {
-
-      this.Add(
-        {
-          type: this.type,
-          count: this.counts,
-          // staff:this.staffselected,
-          discount: this.discountselected,
-
-          leave: this.leaveselected,
-          leave_part: this.leavepartselected,
-          iteration: this.iterationselected,
-          discount_type: this.discounttypeselected,
-          sanction: this.sanctionselected,
-        });
-
-
-    },
-
 
     list(page = 1) {
       this.axios
-        .post(`/leave_sanction?page=${page}`)
+        .post(`/staff_leave_sanction?page=${page}`)
         .then(({ data }) => {
-          this.leave_types = data.leave_types;
-          this.leave_parts = data.leave_parts;
-          this.discount_types = data.discount_types;
-          this.staffs = data.staffs;
+          // this.leave_types = data.leave_types;
+          // this.leave_parts = data.leave_parts;
+          // this.discount_types = data.discount_types;
+          // this.staffs = data.staffs;
           this.value_list = data.list;
         })
         .catch(({ response }) => {

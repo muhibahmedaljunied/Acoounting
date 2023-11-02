@@ -125,6 +125,7 @@ class ExtraService extends SanctionService
 
 
 
+   
         if (count($extra) == $data[$i]->iteration) {
 
             $this->details->init_details(value: $data[$i]);

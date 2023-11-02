@@ -84,7 +84,7 @@
                   <td>{{ staff.staff_type.name }}</td>
                   <td></td>
 
-                  <td>{{ staff.work_type.name }}</td>
+                  <!-- <td>{{ staff.work_type.name }}</td> -->
 
                   <!-- <td>{{ staff.salary }}</td>
                   <td>{{ staff.branch }}</td> -->

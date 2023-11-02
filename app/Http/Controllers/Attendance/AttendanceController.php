@@ -43,9 +43,16 @@ class AttendanceController extends Controller
                 ->paginate(10);
         });
 
+        $minutes = 60;
+        $staffs = Cache::remember('staff', $minutes, function () {
+            return DB::table('staff')->get();
+        });
+
+
         return response()->json([
 
             'list' => $staff_list,
+            'staffs' => $staffs,
             'work_systems' => WorkSystem::all(),
 
         ]);
@@ -87,12 +94,24 @@ class AttendanceController extends Controller
             ->get();
 
 
-        // dd($periods);
+            
+        $work_types = WorkSystem::where('work_systems.id', $request->id)
+        ->join('work_system_details', 'work_system_details.work_system_id', '=', 'work_systems.id')
+        ->join('work_types', 'work_types.id', '=', 'work_system_details.work_type_id')
+        ->select(
+            'work_types.id',
+            'work_types.name',
+        )
+        ->get();
+        
+
+
+        // dd($work_types);
 
 
         return response()->json([
             'periods' => $periods,
-            // 'staffs' => $staffs
+            'work_types' => $work_types
         ]);
     }
 
@@ -234,8 +253,10 @@ class AttendanceController extends Controller
     {
 
 
-        // dd($request->all());
+     
         $this->attendance_core->data = $request->all();
+
+     
         try {
 
             DB::beginTransaction();
@@ -246,6 +267,7 @@ class AttendanceController extends Controller
 
                 if ($this->attendance_core->data['attendance_status'] == 1) {
 
+          
                     $this->service->attende();
                 } else {
                     $this->service->absence();

@@ -56,6 +56,26 @@ class ExtraController extends Controller
         return response()->json(['list' => $staffs]);
     }
 
+    public function report(Request $request){
+
+        
+        $extras = Staff::with(['extra' => function ($query) use ($request) {
+            $query->select('extras.*')
+            ->where('extras.staff_id','=', $request->staff)
+            ->whereBetween('extras.date', array($request->post('from_date'), $request->post('into_date')));
+
+        }])
+        ->select('*')
+        ->paginate(10);
+        // dd($advances);
+        $this->hrRepo->Sum($extras);
+
+        // dd($advances);
+        return response()->json(['list' => $extras]);
+
+
+    }
+
     public function store(Request $request)
     {
 

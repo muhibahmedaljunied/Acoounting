@@ -31,7 +31,7 @@
             </div>
         
             <div class="col-sm-6 col-md-3" style="margin-top: auto;">
-              <a href="#" ><img src="/assets/img/search.png" alt="" style="width: 10%;">  </a>
+              <a href="#" @click="report()" ><img src="/assets/img/search.png" alt="" style="width: 10%;">  </a>
             </div>
           </div>
 
@@ -217,6 +217,7 @@ export default {
   },
   mounted() {
     this.list();
+    this.type = 'discount';
   },
   methods: {
 
@@ -229,6 +230,21 @@ export default {
           this.discounts = data;
 
           // this.$root.logo = "Category";
+        });
+    },
+
+    
+    report() {
+      this.axios
+        .post(`/discount_report`, { 
+          type:this.type,
+          staff: this.staff_selected,
+          from_date: this.from_date,
+          into_date: this.into_date, 
+        })
+        .then(({ data }) => {
+          this.list_data = data.list;
+
         });
     },
 

@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Repository\HR;
-
-use App\Models\Advance;
-use App\Models\Payroll;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\RepositoryInterface\PayrollRepositoryInterface;
 use App\Services\CoreStaffService;
+use App\Models\Advance;
+use App\Models\Payroll;
 use DB;
 
 class AdvanceRepository implements HRRepositoryInterface,PayrollRepositoryInterface

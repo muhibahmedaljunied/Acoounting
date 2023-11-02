@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
 
-    protected $fillable = ['account_name_ar','account_name_en','currency','account_main','rank','account_type','parent_id'];
+    protected $fillable = ['id','text','account_name_en','parent_id','rank','account_type','currency','type_branch','status_account','created_at','updated_at'];
 
     public function children(){
 

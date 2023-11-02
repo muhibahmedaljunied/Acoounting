@@ -1,56 +1,56 @@
 <?php
 
 namespace App\Repository\Sanction;
+
 use App\Traits\Staff\Sanction\SanctionTrait;
 use App\Traits\staff\Sanction\DelaySanctionTrait;
 use App\RepositoryInterface\SanctionRepositoryInterface;
-use App\RepositoryInterface\PayrollRepositoryInterface;
 use DB;
-class DelayRepository implements SanctionRepositoryInterface,PayrollRepositoryInterface
+
+class DelayRepository implements SanctionRepositoryInterface
 {
-    use SanctionTrait,DelaySanctionTrait;
- 
-    
-    public function create($id, $request, $val)
+    use SanctionTrait, DelaySanctionTrait;
+
+    public $attendance_core;
+
+    public function create($attendance_core)
     {
- 
+
+        $this->attendance_core = $attendance_core;
         $data  = $this->get();
-      
-        $delay_current = $this->current_attendance($id,'delay');
-        $iterat = $this->all_attendance($delay_current,'delay');
+  
+        $day = date('l', strtotime($attendance_core->data['attendance_date']));
+
+        $this->current_attendance('delay');
+           
+        $iterat = $this->all_attendance('delay');
+    
         foreach ($data as $key => $value) {
 
-            if ($value->code == $request['type_leave_delay'] && $value->duration == $request['delay'][$val]) {
-
+            // if ($value->code == $attendance_core->data['type_leave_delay'] && $value->duration == $attendance_core->data['delay'][$attendance_core->value]) {
+                // dd($value);
+               
+            if ($value->delay_type_id == 1 &&  $day == 'Saturday') {
+            
+    
                 if ($iterat == $value->iteration) {
-
-                    $this->handle($request,$value->delay_sanction_id,$val,$id);
-
+            
+                    $attendance_core->sanction_type_id = $value->delay_type_id;
+                    $this->handle();
                 }
             }
-          
         }
-    
-
+        // dd('sdd');
     }
+
+
+
+    public function handle()
+    {
 
  
-
-   
-
-
-    public function handle($request,$delay_sanction_id,$val,$id){
-
-        // $de = DelaySanction::find($delay_sanction_id);
-        $de = $this->get_sanction($delay_sanction_id,'DelaySanction');
-        $this->staff_sanction($request, $val, $id, $de);
-        $this->refresh($request,$de);
-
-
+        $this->get_sanction('DelaySanction');
+        $this->staff_sanction();
+        // $this->payroll();
     }
-   
-
-    
-
-    
 }

@@ -21,9 +21,12 @@
                                 <div class="col-md-6">
                                     <div class="card">
                                         <div class="card-header">
-                                            <!-- <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_staffos"
-                        data-target="#structure_main">
-                        <i class="fa fa-plus-circle"></i></a> -->
+
+                                            <a @click="exports_excel()">
+                                                <img src="/assets/img/export.png" alt="" style="width: 10%;"></a>
+
+                                            <a @click="imports_excel()">
+                                                <img src="/assets/img/import.png" alt="" style="width: 10%;"></a>
                                         </div>
 
                                         <div class="card-body">
@@ -47,7 +50,15 @@
                 <div class="card">
 
 
+                    <div class="card-header pb-0">
+
+
+                        <span style="font-size: x-large">اضافه هيكل</span>
+
+
+                    </div>
                     <form method="post">
+
 
                         <div class="card-body">
                             <div class="form">
@@ -71,7 +82,7 @@
                                     <label for="Staff">اسم الهيكل</label>
                                     <input style="background-color: beige;" v-model="text" type="text" name="Staff"
                                         id="staff" class="form-control" required /><span style="color:red">{{
-                                        error_text[0] }}</span>
+                                            error_text[0] }}</span>
 
                                 </div>
 
@@ -121,7 +132,6 @@
         </div>
 
     </div>
-
 </template>
 
 <script>
@@ -133,7 +143,7 @@ export default {
     mixins: [tree],
     data() {
         return {
-           
+
             error_text: '',
             error_hash_rate: '',
             error_purchase_price: '',
@@ -153,7 +163,7 @@ export default {
     },
     mounted() {
         this.type_of_tree = 0;
-        
+
     },
     created() {
         localStorage.setItem('id', 0);
@@ -165,10 +175,35 @@ export default {
 
     methods: {
 
-       
+
 
         onFileChange(e) {
             this.file = e.target.files[0];
+        },
+
+        exports_excel() {
+
+            axios
+                .post(`export_AdministrativeStructure`)
+                .then(function (response) {
+
+                    // console.log(1);
+                })
+                .catch(error => {
+
+                });
+        },
+        imports_excel() {
+
+            axios
+                .post(`import_AdministrativeStructure`)
+                .then(function (response) {
+
+                    // console.log(1);
+                })
+                .catch(error => {
+
+                });
         },
 
 

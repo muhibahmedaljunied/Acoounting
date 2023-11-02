@@ -70,7 +70,7 @@
                   x
                 </button>
                 <div class="col-md-8">
-                  <h4 class="modal-title" id="myLargeModalLabel"> نوع التاخير</h4>
+                  <h4 class="modal-title" id="myLargeModalLabel"> نوع الاضافي</h4>
                 </div>
                 <div class="col-md-4">
                   <div class="col-sm-12">
@@ -83,9 +83,7 @@
                 <div class="row row-sm">
                   <div class="col-xl-12">
                     <div class="card">
-                      <div class="card-header pb-0">
-
-                      </div>
+                    
                       <div class="card-body">
                         <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
 

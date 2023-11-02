@@ -45,16 +45,17 @@ trait AttendanceTrait
 
 
 
-    public function refresh_details_table($period_id, $data, $id)
+    public function refresh_details_table()
     {
+
 
 
         $temporale_f = tap(AttendanceDetail::where([
 
-            'attendance_id' => $id,
-            'period_id' => $period_id
+            'attendance_id' => $this->attendance_core->attendance_id,
+            'period_id' => $this->attendance_core->data['period']
         ]))
-            ->update($data)
+            ->update($this->attendance_core->updating_data)
             ->get('id');
 
         return $temporale_f;

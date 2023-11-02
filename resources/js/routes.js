@@ -10,8 +10,8 @@ import AccountBasicData from './components/admin/FinancialAccounting/AccountBasi
 
 
 // ------------------------------------------------------------------staff---------------------------------------------------------------------------
+import Salary from './components/admin/staff/Salary'
 import SalaryDetails from './components/admin/staff/SalaryDetails'
-
 import AdministrativeStructure from './components/admin/staff/AdministrativeStructure'
 import BasicData from './components/admin/staff/BasicData'
 import Staff from './components/admin/staff/Staff'
@@ -166,6 +166,11 @@ const routes = [
     component: BasicData
 
   },
+    {
+      path: '/staff/salary',
+      component: Salary
+  
+    },
   {
     path: '/salary_details/:id',
     component: SalaryDetails

@@ -43,11 +43,6 @@ class AbsenceController extends Controller
         return response()->json(['absence_types' => $absence_types, 'staffs' => $staffs, 'discount_types' => $discount_types]);
     }
 
-  
-    public function create()
-    {
-        //
-    }
 
 
     public function store(Request $request)

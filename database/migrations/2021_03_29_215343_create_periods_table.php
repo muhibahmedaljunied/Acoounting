@@ -20,6 +20,7 @@ class CreatePeriodsTable extends Migration
            
             $table->string('name')->nullable();
 
+            $table->string('code')->nullable();
 
             $table->timestamps();
         });

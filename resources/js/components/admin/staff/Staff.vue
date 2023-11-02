@@ -100,9 +100,9 @@
                       <div class="tab-pane" id="tab7">
                         <discount></discount>
                       </div>
-                      <!-- <div class="tab-pane" id="tab8">
-                        <loan></loan>
-                      </div> -->
+                      <div class="tab-pane" id="tab8">
+                        <staff-sanction></staff-sanction>
+                      </div>
                 
                     
                   </div>
@@ -141,7 +141,7 @@ import Extra from "./StaffData/Extra";
 
 import Discount from "./StaffData/Discount";
 
-import Loan from "./StaffData/Loan";
+import StaffSanction from "./StaffData/StaffSanction";
 
 
 
@@ -155,7 +155,7 @@ export default {
     Attendance,
     Extra,
     Discount,
-    Loan
+    StaffSanction
   
   
 

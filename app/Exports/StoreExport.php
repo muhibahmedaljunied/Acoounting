@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Exports;
-
-use App\Store;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use App\models\Store;
+use Carbon\Carbon;
 
-class StoreExport implements FromCollection
+
+
+class StoreExport implements FromCollection,WithMapping, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -14,4 +18,57 @@ class StoreExport implements FromCollection
     {
         return Store::all();
     }
+
+    public function map($row) : array {
+
+        return [
+
+            
+            $row->id,
+
+            $row->text,
+
+            $row->parent_id,
+
+            $row->rank,
+
+            $row->status,
+
+            Carbon::parse($row->created_at)->toFormattedDateString(),
+
+            Carbon::parse($row->updated_at)->toFormattedDateString()
+
+        ] ;
+ 
+
+    }
+
+ 
+
+    public function headings() : array {
+
+
+        return [
+
+            'id',
+ 
+            'text',
+ 
+            'parent_id',
+ 
+            'rank',
+ 
+            'status',
+ 
+            'created_at',
+ 
+            'updated_at'
+ 
+ 
+         ] ;
+
+        
+
+    }
+
 }

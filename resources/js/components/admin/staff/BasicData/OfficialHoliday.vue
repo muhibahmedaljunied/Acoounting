@@ -88,9 +88,7 @@
                 <div class="row row-sm">
                   <div class="col-xl-12">
                     <div class="card">
-                      <div class="card-header pb-0">
-                      
-                      </div>
+                  
                       <div class="card-body">
                         <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
 

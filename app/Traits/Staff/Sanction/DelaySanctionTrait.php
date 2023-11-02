@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits\staff\Sanction;
+use App\Models\DelaySanction;
 use DB;
 
 trait DelaySanctionTrait
@@ -43,6 +44,7 @@ trait DelaySanctionTrait
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'delay_sanctions.sanction_discount_id')
             ->select('delay_sanctions.*', 'delay_sanctions.id as delay_sanction_id', 'parts.duration', 'delay_types.*', 'sanction_discounts.*')
             ->get();
+
         return $delay;
     }
     

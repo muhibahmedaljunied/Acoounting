@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 use App\RepositoryInterface\HRRepositoryInterface;
+use App\Repository\HR\AbsenceSanctionRepository;
 use App\Repository\HR\DelaySanctionRepository;
 use App\Repository\HR\LeaveSanctionRepository;
 use App\Repository\HR\ExtraSanctionRepository;
@@ -68,6 +69,11 @@ class HRServiceProvider extends ServiceProvider
             if ($request->type == 'extra_sanction') {
 
                 return new ExtraSanctionRepository($core);
+            }
+
+            if ($request->type == 'absence_sanction') {
+
+                return new AbsenceSanctionRepository($core);
             }
 
 

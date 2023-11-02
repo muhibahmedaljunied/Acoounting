@@ -1,96 +1,125 @@
 <?php
 
 namespace App\Http\Controllers\Absence;
-use App\Models\Absence;
-use App\Models\AbsenceType;
-use App\Models\SanctionDiscount;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
-use DB;
+use App\Services\CoreStaffService;
+use App\Services\Core\HrService;
+use App\Models\SanctionDiscount;
 use Illuminate\Http\Request;
+use App\Models\AbsenceType;
+use App\Models\Part;
+use DB;
+
 
 class AbsenceSanctionController extends Controller
 {
 
-
-
+    public function __construct(
+        protected HrService $hr,
+        protected CoreStaffService $core,
+    ) {
+    }
     public function index()
     {
-       
+
+        $minutes = 60;
+        $staffs = Cache::remember('staff', $minutes, function () {
+            return DB::table('staff')->get();
+        });
+
+
+
+        return response()->json([
+            'list' => $this->get_absence_sanction(),
+            'absence_types' => AbsenceType::all(),
+            'absence_parts' => Part::all(),
+            'staffs' => $staffs,
+            'discount_types' => SanctionDiscount::all()
+        ]);
+    }
+
+    public function get_absence_sanction()
+    {
 
         $absence_sanctions = Cache::rememberForever('absence_sanctions_index', function () {
 
             return DB::table('absence_sanctions')
                 ->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id')
-                // ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
-                ->select('absence_sanctions.*', 'absence_types.name as absence', 'sanction_discounts.name as discount_name')
+                ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
+                ->select(
+                    'absence_sanctions.*',
+                    'absence_types.name as absence',
+                    'sanction_discounts.name as discount_name'
+                )
                 ->paginate(10);
         });
 
-        $absence_types = AbsenceType::all();
-        $discount_types = SanctionDiscount::all();
-        // ------------------------------------------------------------------------------------------------
-        $staffs = Cache::rememberForever('staff', function () {
-            return DB::table('staff')->get();
-        });
-        // --------------------------------------------------------------------------------------------------
-
-
-        return response()->json(['absence_types' => $absence_types, 'staffs' => $staffs, 'discount_types' => $discount_types, 'list' => $absence_sanctions]);
+        return $absence_sanctions;
     }
+
+
+    public function get_staff_absence_sanction(Request $request)
+    {
+
+        $staff = DB::table('staff_sanctions')
+            ->join('staff', 'staff.id', '=', 'staff_sanctions.staff_id')
+            ->select(
+                'staff_sanctions.date as sanction_date',
+                'staff_sanctions.sanctionable_type',
+                'staff_sanctions.sanctionable_id',
+                'staff.name',
+                'staff.id'
+            )
+            ->paginate(100);
+
+
+        foreach ($staff as $value) {
+
+
+            if ($value->sanctionable_type == 'App\\Models\\AbsenceSanction') {
+
+                $absence = DB::table('absence_sanctions')->where('absence_sanctions.id', $value->sanctionable_id)
+                    ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
+                    ->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id')
+                    ->join('parts', 'parts.id', '=', 'absence_sanctions.part_id')
+                    ->select(
+                        'absence_sanctions.*',
+                        'absence_types.name as type_name',
+                        'parts.name as parts_name',
+                        'sanction_discounts.name as discount_name'
+                    )
+                    ->get();
+
+                $value->AbsenceSanction = $absence;
+            }
+        }
+
+        return response()->json(['list' => $staff]);
+    }
+
+
+
+
 
     public function store(Request $request)
     {
 
-        // foreach ($request->post('count') as $value) {
 
+        $this->core->data = $request->all();
 
-        //     $temporale_f = 0;
-        //     $temporale_f = $sanction->update($temporale_f,$request);
-        //     if ($temporale_f->isEmpty()) {
+        foreach ($request->post('count') as $value) {
 
-        //         $sanction->add($request,$value);
-    
-        //     }
-        // }
+            $this->core->value = $value;
 
-        // Cache::forget('absence_sanctions_index');
+            $this->hr->store();
 
+            // }
+        }
 
-
+        Cache::forget('absence_sanctions_index');
         return response()->json(['message' => $request->all()]);
     }
 
 
-    public function create()
-    {
-        //
-    }
-
-
-
-
-
-    public function show(Absence $absence)
-    {
-        //
-    }
-
-
-    public function edit(Absence $absence)
-    {
-        //
-    }
-
-
-    public function update(Request $request, Absence $absence)
-    {
-        //
-    }
-
-
-    public function destroy(Absence $absence)
-    {
-        //
-    }
 }

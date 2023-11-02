@@ -7,10 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\PeriodTime;
 use App\Models\Absence;
 use App\Models\Period;
-use App\Models\WorkType;
-use App\Models\AbsenceType;
-use App\Models\Staff;
-use DB;
 use Illuminate\Http\Request;
 
 class PeriodController extends Controller

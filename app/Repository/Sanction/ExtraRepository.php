@@ -1,103 +1,58 @@
 <?php
 
 namespace App\Repository\Sanction;
-use App\Traits\Staff\Sanction\SanctionTrait;
 use App\RepositoryInterface\SanctionRepositoryInterface;
-use App\RepositoryInterface\PayrollRepositoryInterface;
 use App\Traits\staff\Sanction\ExtraSanctionTrait;
+use App\Traits\Staff\Sanction\SanctionTrait;
 use DB;
-class ExtraRepository implements SanctionRepositoryInterface,PayrollRepositoryInterface
+class ExtraRepository implements SanctionRepositoryInterface
 {
+    use SanctionTrait, ExtraSanctionTrait;
+    public $attendance_core;
 
-    use SanctionTrait,ExtraSanctionTrait;
-
-    // public function add($request, $value)
-    // {
-
-    //     $temporale = new ExtraSanction();
-    //     $temporale->extra_type_id = $request['extra'][$value];
-    //     $temporale->part_id = $request['extra_part'][$value];
-    //     $temporale->iteration = $request['iteration'][$value];
-    //     $temporale->sanction_discount_id = $request['discount_type'][$value];
-    //     $temporale->sanction = $request['sanction'][$value];
-    //     $temporale->save();
-    //     return $temporale->id;
-
-    // }
-
-    // public function update($temporale, $request)
-    // {
-
-    //     $temporale_f = tap(ExtraSanction::whereExtraSanction($request))
-    //         ->update(['sanction' => $request['sanction']])
-    //         ->get('id');
-
-    //     return $temporale_f;
-    // }
-
-    public function create($id, $request, $val)
+    public function create($attendance_core)
     {
 
+        $this->attendance_core = $attendance_core;
+        
         $data  = $this->get();
-     
-        $day = date('l', strtotime($request['attendance_date']));
-        $extra_current = $this->current_attendance($id,'extra');
-    
-        $iterat = $this->all_attendance($extra_current,'extra');
+        $day = date('l', strtotime($attendance_core->data['attendance_date']));
+   
+        $this->current_attendance('extra');
+        
+        $iterat = $this->all_attendance('extra');
 
         foreach ($data as $key => $value) {
-   
-            if ($value->extra_type_id == 1 &&  $day == 'Saturday') {
-              
+
+            if ($value->extra_type_id == 1) {
+
                 if ($iterat == $value->iteration) {
 
-                 
-                   $this->handle($request,$value->extra_sanction_id,$val,$id);
-            
-                
+                    $attendance_core->sanction_type_id = $value->extra_type_id;
+                    $this->handle();
                 }
             }
-    
-            // if ($value->extra_type_id == 1 &&  $day == 'Thurisday') {
 
-            //     if ($iterat == $value->iteration) {
+            if ($value->extra_type_id == 2) {
 
-            //         $result = $this->sanction_finshed($id, $request, $val, $value, $type);
-            //         return $result;
-            //     }
-            // }
+                if ($iterat == $value->iteration) {
+
+                      $attendance_core->sanction_type_id = $value->extra_type_id;
+                      $this->handle();
+                }
+            }
 
         }
-
-   
     }
 
 
-    public function handle($request,$extra_sanction_id,$val,$id){
+    public function handle()
+    {
 
-    
-        $de = $this->get_sanction($extra_sanction_id,'ExtraSanction');
-        $this->staff_sanction($request, $val, $id, $de);
-        $qw = $this->refresh($request, $de,'total_extra');
-        return $qw;
 
+        $this->get_sanction('ExtraSanction');
+        $this->staff_sanction();
+        // $this->payroll('total_extra');
 
     }
-
-
-    // public function get()
-    // {
-
-    //     $extra = DB::table('extra_sanctions')
-    //         ->join('extra_types', 'extra_types.id', '=', 'extra_sanctions.extra_type_id')
-    //         ->join('parts', 'parts.id', '=', 'extra_sanctions.part_id')
-    //         ->join('sanction_discounts', 'sanction_discounts.id', '=', 'extra_sanctions.sanction_discount_id')
-    //         ->select('extra_sanctions.*', 'extra_sanctions.id as extra_sanction_id', 'parts.duration', 'extra_types.*', 'sanction_discounts.*')
-    //         ->get();
-    //     return $extra;
-    // }
-
-    
-   
-
 }
