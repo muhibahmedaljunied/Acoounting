@@ -10,24 +10,8 @@ use Illuminate\Http\Request;
 use App\Exports\AccountExport;
 use App\Imports\AccountImport;
 use DB;
-
-use function PHPSTORM_META\type;
-
 class AccountController extends Controller
 {
-
-
-    public function index()
-    {
-
-     
-
-    }
-
- 
-    public function create()
-    {
-    }
 
 
 
@@ -43,11 +27,11 @@ class AccountController extends Controller
     public function get_account(Request $request)
     {
 
-        $accounts = DB::table('accounts')->where('store_accounts.store_id', $request->id)
-            ->join('store_accounts', 'store_accounts.account_id', '=', 'accounts.id')
-            ->select('accounts.id', 'accounts.text')
-            ->get();
-       
+        $accounts = DB::table('stores')->where('stores.id', $request->id)
+        ->join('accounts', 'stores.account_id', '=', 'accounts.id')
+        ->select('accounts.id', 'accounts.text')
+        ->get();
+
         return response()->json(['accounts' => $accounts]);
     }
 
@@ -120,6 +104,7 @@ class AccountController extends Controller
             ->select('accounts.*')
             ->get();
 
+         
 
         $childs = Account::where('parent_id', $id)->select('accounts.*')->max('id');
 
@@ -224,24 +209,9 @@ class AccountController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Account  $account
-     * @return \Illuminate\Http\Response
-     */
+   
 
-    public function update(Request $request, Account $account)
-    {
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Account  $account
-     * @return \Illuminate\Http\Response
-     */
+   
 
     public function destroy($id)
     {

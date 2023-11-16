@@ -148,7 +148,7 @@
                     
                         <div class="card-body">
 
-                          <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
+                          <form method="post"  enctype="multipart/form-data">
 
                             <div class="table-responsive">
                               <table class="table table-bordered text-right m-t-30"

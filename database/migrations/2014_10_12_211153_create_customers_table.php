@@ -15,8 +15,8 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
-        //   $table->unsignedInteger('account_id')->nullable();
-        //   $table->foreign('account_id')->references('id')->on('accounts');
+          $table->unsignedInteger('account_id')->nullable();
+          $table->foreign('account_id')->references('id')->on('accounts');
             $table->string('name');
             $table->string('phone')->default('776165784')->nullable();
             $table->string('email')->unique()->nullable();   

@@ -19,6 +19,10 @@ class CreateStoresTable extends Migration
             $table->unsignedInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('stores');
 
+            $table->unsignedInteger('account_id')->nullable();
+            $table->foreign('account_id')->references('id')->on('accounts');
+
+
             $table->integer('rank')->nullable();
             $table->string('status');
 

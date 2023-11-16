@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Sale;
 
-// use App\RepositoryInterface\StockRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\InventuryStockRepositoryInterface;
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
@@ -33,7 +32,6 @@ class SaleController extends Controller
         protected WarehouseRepositoryInterface $warehouse,
         protected InventuryStoreRepositoryInterface $store,
         protected InventuryStockRepositoryInterface $stock,
-        // protected StockRepositoryInterface $stockRepo,
         protected DetailRepositoryInterface $details,
         protected CoreService $core,
         protected DailyService $daily,
@@ -64,11 +62,11 @@ class SaleController extends Controller
     {
 
         $customers = DB::table('customers')
-            ->join('customer_accounts', 'customer_accounts.customer_id', '=', 'customers.id')
+            ->join('accounts', 'customers.account_id', '=', 'accounts.id')
             ->select(
-                'customers.id',
-                'customers.name',
-                'customer_accounts.account_id'
+                'customers.*',
+                // 'customers.name',
+                // 'customer_accounts.account_id'
             )
             ->get();
 
@@ -79,11 +77,11 @@ class SaleController extends Controller
     {
 
         $treasuries = DB::table('treasuries')
-            ->join('treasury_accounts', 'treasury_accounts.treasury_id', '=', 'treasuries.id')
+            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
                 'treasuries.id',
                 'treasuries.name',
-                'treasury_accounts.account_id'
+                // 'treasury_accounts.account_id'
             )
             ->get();
 

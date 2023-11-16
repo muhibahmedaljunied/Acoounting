@@ -69,15 +69,14 @@ class PurchaseController extends Controller
     public function suppliers(){
 
         $suppliers =  DB::table('suppliers')
-        // ->join('supplier_accounts', 'supplier_accounts.supplier_id', '=', 'suppliers.id')
+        ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
         ->select(
-            'suppliers.id',
-            'suppliers.name',
-            // 'supplier_accounts.account_id'
+            'suppliers.*',
+            // 'suppliers.name',
+            // 'supplier_accounts.account_id',
         )
         ->get();
        
-
         return $suppliers;
 
     }
@@ -85,7 +84,7 @@ class PurchaseController extends Controller
     public function treasuries(){
         
         $treasuries = DB::table('treasuries')
-        // ->join('treasury_accounts', 'treasury_accounts.treasury_id', '=', 'treasuries.id')
+        ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
         ->select(
             'treasuries.id',
             'treasuries.name',

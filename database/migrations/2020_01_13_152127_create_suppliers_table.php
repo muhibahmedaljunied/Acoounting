@@ -15,8 +15,8 @@ class CreateSuppliersTable extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->Increments('id');
          
-            // $table->unsignedInteger('account_id')->nullable();
-            // $table->foreign('account_id')->references('id')->on('accounts');
+            $table->unsignedInteger('account_id')->nullable();
+            $table->foreign('account_id')->references('id')->on('accounts');
          
             $table->string('name',30);
             $table->string('last_name',30);

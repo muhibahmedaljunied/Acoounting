@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers\Account;
 
-
-use App\Models\Treasury;
-use DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Treasury;
+use App\Models\Account;
+use DB;
 
 class TreasuryController extends Controller
 {
-    
-   
+
+
     public function index()
     {
-
-       
 
         $treasuries = Treasury::all();
         return response()->json(['treasuries' => $treasuries]);
@@ -26,57 +24,54 @@ class TreasuryController extends Controller
     {
 
 
-       
+
+        // dd($request->all());
 
         foreach ($request->post('count') as $value) {
-     
-            $Bank = new Treasury();
-            $Bank->date =  $request->post('date');
-            $Bank->Bank_type_id =  $request->all()['Bank_type'][$value];
-            $Bank->quantity =  $request->all()['qty'][$value];
 
-            $Bank->save();
-            
-           
+            // -------------------------------------------------------------------------
+            $parent =  DB::table('accounts')
+                ->where('accounts.id', $request['account'][$value])
+                ->select(
+                    'accounts.*',
 
+                )
+                ->first();
+
+            // ---------------------------------------------------------------------------
+
+            $childs = Account::where('parent_id', $parent->id)->select('accounts.*')->max('id');
+            $id = ($childs == null) ? $request['account'][$value] * 10 + 1 : $childs + 1;
+
+            // dd($id);
+            // -------------------------------------------------------------------------
+
+            $account = new Account();
+            $account->id = $id;
+            $account->text = $request['name'][$value];
+            $account->parent_id = $parent->id;
+            $account->rank = $parent->rank + 1;
+            $account->status_account = false;
+            $account->save();
+            // -------------------------------------------------------------------------
+
+            $treasury = new Treasury();
+            $treasury->account_id =  $id;
+            $treasury->name =  $request['name'][$value];
+            $treasury->save();
         }
-     
+
         return response()->json(['message' => 'success']);
     }
 
-    
-    public function create()
-    {
-        //
-    }
-
-    
 
     public function show()
     {
-         $treasuries = DB::table('treasuries')
-         ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
-        ->select('treasuries.*','accounts.text','accounts.id as account_id')
-        ->paginate(10);
+        $treasuries = DB::table('treasuries')
+            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
+            ->select('treasuries.*', 'accounts.text', 'accounts.id as account_id')
+            ->paginate(10);
 
         return response()->json(['treasuries' => $treasuries]);
-    }
-
-    
-    public function edit()
-    {
-        //
-    }
-
-    
-    public function update()
-    {
-        //
-    }
-
-   
-    public function destroy()
-    {
-        //
     }
 }
