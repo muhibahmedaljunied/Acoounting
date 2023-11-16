@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Account;
 use App\Models\Bank;
 use DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 class BankController extends Controller
@@ -35,14 +36,39 @@ class BankController extends Controller
         //     return response()->json(['error' => $validator->errors()], 401);
         // }
 
+        // dd($request->all());
         foreach ($request->post('count') as $value) {
      
-            $Bank = new Bank();
-            $Bank->date =  $request->post('date');
-            $Bank->Bank_type_id =  $request->all()['Bank_type'][$value];
-            $Bank->quantity =  $request->all()['qty'][$value];
+            // -------------------------------------------------------------------------
+            $parent =  DB::table('accounts')
+                ->where('accounts.id', $request['account'][$value])
+                ->select(
+                    'accounts.*',
 
-            $Bank->save();
+                )
+                ->first();
+      
+            // ---------------------------------------------------------------------------
+
+            $childs = Account::where('parent_id', $parent->id)->select('accounts.*')->max('id');
+            $id = ($childs == null) ? $request['account'][$value]* 10 + 1 : $childs + 1;
+
+            // dd($id);
+            // -------------------------------------------------------------------------
+
+            $account = new Account();
+            $account->id = $id;
+            $account->text = $request['name'][$value];
+            $account->parent_id = $parent->id;
+            $account->rank = $parent->rank + 1;
+            $account->status_account = false;
+            $account->save();
+            // -------------------------------------------------------------------------
+
+            $bank = new Bank();
+            $bank->account_id =  $id;
+            $bank->name =  $request['name'][$value];
+            $bank->save();
             
            
 
@@ -51,13 +77,6 @@ class BankController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    
-    public function create()
-    {
-        //
-    }
-
-    
 
     public function show()
     {
@@ -71,20 +90,5 @@ class BankController extends Controller
     }
 
     
-    public function edit()
-    {
-        //
-    }
-
     
-    public function update()
-    {
-        //
-    }
-
-   
-    public function destroy()
-    {
-        //
-    }
 }

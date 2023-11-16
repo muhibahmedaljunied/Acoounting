@@ -51,23 +51,23 @@ s<template>
                   <th class="wd-15p border-bottom-0">الهاتف</th>
                   <th class="wd-15p border-bottom-0">البريد الالكتروني</th>
                   <th class="wd-15p border-bottom-0">العنوان</th>
-                  <th class="wd-15p border-bottom-0">رقم الحساب</th>
+                  <th class="wd-15p border-bottom-0"> الحساب</th>
                   <th class="wd-15p border-bottom-0">الرصيد</th>
-                  <th class="wd-15p border-bottom-0">كلمه السر</th>
-                  <th class="wd-15p border-bottom-0">الصلاحيه</th>
+                  <!-- <th class="wd-15p border-bottom-0">كلمه السر</th>
+                  <th class="wd-15p border-bottom-0">الصلاحيه</th> -->
                   <!-- <th class="wd-15p border-bottom-0">الحاله</th> -->
 
                   <th class="wd-15p border-bottom-0">العمليات</th>
                 </tr>
               </thead>
-              <tbody v-if="customers && customers.data.length > 0">
-                <tr v-for="(customer, index) in customers.data" :key="index">
+              <tbody v-if="customers && customers.length > 0">
+                <tr v-for="(customer, index) in customers" :key="index">
                   <td>{{ index+1 }}</td>
                   <td>{{ customer.name }}</td>
                   <td>{{ customer.phone }}</td>
                   <td>{{ customer.email }}</td>
                   <td>{{ customer.address }}</td>
-                  <td></td>
+                  <td>{{ customer.text }}</td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -97,7 +97,7 @@ s<template>
               </tbody>
               <tbody v-else>
                 <tr>
-                  <td align="center" colspan="3"><h3>  لايوجد عملاء </h3></td>
+                  <td align="center" colspan="8"><h3>  لايوجد عملاء </h3></td>
                 </tr>
               </tbody>
             </table>
@@ -154,8 +154,8 @@ export default {
       this.axios
         .post(`/customer?page=${page}`)
         .then(({ data }) => {
-          console.log();
-          this.customers = data;
+          console.log(data.data);
+          this.customers = data.data;
         })
         .catch(({ response }) => {
           console.error(response);

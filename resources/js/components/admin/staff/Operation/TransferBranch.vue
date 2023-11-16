@@ -150,7 +150,7 @@
                           <h3 class="text-center">أضافه </h3>
                           <form
                             method="post"
-                            @submit.prevent="submitForm"
+                            
                             enctype="multipart/form-data"
                           >
                             <div class="form-group"></div>

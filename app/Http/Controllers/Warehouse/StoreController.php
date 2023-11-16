@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\Models\Account;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
@@ -67,17 +68,11 @@ class StoreController extends Controller
 
         // -------------------------------------------------------
 
-
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
 
-            $Store = $this->add_store($request);
-
-            if ($request['status'] == 'false') {
-                $this->add_store_account($request, $Store);
-            }
-
+            $this->add_store($request);
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
 
@@ -107,17 +102,61 @@ class StoreController extends Controller
     public function add_store($request)
     {
 
-        $Store = new Store();
-        $Store->text = $request['text'];
-        if ($request['parent'] != 0) {
-            $Store->parent_id = $request['parent'];
+
+        if ($request->post('account') == null) {
+
+
+            $store = new Store();
+            $store->id = $request->store_id;
+            $store->text = $request['text'];
+            if ($request['parent'] != 0) {
+                $store->parent_id = $request['parent'];
+            }
+            $store->rank = $request['rank'];
+            $store->status = $request['status'];
+            $store->save();
+        } else {
+
+            $parent =  DB::table('accounts')
+                ->where('accounts.id', $request->post('account'))
+                ->select(
+                    'accounts.*',
+
+                )
+                ->first();
+            // ---------------------------------------------------------------------------
+
+            $childs = Account::where('parent_id', $parent->id)->select('accounts.*')->max('id');
+            $id = ($childs == null) ? $request->post('account') * 10 + 1 : $childs + 1;
+
+
+            // --------------------------------------------------------------------------------
+            $account = new Account();
+            $account->id = $id;
+            $account->text = $request['text'];
+            $account->parent_id = $parent->id;
+            $account->rank = $parent->rank + 1;
+            $account->status_account = false;
+            $account->save();
+
+            // -------------------------------------------------------------------------
+
+            $store = new Store();
+            $store->text = $request['text'];
+            $store->id = $request->store_id;
+            $store->account_id = $id;
+            if ($request['parent'] != 0) {
+                $store->parent_id = $request['parent'];
+            }
+            $store->rank = $request['rank'];
+            $store->status = $request['status'];
+            $store->save();
+         
         }
 
-        $Store->rank = $request['rank'];
-        $Store->status = $request['status'];
-        $Store->save();
+        // dd($store->id);
 
-        return $Store->id;
+        return $store->id;
     }
 
     public function import(Request $request)
@@ -138,15 +177,15 @@ class StoreController extends Controller
         return Excel::download(new StoreExport, 'store.xlsx');
     }
 
-    public function add_store_account($request, $Store)
-    {
+    // public function add_store_account($request, $Store)
+    // {
 
 
-        $Store_account = new StoreAccount();
-        $Store_account->store_id = $Store;
-        $Store_account->account_id = $request['account'];
-        $Store_account->save();
-    }
+    //     $Store_account = new StoreAccount();
+    //     $Store_account->store_id = $Store;
+    //     $Store_account->account_id = $request['account'];
+    //     $Store_account->save();
+    // }
     public function Store_details_node($id)
     {
 

@@ -84,6 +84,17 @@
                         </div>
 
                         <div class="form-group">
+                          <label for="radio-example-one">متفرع </label>
+
+                          <input type="checkbox" name='fieldset2' v-model="status" id="status">
+
+                          <input id='parent' type="hidden" />
+
+                          <input id='rank' type="hidden" />
+
+                        </div>
+
+                        <div v-if="status == false" class="form-group">
                           <label for="cliente">اسم الحساب</label>
 
 
@@ -103,16 +114,7 @@
 
 
 
-                        <div class="form-group">
-                          <label for="radio-example-one">متفرع </label>
-
-                          <input type="checkbox" name='fieldset2' v-model="status" id="status">
-
-                          <input id='parent' type="hidden" />
-
-                          <input id='rank' type="hidden" />
-
-                        </div>
+                      
 
                       </div>
                       <div class="card-footer">

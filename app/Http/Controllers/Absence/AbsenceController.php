@@ -56,5 +56,7 @@ class AbsenceController extends Controller
         return response()->json();
     }
 
+    
+
 
 }

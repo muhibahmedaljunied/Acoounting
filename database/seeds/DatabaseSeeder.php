@@ -12,10 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        // $this->call(
-        //     ProductTableSeeder::class,
-        //     ProductTableSeeder::class
-        // );
+       
         DB::table('roles')->insert([
             'id'       => 1,
             'name'   => "Admin",
@@ -55,93 +52,7 @@ class DatabaseSeeder extends Seeder
             'remember_token' => '12313131313',
 
         ]);
-        // ----------------------------------------------------------------------------------------------
-        DB::table('suppliers')->insert([
-            'id'        => 1,
-            'name'    => "عمار",
-            'last_name'    => "النمر",
-            'phone'  => "738017689",
-            'email'     => 'muhib2@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
-
-        DB::table('suppliers')->insert([
-            'id'        => 2,
-            'name'    => "بسام",
-            'last_name'    => "الارحبي",
-            'phone'  => "738017689",
-            'email'     => 'muhib3@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
-
-        DB::table('suppliers')->insert([
-            'id'        => 3,
-            'name'    => "عصام",
-            'last_name'    => "الحنيد",
-            'phone'  => "738017689",
-            'email'     => 'muhib4@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
-
-        DB::table('suppliers')->insert([
-            'id'        => 4,
-            'name'    => "حسين",
-            'last_name'    => "الحشيشي",
-            'phone'  => "738017689",
-            'email'     => 'muhib5@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
-        // -----------------------------------------------------------------------------
-        DB::table('customers')->insert([
-            'id'        => 1,
-            'name'    => "بشير",
-            'phone'  => "738017689",
-            'email'     => 'muhib1@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
-
-        DB::table('customers')->insert([
-            'id'        => 2,
-            'name'    => "عبدالمجيد",
-
-            'phone'  => "738017689",
-            'email'     => 'muhib2@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
-
-        DB::table('customers')->insert([
-            'id'        => 3,
-            'name'    => "اسد",
-
-            'phone'  => "738017689",
-            'email'     => 'muhib3@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
-
-        DB::table('customers')->insert([
-            'id'        => 4,
-            'name'    => "شملان",
-
-            'phone'  => "738017689",
-            'email'     => 'muhib4@gmail.com',
-            'address'    => "sana'a",
-            'status'    => 1,
-
-        ]);
+     
         // -----------------------------------------------------------------------------------------
 
         // DB::table('banks')->insert([

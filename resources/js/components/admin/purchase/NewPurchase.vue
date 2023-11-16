@@ -2,9 +2,7 @@
   <div class="wrapper">
     <div class="container-fluid">
       <div class="row">
-        <!-- <div class="pull-right">
-          <h1>فواتير المشتريات <span id="codigo"></span></h1>
-        </div> -->
+      
         <div class="card text-right">
           <div class="card-header">
 
@@ -12,7 +10,6 @@
             <h1>فاتوره المشتريات <span id="codigo"></span></h1>
           </div>
           <div class="card-body">
-            <!-- <h5 class="card-title">Special title treatment</h5> -->
 
 
 
@@ -27,7 +24,7 @@
                     class="custom-search-input">
                   <input :id="'Purchase_store_tree_id'" type="hidden" readonly>
 
-                  <button class="custom-search-botton" type="button" data-toggle="modal" data-target="#exampleModalStore">
+                  <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(index)" data-target="#exampleModalStore">
                     <i class="fa fa-plus-circle"></i></button>
                 </div>
 
@@ -128,32 +125,17 @@
                   </thead>
                   <tbody>
                     <tr v-for="index in count" :key="index">
-                      <!-- <tr v-for="(products, index) in product"> -->
-                      <!-- <tr v-for="(products, index) in product" :key="index"> -->
-                      <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
+                    
                       <td>
-
-
-
-                        <!-- <div id="factura_producto" class="input_nombre">
-                        <select v-model="product[index - 1]" name="type" id="type" class="form-control" required>
-                          <option v-for="(product, sindex) in products" :key="sindex" v-bind:value="product.id">
-                            {{ product.text }}
-                          </option>
-                        </select>
-                      </div> -->
-
                         <div class="custom-search">
-                          <!-- <select v-model="product[index]" id="supplier" class="custom-search-input">
-
-                                      </select> -->
+         
                           <input style="background-color: beige;" :id="'Purchase_product_tree' + index" type="text"
                             readonly class="custom-search-input">
                           <input :id="'Purchase_product_tree_id' + index" type="hidden" readonly
                             class="custom-search-input">
 
                           <button class="custom-search-botton" type="button" data-toggle="modal"
-                            data-target="#exampleModalProduct" @click="detect_index_product(index)">
+                            data-target="#exampleModalProduct" @click="detect_index(index)">
                             <i class="fa fa-plus-circle"></i></button>
                         </div>
 
@@ -177,28 +159,11 @@
                           <input type="text" v-model="desc[index]" id="desc" class="form-control" />
                         </div>
                       </td>
-                      <!-- 
-                      <td>
-              
-
-
-                        <div class="custom-search">
-
-                          <input style="background-color: beige;" :id="'Purchase_store_tree' + index" type="text" readonly
-                            class="custom-search-input">
-                          <input :id="'Purchase_store_tree_id' + index" type="hidden" readonly
-                            class="custom-search-input">
-
-                          <button class="custom-search-botton" type="button" data-toggle="modal"
-                            data-target="#exampleModalStore" @click="detect_index_store(index)"> <i
-                              class="fa fa-plus-circle"></i></button>
-                        </div>
-                      </td> -->
+                  
 
 
                       <td>
                         <div id="factura_producto">
-                          <!-- <input v-model="unit_type[index]" :id="'unit_type' + index" type="hidden" readonly> -->
 
                           <select style="background-color: beige;" v-model="unit[index]" name="type"
                             :id="'select_unit' + index" class="form-control" required>

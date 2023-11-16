@@ -26,10 +26,12 @@ Route::post('/auditBalance', 'Account\AccountController@auditBalance');
 
 // --------------------------------banks------------------------------------------
 Route::post('/banks', 'Account\BankController@show');
+Route::post('/store_bank', 'Account\BankController@store');
 // --------------------------------Currencies------------------------------------------
 Route::post('/currencies', 'Account\CurrencyController@show');
 // --------------------------------treasuries------------------------------------------
 Route::post('/treasuries', 'Account\TreasuryController@show');
+Route::post('/store_treasury', 'Account\TreasuryController@store');
 // --------------------------------type_expence------------------------------------------
 Route::post('/type_expence', 'Account\TypeExpenceController@show');
 // --------------------------------type_income------------------------------------------

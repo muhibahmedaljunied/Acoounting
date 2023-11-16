@@ -91,7 +91,7 @@
                 <div class="card">
 
                   <div class="card-body">
-                    <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data">
 
                       <div class="table-responsive">
                         <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
@@ -103,7 +103,7 @@
                               <th>اسم الحساب </th>
 
 
-                              <th>رقم الحساب </th>
+                              <!-- <th>رقم الحساب </th> -->
 
 
 
@@ -121,21 +121,22 @@
 
                                 <div class="custom-search">
 
-                                  <input :id="'Treasury_account_tree' + indexselectedtreasury" type="text"
+                                  <input :id="'Treasury_account_tree' + index" type="text"
                                     class="custom-search-input">
 
                                   <button class="custom-search-botton" type="button" data-toggle="modal"
-                                    @click="detect_index_treasury(indexselectedtreasury)"
-                                    data-target="#exampleModaltreasury"> <i class="fa fa-plus-circle"></i></button>
+                                    @click="detect_index(index)"
+                                    data-target="#exampleModalTreasury"> <i class="fa fa-plus-circle"></i></button>
 
                                 </div>
 
-                              </td>
-                              <td>
-
-                                <input type="text" name="status" :id="'Treasury_account_tree_id' + indexselectedtreasury"
+                                <input type="hidden" v-model="account[index]" name="status" :id="'Treasury_account_tree_id' + index"
                                   class="form-control" />
                               </td>
+                     
+
+                          
+                      
 
 
 
@@ -162,65 +163,47 @@
 
                   </div>
 
-                  <!-- <div class="card-body">
-                  <div class="form">
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-                    <form method="post">
-                      <div class="form-group">
-                        <label for="name"> الاسم </label>
-                        <input type="text" name="name" id="name" class="form-control" />
-                      </div>
-
-
-                      <div class="form-group">
-                        <label for="status">رقم الحساب</label>
-                        <input type="text" name="status" :id="'Treasury_account_tree_id' + indexselectedtreasury"
-                          class="form-control" />
-                      </div>
-                      <div class="form-group">
-                        <label for="cliente">اسم الحساب</label>
-
-
-                        <div class="custom-search">
-
-                          <input :id="'Treasury_account_tree' + indexselectedtreasury" type="text"
-                            class="custom-search-input">
-
-                          <button class="custom-search-botton" type="button" data-toggle="modal"
-                            @click="detect_index_treasury(indexselectedtreasury)" data-target="#exampleModaltreasury"> <i
-                              class="fa fa-plus-circle"></i></button>
-
-                        </div>
-
-
-
-                      </div>
-
-
-
-
-
-
-                      <button type="submit" class="btn btn-primary">
-                        Add
-                      </button>
-                    </form>
                   </div>
-                </div> -->
+
+
 
                 </div>
               </div>
 
-              <!--/div-->
+
             </div>
           </div>
+          
+      <div class="modal fade" id="exampleModalTreasury" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="well" id="treeview_json_account"></div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
 
 
         </div>
-        <!-- /.modal-content -->
+
       </div>
 
-      <!-- /.modal-dialog -->
+
     </div>
 
 
@@ -249,7 +232,7 @@ export default {
       },
       treasury: [],
       account: [],
-      indexselectedtreasury: 0,
+      // indexselectedtreasury: 0,
       type: '',
       type_of_tree: 0,
       jsonTreeData: '',
@@ -259,8 +242,8 @@ export default {
   mounted() {
 
     this.list();
-    this.counts[0] = 0;
-    this.type = 'Bank';
+    this.counts[0] = 1;
+    this.type = 'Treasury';
     this.type_of_tree == 1
     this.showtree('account');
 
@@ -272,6 +255,29 @@ export default {
 
 
 
+
+    Add_new() {
+
+      this.axios
+        .post(`/store_treasury`, {
+          count: this.counts,
+          type: this.type,
+          name: this.treasury,
+          account: this.account,
+
+
+        }
+        )
+        .then((response) => {
+          console.log(response);
+          toastMessage("تم الاضافه بنجاح");
+          // this.$router.go(0);
+        });
+
+
+
+
+    },
 
 
     list(page = 1) {

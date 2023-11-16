@@ -1,7 +1,7 @@
 contextmenu = function (node) {
 
   var items = {
-  
+
     renameItem: {
       // The "rename" menu item
       label: "تحرير",
@@ -17,7 +17,7 @@ contextmenu = function (node) {
       // The "delete" menu item
       label: "حذف",
       action: function (data) {
-        
+
         if (confirm("Are you sure you wish to delete the selected item?")) {
 
           var rm = $.jstree.reference(data.reference).get_node(data.reference).id;
@@ -46,6 +46,7 @@ contextmenu = function (node) {
 
         var id = $.jstree.reference(data.reference).get_node(data.reference).id
 
+
         axios
           .post(`/${localStorage.getItem('table')}_details_node/${id}`)
           .then(function (response) {
@@ -70,12 +71,12 @@ contextmenu = function (node) {
           });
 
 
-     
+
 
 
       },
     },
-   
+
   };
 
   if ($(node).hasClass("folder")) {

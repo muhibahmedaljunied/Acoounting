@@ -1,63 +1,8 @@
 
 export default {
 
-    data() {
-        return {
-            // account: '',
-            // all_products: '',
-            // jsonTreeData: '',
-            // type_of_tree: 1,
-            // indexselected: '',
-            // indexselected: '',
-            // indexselected: '',
-            // last_nodes: '',
-            // rank: 1,
-            // parent: 0,
-            // index: 0,
-
-            // statusselected: 0,
-            // unitselected: 0,
-            // unitselectedname: '',
-            // productselected: 0,
-            // productselectedname: "",
-            // storeselectedname: "",
-            // storeselected: 0,
-            // descselected: "",
-            // operationselected: 0,
-            // dateselected: 0,
-            // typeselected: [],
-            // checkselected: '',
-            // moveselected: 0,
-
-        }
-    },
     methods: {
 
-        detect_index(index) {
-
-            // alert(index);
-            this.indexselected = index;
-        },
-        detect_index_product(index) {
-
-            // alert(index);
-            this.indexselected = index;
-        },
-        detect_index_bank(index) {
-
-            // alert(index);
-            this.indexselectedbank = index;
-        },
-        detect_index_treasury(index) {
-
-            // alert(index);
-            this.indexselectedtreasury = index;
-        },
-
-        detect_index_store(index) {
-
-            this.indexselected = index;
-        },
         showtree(table) {
 
             var uri = `/tree_${table}`;
@@ -90,7 +35,7 @@ export default {
                     this.jsonTreeData = response.data.trees;
                     this.last_nodes = response.data.last_nodes;
                     $(`#${table}_number`).val(response.data.last_nodes + 1);
-                }
+                } 
 
 
 
@@ -171,27 +116,30 @@ export default {
                 }).on("changed.jstree", function (e, data) {
 
 
+                    console.log(gf.type,table);
 
                     if (gf.indexselected) {
 
-                        $(`#${gf.type}_${table}_tree${gf.indexselected}`).val(data.node.text);
+                        $(`#${gf.type}_${table}_tree${gf.indexselected}`).val(data.node.id+' '+data.node.text);
                         $(`#${gf.type}_${table}_tree_id${gf.indexselected}`).val(data.node.id);
 
+                 
                         if (table == 'account') {
 
                             gf.account[gf.indexselected] = data.node.id;
+
                         }
 
 
 
 
                     } else {
-
+                       
                         $(`#${gf.type}_${table}_tree`).val(data.node.text);
                         $(`#${gf.type}_${table}_tree_id`).val(data.node.id);
 
                         if (table == 'account') {
-
+                    
                             gf.account = data.node.id;
                         }
                     }
@@ -209,10 +157,6 @@ export default {
 
 
                     }
-
-
-
-
 
                     // ----------------------------------------product-----------------------------------------------------------
 
@@ -252,26 +196,14 @@ export default {
 
                     if (table == 'product' && gf.type == 'Sale') {
 
-
-
                         gf.get_product_for_sale(gf, data.node.id,table);
+
                     }
 
 
-                    if (table == 'store' && gf.type == 'Sale') {
+                 
 
 
-                        gf.store = data.node.id;
-                        gf.get_product_for_sale(gf, data.node.id,table);
-                        gf.get_account_for_store(gf);
-                    }
-
-
-
-                    // if (gf.type == 'Cash') {
-
-                    //     gf.get_product_for_sale(gf, data.node.id);
-                    // }
 
 
                     if (table == 'product' && gf.type == 'Transfer') {
@@ -293,6 +225,14 @@ export default {
 
                     }
 
+                    if (table == 'store' && gf.type == 'Sale') {
+
+
+                        gf.store = data.node.id;
+                        gf.get_product_for_sale(gf, data.node.id,table);
+                        gf.get_account_for_store(gf);
+                    }
+
                     if (table == 'intostore' && gf.type == 'Transfer') {
 
 
@@ -312,13 +252,6 @@ export default {
 
                     }
 
-                    // if (table == 'store' && gf.type == 'Purchase') {
-
-
-                    //     gf.store[gf.indexselected] = data.node.id;
-
-
-                    // }
 
                     if (table == 'store' && gf.type == 'Purchase') {
 
@@ -363,6 +296,33 @@ export default {
 
             });
         },
+
+        detect_index(index) {
+
+            // alert(index);
+            this.indexselected = index;
+        },
+        // detect_index_product(index) {
+
+        //     // alert(index);
+        //     this.indexselected = index;
+        // },
+        // detect_index_bank(index) {
+
+        //     // alert(index);
+        //     this.indexselectedbank = index;
+        // },
+        // detect_index_treasury(index) {
+
+        //     // alert(index);
+        //     this.indexselectedtreasury = index;
+        // },
+
+        // detect_index_store(index) {
+
+        //     this.indexselected = index;
+        // },
+    
 
         get_account_for_store(gf) {
 
