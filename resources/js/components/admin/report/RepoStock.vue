@@ -37,6 +37,9 @@
 
                       </div>
                     </div>
+
+
+                    <hr>
                     <div class="row">
                       <div class="col-md-3" v-show="showproduct">
                         <label for="status">المنتج</label>

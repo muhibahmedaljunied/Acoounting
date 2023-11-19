@@ -76,7 +76,7 @@ class SaleController extends Controller
     public function treasuries()
     {
 
-        $treasuries = DB::table('treasuries')
+        return DB::table('treasuries')
             ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
                 'treasuries.id',
@@ -85,7 +85,7 @@ class SaleController extends Controller
             )
             ->get();
 
-        return $treasuries;
+     
     }
     public function get_all()
     {
@@ -132,28 +132,26 @@ class SaleController extends Controller
     {
 
 
-        //    dd($request->all());
-
-
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
+       
             $this->warehouse->add();
 
             foreach ($request->post('count') as $value) {
 
                 $this->core->setValue($value);
-
+     
                 $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
 
                 $this->store->store(); // this handle data in store_product table
-
+               
                 $this->details->init_details(); // this make initial for details table
-
+          
                 $this->stock->stock(); // this handle data in stock table
 
             }
-
+         
             $this->sale->pay();
             $this->daily->daily();
 
@@ -195,16 +193,7 @@ class SaleController extends Controller
         return response()->json(['sales' => $sales]);
     }
 
-    public function search(Request $request)
-    {
-
-        // $sales = Supply::where('users.name', 'LIKE', '%' . $request->post('word_search') . '%')
-        //     ->join('users', 'users.id', '=', 'sales.customer_id')
-        //     ->select('sales.*', 'sales.id as sale_id', 'users.*')
-        //     ->paginate(10);
-
-        // return response()->json(['sales' => $sales]);
-    }
+ 
 
 
     public function invoice_sale(Request $request, $id)
@@ -225,15 +214,5 @@ class SaleController extends Controller
 
 
 
-    // public function destroy(Request $request)
-    // {
-    //     if ($request->id) {
-    //         Temporale::where('type_process', 'sale')->where('temporales.product_id', $request->id)->delete();
-    //     } else {
-    //         Temporale::where('type_process', 'sale')->delete();
-    //     }
-
-
-    //     return response()->json('successfully deleted');
-    // }
+   
 }

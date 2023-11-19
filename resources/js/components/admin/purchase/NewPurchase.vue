@@ -70,8 +70,18 @@
                 </select>
               </div>
 
-              <div class="col-md-2" >
+              <div class="col-md-2"  v-if="show_treasury == true">
                 <label for="pagoPrevio">الصندوق</label>
+                <select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
+                  <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
+                    {{ tre.name }}
+                  </option>
+                </select>
+
+              </div>
+
+              <div class="col-md-2" v-if="show_bank == true">
+                <label for="pagoPrevio">البنك</label>
                 <select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
                   <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
                     {{ tre.name }}
@@ -431,6 +441,8 @@ export default {
       type_payment: 0,
       Way_to_pay_selected: 1,
       show: false,
+      show_treasury: true,
+      show_bank: false,
       paid: 0,
       remaining: 0,
       return_qty: [],
@@ -630,6 +642,17 @@ export default {
       } else {
         this.show = false;
       }
+
+
+      if (input.value == 1) {
+        this.show_treasury = true;
+        this.show_bank = false;
+      } 
+
+      if (input.value == 3) {
+        this.show_bank = true;
+        this.show_treasury = false;
+      } 
     },
     credit(e) {
       this.remaining = this.grand_total - this.paid;

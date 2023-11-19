@@ -9,7 +9,7 @@
           <form method="post">
             <div class="card-header pb-0">
               <div class="d-flex justify-content-between">
-                <span class="h2"> اضافه تحويل مخزني</span>
+                <span class="h2">  تحويل مخزني</span>
               </div>
             </div>
             <div class="card-body" id="printme">
@@ -17,20 +17,7 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <div class="row">
-                      <!-- <div class="col-md-3">
-                        <label for="desde"> المنتج</label>
-
-                        <div class="custom-search">
-
-                          <input :id="'Transfer_product_tree'" type="text" readonly class="custom-search-input" />
-                          <input :id="'Transfer_product_tree_id'" type="hidden" readonly class="custom-search-input" />
-
-                          <button class="custom-search-botton" type="button" data-toggle="modal"
-                            data-target="#exampleModalProduct">
-                            <i class="fa fa-plus-circle"></i>
-                          </button>
-                        </div>
-                      </div> -->
+                   
 
                       <div class="col-md-3">
                         <label for="desde"> المخزن</label>
@@ -171,19 +158,7 @@
                           <!-- <input type="hidden" v-model="data_product.store_id" id="id" /> -->
                         </div>
                       </td>
-                      <!-- <td>
-                        <div class="custom-search">
-                          <input style="background-color: beige;" :id="'Transfer_store_tree' + index" type="text" readonly
-                            class="custom-search-input" />
-                          <input :id="'Transfer_store_tree_id' + index" type="hidden" readonly
-                            class="custom-search-input" />
-
-                          <button class="custom-search-botton" type="button" data-toggle="modal"
-                            data-target="#exampleModalStore" @click="detect_index_store(index)">
-                            <i class="fa fa-plus-circle"></i>
-                          </button>
-                        </div>
-                      </td> -->
+                   
 
                       <td>
                         <input style="background-color: beige;" v-model="data_product.qty_transfer" type="number"
@@ -208,25 +183,14 @@
                         <input @change="
                           add_one_transfer(
                             index,
-                            data_product.product_id,
                             data_product.qty_transfer,
                             data_product.quantity,
-                            data_product.desc,
-                            data_product.status_id,
-                            data_product.store_id,
                             data_product.unit_selected
-                            // intostore[index]
+                        
                           )
                           " type="checkbox" v-model="check_state[index]" class="btn btn-info waves-effect" />
                       </td>
-                      <!-- <td>
-                      <button
-                        v-on:change="addComponent"
-                        class="tn btn-info btn-sm waves-effect btn-agregar"
-                      >
-                        <i class="fa fa-plus-circle"></i>
-                      </button>
-                    </td> -->
+                   
                     </tr>
                   </tbody>
                 </table>
@@ -286,10 +250,10 @@
           </div>
         </div>
       </div>
-      <!--/div-->
+
     </div>
   </div>
-  <!-- /row -->
+
 </template>
 <script>
 import operation from "../../../../../js/operation.js";
@@ -365,18 +329,22 @@ export default {
       type: "",
       intostore: 0,
       intostore_id: 0,
+
+      fromstore: 0,
+      fromstore_id: 0,
+
+
       quantity: [],
       transfer_details: "",
       transfer_id: "",
       transfer_date: "",
       selectproduct: "",
-      // detail: "",
       data_product_wait: "",
     };
   },
 
   mounted() {
-    // this.type_refresh = '';
+
     this.type_of_tree = 1;
     this.type = "Transfer";
     this.showtree("product");
@@ -400,12 +368,8 @@ export default {
 
     add_one_transfer(
       index,
-      product,
       qty,
       quantity,
-      desc,
-      status,
-      store,
       unit
     ) {
 
@@ -419,15 +383,8 @@ export default {
         // if (qty != 0) {
         // if (qty <= qty_avilable) {
 
-        // this.intostore = $(`#Transfer_store_tree`).val();
-        // this.intostore_id = $(`#Transfer_store_tree_id`).val();
         this.counts[index] = index;
-        // this.product[index] = product;
         this.qty[index] = qty;
-        // this.quantity[index] = quantity;
-        // this.desc[index] = desc;
-        // this.store[index] = store;
-        // this.status[index] = status;
         this.unit[index] = unit;
 
 
@@ -436,15 +393,10 @@ export default {
       } else if (this.check_state[index] == false) {
         this.$delete(this.counts, index);
       }
-
       console.log(this.counts, index);
-      // console.log(this.product, index);
-      // console.log(this.desc, index);
       console.log(this.unit, index);
-      // console.log(this.quantity, index);
-      // console.log(this.units, index);
       console.log(this.qty, index);
-      // console.log(this.status, index);
+
     },
 
     check_qty(qty, unit, availabe_qty) {
@@ -488,24 +440,18 @@ export default {
 
       this.axios
         .post("store_transfer", {
-          // counts: this.counts,
-          // // transfer_id:this.transfer_id,
-
+ 
           type: this.type,
           date: this.date,
           count: this.counts,
-          // product: this.product,
-          // store: this.store,l  
-          // desc: this.desc,
           qty_transfer: this.qty,
-          // quantity: this.quantity,
           unit: this.unit,
           units: this.units,
-          // status: this.status,
           intostore: this.intostore,
           intostore_id: this.intostore_id,
+          fromstore: this.fromstore,
+          fromstore_id: this.fromstore_id,
           old: this.detail,
-          // qty_avilable: this.qty_avilable,
         })
         .then(function (response) {
           console.log(response);
@@ -531,35 +477,3 @@ export default {
 };
 </script>
 
-
-<!-- 
-
-  -نوع الموظف (مدير-موظف)
-  -نوع التعاقد(دوام كامل-نصدوام )
-  -  عدد ايام الاجازه
-  - طريقه دفع الراتب
-  -نوع التحضير 
-  -بيانات العقد
-  -اجمالي الراتب وصافي الراتب
-  -
-
- -->
-<!--  الهيكل الاداري للموظقين -->
-<!-- https://www.youtube.com/watch?v=7mgiW-Fe_7w&list=PLMYF6NkLrdN8V2JKIMxqMsZNPsgUj3WOK&index=44  -->
-<!-- https://www.youtube.com/watch?v=wsV4uBAmdj8 -->
-<!-- https://www.youtube.com/watch?v=qzH-1l51Gyk  -->
-
-<!-- https://www.youtube.com/watch?v=QQstEwvkzK4&list=PL3LzdsN_338DfbpVpyYAsz6nYxX-F6yZq   قوائم نظام شؤون الموظفين والرواتب مع التقارير والترحيل إلى الحسابات في برنامج الحناوي  -->
-
-<!--   https://www.youtube.com/watch?v=Us0N3jCQAfQ   برنامج شئون الموظفين مع اضافة السلف 111 -->
-<!-- https://www.youtube.com/watch?v=vRHsByfOKxc    برنامج محاسبة شئون الموظفين الموارد البشرية اصدار 2.0 _ برنامج ادارة الموارد البشرية | AccFlexERP  -->
-<!-- https://www.youtube.com/watch?v=fwgqqkY5fxE  @hinawisoftware تسلسل إجراءات الإجازات في نظام شؤون الموظفين واالرواتب في برنامج الحناوي  -->
-<!-- https://www.youtube.com/watch?v=nwOcvvmZJsk  شرح تسلسل اجراءات شؤون الموظفين والرواتب في برنامج الحناوي - عربي  -->
-<!-- https://www.youtube.com/watch?v=HtWla12Qd38 111 شرح عملية التوظيف في نظام شئون الموظفين  -->
-<!-- https://www.youtube.com/watch?v=qdHMrZGG-MQ 111 مكتب MaktApp - نظام إدارة المهام وفرق العمل (لمحة سريعة)  -->
-<!-- https://www.youtube.com/watch?v=-WundYvoSGM 111 @hinawisoftware تسلسل إجراءات الغياب في نظام شؤون الموظفين والرواتب في برنامج الحناوي  -->
-<!-- https://www.youtube.com/watch?v=Hw9zMHoxebc  @hinawisoftware قائمة كشف الدوام في نظام شؤون الموظفين في برنامج الحناوي  -->
-<!-- https://www.youtube.com/watch?v=RNs8wCXAb7o  شؤون الموظفين نظام برواكتف - الموظفين  -->
-<!-- https://www.youtube.com/watch?v=CLV-sZcGzi4 111 نظام مداد: شؤون الموظفين (تسجيل موظف جديد) HD  -->
-<!-- https://www.youtube.com/watch?v=bhJRQgsp-48    تعرف على مزايا قيود - الأصول الثابتة 💻  -->
-<!-- https://www.youtube.com/watch?v=osbIT4xRaxI   شرح نظام الأصول الثابتة ضمن برنامج المنارة للمحاسبة والمستودعات  -->

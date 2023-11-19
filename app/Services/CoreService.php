@@ -11,8 +11,12 @@ class CoreService
     public $unit_array;
     public $micro_unit_qty;
     public $sale_id;
+    public $sale;
     public $return_id;
     public $purchase_id;
+    public $purchase;
+    public $transfer_id;
+    public $transfer;
     public $id_store_product;
     public $value; 
     public $discount;
@@ -22,11 +26,11 @@ class CoreService
         $this->value = $value;
     }
 
-    
     public function setData($data){
 
         $this->data = $data;
     }
+    
     public function setDiscount($discount){
 
         $this->discount = $discount;

@@ -4,7 +4,9 @@ namespace App\Providers;
 use App\RepositoryInterface\UnitRepositoryInterface;
 use App\Repository\Unit\UnitTransferRepository;
 use App\Repository\Unit\UnitReturnRepository;
+use App\Repository\Unit\UnitSaleRepository;
 use App\Repository\Unit\UnitRepository;
+
 use Illuminate\Support\ServiceProvider;
 
 class UnitServiceProvider extends ServiceProvider
@@ -22,9 +24,14 @@ class UnitServiceProvider extends ServiceProvider
             $request = app(\Illuminate\Http\Request::class);
 
 
-            if ($request->type == 'Purchase' || $request->type == 'Sale') {
+            if ($request->type == 'Purchase') {
 
                 return new UnitRepository();
+            }
+
+            if ($request->type == 'Sale') {
+
+                return new UnitSaleRepository();
             }
 
         

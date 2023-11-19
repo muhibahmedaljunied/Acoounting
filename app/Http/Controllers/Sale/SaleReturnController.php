@@ -62,11 +62,11 @@ class SaleReturnController extends Controller
     {
 
         $customers = DB::table('customers')
-            ->join('customer_accounts', 'customer_accounts.customer_id', '=', 'customers.id')
+            ->join('accounts', 'accounts.id', '=', 'customers.account_id')
             ->select(
                 'customers.id',
                 'customers.name',
-                'customer_accounts.account_id'
+             
             )
             ->get();
 
@@ -77,11 +77,11 @@ class SaleReturnController extends Controller
     {
 
         $treasuries = DB::table('treasuries')
-            ->join('treasury_accounts', 'treasury_accounts.treasury_id', '=', 'treasuries.id')
+            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
                 'treasuries.id',
                 'treasuries.name',
-                'treasury_accounts.account_id'
+   
             )
             ->get();
 
@@ -180,6 +180,7 @@ class SaleReturnController extends Controller
                 $this->stock->stock();
             }
 
+            $this->daily->daily();
             // dd('ddddddddddd');
 
             // ------------------------------------------------------------------------------------------------------

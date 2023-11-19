@@ -177,15 +177,6 @@ class StoreController extends Controller
         return Excel::download(new StoreExport, 'store.xlsx');
     }
 
-    // public function add_store_account($request, $Store)
-    // {
-
-
-    //     $Store_account = new StoreAccount();
-    //     $Store_account->store_id = $Store;
-    //     $Store_account->account_id = $request['account'];
-    //     $Store_account->save();
-    // }
     public function Store_details_node($id)
     {
 
@@ -211,9 +202,6 @@ class StoreController extends Controller
         return response()->json($data);
 
 
-        // $store = Store::find($id);
-        // $store->update($request->post());
-        // return response()->json($store);
 
 
     }

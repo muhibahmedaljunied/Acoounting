@@ -11,7 +11,7 @@
           <div style="display: flex;float: left; margin: 5px">
 
             <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-              data-target="#treasury">
+              data-target="#expence_c">
               <i class="fa fa-plus-circle"></i></a>
 
 
@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-          aria-hidden="true" style="display: none" id="treasury">
+          aria-hidden="true" style="display: none" id="expence_c">
           <div class="modal-dialog modal-lg" style="width: 100%">
             <div class="modal-content">
               <div class="modal-header">

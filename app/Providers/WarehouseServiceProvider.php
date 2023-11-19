@@ -19,17 +19,17 @@ class WarehouseServiceProvider extends ServiceProvider
 
             $request = app(\Illuminate\Http\Request::class);
 
-            if ($request->type == 'purchase') {
+            if ($request->type == 'Purchase') {
 
                 return new PurchaseRepository();
             }
 
-            if ($request->type == 'sale') {
+            if ($request->type == 'Sale') {
 
                 return new SaleRepository();
             }
 
-            if ($request->type == 'transfer') {
+            if ($request->type == 'Transfer') {
 
                 return new TransferRepository();
             }

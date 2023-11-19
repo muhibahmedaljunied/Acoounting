@@ -216,7 +216,7 @@ export default {
           .then((response) => {
 
             console.log(response.data);
-            this.sale_detail = response.data.sale_details;
+            this.sale_detail = response.data.details;
             this.sale_detail.forEach((item) => {
               this.total = parseInt(item.total) + parseInt(this.total);
             });

@@ -278,10 +278,10 @@
             </li>
 
             <li>
-              <router-link class="slide-item" to="/expence">المصروفات النقديه</router-link>
+              <router-link class="slide-item" to="/expence">المصروفات </router-link>
             </li>
             <li>
-              <router-link class="slide-item" to="/income">الايرادات النقديه</router-link>
+              <router-link class="slide-item" to="/income">الايرادات </router-link>
             </li>
 
             <li class="slide">
@@ -402,16 +402,7 @@
               <router-link class="slide-item" to="/opening_inventory">المخزون الافتتاحي</router-link>
             </li>
           </ul>
-          <ul class="slide-menu">
-            <li>
-              <router-link class="slide-item" to="/supply">توريد</router-link>
-            </li>
-          </ul>
-          <ul class="slide-menu">
-            <li>
-              <router-link class="slide-item" to="/cash">صرف</router-link>
-            </li>
-          </ul>
+     
           <!-- <ul class="slide-menu">
               <li>
               <router-link class="slide-item" to="stock"> الرفوف</router-link>
@@ -504,6 +495,11 @@
             <li>
               <router-link class="slide-item" to="/listpurchase">المشتريات</router-link>
             </li>
+            <ul class="slide-menu">
+            <li>
+              <router-link class="slide-item" to="/supply">توريد</router-link>
+            </li>
+          </ul>
 
 
             <li>
@@ -540,7 +536,12 @@
               <router-link class="slide-item" to="/listsale">المبيعات</router-link>
             </li>
 
-
+ 
+            <ul class="slide-menu">
+            <li>
+              <router-link class="slide-item" to="/cash">صرف</router-link>
+            </li>
+          </ul>
 
 
             <li>

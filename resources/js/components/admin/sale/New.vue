@@ -30,22 +30,87 @@
                   <i class="fa fa-plus-circle"></i></button>
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
               <h5 class="card-title">اسم الحساب</h5>
               <div class="custom-search">
 
                 <select class="form-control" style="background-color: beige;" name="forma_pago" id="select_account_Sale">
 
                 </select>
-                <!-- <input :id="'Sale_account_id'" type="hidden" readonly class="custom-search-input"> -->
 
               </div>
             </div>
 
+   
+
 
           </div>
-          <br>
+          <br />
           <hr>
+          <div class="row">
+
+            <div class="col-md-2">
+                  <label for="FormaPago">طريقه الدفع</label>
+                  <select style="background-color: beige;" name="forma_pago" class="form-control" id="forma_pago"
+                    v-model="Way_to_pay_selected" v-on:change="onwaychange">
+                    text
+    
+                    <option v-bind:value="1">نقد</option>
+                    <option v-bind:value="2">أجل</option>
+                    <option v-bind:value="3">بنك</option>
+                  </select>
+                </div>
+                  <div class="col-md-2">
+                  <label for="cliente"> العميل</label>
+
+                  <select style="background-color: beige;" v-model="customer" id="customer" class="form-control">
+                    <option v-for="cust in customers" v-bind:value="[cust.id, cust.name, cust.account_id]">
+                      {{ cust.name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-2" v-if="show_treasury == true" >
+                  <label for="pagoPrevio">الصندوق</label>
+                  <select style="background-color: beige;" v-model="treasury" id="supplier" class="form-control">
+                    <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
+                      {{ tre.name }}
+                    </option>
+                  </select>
+
+                </div>
+
+                
+              <div class="col-md-2" v-if="show_bank == true">
+                <label for="pagoPrevio">البنك</label>
+                <select style="background-color: beige;" v-model="treasury" id="supplier" class="form-control">
+                    <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
+                      {{ tre.name }}
+                    </option>
+                  </select>
+
+              </div>
+
+
+
+              <div class="col-md-4">
+                  <label for="pagoPrevio">البيان</label>
+
+
+                  <input class="form-control" style="background-color: beige;" type="text" v-model="description">
+
+
+                </div>
+
+                <div class="col-md-2">
+                  <label for="date">التاريخ</label><br />
+
+                  <input style="background-color: beige;" name="date" type="date" v-model="date" class="form-control" />
+                </div>
+
+          </div>
+          <br />
+          <hr>
+ 
 
           <div class="row">
             <div class="col-md-12">
@@ -60,6 +125,7 @@
                     <th> المواصفات والطراز</th>
                     <th>الكميه المنوفره</th>
                     <th>الوحده</th>
+                    <!-- <th>التكلفه</th> -->
                     <th>السعر</th>
                     <th>الكميه</th>
                     <th>الضريبه</th>
@@ -178,10 +244,20 @@
                       <input v-else type="number" v-model="product.cost" id="price" class="form-control input_cantidad"
                         onkeypress="return " />
                     </td>
+
+                    <!-- <td>
+                      <input readonly style="background-color: beige;" type="number"
+                         v-model="cost[index]" id="qty" class="form-control input_cantidad"
+                        onkeypress="return " />
+
+
+                    </td> -->
                     <td>
                       <!-- <input style="background-color: beige;" type="number" @input="on_input(qty[index], product.availabe_qty), calculate_price(product.cost, qty[index],
                     index)" v-model="qty[index]" id="qty" class="form-control input_cantidad" onkeypress="return " /> -->
-                      <input v-if="check_state[index] == true" readonly style="background-color: beige;" type="number"
+
+                 
+                      <input v-if="check_state[index] == true" readonly  style="background-color: beige;" type="number"
                         @input="calculate_price(index)" v-model="qty[index]" id="qty" class="form-control input_cantidad"
                         onkeypress="return " />
 
@@ -279,7 +355,8 @@ product.id,
               </table>
             </div>
           </div>
-
+          <br />
+          <hr>
 
           <div class="row">
             <div class="col-md-12">
@@ -295,59 +372,7 @@ product.id,
                   </select>
                 </div>
 
-                <div class="col-md-12">
-                  <label for="pagoPrevio">البيان</label>
-
-
-                  <input class="form-control" style="background-color: beige;" type="text" v-model="description">
-
-
-                </div>
-
-
-
-
-
-                <div class="col-md-12">
-                  <label for="FormaPago">طريقه الدفع</label>
-                  <select style="background-color: beige;" name="forma_pago" class="form-control" id="forma_pago"
-                    v-model="Way_to_pay_selected" v-on:change="onwaychange">
-                    text
-                    <!-- <option v-bind:value="1">cash Money</option>
-<option v-bind:value="2">Credit</option> -->
-                    <option v-bind:value="1">نقد</option>
-                    <option v-bind:value="2">أجل</option>
-                    <option v-bind:value="3">بنك</option>
-                  </select>
-                </div>
-
-
-
-                <div class="col-md-12">
-                  <label for="cliente"> العميل</label>
-
-                  <select style="background-color: beige;" v-model="customer" id="customer" class="form-control">
-                    <option v-for="cust in customers" v-bind:value="[cust.id, cust.name, cust.account_id]">
-                      {{ cust.name }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-md-12" >
-                  <label for="pagoPrevio">الصندوق</label>
-                  <select style="background-color: beige;" v-model="treasury" id="supplier" class="form-control">
-                    <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
-                      {{ tre.name }}
-                    </option>
-                  </select>
-
-                </div>
-
-
-                <div class="col-md-12">
-                  <label for="date">التاريخ</label><br />
-
-                  <input style="background-color: beige;" name="date" type="date" v-model="date" class="form-control" />
-                </div>
+         
 
 
                 <div class="col-md-12">
@@ -576,6 +601,8 @@ export default {
       type_payment: 0,
       Way_to_pay_selected: 1,
       show: false,
+      show_treasury: true,
+      show_bank: false,
       paid: 0,
       remaining: 0,
       return_qty: [],
@@ -735,6 +762,17 @@ export default {
       } else {
         this.show = false;
       }
+
+      if (input.value == 1) {
+        this.show_treasury = true;
+        this.show_bank = false;
+      } 
+
+      if (input.value == 3) {
+        this.show_bank = true;
+        this.show_treasury = false;
+      } 
+
     },
     add_one_sale(
       store_product_id,

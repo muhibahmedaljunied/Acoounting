@@ -340,7 +340,7 @@ export default {
     let uri = `/sale_details/${this.$route.params.id}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
       console.log(response);
-      this.detail = response.data.sale_details;
+      this.detail = response.data.details;
       this.customers = response.data.customers;
       this.treasuries = response.data.treasuries;
 

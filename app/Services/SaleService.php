@@ -24,60 +24,10 @@ class SaleService
 
 
     ) {
-        // $this->core = app(CoreService::class);
+
     }
 
-    // public function Stock()
-    // {
-
-    //     $this->stock->init_stock();
-    // }
-    // public function store()
-    // {
-
-    //     $this->store->get_store()->refresh_store(); // this make refresh for store_products
-
-
-
-    // }
-
    
-    // public function add_into_purchase_table()
-    // {
-
-   
-    //     $this->stockRepo->add();
-
-    // }
-
-    // public function add_into_purchase_details_table()
-    // {
-
-   
-    //     $this->details->init_details(); // this make initial for details table
-
-    // }
-
-    // public function unit_and_qty()
-    // {
-
-    //     // this make decode for unit and convert qty into miqro
-    //     $this->stockRepo->decode_unit();
-    //     $this->stockRepo->convert_qty();
-
-
-    // }
-
-
-    // public function daily()
-    // {
-       
-    //     $this->daily->handle();
-    //     $this->db_create();
-    //     $this->db_store();
-    // }
-
-
     public function pay(){
 
 

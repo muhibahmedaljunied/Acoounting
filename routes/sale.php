@@ -11,7 +11,7 @@ Route::post('/listsalesearch', 'Sale\SaleController@search');
 Route::post('/add_Sale', 'Sale\SaleController@store');
 Route::post('/paySale', 'Sale\SaleController@payment');
 Route::post('/sale_details/{id}', 'Sale\SaleController@details');
-Route::post('/sale_details/{id}', 'Sale\SaleReturnController@index');
+Route::post('/sale_return_details/{id}', 'Sale\SaleReturnController@index');
 
 Route::post('/Sale/delete', 'Sale\SaleController@destroy');
 Route::post('/Sale/delete/{id}', 'Sale\SaleController@destroy');

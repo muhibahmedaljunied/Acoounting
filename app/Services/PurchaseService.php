@@ -1,15 +1,9 @@
 <?php
 
 namespace App\Services;
-use App\Services\StoreService;
 use App\Services\InventureService;
-use App\Services\StockService;
-// use App\RepositoryInterface\UnitRepositoryInterface;
 use App\Services\CoreService;
 use App\Models\PaymentPurchase;
-
-// use App\Traits\DailyTrait;
-
 class PurchaseService
 {
 

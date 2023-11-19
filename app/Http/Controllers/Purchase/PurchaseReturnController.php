@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Purchase;
-
-// use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\RepositoryInterface\InventuryStockRepositoryInterface;
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
@@ -30,12 +28,10 @@ class PurchaseReturnController extends Controller
         StoreProductTrait,
         GeneralTrait,
         ReturnDetailsTrait;
-
     public function __construct(
         protected ReturnService $returnservice,
         protected ReturnRepositoryInterface $return,
         protected DetailRepositoryInterface $details,
-        // protected DetailRefreshRepositoryInterface $refresh,
         protected WarehouseRepositoryInterface $warehouse,
         protected InventuryStockRepositoryInterface $stock,
         protected InventuryStoreRepositoryInterface $store,
@@ -81,11 +77,11 @@ class PurchaseReturnController extends Controller
     {
 
         $treasuries = DB::table('treasuries')
-            ->join('treasury_accounts', 'treasury_accounts.treasury_id', '=', 'treasuries.id')
+            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
                 'treasuries.id',
                 'treasuries.name',
-                'treasury_accounts.account_id'
+      
             )
             ->get();
 
@@ -183,6 +179,7 @@ class PurchaseReturnController extends Controller
                 $this->stock->stock();
             }
 
+            $this->daily->daily();
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             $this->daily->daily();

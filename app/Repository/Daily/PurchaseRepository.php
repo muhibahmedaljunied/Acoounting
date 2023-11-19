@@ -5,13 +5,11 @@ use App\RepositoryInterface\DailyRepositoryInterface;
 use App\Services\CoreService;
 use App\RepositoryInterface\Daily;
 use DB;
-
 class PurchaseRepository extends Daily implements DailyRepositoryInterface
 {
     public $core;
     public function __construct()
     {
-
 
         $this->core = app(CoreService::class);
     }

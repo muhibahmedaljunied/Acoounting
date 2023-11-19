@@ -16,8 +16,10 @@ class UnitRepository implements UnitRepositoryInterface
    public function decode_unit()
     {
 
+      
         $this->core->unit_array = json_decode($this->core->data['unit'][$this->core->value]);
         $this->core->unit_value = $this->core->unit_array[0];
+
         return $this;
 
     }

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\RepositoryInterface\DailyRepositoryInterface;
-use Illuminate\Http\Request;
 use App\Services\CoreService;
 use App\Traits\DailyTrait;
 class DailyService extends CoreService
@@ -13,7 +12,6 @@ class DailyService extends CoreService
    public $status_request = 'faild';
    public $core;
    public function __construct(
-      Request $request,
       protected DailyRepositoryInterface $daily,
    ) {
 

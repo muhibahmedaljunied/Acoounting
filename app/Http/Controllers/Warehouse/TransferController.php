@@ -5,7 +5,7 @@ use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\InventuryStockRepositoryInterface;
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\Traits\StoreProduct\StoreProductTrait;
+use App\Traits\Transfer\StoreProductTrait;
 use App\Services\UnitService;
 use App\Traits\Details\DetailsTrait;
 use App\Services\InventureService;
@@ -66,7 +66,9 @@ class TransferController extends Controller
 
 
 
-        $products = ($request->post('type') == 'store') ? $this->get_store_product_with_store($request) : $this->get_store_product_with_product($request);
+        $products = ($request->post('type') == 'store') ? 
+        $this->get_store_product_with_store($request) : 
+        $this->get_store_product_with_product($request);
 
         $this->units($products);
         return response()->json(['products' => $products]);
@@ -77,7 +79,7 @@ class TransferController extends Controller
     {
 
 
-        $products = StoreProduct::where('store_products.quantity', '!=', 0)
+        return StoreProduct::where('store_products.quantity', '!=', 0)
             ->where('product_units.unit_type', '==', 0)
             ->where('store_products.store_id', $request['id'])
             ->join('products', 'products.id', '=', 'store_products.product_id')
@@ -98,14 +100,13 @@ class TransferController extends Controller
             )
             ->get();
 
-        return $products;
     }
 
     public function get_store_product_with_product($request)
     {
 
 
-        $products = StoreProduct::where('store_products.quantity', '!=', 0)
+        return  StoreProduct::where('store_products.quantity', '!=', 0)
             ->where('product_units.unit_type', '==', 0)
             ->where('store_products.product_id', $request['id'])
             ->join('products', 'products.id', '=', 'store_products.product_id')
@@ -125,7 +126,7 @@ class TransferController extends Controller
             )
             ->get();
 
-        return $products;
+     
     }
 
 
@@ -147,29 +148,27 @@ class TransferController extends Controller
 
 
 
-        // $this->core->setData($request->all());
         try {
 
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $this->warehouse->add();
+            $this->warehouse->add(); // this handle data in transfer table
 
             foreach ($request->post('count') as $value) {
-                $this->core->setValue($value);
+                
+                $this->core->setValue($value);  //this set index of data
 
                 $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
+            
+                $this->store->store(); // this handle data in store table
+       
+                $this->details->init_details(); // this make initial for details table
 
-                $this->store->store();
-
-                $this->details->init_details(); // this make initial for details tables
-
-                $this->stock->stock();
+                $this->stock->stock();// this handle data in stock table
             }
 
-            // dd('f');
-
-            // ---------------------------------------------------------------------------------------
-
+            // dd('sd');
+    
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([
                 'message' => "transfer created successfully",

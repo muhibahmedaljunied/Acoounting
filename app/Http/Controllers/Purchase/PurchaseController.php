@@ -29,6 +29,7 @@ class PurchaseController extends Controller
 
 
     public function __construct(
+    
         protected InventuryStockRepositoryInterface $stock,
         protected InventuryStoreRepositoryInterface $store,
         protected WarehouseRepositoryInterface $wahehouse,
@@ -66,14 +67,15 @@ class PurchaseController extends Controller
         ]);
     }
 
+  
+
     public function suppliers(){
 
         $suppliers =  DB::table('suppliers')
         ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
         ->select(
             'suppliers.*',
-            // 'suppliers.name',
-            // 'supplier_accounts.account_id',
+
         )
         ->get();
        
@@ -88,7 +90,6 @@ class PurchaseController extends Controller
         ->select(
             'treasuries.id',
             'treasuries.name',
-            // 'treasury_accounts.account_id'
         )
         ->get();
 
@@ -113,6 +114,7 @@ class PurchaseController extends Controller
 
 
 
+ 
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -132,7 +134,7 @@ class PurchaseController extends Controller
             }
 
             $this->purchase->pay();
-            $this->daily->daily();
+            // $this->daily->daily();
 
         
             // ------------------------------------------------------------------------------------------------------
@@ -204,6 +206,7 @@ class PurchaseController extends Controller
                 'payment_purchases.*'
             )
             ->paginate(10);
+
         return response()->json(['purchases' => $purchases]);
     }
 

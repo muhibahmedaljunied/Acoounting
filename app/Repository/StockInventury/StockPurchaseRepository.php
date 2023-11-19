@@ -11,10 +11,13 @@ class StockPurchaseRepository implements InventuryStockRepositoryInterface
    
     public function __construct(protected CoreService $core)
     {
+    
     }
    public function Stock()
     {
 
+
+  
         $this->refresh_price(); //this make refresh for cost of product
 
         $this->init_stock_table();
@@ -45,16 +48,17 @@ class StockPurchaseRepository implements InventuryStockRepositoryInterface
         if ($this->core->stock_f != 0) {
             return 0;
         }
+      
         // dd($this->core->data['unit']);
         $stocks = new Stock();
         $stocks->store_product_id = $this->core->id_store_product;
         $stocks->unit_id = $this->core->unit_value;
-        $stocks->type_operation = $this->core->data['type'];
         $stocks->quantity = $this->core->micro_unit_qty;
         $stocks->date = $this->core->data['date'];
+        $stocks->stockable()->associate($this->core->purchase);
         $stocks->save();
 
-
+ 
         // }
     }
 

@@ -38,25 +38,25 @@ Route::post('/type_expence', 'Account\TypeExpenceController@show');
 Route::post('/type_income', 'Account\TypeIncomeController@show');
 // --------------------------------expence_type------------------------------------------
 Route::post('/expence_type', 'Account\ExpenceTypeController@show');
-Route::post('/expence/newexpence', 'ExpenceController@index');
+Route::post('/expence/newexpence', 'Account\ExpenceController@index');
 
-Route::post('/expence/delete', 'ExpenceController@destroy');
+Route::post('/expence/delete', 'Account\ExpenceController@destroy');
 
-Route::post('/store_expence', 'ExpenceController@store');
+Route::post('/store_expence', 'Account\ExpenceController@store');
 
-Route::post('/payexpence', 'ExpenceController@payment');
+Route::post('/payexpence', 'Account\ExpenceController@payment');
 
-Route::post('/expences', 'ExpenceController@show');
+Route::post('/expences', 'Account\ExpenceController@show');
 
-Route::post('/expence/newexpencesearch', 'ExpenceController@search_new');
+Route::post('/expence/newexpencesearch', 'Account\ExpenceController@search_new');
 
-Route::post('/listexpence', 'ExpenceController@show');
+Route::post('/listexpence', 'Account\ExpenceController@show');
 
-Route::post('/listexpencesearch', 'ExpenceController@search');
+Route::post('/listexpencesearch', 'Account\ExpenceController@search');
 
-Route::post('/expence_details/{id}', 'ExpenceController@details_supply');
-Route::post('/invoice_expence/{id}', 'ExpenceController@invoice_supply');
-Route::post('/recive_expence/{id}', 'ExpenceController@recive_supply');
+Route::post('/expence_details/{id}', 'Account\ExpenceController@details_supply');
+Route::post('/invoice_expence/{id}', 'Account\ExpenceController@invoice_supply');
+Route::post('/recive_expence/{id}', 'Account\ExpenceController@recive_supply');
 
 
 

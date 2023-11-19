@@ -5,8 +5,6 @@ use App\RepositoryInterface\DailyRepositoryInterface;
 use App\RepositoryInterface\Daily;
 use App\Services\CoreService;
 use DB;
-
-
 class SaleRepository extends Daily implements DailyRepositoryInterface
 {
 

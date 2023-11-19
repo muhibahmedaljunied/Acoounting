@@ -220,6 +220,9 @@ export default {
 
 
                         gf.store_one = data.node.id;
+                        gf.fromstore = data.node.text;
+                        gf.fromstore_id = data.node.id;
+
                         gf.get_product_for_transfer(gf, 'store',data.node.id);
 
 
@@ -238,6 +241,9 @@ export default {
 
                         gf.intostore = data.node.text;
                         gf.intostore_id = data.node.id;
+
+                  
+
 
 
                     }

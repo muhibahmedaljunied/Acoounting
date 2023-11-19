@@ -16,8 +16,6 @@ use App\Models\Supply;
 use App\Models\Cash;
 use App\Models\Transfer;
 
-
-
 trait GeneralTrait
 {
     use StockTrait, StoreProductTrait, ConditionTrait, DetailsTrait, ReturnTrait;

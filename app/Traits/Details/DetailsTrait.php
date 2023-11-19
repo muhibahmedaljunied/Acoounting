@@ -4,36 +4,19 @@ namespace App\Traits\Details;
 
 use DB;
 use App\Traits\Unit\UnitsTrait;
+use Illuminate\Http\Request;
 
 trait DetailsTrait
 {
     use UnitsTrait;
 
 
-    // function refresh_details(...$list_data)
-    // {
 
-    //     $data = $list_data['data'];
-    //     $after_update = str_replace('Return', '', $data['type']);
-
-    //     $type_column = strtolower($after_update);
-
-    //     $condition = [
-    //         'product_id' => $data['product_id'],
-    //         'status_id' => $data['status_id'],
-    //         'store_id' => $data['store_id'],
-    //         'desc' => $data['desc'],
-    //         'id' => $data['id']
-    //         // $type_column.'_id' => $data['id']
-    //     ];
-    //     DB::table($type_column . '_details')->where($condition)->increment('qty_return', $data['qty']);
-    // }
-
-
-
-    public function details($request, $id)
+    public function details(Request $request, $id)
     {
-        // return response()->json(['details' => $request->all()]);
+
+
+        
         $table = $request['table'];
         $output = explode('_', $table);
         $column = $output[0];
@@ -68,7 +51,13 @@ trait DetailsTrait
         }
         $this->units($details);
 
-        return $details;
+
+        return response()->json([
+            'details' => $details,
+
+        ]);
+
+
   
     }
 }

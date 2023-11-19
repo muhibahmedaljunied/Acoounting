@@ -42,17 +42,7 @@ class StockController extends Controller
         });
         
         $this->units($stocks);
-        // foreach ($stocks as $value) {
-
-        //     $units = DB::table('product_units')
-        //         ->join('units', 'units.id', '=', 'product_units.unit_id')
-        //         ->join('products', 'products.id', '=', 'product_units.product_id')
-        //         ->where('product_units.product_id', $value->product_id)
-        //         ->select('units.*', 'products.rate', 'product_units.unit_type')
-        //         ->get();
-
-        //     $value->units = $units;
-        // }
+      
 
 
         return response()->json($stocks);
