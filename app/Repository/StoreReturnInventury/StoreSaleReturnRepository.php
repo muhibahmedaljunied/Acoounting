@@ -25,7 +25,6 @@ class StoreSaleReturnRepository implements InventuryStoreRepositoryInterface
 
     function get_store_product_table($type = null)
     {
-        // $id_store_product = ($type == 'purchase') ? $this->get_store_product_for_purchase() : $this->get_store_product_for_another();
 
         $id_store_product = $this->get_store_product_for_another();
 
@@ -67,33 +66,7 @@ class StoreSaleReturnRepository implements InventuryStoreRepositoryInterface
 
 
     
-    // function get_store_product_for_purchase()
-    // {
-
-
-    //     $id_store_product = StoreProduct::where([
-    //         'product_id' => $this->core->data['product'][$this->core->value],
-    //         'store_id' => $this->core->data['store'],
-    //         'status_id' => $this->core->data['status'][$this->core->value],
-    //         'desc' => $this->core->data['desc'][$this->core->value]
-    //     ])
-    //         ->select()
-    //         ->get();
-
-
-    //     return $id_store_product;
-    // }
-
-
-
-    // public function init_store_product_table()
-    // {
-    //           if ($this->core->store_product_f != 0) {
-    //         return 0;
-    //     }
-
-    // }
-
+    
 
 
 }
