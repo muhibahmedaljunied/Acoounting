@@ -6,7 +6,7 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <span class="h2">اضافه مرتجع شراء</span>
+                <span class="h2"> مرتجع شراء</span>
               </div>
               <div class="text-center">
                 <!-- <span
@@ -61,12 +61,12 @@
 
 
                 </div>
-                
-              
+
+
                 <br>
-                  <hr>
+                <hr>
                 <div class="row">
-              
+
                   <div class="col-md-2">
 
                     <label for="pagoPrevio">الصندوق</label>
@@ -82,15 +82,15 @@
 
                   <div class="col-md-2">
 
-<label for="pagoPrevio">البنك</label>
-<select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
-  <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
-    {{ tre.name }}
-  </option>
-</select>
+                    <label for="pagoPrevio">البنك</label>
+                    <select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
+                      <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
+                        {{ tre.name }}
+                      </option>
+                    </select>
 
 
-</div>
+                  </div>
 
                   <div class="col-md-4">
                     <label for="pagoPrevio">البيان</label>
@@ -103,7 +103,7 @@
                 </div>
 
                 <br>
-                  <hr>
+                <hr>
 
                 <div class="row">
                   <div class="col-m-12">
@@ -368,7 +368,7 @@
                     </div>
                   </div>
                 </div>
-      
+
 
               </div>
             </div>

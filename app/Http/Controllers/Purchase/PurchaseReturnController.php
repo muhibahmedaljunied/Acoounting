@@ -38,6 +38,7 @@ class PurchaseReturnController extends Controller
         Request $request,
     ) {
 
+        
         $this->core->setData($request->all());
     }
 
@@ -177,6 +178,8 @@ class PurchaseReturnController extends Controller
     {
 
         // $this->core->data = $request->all();
+
+
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 

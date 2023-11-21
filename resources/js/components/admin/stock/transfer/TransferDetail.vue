@@ -131,7 +131,7 @@ export default {
       this.transfer_details = response.data.transfer_details;
     });
   },
-  methods: {},
+
 };
 </script>
 

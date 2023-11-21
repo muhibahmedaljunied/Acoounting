@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Repository\Unit;
+use App\RepositoryInterface\UnitRepositoryInterface;
 use App\Services\CoreService;
-class UnitReturnRepository 
+class UnitReturnRepository implements UnitRepositoryInterface
 {
 
     public $core;

@@ -7,9 +7,7 @@
             <div class="d-flex justify-content-between">
               <span class="h2"> المشتريات</span>
             </div>
-            <p class="tx-12 tx-gray-500 mb-2">
-              Example of Valex Simple Table. <a href="">Learn more</a>
-            </p>
+       
             <div class="d-flex justify-content-between"></div>
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
@@ -83,9 +81,13 @@
                           ]">
                             عرض الفاتوره
                           </option>
-                          <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
+                          <!-- <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
                             v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
                             دفع
+                          </option> -->
+                          <option  class="btn btn-success"
+                            v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
+                            صرف
                           </option>
                           <option class="btn btn-success"
                             v-bind:value="['/purchase_invoice_update/', purchase.purchase_id, 5]">

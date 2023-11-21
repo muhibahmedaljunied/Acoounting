@@ -2,18 +2,33 @@
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
-                <div class="modal-body">
-                    <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
-                        <thead>
+             
+
+                <div class="row row-sm">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <div class="d-flex justify-content-between">
+                                    <span class="h2"> سند صروف</span>
+                                </div>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
+                                  
+                                        <thead>
                             <tr>
 
                                 <th>المصروف</th>
 
 
-                                <!-- <th>الحاله</th>
+                               <th>الحاله</th>
                                 <th>المواصفات والطراز</th>
 
-                                <th>المخزن</th> -->
+                                <th>المخزن</th> 
 
                                 <th> المبلغ</th>
                                 <th> طريقه الدفع</th>
@@ -72,9 +87,9 @@
                                 </td> -->
 
                                 <td>
-                                    <input type="number" id="qty" v-model="qty[index]"
-                                        class="form-control input_cantidad" onkeypress="return valida(event)" /><span
-                                        style="color:red;font-size: 15px;">{{ error_qty[0] }}</span>
+                                    <input type="number" id="qty" v-model="qty[index]" class="form-control input_cantidad"
+                                        onkeypress="return valida(event)" /><span style="color:red;font-size: 15px;">{{
+                                            error_qty[0] }}</span>
                                 </td>
 
                                 <td>
@@ -109,13 +124,13 @@
                             </tr>
                             <tr>
                                 <td colspan="10">
-                                    <div class="m-t-30 col-md-12" >
+                                    <div class="m-t-30 col-md-12">
                                         <label for="date">الاجمالي</label><br />
 
-                                        <input style="text-align: center;color:red" v-model="total" name="date" type="number" class="form-control"
-                                            readonly />
+                                        <input style="text-align: center;color:red" v-model="total" name="date"
+                                            type="number" class="form-control" readonly />
                                         <!-- {{ showshowOrderDetailsOrderDetails }} -->
-                                 
+
                                     </div>
                                 </td>
                             </tr>
@@ -140,27 +155,15 @@
                                     العمليه</span></a>
 
                         </tbody>
-                    </table>
-                </div>
-                <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
+                                    </table>
 
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                </div>
+                                <pagination align="center" :data="sales" @pagination-change-page="list"></pagination>
                             </div>
-                            <div class="modal-body">
-
-                                <div class="well" id="treeview_json_product"></div>
-
-                            </div>
-
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
     </div>
