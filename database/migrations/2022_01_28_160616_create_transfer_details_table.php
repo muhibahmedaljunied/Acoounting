@@ -45,6 +45,7 @@ class CreateTransferDetailsTable extends Migration
             $table->string('product_name')->nullable();
 
             $table->text('into_store')->nullable();
+            $table->text('from_store')->nullable();
             // $table->text('into_shelve')->nullable();
 
             $table->integer('qty');

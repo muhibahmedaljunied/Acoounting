@@ -20,7 +20,7 @@
 
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-4">
+                  <div class="col-md-2">
 
 
                     <label for="date">رقم الفاتوره</label><br />
@@ -30,7 +30,7 @@
 
 
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-2">
 
 
 
@@ -44,7 +44,7 @@
 
 
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-2">
 
                     <label for="date">طريقه الدفع</label><br />
 
@@ -58,20 +58,16 @@
 
 
                   </div>
-                  <div class="col-md-6">
 
 
-                    <label for="cliente"> المورد</label>
-
-                    <select class="form-control" style="background-color: beige;" v-model="supplier" id="supplier">
-                      <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name, sup.account_id]">
-                        {{ sup.name }}
-                      </option>
-                    </select>
-
-
-                  </div>
-                  <div class="col-md-6">
+                </div>
+                
+              
+                <br>
+                  <hr>
+                <div class="row">
+              
+                  <div class="col-md-2">
 
                     <label for="pagoPrevio">الصندوق</label>
                     <select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
@@ -82,6 +78,34 @@
 
 
                   </div>
+
+
+                  <div class="col-md-2">
+
+<label for="pagoPrevio">البنك</label>
+<select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
+  <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
+    {{ tre.name }}
+  </option>
+</select>
+
+
+</div>
+
+                  <div class="col-md-4">
+                    <label for="pagoPrevio">البيان</label>
+
+
+                    <input class="form-control" style="background-color: beige;" type="text" v-model="description">
+
+
+                  </div>
+                </div>
+
+                <br>
+                  <hr>
+
+                <div class="row">
                   <div class="col-m-12">
                     <div class="table-responsive">
                       <table class="table">
@@ -344,7 +368,7 @@
                     </div>
                   </div>
                 </div>
-
+      
 
               </div>
             </div>
@@ -384,7 +408,8 @@ export default {
     this.type = 'PurchaseReturn';
     this.type_refresh = 'decrement';
 
-    let uri = `/purchase_details/${this.$route.params.id}`;
+    let uri = `/purchase_details_in_return/${this.$route.params.id}`;
+    //  let uri = `/purchase_details/${this.$route.params.id}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
       console.log(response);
       this.detail = response.data.details;
@@ -400,7 +425,7 @@ export default {
     add_one_return(index, qty, unit) {
 
 
- 
+
       var result;
 
       if (this.check_state[index] == true) {

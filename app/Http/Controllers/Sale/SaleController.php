@@ -44,6 +44,20 @@ class SaleController extends Controller
     }
 
 
+    public function details(Request $request, $id)
+    {
+
+        $details = $this->get_details($request, $id);
+
+        $this->units($details);
+
+
+        return response()->json([
+            'details' => $details,
+
+        ]);
+    }
+    
     public function index(Request $request)
     {
 
@@ -151,9 +165,10 @@ class SaleController extends Controller
                 $this->stock->stock(); // this handle data in stock table
 
             }
+            
          
             $this->sale->pay();
-            $this->daily->daily();
+            // $this->daily->daily();
 
 
             // ------------------------------------------------------------------------------------------------------

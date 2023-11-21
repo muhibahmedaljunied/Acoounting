@@ -2,8 +2,9 @@
 
 namespace App\Repository\StoreInventury;
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
-use App\Services\CoreService;
 use App\Traits\Transfer\StoreProductTrait;
+use App\Services\CoreService;
+
 
 class StoreTransferRepository implements InventuryStoreRepositoryInterface
 {

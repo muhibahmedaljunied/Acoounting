@@ -47,14 +47,14 @@ class StoreSaleReturnRepository implements InventuryStoreRepositoryInterface
     function get_store_product_for_another()
     {
 
-        $id_store_product = StoreProduct::where([
+        return StoreProduct::where([
             'store_products.id' => $this->core->data['old'][$this->core->value]['store_product_id'],
 
         ])
             ->select()
             ->get();
 
-        return $id_store_product;
+      
     }
 
 

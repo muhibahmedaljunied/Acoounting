@@ -18,6 +18,7 @@ Route::post('/Sale/delete/{id}', 'Sale\SaleController@destroy');
 
 Route::post('/invoice_sale/{id}', 'Sale\SaleController@invoice_sale');
 
+Route::post('/sale_details_in_return/{id}', 'Sale\SaleReturnController@details');
 Route::post('/salereturn', 'Sale\SaleReturnController@create');
 Route::post('/listreturn_sale/{id}', 'Sale\SaleReturnController@show');
 

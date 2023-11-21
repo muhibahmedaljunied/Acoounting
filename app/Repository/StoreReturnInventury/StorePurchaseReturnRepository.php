@@ -18,12 +18,12 @@ class StorePurchaseReturnRepository implements InventuryStoreRepositoryInterface
 
     public function store()
     {
-        $this->get_store_product_table();
+        $this->get_store_product();
         $this->refresh_store_product_table();
     }
 
 
-    function get_store_product_table($type = null)
+    function get_store_product($type = null)
     {
 
 
@@ -48,14 +48,14 @@ class StorePurchaseReturnRepository implements InventuryStoreRepositoryInterface
     function get_store_product_for_another()
     {
 
-        $id_store_product = StoreProduct::where([
+        return StoreProduct::where([
             'store_products.id' => $this->core->data['old'][$this->core->value]['store_product_id'],
 
         ])
             ->select()
             ->get();
 
-        return $id_store_product;
+       
     }
 
 

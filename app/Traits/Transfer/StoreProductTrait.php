@@ -2,7 +2,7 @@
 
 namespace App\Traits\Transfer;
 use App\Models\StoreProduct;
-
+use Illuminate\Support\Facades\DB;
 
 trait StoreProductTrait
 {
@@ -13,15 +13,16 @@ trait StoreProductTrait
     {
 
 
-       
         $store_product = new StoreProduct();
         $store_product->product_id = $this->core->data['old'][$this->core->value]['product_id'];
-        $store_product->store_id = $this->core->data['old'][$this->core->value]['store_id'];
+        $store_product->store_id = $this->core->data['intostore_id'];
         $store_product->status_id = $this->core->data['old'][$this->core->value]['status_id'];
         $store_product->desc = $this->core->data['old'][$this->core->value]['desc'];
         $store_product->quantity = $this->core->micro_unit_qty;
         $store_product->cost = $this->core->data['old'][$this->core->value]['cost'];
         $store_product->save();
+
+        // dd($store_product);
         $this->core->id_store_product = $store_product->id;
     }
 
@@ -41,6 +42,8 @@ trait StoreProductTrait
         $this->core->store_product_f =  DB::table('store_products')
         ->where(['id' => $this->core->id_store_product])
         ->decrement('quantity', $this->core->micro_unit_qty);
+
+       
     }
 
 

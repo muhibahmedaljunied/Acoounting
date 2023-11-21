@@ -17,19 +17,20 @@
 
               <div class="card-body">
 
+
                 <div class="row">
 
-                  <div class="col-md-4">
+                  <div class="col-md-2">
 
 
                     <label for="date">رقم الفاتوره</label><br />
 
-                    <input  v-model="id" style="background-color: beige;" class="form-control" />
+                    <input v-model="id" style="background-color: beige;" class="form-control" />
 
 
 
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-2">
 
 
                     <label for="date">التاريخ</label><br />
@@ -40,7 +41,7 @@
 
 
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-2">
 
                     <label for="date">طريقه الدفع</label><br />
 
@@ -55,20 +56,14 @@
 
 
                   </div>
-                  <div class="col-md-6">
+                </div>
+
+                <hr>
+                <br>
+                <div class="row">
 
 
-                    <label for="cliente"> العميل</label>
-
-                    <select style="background-color: beige;" v-model="customer" id="customer" class="form-control">
-                      <option v-for="cust in customers" v-bind:value="[cust.id, cust.name, cust.account_id]">
-                        {{ cust.name }}
-                      </option>
-                    </select>
-
-
-                  </div>
-                  <div class="col-md-6">
+                  <div class="col-md-2">
 
                     <label for="pagoPrevio">الصندوق</label>
                     <select style="background-color: beige;" v-model="treasury" id="supplier" class="form-control">
@@ -79,7 +74,33 @@
 
 
                   </div>
+                  <div class="col-md-2">
 
+                    <label for="pagoPrevio">البنك</label>
+                    <select style="background-color: beige;" v-model="treasury" id="supplier" class="form-control">
+                      <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
+                        {{ tre.name }}
+                      </option>
+                    </select>
+
+
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="pagoPrevio">البيان</label>
+
+
+                    <input class="form-control" style="background-color: beige;" type="text" v-model="description">
+
+
+                  </div>
+
+
+
+                </div>
+                <hr>
+                <br>
+                <div class="row">
                   <div class="col-md-12">
                     <div class="table-responsive">
                       <table class="table table-bordered">
@@ -276,14 +297,6 @@
 
 
 
-                          <tr>
-                            <td colspan="10">
-                              <div class="m-t-30 col-md-12">
-                                <label for="date">البيان</label><br />
-                                <input v-model="note" type="text" name="name" id="name" class="form-control" />
-                              </div>
-                            </td>
-                          </tr>
 
                           <a v-if="not_qty" @click="Add_return()" class="btn btn-success"><span>تاكيد العمليه</span></a>
                           <!-- <div v-if="seen" class="alert alert-warning" role="alert">
@@ -294,6 +307,7 @@
                     </div>
                   </div>
                 </div>
+
 
               </div>
             </div>
@@ -318,13 +332,13 @@ export default {
       treasury: [],
       count: 1,
 
-      
+
       description: '',
 
       customer: [],
       treasury: [],
-      
-    
+
+
       not_qty: true,
       message_check: false,
       text_message: 0,
@@ -336,8 +350,10 @@ export default {
     this.type_refresh = 'increment';
 
 
+    
+    // let uri = `/sale_details/${this.$route.params.id}`;
+    let uri = `/sale_details_in_return/${this.$route.params.id}`;
 
-    let uri = `/sale_details/${this.$route.params.id}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
       console.log(response);
       this.detail = response.data.details;
@@ -394,7 +410,7 @@ export default {
       this.axios
         .post(`/${url}`, {
 
-      
+
           type: this.type,
           count: this.counts,
           unit: this.unit,

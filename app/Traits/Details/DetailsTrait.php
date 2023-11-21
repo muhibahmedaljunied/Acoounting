@@ -12,7 +12,7 @@ trait DetailsTrait
 
 
 
-    public function details(Request $request, $id)
+    public function get_details(Request $request, $id)
     {
 
 
@@ -22,7 +22,7 @@ trait DetailsTrait
         $column = $output[0];
 
         //-----------------------------------------------------------------------------------------------
-        $details =  DB::table($table)->where($table . '.' . $column . '_id', $id)
+        $details =   DB::table($table)->where($table . '.' . $column . '_id', $id)
             // ->where('store_products.quantity', '!=', 0)
             ->join('units', $table.'.unit_id', '=', 'units.id')
             ->join('store_products', 'store_products.id', '=', $table . '.store_product_id')
@@ -49,13 +49,9 @@ trait DetailsTrait
             $value->qty_return_now = 0;
             $value->unit_selected = [];
         }
-        $this->units($details);
 
-
-        return response()->json([
-            'details' => $details,
-
-        ]);
+        return $details;
+      
 
 
   

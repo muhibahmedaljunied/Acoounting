@@ -1,17 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Sale;
-// use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\RepositoryInterface\InventuryStockRepositoryInterface;
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\RepositoryInterface\ReturnRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Traits\Details\ReturnDetailsTrait;
-use App\Traits\StoreProduct\StoreProductTrait;
 use App\Services\UnitService;
 use App\Traits\GeneralTrait;
-use App\Traits\Stock\StockTrait;
 use App\Services\CoreService;
 use App\Services\ReturnService;
 use Illuminate\Http\Request;
@@ -25,11 +22,11 @@ use Illuminate\Support\Facades\Auth;
 class SaleReturnController extends Controller
 {
 
-    use StockTrait, StoreProductTrait, GeneralTrait, ReturnDetailsTrait;
+    use GeneralTrait, 
+    ReturnDetailsTrait;
 
 
     public function __construct(
-        // protected DetailRefreshRepositoryInterface $refresh,
         protected InventuryStockRepositoryInterface $stock,
         protected InventuryStoreRepositoryInterface $store,
         protected WarehouseRepositoryInterface $warehouse,
@@ -46,6 +43,21 @@ class SaleReturnController extends Controller
         $this->core->setData($request->all());
     }
 
+    public function details(Request $request, $id)
+    {
+
+        $details = $this->get_details($request, $id);
+
+        $this->units($details);
+        
+        return response()->json([
+            'details' => $details,
+            // 'customers' => $this->customers(),
+            'treasuries' => $this->treasuries()
+        ]);
+    }
+
+
     public function index(Request $request, $id)
     {
 
@@ -61,7 +73,7 @@ class SaleReturnController extends Controller
     public function customers()
     {
 
-        $customers = DB::table('customers')
+        return DB::table('customers')
             ->join('accounts', 'accounts.id', '=', 'customers.account_id')
             ->select(
                 'customers.id',
@@ -70,13 +82,13 @@ class SaleReturnController extends Controller
             )
             ->get();
 
-        return $customers;
+       
     }
 
     public function treasuries()
     {
 
-        $treasuries = DB::table('treasuries')
+        return DB::table('treasuries')
             ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
                 'treasuries.id',
@@ -85,7 +97,7 @@ class SaleReturnController extends Controller
             )
             ->get();
 
-        return $treasuries;
+
     }
 
     public function show($id)
@@ -126,7 +138,7 @@ class SaleReturnController extends Controller
     {
 
 
-        $sale_returns = SaleReturn::where('sale_returns.id', $id)
+        return SaleReturn::where('sale_returns.id', $id)
             ->join('sales', 'sales.id', '=', 'sale_returns.sale_id')
             ->join('users', 'users.id', '=', 'sales.customer_id')
             ->select(
@@ -137,14 +149,14 @@ class SaleReturnController extends Controller
                 'sale_returns.id as return_id'
             )
             ->get();
-        return $sale_returns;
+      
     }
 
     public function get_sale_return_detail($id)
     {
 
 
-        $sale_return_details = SaleReturnDetail::where('sale_return_details.sale_return_id', $id)
+        return SaleReturnDetail::where('sale_return_details.sale_return_id', $id)
             ->join('sale_returns', 'sale_returns.id', '=', 'sale_return_details.sale_return_id')
             ->join('store_products', 'store_products.id', '=', 'sale_return_details.store_product_id')
             ->joinall()
@@ -160,7 +172,7 @@ class SaleReturnController extends Controller
             )
             ->get();
 
-        return $sale_return_details;
+       
     }
 
     public function create(Request $request)   // this create return for supply,cashing,sale,purchase

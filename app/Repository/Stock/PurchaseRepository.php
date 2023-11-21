@@ -4,7 +4,7 @@ namespace App\Repository\Stock;
 
 use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Traits\Warehouse\PurchaseTrait;
+use App\Traits\Purchase\PurchaseTrait;
 use App\Services\CoreService;
 use App\RepositoryInterface\Daily;
 use DB;

@@ -167,7 +167,9 @@ class TransferController extends Controller
                 $this->stock->stock();// this handle data in stock table
             }
 
-            // dd('sd');
+         
+
+            // dd('sdsdsd');
     
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([

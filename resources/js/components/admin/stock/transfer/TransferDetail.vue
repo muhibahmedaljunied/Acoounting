@@ -48,7 +48,7 @@
                       {{ transfer_detail.desc }}
                     </td>
                     <td style="width: 40px">
-                      {{ transfer_detail.store }}
+                      {{ transfer_detail.from_store }}
                     </td>
 
                     <td style="width: 40px">

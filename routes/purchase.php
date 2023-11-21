@@ -27,6 +27,7 @@ Route::post('/add_Purchase', 'Purchase\PurchaseController@store');
 Route::post('/payPurchase', 'Purchase\purchaseController@payment');
 Route::post('/purchase_details/{id}', 'Purchase\PurchaseController@details');
 // ------------------------------------------------------------------------------------------
+Route::post('/purchase_details_in_return/{id}', 'Purchase\PurchaseReturnController@details');
 Route::post('/purchase_return_details/{id}', 'Purchase\PurchaseReturnController@index');
 Route::post('/purchasereturn', 'Purchase\PurchaseReturnController@create');
 Route::post('/listreturn_purchase/{id}', 'Purchase\PurchaseReturnController@show');

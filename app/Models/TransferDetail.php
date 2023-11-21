@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class TransferDetail extends Model
 {
     protected $fillable = [
-        'transfer_id', 'product_id', 'product_name', 'quantity'
+        'transfer_id', 'quantity'
     ];
 
     protected $casts = [
         'into_store' => 'array', // Will convarted to (Array)
-        'into_shelve' => 'array', // Will convarted to (Array)
+        'from_store' => 'array', // Will convarted to (Array)
     ];
 
 

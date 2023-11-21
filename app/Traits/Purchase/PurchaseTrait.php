@@ -36,6 +36,8 @@ trait PurchaseTrait
     {
 
 
+
+        
         $Details = new PurchaseDetail();
         $Details->purchase_id = $core->purchase_id;
         $Details->price = $core->data['price'][$core->value];

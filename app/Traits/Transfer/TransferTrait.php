@@ -23,7 +23,7 @@ trait TransferTrait
     {
   
         
-// dd($this->core->data);
+        // dd($this->core->data['fromstore']);
         $details = new TransferDetail();
         $details->transfer_id = $this->core->transfer_id;
         $details->from_store = $this->core->data['fromstore'];
@@ -31,8 +31,10 @@ trait TransferTrait
         $details->store_product_id = $this->core->id_store_product;
         $details->unit_id = $unit_id[0];
         $details->qty = $this->core->micro_unit_qty;
-
         $details->save();
+
+        // dd($details);
+    
 
 
     }

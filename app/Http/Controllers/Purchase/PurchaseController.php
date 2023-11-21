@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Purchase;
+
 use App\RepositoryInterface\InventuryStockRepositoryInterface;
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
@@ -29,7 +30,7 @@ class PurchaseController extends Controller
 
 
     public function __construct(
-    
+
         protected InventuryStockRepositoryInterface $stock,
         protected InventuryStoreRepositoryInterface $store,
         protected WarehouseRepositoryInterface $wahehouse,
@@ -44,9 +45,19 @@ class PurchaseController extends Controller
 
         $this->core->setData($request->all());
         $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
+    }
 
-        // Returns::store();
+    public function details(Request $request, $id)
+    {
 
+        $details = $this->get_details($request, $id);
+
+        $this->units($details);
+
+        return response()->json([
+            'details' => $details,
+
+        ]);
     }
     public function index()
     {
@@ -56,7 +67,7 @@ class PurchaseController extends Controller
             ->select('products.*',)
             ->get();
 
-        
+
 
 
         return response()->json([
@@ -67,34 +78,34 @@ class PurchaseController extends Controller
         ]);
     }
 
-  
 
-    public function suppliers(){
+
+    public function suppliers()
+    {
 
         $suppliers =  DB::table('suppliers')
-        ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
-        ->select(
-            'suppliers.*',
+            ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
+            ->select(
+                'suppliers.*',
 
-        )
-        ->get();
-       
+            )
+            ->get();
+
         return $suppliers;
-
     }
 
-    public function treasuries(){
-        
+    public function treasuries()
+    {
+
         $treasuries = DB::table('treasuries')
-        ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
-        ->select(
-            'treasuries.id',
-            'treasuries.name',
-        )
-        ->get();
+            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
+            ->select(
+                'treasuries.id',
+                'treasuries.name',
+            )
+            ->get();
 
         return $treasuries;
-
     }
 
     public function payment(Request $request)
@@ -114,7 +125,7 @@ class PurchaseController extends Controller
 
 
 
- 
+
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -122,7 +133,7 @@ class PurchaseController extends Controller
 
             foreach ($request->post('count') as $value) {
 
-                $this->core->setValue($value+1);
+                $this->core->setValue($value + 1);
 
                 $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
 
@@ -136,7 +147,7 @@ class PurchaseController extends Controller
             $this->purchase->pay();
             // $this->daily->daily();
 
-        
+
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
 
@@ -159,9 +170,9 @@ class PurchaseController extends Controller
 
 
 
-   
 
-    
+
+
 
     public function payment_bond(Request $request)
     {
