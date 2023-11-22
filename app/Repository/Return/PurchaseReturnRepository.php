@@ -1,21 +1,18 @@
 <?php
 
 namespace App\Repository\Return;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\RepositoryInterface\DailyRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\RepositoryInterface\ReturnRepositoryInterface;
-use App\Models\PurchaseReturn;
 use App\Services\CoreService;
 use App\RepositoryInterface\Daily;
-use App\Models\PurchaseReturnDetail;
+
 
 use App\Traits\DailyTrait;
 
 use DB;
 
-class PurchaseReturnRepository extends Daily implements DailyRepositoryInterface,  WarehouseRepositoryInterface, DetailRepositoryInterface, ReturnRepositoryInterface, DetailRefreshRepositoryInterface
+class PurchaseReturnRepository extends Daily implements DailyRepositoryInterface,ReturnRepositoryInterface
+
 {
 
     use DailyTrait;
@@ -81,42 +78,7 @@ class PurchaseReturnRepository extends Daily implements DailyRepositoryInterface
       
     }
 
-    function add()
-    {
-        $return = new PurchaseReturn();
-        $return->purchase_id = $this->core->data['purchase_id'];
-        $return->date  = $this->core->data['date'];
-        // $return->quantity = $request->post('total');
-        // $return->note  = $request['note'];
-        $return->save();
-        $this->core->return_id = $return->id;
-    }
 
-
-    public function init_details(...$list_data)
-    {
-
-
-        $Details = new PurchaseReturnDetail();
-        $Details->purchase_return_id = $this->core->return_id;
-        $Details->store_product_id = $this->core->id_store_product;
-        $Details->unit_id = $this->core->unit_value;
-        $Details->qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
-        $Details->save();
-    }
-
-    function refresh_details()
-    {
-
-
-        DB::table('purchase_details')
-            ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
-            ->increment('qty_return', $this->core->data['old'][$this->core->value]['qty_return_now']);
-        // dd($result);
-
-
-
-    }
 
 
 
@@ -164,43 +126,7 @@ class PurchaseReturnRepository extends Daily implements DailyRepositoryInterface
     }
 
     
-    // public function refresh_store_product(...$list_data)
-    // {
-
-
-    //     $this->core->store_product_f =  DB::table('store_products')
-    //         ->where(['id' => $this->core->id_store_product])
-    //         ->decrement('quantity', $this->core->micro_unit_qty);
-    // }
    
-
-   
-
-    // public function decode_unit()
-    // {
-
-    //     $this->core->unit_array = $this->core->data['unit'][$this->core->value];
-    //     $this->core->unit_value = $this->core->unit_array[0];
-    //     // dd($this->core->unit_value);
-
-    //     return $this;
-    //     // return $unit[0];
-
-    // }
-
-    // function convert_qty()
-    // {
-
-    //     // dd($this->core->data['old'][$this->core->value]['qty_return_now']);
-
-    //     if ($this->core->unit_array[2] == 1) {  //this means unit_type
-
-    //         $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'] * $this->core->unit_array[1];
-    //     } else {
-    //         $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
-    //     }
-    //     return $this;
-    // }
 
 
 }

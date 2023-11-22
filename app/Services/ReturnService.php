@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Services;
-
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
-use App\Traits\DailyTrait;
+use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Services\InventureService;
 use App\Services\CoreService;
+use App\Traits\DailyTrait;
+
 class ReturnService
 {
 

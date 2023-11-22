@@ -66,6 +66,19 @@
                 <br>
                 <hr>
                 <div class="row">
+                  <div class="col-md-2">
+
+
+                    <label for="cliente"> المورد</label>
+
+                    <select class="form-control" style="background-color: beige;" v-model="supplier" id="supplier">
+                      <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name, sup.account_id]">
+                        {{ sup.name }}
+                      </option>
+                    </select>
+
+
+                  </div>
 
                   <div class="col-md-2">
 

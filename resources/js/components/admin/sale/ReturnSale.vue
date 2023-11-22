@@ -65,6 +65,20 @@
 
                   <div class="col-md-2">
 
+
+                    <label for="cliente"> العميل</label>
+
+                    <select class="form-control" style="background-color: beige;" v-model="customer" id="supplier">
+                      <option v-for="cus in customers" v-bind:value="[cus.id, cus.name, cus.account_id]">
+                        {{ cus.name }}
+                      </option>
+                    </select>
+
+
+                  </div>
+
+                  <div class="col-md-2">
+
                     <label for="pagoPrevio">الصندوق</label>
                     <select style="background-color: beige;" v-model="treasury" id="supplier" class="form-control">
                       <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
@@ -337,7 +351,7 @@ export default {
 
       customer: [],
       treasury: [],
-
+      customers:'',
 
       not_qty: true,
       message_check: false,
@@ -350,7 +364,7 @@ export default {
     this.type_refresh = 'increment';
 
 
-    
+
     // let uri = `/sale_details/${this.$route.params.id}`;
     let uri = `/sale_details_in_return/${this.$route.params.id}`;
 

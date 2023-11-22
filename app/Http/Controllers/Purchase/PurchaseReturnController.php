@@ -52,7 +52,7 @@ class PurchaseReturnController extends Controller
 
         return response()->json([
             'details' => $details,
-            // 'suppliers' => $this->suppliers(),
+            'suppliers' => $this->suppliers(),
             'treasuries' => $this->treasuries()
         ]);
     }
@@ -184,18 +184,20 @@ class PurchaseReturnController extends Controller
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
 
+      
             $this->warehouse->add();
-
+     
             foreach ($request->post('count') as $value) {
 
                 $this->core->setValue($value);
                 $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
                 $this->store->store();
+       
                 $this->returnservice->details();
                 $this->stock->stock();
             }
 
-            dd('sdsd');
+      dd('dddddsss');
             $this->daily->daily();
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB

@@ -52,7 +52,7 @@ class SaleReturnController extends Controller
         
         return response()->json([
             'details' => $details,
-            // 'customers' => $this->customers(),
+            'customers' => $this->customers(),
             'treasuries' => $this->treasuries()
         ]);
     }
