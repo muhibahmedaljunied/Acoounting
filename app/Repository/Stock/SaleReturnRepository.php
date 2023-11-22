@@ -4,7 +4,7 @@ namespace App\Repository\Stock;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Traits\Purchase\PurchaseTrait;
+use App\Traits\Sale\SaleReturnTrait;
 use App\Services\CoreService;
 use DB;
 
@@ -13,7 +13,7 @@ DetailRepositoryInterface,
 DetailRefreshRepositoryInterface
 {
 
-use PurchaseTrait;
+use SaleReturnTrait;
 
     public $core;
     public function __construct()
@@ -42,13 +42,7 @@ use PurchaseTrait;
         function refresh_details()
     {
 
-
-
-        DB::table('sale_details')
-            ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
-            ->increment('qty_return', $this->core->data['old'][$this->core->value]['qty_return_now']);
-        // dd($result);
-
+        $this->refresh_sale_return_details_table();
 
 
     }

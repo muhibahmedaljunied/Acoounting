@@ -37,7 +37,7 @@ class ReturnService
         $this->details->init_details(); // this make initial for details tables
       
 
-        $this->refresh->refresh_details();
+        $this->refresh->refresh_details();  //this hadle data in details table
    
         return $this;
     }

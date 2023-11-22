@@ -1,25 +1,20 @@
 <?php
 
-namespace App\Traits\Purchase;
-use App\Models\SaleDetail;
+namespace App\Traits\Sale;
+use App\Models\SaleReturn;
 use App\Models\SaleReturnDetail;
 trait SaleReturnTrait
 {
 
-    public function add_into_sale_return_table()
+     function add_into_sale_return_table()
     {
 
 
 
         $table_one = SaleReturn::create(
             [
-                'customer_id' => $this->core->data['customer_id'],
-                'customer_name' => $this->core->data['customer_name'],
-                'grand_total' => $this->core->data['grand_total'],
-                'sub_total' => $this->core->data['sub_total'],
-                'discount' => $this->core->discount,
-                'tax_amount' => $this->core->data['total_tax'],
-                'status' => 'pendding',
+                'sale_id' => $this->core->data['customer_id'],
+                'quatity' => $this->core->data['customer_name'],
                 'date' => $this->core->data['date'],
 
             ]
@@ -29,18 +24,29 @@ trait SaleReturnTrait
  
     }
 
-    public function add_into_sale_return_details_table()
+     function add_into_sale_return_details_table()
     {
 
 
-        $Details = new SaleReturDetail();
-        $Details->sale_id = $this->core->sale_id;
-        $Details->price = $this->core->data['old'][$this->core->value]['cost'];
-        $Details->qty = $this->core->data['qty'][$this->core->value];
-        $Details->total = $this->core->data['sub_total'];
-        $Details->store_product_id = $this->core->id_store_product;
-        $Details->unit_id = $this->core->unit_value;
-        $Details->qty = $this->core->data['qty'][$this->core->value];
-        $Details->save();
-    }}
+        $details = new SaleReturnDetail();
+        $details->sale_return_id = $this->core->sale_id;
+        $details->store_product_id = $this->core->id_store_product;
+        $details->unit_id = $this->core->unit_value;
+        $details->qty = $this->core->data['qty'][$this->core->value];
+        $details->save();
+    }
+
+     function refresh_sale_return_details_table()
+    {
+
+        DB::table('sale_details')
+                    ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
+                    ->increment('qty_return', $this->core->data['old'][$this->core->value]['qty_return_now']);
+            
+
+
+
+    }
+    
 }
+
