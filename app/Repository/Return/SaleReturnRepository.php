@@ -1,18 +1,20 @@
 <?php
 
 namespace App\Repository\Return;
-use App\RepositoryInterface\ReturnRepositoryInterface;
 use App\RepositoryInterface\DailyRepositoryInterface;
 use App\Services\CoreService;
-use App\Models\Daily;
 use App\Traits\DailyTrait;
 use DB;
 
-class SaleReturnRepository extends Daily implements DailyRepositoryInterface, ReturnRepositoryInterface
+class SaleReturnRepository  implements DailyRepositoryInterface
 
 {
 
     use DailyTrait;
+    public $qty_return_now = 0;
+    public $qty_remain = 0;
+    public $error;
+    public $qty = 0;
     public $core;
     public function __construct()
     {
@@ -20,7 +22,7 @@ class SaleReturnRepository extends Daily implements DailyRepositoryInterface, Re
     }
 
 
- 
+
     function handle()
     {
         for ($i = 0; $i < 4; $i++) {
@@ -72,7 +74,7 @@ class SaleReturnRepository extends Daily implements DailyRepositoryInterface, Re
         // if ($this->core->data['type_payment'] == 2) {
         //     $this->data_store['account_id'][$i] = $this->core->data['supplier_account'];
         // }
-      
+
     }
 
 
@@ -86,47 +88,6 @@ class SaleReturnRepository extends Daily implements DailyRepositoryInterface, Re
         return $detail;
     }
 
-    public function check_return($value)
-    {
-
-        $qty_return_now = $value['qty_return_now'];
-        $qty_remain = $value['qty_remain'];
-        $qty = $value['qty'];
 
 
-        foreach ($value['units'] as $key => $values) {   //this for converts qty_return into micro unit
-
-            //[0] =id,[1] = rate,[2] = unit_type
-            if ($value['unit_selected'][2] == 1) {
-
-
-                $qty_return_now = $value['qty_return_now'] * $value['rate'];
-                $qty_remain = $value['qty_remain'] * $value['rate'];
-                $qty = $value['qty'] * $value['rate'];
-            }
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------
-        // if ($qty_return_now > $value['avilable_qty']) {
-        //     return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المتوفره"];
-        // }
-
-        if ($qty_return_now > $qty_remain) {
-            return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المسموح بها"];
-        }
-
-        if ($qty_return_now > $qty) {
-            return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المباعه"];
-        }
-
-        if ($qty_remain == 0) {
-            return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه 0"];
-        }
-        $this->core->micro_unit_qty = $qty_return_now;
-        return ['message' => 1, 'qty' => $qty_return_now];
-    }
-
-    
-
- 
 }

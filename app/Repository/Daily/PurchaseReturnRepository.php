@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Stock;
+namespace App\Repository\Daily;
 use App\RepositoryInterface\DailyRepositoryInterface;
 use App\Services\CoreService;
 use App\RepositoryInterface\Daily;

@@ -33,10 +33,10 @@
                 <tbody v-if="sales && sales.data.length > 0">
                   <tr v-for="(sale, index) in sales.data" :key="index">
                     <td>{{ sale.sale_id }}</td>
-                    <td>{{ sale.customer_name }}</td>
+                    <td>{{ sale.name }}</td>
                     <!-- <td>{{ sale.quantity }}</td>
                   <td>{{ sale.qty_return }}</td> -->
-                    <td>{{ sale.sale_date }}</td>
+                    <td>{{ sale.created_at }}</td>
                     <td>{{ sale.paid }}</td>
                     <td>{{ sale.remaining }}</td>
                     <td>{{ sale.grand_total }}</td>
@@ -69,7 +69,7 @@
                             عرض الفاتوره
                           </option>
                           <option class="btn btn-success" v-bind:value="['/ReceivableBond/', sale.sale_id, 4]">
-                            دفع
+                          قبض
                           </option>
                           <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.sale_id, 5]">
                             تعديل الفاتوره
@@ -149,7 +149,30 @@
                     <td>{{ sale_details.store }}</td>
 
                     <!-- <td>{{ sale_details.qty }}</td>  -->
-                    <td>{{ sale_details.qty }} {{ sale_details.unit }}</td>
+                    <td>
+
+                         <div v-for="temx in sale_details.units">
+
+
+
+                        <span v-if="temx.unit_type == 0">
+
+                          <span v-if="sale_details.qty / sale_details.rate >= 1">
+                            {{ Math.floor((sale_details.qty / sale_details.rate)) }}{{
+                              sale_details.units[0].name
+                            }}
+                          </span>
+
+                          <span v-if="sale_details.qty % sale_details.rate >= 1">
+                            {{ Math.floor((sale_details.qty % sale_details.rate)) }}{{
+                              sale_details.units[1].name
+                            }}
+                          </span>
+                        </span>
+
+                        </div>
+                      <!-- {{ sale_details.qty }} {{ sale_details.unit }} -->
+                    </td>
                     <td>{{ sale_details.price }}</td>
                     <td>{{ sale_details.total }}</td>
                     <!-- <td>{{ sale_details.qty_return }}</td> -->

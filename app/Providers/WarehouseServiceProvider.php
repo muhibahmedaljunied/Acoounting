@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
+use App\Repository\Stock\PurchaseReturnRepository;
+use App\Repository\Stock\SaleReturnRepository;
 use App\Repository\Stock\PurchaseRepository;
 use App\Repository\Stock\SaleRepository;
 use App\Repository\Stock\TransferRepository;
@@ -29,13 +31,25 @@ class WarehouseServiceProvider extends ServiceProvider
                 return new SaleRepository();
             }
 
+            if ($request->type == 'PurchaseReturn') {
+
+                return new PurchaseReturnRepository();
+            }
+
+            if ($request->type == 'SaleReturn') {
+
+                return new SaleReturnRepository();
+            }
+
+
+
             if ($request->type == 'Transfer') {
 
                 return new TransferRepository();
             }
 
 
-            return new PurchaseRepository();
+            // return new PurchaseRepository();
         });
 
     }

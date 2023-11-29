@@ -6,7 +6,7 @@ use App\Services\CoreService;
 
 use DB;
 
-class PurchaseReturnRepository 
+class PurchaseReturnRepository
 {
 
     use PurchaseReturnTrait;
@@ -19,10 +19,12 @@ class PurchaseReturnRepository
         $this->core = app(CoreService::class);
     }
 
+
+
     public function add()
     {
 
-
+      
         $this->add_into_purchase_return_table($this->core);
     }
 

@@ -9,7 +9,7 @@
           <form method="post">
             <div class="card-header pb-0">
               <div class="d-flex justify-content-between">
-                <span class="h2">  تحويل مخزني</span>
+                <span class="h3">  تحويل مخزني</span>
               </div>
             </div>
             <div class="card-body" id="printme">
@@ -411,12 +411,20 @@ export default {
         producter_qty = qty;
       }
 
-      if (producter_qty > availabe_qty || qty == 0) {
+      if (producter_qty > availabe_qty) {
+
+        toastMessage('فشل', "الكميه المحوله اكبر من المتوفره", 'error');
+        return 0;
+
+      }
+
+       if ( qty <= 0) {
 
         toastMessage('فشل', "تأكد من الكميه المحوله", 'error');
         return 0;
 
       }
+
 
       return 1;
     },

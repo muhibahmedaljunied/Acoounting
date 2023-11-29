@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\RepositoryInterface\InventuryStoreRepositoryInterface;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
+
+use App\Repository\StoreInventury\StoreTransferRepository;
+use App\Repository\StockInventury\StockTransferRepository;
+use App\Repository\CheckData\CheckTransferRepository;
 use App\Traits\Transfer\StoreProductTrait;
+use App\Repository\Stock\TransferRepository;
 use App\Services\UnitService;
 use App\Traits\Details\DetailsTrait;
 use App\Services\InventureService;
@@ -29,13 +30,8 @@ class TransferController extends Controller
 
     public function __construct(
         Request $request,
-        protected InventuryStoreRepositoryInterface $store,
-        protected InventuryStockRepositoryInterface $stock,
-        protected WarehouseRepositoryInterface $warehouse,
-        protected DetailRepositoryInterface $details,
-        protected InventureService $inventure,
         protected CoreService $core,
-        protected UnitService $unit,
+
 
 
     ) {
@@ -66,9 +62,9 @@ class TransferController extends Controller
 
 
 
-        $products = ($request->post('type') == 'store') ? 
-        $this->get_store_product_with_store($request) : 
-        $this->get_store_product_with_product($request);
+        $products = ($request->post('type') == 'store') ?
+            $this->get_store_product_with_store($request) :
+            $this->get_store_product_with_product($request);
 
         $this->units($products);
         return response()->json(['products' => $products]);
@@ -99,7 +95,6 @@ class TransferController extends Controller
                 'stores.text as store'
             )
             ->get();
-
     }
 
     public function get_store_product_with_product($request)
@@ -125,8 +120,6 @@ class TransferController extends Controller
                 'stores.text as store'
             )
             ->get();
-
-     
     }
 
 
@@ -143,8 +136,14 @@ class TransferController extends Controller
 
 
 
-    public function store(Request $request)
-    {
+    public function store(
+
+        StoreTransferRepository $store,
+        StockTransferRepository $stock,
+        TransferRepository $warehouse,
+        CheckTransferRepository $check,
+        UnitService $unit,
+    ) {
 
 
 
@@ -152,25 +151,34 @@ class TransferController extends Controller
 
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $this->warehouse->add(); // this handle data in transfer table
+            $warehouse->add(); // this handle data in transfer table
 
-            foreach ($request->post('count') as $value) {
-                
+            foreach ($this->core->data['count'] as $value) {
+
+                // -------------------------------------------------------------------------------------
+
+                // $result = $check->check_return($this->core->data['old'][$value]);
+
+                // if ($result['status'] == 0) {
+
+                //     return response(['message' => $result['text'], 'status' => $result['status']]);
+                // }
+                // -------------------------------------------------------------------------------------
                 $this->core->setValue($value);  //this set index of data
 
-                $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-            
-                $this->store->store(); // this handle data in store table
-       
-                $this->details->init_details(); // this make initial for details table
+                $unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
 
-                $this->stock->stock();// this handle data in stock table
+                $store->store(); // this handle data in store table
+
+                $warehouse->init_details(); // this make initial for details table
+
+                $stock->stock(); // this handle data in stock table
             }
 
-         
+
 
             // dd('sdsdsd');
-    
+
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([
                 'message' => "transfer created successfully",

@@ -1,15 +1,12 @@
 <?php
 
 namespace App\Repository\Stock;
-
-use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Traits\Purchase\PurchaseTrait;
 use App\Services\CoreService;
 use App\RepositoryInterface\Daily;
 use DB;
 
-class PurchaseRepository extends Daily implements WarehouseRepositoryInterface, DetailRepositoryInterface
+class PurchaseRepository
 {
 
 use PurchaseTrait;

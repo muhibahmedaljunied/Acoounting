@@ -26,6 +26,12 @@ Route::post('/listpurchasesearch', 'Purchase\PurchaseController@search');
 Route::post('/add_Purchase', 'Purchase\PurchaseController@store');
 Route::post('/payPurchase', 'Purchase\purchaseController@payment');
 Route::post('/purchase_details/{id}', 'Purchase\PurchaseController@details');
+
+Route::post('/data_for_payment_bond/{id}', 'Purchase\PurchaseController@payment_bond');
+Route::post('/store_PaymentBond', 'Purchase\PurchaseController@store_PaymentBond');
+
+
+
 // ------------------------------------------------------------------------------------------
 Route::post('/purchase_details_in_return/{id}', 'Purchase\PurchaseReturnController@details');
 Route::post('/purchase_return_details/{id}', 'Purchase\PurchaseReturnController@index');

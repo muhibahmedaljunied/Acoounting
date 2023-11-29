@@ -1,12 +1,10 @@
 <?php
 
 namespace App\Repository\Stock;
-use App\RepositoryInterface\StockRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Models\Cash;
 use App\Models\CashDetail;
 use DB;
-class CashRepository implements StockRepositoryInterface,DetailRepositoryInterface
+class CashRepository 
 {
 
    

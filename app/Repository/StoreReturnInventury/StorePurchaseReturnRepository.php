@@ -1,15 +1,17 @@
 <?php
 
 
-namespace App\Repository\Inventury\StoreInventury;
+namespace App\Repository\StoreReturnInventury;
 
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
+use App\Traits\Purchase\StoreProductTrait;
 use App\Models\StoreProduct;
 use App\Services\CoreService;
-
+use Illuminate\Support\Facades\DB;
 class StorePurchaseReturnRepository implements InventuryStoreRepositoryInterface
 {
 
+    use StoreProductTrait;
 
     public function __construct(protected CoreService $core)
     {
@@ -19,7 +21,7 @@ class StorePurchaseReturnRepository implements InventuryStoreRepositoryInterface
     public function store()
     {
         $this->get_store_product();
-        $this->refresh_store_product_table();
+        $this->refresh_store_product();
     }
 
 
@@ -35,13 +37,13 @@ class StorePurchaseReturnRepository implements InventuryStoreRepositoryInterface
         return $this;
     }
 
-    public function refresh_store_product_table(...$list_data)
+    public function refresh_store_product()
     {
-
 
         $this->core->store_product_f =  DB::table('store_products')
             ->where(['id' => $this->core->id_store_product])
-            ->increment('quantity', $this->core->micro_unit_qty);
+            ->decrement('quantity', $this->core->micro_unit_qty);
+
     }
 
 

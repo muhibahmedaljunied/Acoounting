@@ -13,4 +13,10 @@ class PurchaseReturn extends Model
         return $this->belongsTo(Purchase::class);
     }
 
+    public function stock()
+    {
+        return $this->morphMany(Stock::class, 'stockable');
+    }
+
+
 }

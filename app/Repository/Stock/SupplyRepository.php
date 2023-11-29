@@ -3,9 +3,7 @@
 namespace App\Repository\Stock;
 use App\Models\Supply;
 use App\Models\SupplyDetail;
-use App\RepositoryInterface\StockRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
-class SupplyRepository implements StockRepositoryInterface,DetailRepositoryInterface
+class SupplyRepository
 {
 
     public function add()

@@ -1,10 +1,6 @@
 <?php
 
 namespace App\Services;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Services\InventureService;
-use App\Repository\Stock\SaleRepository;
-use App\Services\CoreService;
 use App\Traits\DailyTrait;
 use App\Models\PaymentSale;
 class SaleService 
@@ -17,10 +13,8 @@ class SaleService
     use DailyTrait;
     public function __construct(
     
-        protected InventureService $inventury,
-        protected SaleRepository $daily,
+       
         protected CoreService $core,
-        protected DetailRepositoryInterface $details,
 
 
     ) {

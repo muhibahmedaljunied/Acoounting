@@ -28,7 +28,7 @@ class StockTransferRepository implements InventuryStockRepositoryInterface
 
  
         $stocks = new Stock();
-        $stocks->store_product_id = $this->core->id_store_product;
+        $stocks->store_product_id = $this->core->data_store_product['store_product_id'];
         $stocks->unit_id = $this->core->unit_value;
         $stocks->quantity = $this->core->micro_unit_qty;
         $stocks->date = $this->core->data['date'];

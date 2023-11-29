@@ -5,7 +5,7 @@ use App\RepositoryInterface\UnitRepositoryInterface;
 use App\Repository\Unit\UnitTransferRepository;
 use App\Repository\Unit\UnitReturnRepository;
 use App\Repository\Unit\UnitSaleRepository;
-use App\Repository\Unit\UnitRepository;
+use App\Repository\Unit\UnitPurchaseRepository;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -26,7 +26,7 @@ class UnitServiceProvider extends ServiceProvider
 
             if ($request->type == 'Purchase') {
 
-                return new UnitRepository();
+                return new UnitPurchaseRepository();
             }
 
             if ($request->type == 'Sale') {

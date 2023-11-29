@@ -7,7 +7,7 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <span class="h2">اضافه مرتجع بيع</span>
+                <span class="h3"> مرتجع بيع</span>
               </div>
               <!-- <div class="text-center">
                 <span v-if="message_check" class="alert alert-warning" role="alert">
@@ -138,7 +138,7 @@
                             <th>اضافه</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="detail && detail.length > 0">
                           <tr v-for="(sale_details, index) in detail" :key="index">
                             <input v-model="id = sale_details.sale_id" type="hidden" name="name" id="name"
                               class="form-control" />
@@ -243,7 +243,26 @@
                               <div v-for="temx in sale_details.units">
 
 
-                                <span v-if="sale_details.unit_id == temx.id">
+                                <span v-if="temx.unit_type == 0">
+
+                                  <span v-if="sale_details.qty_remain / sale_details.rate >= 1">
+                                    {{ Math.floor((sale_details.qty_remain / sale_details.rate)) }}{{
+                                      sale_details.units[0].name
+                                    }}
+                                  </span>
+
+                                  <span v-if="sale_details.qty_remain % sale_details.rate >= 1">
+                                    {{ Math.floor((sale_details.qty_remain % sale_details.rate)) }}{{
+                                      sale_details.units[1].name
+                                    }}
+                                  </span>
+
+                                  <span v-if="sale_details.qty_remain == 0">
+                                      0
+                                    </span>
+                                </span>
+
+                                <!-- <span v-if="sale_details.unit_id == temx.id">
                                   <span v-if="temx.unit_type == 0">
 
                                     <span v-if="sale_details.qty_remain / sale_details.rate >= 1">
@@ -267,7 +286,7 @@
                                     {{ sale_details.qty_remain }} {{ temx.name }}
                                   </span>
 
-                                </span>
+                                </span> -->
                               </div>
 
                             </td>
@@ -280,12 +299,12 @@
                               </div>
                             </td>
 
-                            <td>
+                            <td v-if="sale_details.qty_remain != 0">
 
                               <input v-model="check_state[index]" @change="
                                 add_one_return_sale(
 
-                                  // purchase_details.qty_remain,
+                                  sale_details.qty_remain,
                                   index,
                                   sale_details.qty_return_now,
                                   sale_details.unit_selected
@@ -293,18 +312,48 @@
 
                                 )
                                 " type="checkbox" class="btn btn-info waves-effect">
+
                             </td>
+
+
+                            <td v-else>
+
+                              <input v-model="check_state[index]" @change="
+                                add_one_return_sale(
+
+                                  sale_details.qty_remain,
+                                  index,
+                                  sale_details.qty_return_now,
+                                  sale_details.unit_selected
+
+
+                                )
+                                " type="checkbox" disabled class="btn btn-info waves-effect">
+
+                            </td>
+
                           </tr>
 
                           <tr>
-                            <td colspan="10">
-                              <div class="m-t-30 col-md-12">
+                            <td colspan="9">
+                              <div class="col-md-8">
                                 <label for="date">الاجمالي</label><br />
                                 <input readonly name="number" type="number" class="form-control" />
 
 
                               </div>
                             </td>
+
+                            <td>
+
+                              <div class="col-md-4">
+
+                                <button type="button" v-if="not_qty" @click="Add_return()"
+                                  class="btn btn-info"><span>تاكيد العمليه</span></button>
+
+                              </div>
+
+                            </td>
                           </tr>
 
 
@@ -312,10 +361,16 @@
 
 
 
-                          <a v-if="not_qty" @click="Add_return()" class="btn btn-success"><span>تاكيد العمليه</span></a>
-                          <!-- <div v-if="seen" class="alert alert-warning" role="alert">
-                        قم باضافه الكميه المرتجعه
-                      </div> -->
+
+                        </tbody>
+                        <tbody v-else>
+                          <tr>
+                            <td align="center" colspan="3">
+                              <h3>
+                                لايوجد كمبه متوفره في المخزن
+                              </h3>
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -351,7 +406,7 @@ export default {
 
       customer: [],
       treasury: [],
-      customers:'',
+      customers: '',
 
       not_qty: true,
       message_check: false,
@@ -378,17 +433,38 @@ export default {
     });
   },
   methods: {
-    check_qty(sale_id = 0, qty_return, quantity) {
-      if (qty_return > quantity || qty_return == 0) {
-        this.text_message = quantity;
-        this.message_check = true;
+    check_qty(qty_remain, qty, unit) {
+
+      var producter_qty = 0;
+
+      if (unit[2] == 1) {
+
+        producter_qty = qty * unit[1];
       } else {
-        this.message_check = false;
+
+        producter_qty = qty;
+      }
+
+      if (producter_qty > qty_remain) {
+
+        toastMessage('فشل', "الكميه المدخله اكبر من المسموحه", 'error');
+        return 0;
+
       }
 
 
+
+      if (producter_qty <= 0) {
+
+        toastMessage('فشل', "تأكد من الكميه المدخله", 'error');
+        return 0;
+
+      }
+
+
+      return 1;
     },
-    add_one_return_sale(index, qty, unit) {
+    add_one_return_sale(qty_remain, index, qty, unit) {
 
 
 
@@ -396,10 +472,8 @@ export default {
 
       if (this.check_state[index] == true) {
 
+        if (this.check_qty(qty_remain, qty, unit) == 0) { return 0; }
 
-        // result = this.check_qty(qty, unit, availabe_qty);
-
-        // if (result == 0) { return 0; }
 
         this.counts[index] = index;
         this.qty[index] = qty;
@@ -451,9 +525,7 @@ export default {
         .then((response) => {
           console.log(response);
 
-          if (response.data.message != 0) {
-
-            // console.log(response)
+          if (response.data.status != 0) {
 
             this.seen = false;
             toastMessage("تم الارجاع بنجاح");
@@ -461,7 +533,7 @@ export default {
 
           } else {
 
-            toastMessage("فشل", response.data.text);
+            toastMessage("فشل", response.data.message);
 
 
 

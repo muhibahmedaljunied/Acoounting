@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Purchase;
 
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\RepositoryInterface\InventuryStoreRepositoryInterface;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
+use App\Repository\StoreInventury\StorePurchaseRepository;
+use App\Repository\StockInventury\StockPurchaseRepository;
+use App\Repository\Stock\PurchaseRepository;
 use App\Services\UnitService;
 use App\Models\PaymentPurchase;
 use App\Models\StoreProduct;
@@ -13,6 +12,8 @@ use App\Services\PurchaseService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Daily;
+use App\Models\DailyDetail;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ use App\Models\Temporale;
 use App\Models\Purchase;
 use App\Services\CoreService;
 use App\Services\DailyService;
+use App\Models\PayableNote;
 
 
 class PurchaseController extends Controller
@@ -31,13 +33,8 @@ class PurchaseController extends Controller
 
     public function __construct(
 
-        protected InventuryStockRepositoryInterface $stock,
-        protected InventuryStoreRepositoryInterface $store,
-        protected WarehouseRepositoryInterface $wahehouse,
-        protected DetailRepositoryInterface $details,
-        protected PurchaseService $purchase,
-        protected DailyService $daily,
         protected CoreService $core,
+        protected PurchaseService $purchase,
         protected UnitService $unit,
         Request $request,
 
@@ -108,8 +105,11 @@ class PurchaseController extends Controller
         return $treasuries;
     }
 
-    public function payment(Request $request)
-    {
+    public function payment(
+        StorePurchaseRepository $store,
+        StockPurchaseRepository $stock,
+        PurchaseRepository $warehouse,
+    ) {
 
 
 
@@ -129,22 +129,24 @@ class PurchaseController extends Controller
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $this->wahehouse->add(); // this insert data into purchase table
+            $warehouse->add(); // this insert data into purchase table
 
-            foreach ($request->post('count') as $value) {
+            foreach ($this->core->data['count'] as $value) {
 
                 $this->core->setValue($value + 1);
 
                 $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
 
-                $this->store->store(); // this handle data in store_product table
+                $store->store(); // this handle data in store_product table
 
-                $this->details->init_details(); // this make initial for details table
+                $warehouse->init_details(); // this make initial for details table
 
-                $this->stock->stock(); // this handle data in stock table
+                $stock->stock(); // this handle data in stock table
             }
 
             $this->purchase->pay();
+
+            // dd('sdsdsd');
             // $this->daily->daily();
 
 
@@ -177,19 +179,90 @@ class PurchaseController extends Controller
     public function payment_bond(Request $request)
     {
 
-        $payable_note = DB::table('purchases')
+        $data = DB::table('purchases')
             ->where('purchases.id', $request->id)
-            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
             ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
+            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+            ->join('accounts', 'accounts.id', '=', 'suppliers.account_id')
+
             ->select(
                 'purchases.*',
-                'purchases.id as purchases_id',
-                'suppliers.*',
-                'payment_purchases.*'
+                'suppliers.id',
+                'suppliers.name',
+                'payment_purchases.*',
+                'accounts.id as account_id',
+                'accounts.text'
             )
             ->get();
-        return response()->json(['payable_note' => $payable_note]);
+        return response()->json(['list_data' => $data]);
     }
+
+    public function store_PaymentBond(
+        Request $request,
+        DailyService $daily,
+    )
+    {
+
+
+
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
+
+
+
+
+            $daily->daily('date','total')
+            ->depit('account_id'])
+            ->credit(['account_id', 'account_id', 'account_id'])
+            ->set();
+
+            // -------------------------------------------------------------
+
+            // $data = new Daily();
+            // $data->date = $request->post('date');
+            // $data->total = $request->post('paid');
+            // $data->save();
+
+            // -------------------------------------------------------------
+
+            // $data = new DailyDetail();
+            // $data->daily_id = $request->post('purchase_id');
+            // $data->account_id = $request->post('purchase_id');
+            // $data->description = $request->post('paid');
+            // $data->debit = $request->post('debit');
+            // $data->credit = $request->post('credit');
+            // $data->save();
+
+            // -------------------------------------------------------------
+
+            // $data = new PayableNote();
+            // $data->purchase_id = $request->post('purchase_id');
+            // $data->paid = $request->post('paid');
+            // $data->date = $request->post('date');
+            // $data->save();
+
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
+            return response([
+                'message' => "daily created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+
+
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
+
+
+        return response()->json(['list_data' => $data]);
+    }
+
     public function payment_bond_store(Request $request)
     {
 

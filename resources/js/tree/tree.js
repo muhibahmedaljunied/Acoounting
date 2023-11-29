@@ -10,6 +10,12 @@ export default {
 
                 uri = `/tree_store`;
             }
+
+            if(table == 'expence' || table == 'payment'){
+
+                uri = `/tree_account`;
+            }
+
             let gf = this;
 
 
@@ -23,6 +29,7 @@ export default {
 
                 }
 
+                console.log(this.jsonTreeData);
                 if (this.type_of_tree == 0 && table == 'account' && gf.type == 'Store') {
 
                     this.jsonTreeData = response.data.trees;
@@ -36,7 +43,6 @@ export default {
                     this.last_nodes = response.data.last_nodes;
                     $(`#${table}_number`).val(response.data.last_nodes + 1);
                 } 
-
 
 
 
@@ -123,7 +129,6 @@ export default {
                         $(`#${gf.type}_${table}_tree${gf.indexselected}`).val(data.node.id+' '+data.node.text);
                         $(`#${gf.type}_${table}_tree_id${gf.indexselected}`).val(data.node.id);
 
-                 
                         if (table == 'account') {
 
                             gf.account[gf.indexselected] = data.node.id;
@@ -305,29 +310,9 @@ export default {
 
         detect_index(index) {
 
-            // alert(index);
             this.indexselected = index;
         },
-        // detect_index_product(index) {
-
-        //     // alert(index);
-        //     this.indexselected = index;
-        // },
-        // detect_index_bank(index) {
-
-        //     // alert(index);
-        //     this.indexselectedbank = index;
-        // },
-        // detect_index_treasury(index) {
-
-        //     // alert(index);
-        //     this.indexselectedtreasury = index;
-        // },
-
-        // detect_index_store(index) {
-
-        //     this.indexselected = index;
-        // },
+     
     
 
         get_account_for_store(gf) {

@@ -41,11 +41,11 @@ trait PurchaseTrait
         $Details = new PurchaseDetail();
         $Details->purchase_id = $core->purchase_id;
         $Details->price = $core->data['price'][$core->value];
-        $Details->qty = $core->data['qty'][$core->value];
         $Details->total = $core->data['sub_total'];
         $Details->store_product_id = $core->id_store_product;
         $Details->unit_id = $core->unit_value;
-        $Details->qty = $core->data['qty'][$core->value];
+        // $Details->qty = $core->data['qty'][$core->value];
+        $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
     }
 }

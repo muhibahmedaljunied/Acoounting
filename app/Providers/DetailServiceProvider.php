@@ -28,6 +28,7 @@ class DetailServiceProvider extends ServiceProvider
     public function register()
     {
 
+        
         $request = app(\Illuminate\Http\Request::class);
 
         $this->app->bind(DetailRepositoryInterface::class, function ( ) use($request)  {
@@ -40,7 +41,7 @@ class DetailServiceProvider extends ServiceProvider
 
             if ($request->type == 'SaleReturn' || $request->type == 'Sale' ) {
            
-                return $this->details_sale($request);;
+                return $this->details_sale($request);
             } 
 
             if ($request->type == 'Transfer') {

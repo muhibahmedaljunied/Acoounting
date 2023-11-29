@@ -10,7 +10,7 @@
                   <table style="width: 100%">
                     <thead>
 
-                <right-side :data_style='data_style'></right-side>
+              
 
                       <tr></tr>
 

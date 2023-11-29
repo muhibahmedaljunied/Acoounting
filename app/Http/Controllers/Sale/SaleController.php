@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Sale;
-
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\RepositoryInterface\InventuryStoreRepositoryInterface;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
+use App\Repository\CheckData\CheckSaleReturnRepository;
+use App\Repository\StoreInventury\StoreSaleRepository;
+use App\Repository\StockInventury\StockSaleRepository;
+use App\Repository\Stock\SaleRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Models\ReceivableNote;
+use App\Models\DailyDetail;
 use App\Services\UnitService;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
@@ -17,8 +19,9 @@ use App\Services\CoreService;
 use App\Services\DailyService;
 use App\Services\SaleService;
 use App\Traits\Unit\UnitsTrait;
+use App\Models\Daily;
+use App\Services\DailyService;
 use App\Models\Sale;
-use DB;
 
 class SaleController extends Controller
 {
@@ -29,14 +32,8 @@ class SaleController extends Controller
 
     public function __construct(
         Request $request,
-        protected WarehouseRepositoryInterface $warehouse,
-        protected InventuryStoreRepositoryInterface $store,
-        protected InventuryStockRepositoryInterface $stock,
-        protected DetailRepositoryInterface $details,
         protected CoreService $core,
-        protected DailyService $daily,
-        protected SaleService $sale,
-        protected UnitService $unit,
+
 
     ) {
         $this->core->setData($request->all());
@@ -51,13 +48,12 @@ class SaleController extends Controller
 
         $this->units($details);
 
-
         return response()->json([
             'details' => $details,
 
         ]);
     }
-    
+
     public function index(Request $request)
     {
 
@@ -79,8 +75,8 @@ class SaleController extends Controller
             ->join('accounts', 'customers.account_id', '=', 'accounts.id')
             ->select(
                 'customers.*',
-                // 'customers.name',
-                // 'customer_accounts.account_id'
+                'customers.name',
+                'customers.account_id'
             )
             ->get();
 
@@ -95,11 +91,9 @@ class SaleController extends Controller
             ->select(
                 'treasuries.id',
                 'treasuries.name',
-                // 'treasury_accounts.account_id'
+                'treasuries.account_id'
             )
             ->get();
-
-     
     }
     public function get_all()
     {
@@ -142,33 +136,54 @@ class SaleController extends Controller
     }
 
 
-    public function payment(Request $request)
-    {
+    public function payment(
+        StoreSaleRepository $store,
+        StockSaleRepository $stock,
+        SaleRepository $warehouse,
+        CheckSaleReturnRepository $check,
+        UnitService $unit,
+        SaleService $sale,
+        DailyService $daily,
+
+
+    ) {
 
 
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-       
-            $this->warehouse->add();
 
-            foreach ($request->post('count') as $value) {
+            $warehouse->add();
+
+            foreach ($this->core->data['count'] as $value) {
+
+                // -------------------------------------------------------------------------------------
+
+                // $result = $check->check_return($this->core->data['old'][$value]);
+
+                // if ($result['status'] == 0) {
+
+                //  return response(['message' => $result['text'] ,'status' => $result['status']]);
+
+                // }
+                // -------------------------------------------------------------------------------------
+
 
                 $this->core->setValue($value);
-     
-                $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
 
-                $this->store->store(); // this handle data in store_product table
-               
-                $this->details->init_details(); // this make initial for details table
-          
-                $this->stock->stock(); // this handle data in stock table
+                $unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
 
+                $store->store(); // this handle data in store_product table
+
+                $warehouse->init_details(); // this make initial for details table
+
+                $stock->stock(); // this handle data in stock table
             }
-            
-         
-            $this->sale->pay();
-            // $this->daily->daily();
+
+            $sale->pay();
+            // dd('sdsdsdsdsdsd');
+
+            // $daily->daily();
 
 
             // ------------------------------------------------------------------------------------------------------
@@ -190,17 +205,77 @@ class SaleController extends Controller
 
 
 
+    public function receivable_bond(Request $request)
+    {
 
 
-    public function show()
+
+
+        $data = DB::table('sales')
+            ->where('sales.id', $request->id)
+            ->join('payment_sales', 'payment_sales.sale_id', '=', 'sales.id')
+            ->join('customers', 'customers.id', '=', 'sales.customer_id')
+            ->join('accounts', 'accounts.id', '=', 'customers.account_id')
+            ->select(
+                'sales.id as sale_id',
+                'customers.id',
+                'customers.name',
+                'payment_sales.*',
+                'accounts.id as account_id',
+                'accounts.text'
+
+            )
+            ->get();
+
+        return response()->json(['list_data' => $data]);
+    }
+
+    public function store_ReceivableBond(Request $request,DailyService $daily)
+    {
+
+
+
+        // dd($request->all());
+
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
+
+       
+
+
+            $daily->daily('date','total')
+            ->depit(['account_id'])
+            ->credit(['account_id', 'account_id', 'account_id'])
+            ->set();
+          
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
+            return response([
+                'message' => "daily created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+
+
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
+    }
+
+    function show()
     {
         $sales = DB::table('sales')
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
             ->join('payment_sales', 'payment_sales.sale_id', '=', 'sales.id')
             ->select(
-                'sales.*',
+                // 'sales.*',
                 'sales.id as sale_id',
-                'customers.*',
+                'customers.name',
                 'payment_sales.*'
             )
             ->paginate(10);
@@ -208,10 +283,10 @@ class SaleController extends Controller
         return response()->json(['sales' => $sales]);
     }
 
- 
 
 
-    public function invoice_sale(Request $request, $id)
+
+    function invoice_sale(Request $request, $id)
     {
 
         $table = $request->post('table');
@@ -227,7 +302,8 @@ class SaleController extends Controller
     }
 
 
-
-
    
+
+  
+
 }

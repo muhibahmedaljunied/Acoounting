@@ -26,11 +26,11 @@
                         </li>
 
                         <li class="nav-item">
-                          <a href="#tab4" class="nav-link" data-toggle="tab"> انواع المصروفات</a>
+                          <!-- <a href="#tab4" class="nav-link" data-toggle="tab"> انواع المصروفات</a>
                         </li>
 
                         <li class="nav-item">
-                          <a href="#tab5" class="nav-link" data-toggle="tab"> انواع الايرادات</a>
+                          <a href="#tab5" class="nav-link" data-toggle="tab"> انواع الايرادات</a> -->
                         </li>
 
 
@@ -54,13 +54,13 @@
                         <treasury></treasury>
                       </div>
 
-                      <div class="tab-pane" id="tab4">
+                      <!-- <div class="tab-pane" id="tab4">
                         <type-expence></type-expence>
                       </div>
 
                       <div class="tab-pane" id="tab5">
                         <type-income></type-income>
-                      </div>
+                      </div> -->
 
                     </div>
                   </div>
@@ -77,12 +77,10 @@
 </template>
 <script>
 import Bank from "./BasicData/Bank";
-
 import Currency from "./BasicData/Currency";
-
 import Treasury from "./BasicData/Treasury";
-import TypeExpence from "./BasicData/TypeExpence";
-import TypeIncome from "./BasicData/TypeIncome";
+// import TypeExpence from "./BasicData/TypeExpence";
+// import TypeIncome from "./BasicData/TypeIncome";
 
 
 
@@ -92,8 +90,8 @@ export default {
     Bank,
     Currency,
     Treasury,
-    TypeExpence,
-    TypeIncome
+    // TypeExpence,
+    // TypeIncome
 
   },
 

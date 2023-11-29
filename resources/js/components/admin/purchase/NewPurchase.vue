@@ -2,12 +2,12 @@
   <div class="wrapper">
     <div class="container-fluid">
       <div class="row">
-      
+
         <div class="card text-right">
           <div class="card-header">
 
-    
-            <h1>فاتوره المشتريات <span id="codigo"></span></h1>
+
+            <h3>فاتوره مشتريات <span id="codigo"></span></h3>
           </div>
           <div class="card-body">
 
@@ -24,7 +24,8 @@
                     class="custom-search-input">
                   <input :id="'Purchase_store_tree_id'" type="hidden" readonly>
 
-                  <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(index)" data-target="#exampleModalStore">
+                  <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(index)"
+                    data-target="#exampleModalStore">
                     <i class="fa fa-plus-circle"></i></button>
                 </div>
 
@@ -32,7 +33,8 @@
 
               <div class="col-md-2">
                 <label for="pagoPrevio">اسم الحساب</label>
-                <select class="form-control" style="background-color: beige;" name="forma_pago" id="select_account_Purchase">
+                <select class="form-control" style="background-color: beige;" name="forma_pago"
+                  id="select_account_Purchase">
 
                 </select>
 
@@ -48,7 +50,7 @@
             <hr>
             <div class="row">
 
-              
+
               <div class="col-md-2">
                 <label for="FormaPago">طريقه الدفع</label>
                 <select class="form-control" style="background-color: beige;" name="forma_pago" id="forma_pago"
@@ -60,7 +62,7 @@
                 </select>
               </div>
 
-              <div class="col-md-2" >
+              <div class="col-md-2">
                 <label for="cliente"> المورد</label>
 
                 <select class="form-control" style="background-color: beige;" v-model="supplier" id="supplier">
@@ -70,7 +72,7 @@
                 </select>
               </div>
 
-              <div class="col-md-2"  v-if="show_treasury == true">
+              <div class="col-md-2" v-if="show_treasury == true">
                 <label for="pagoPrevio">الصندوق</label>
                 <select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
                   <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
@@ -135,10 +137,10 @@
                   </thead>
                   <tbody>
                     <tr v-for="index in count" :key="index">
-                    
+
                       <td>
                         <div class="custom-search">
-         
+
                           <input style="background-color: beige;" :id="'Purchase_product_tree' + index" type="text"
                             readonly class="custom-search-input">
                           <input :id="'Purchase_product_tree_id' + index" type="hidden" readonly
@@ -169,7 +171,7 @@
                           <input type="text" v-model="desc[index]" id="desc" class="form-control" />
                         </div>
                       </td>
-                  
+
 
 
                       <td>
@@ -291,7 +293,7 @@
 
                   <div class="col-md-12">
                     <label for="pagoPrevio">اجمالي الكميه</label>
-             
+
                     <input type="text" readonly="readonly" id="cantidad_total" v-model="total_quantity"
                       class="form-control" />
                     <input type="hidden" id="items_totales" />
@@ -354,7 +356,7 @@
           </div>
 
         </div>
-      
+
 
 
       </div>
@@ -400,7 +402,7 @@
         </div>
       </div>
 
-      
+
 
     </div>
   </div>
@@ -487,12 +489,20 @@ export default {
     },
 
     calculate_price(index) {
+
+      if (this.qty[index] <= 0 || this.price[index] <= 0) {
+
+        toastMessage('فشل', "تأكد من البيانات المدخله", 'error');
+        return 0;
+
+      }
+
       this.grand_total = 0;
       this.total_tax = 0;
       this.total_quantity = 0;
       var unit = JSON.parse($(`#select_unit${index}`).val());
 
- 
+
       if (unit[2] == 0) {
 
         this.total[index] = this.price[index] * this.qty[index];
@@ -546,7 +556,7 @@ export default {
 
 
 
-        this.paid  = this.grand_total;
+        this.paid = this.grand_total;
       }
     },
 
@@ -584,7 +594,7 @@ export default {
           this.total_quantity = parseInt(0) + parseInt(this.total_quantity);
         }
 
-    
+
 
       }
     },
@@ -622,7 +632,7 @@ export default {
         console.log(data.suppliers);
         this.temporale = data.temporales;
 
-       
+
 
         this.products = data.products;
         this.suppliers = data.suppliers;
@@ -647,12 +657,12 @@ export default {
       if (input.value == 1) {
         this.show_treasury = true;
         this.show_bank = false;
-      } 
+      }
 
       if (input.value == 3) {
         this.show_bank = true;
         this.show_treasury = false;
-      } 
+      }
     },
     credit(e) {
       this.remaining = this.grand_total - this.paid;
@@ -661,12 +671,12 @@ export default {
 
     payment() {
 
-     
+
       this.To_pay = this.grand_total;
       this.axios
         .post(`/payPurchase`, {
           type: 'Purchase',
-          count:this.counts,
+          count: this.counts,
           product: this.product,
           unit: this.unit,
           desc: this.desc,
@@ -675,7 +685,7 @@ export default {
           price: this.price,
           total: this.total,
           tax: this.tax,
-          
+
           store: $('#Purchase_store_tree_id').val(),
           store_account: $(`#select_account_${this.type}`).val(),
           description: this.description,

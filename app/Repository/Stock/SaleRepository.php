@@ -1,15 +1,12 @@
 <?php
 
 namespace App\Repository\Stock;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\Daily;
-use App\Traits\Sale\SaleReturnTrait;
+use App\Traits\Sale\SaleTrait;
 use App\Services\CoreService;
-class SaleRepository extends Daily implements WarehouseRepositoryInterface, DetailRepositoryInterface
+class SaleRepository
 {
 
-use SaleReturnTrait;
+use SaleTrait;
     public $core;
     public function __construct()
     {

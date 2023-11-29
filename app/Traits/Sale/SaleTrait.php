@@ -39,11 +39,11 @@ trait SaleTrait
         $Details = new SaleDetail();
         $Details->sale_id = $this->core->sale_id;
         $Details->price = $this->core->data['old'][$this->core->value]['cost'];
-        $Details->qty = $this->core->data['qty'][$this->core->value];
         $Details->total = $this->core->data['sub_total'];
         $Details->store_product_id = $this->core->id_store_product;
         $Details->unit_id = $this->core->unit_value;
-        $Details->qty = $this->core->data['qty'][$this->core->value];
+        // $Details->qty = $this->core->data['qty'][$this->core->value];
+        $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
     }
 }

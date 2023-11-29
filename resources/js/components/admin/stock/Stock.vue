@@ -1,14 +1,17 @@
 <template>
-  <div class="row row-sm">
+
+  <div class="container-fluid">
+
+    <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
         <div class="card-header">
-            <span class="h2"> المخزون</span>
-        
+          <span class="h2"> المخزون</span>
+
           <div style="display: flex;float: left; margin: 5px">
 
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
           </div>
         </div>
         <div class="card-body">
@@ -20,8 +23,9 @@
                   <th class="wd-15p border-bottom-0">المنتج</th>
                   <th class="wd-15p border-bottom-0"> الحاله</th>
                   <th>المواصفات والطراز</th>
-                  <th class="wd-15p border-bottom-0">الكميه المتوفره</th>
                   <th class="wd-15p border-bottom-0"> المخزن</th>
+
+                  <th class="wd-15p border-bottom-0">الكميه المتوفره</th>
                   <!-- <th class="wd-15p border-bottom-0"> الرف</th> -->
 
 
@@ -37,6 +41,7 @@
                   <td>{{ stock.desc }}</td>
                   <!-- <td>{{ stock.quantity }} {{ stock.unit }}</td> -->
 
+                  <td>{{ stock.store }}</td>
 
                   <td>
 
@@ -47,15 +52,18 @@
                       <span v-if="temx.unit_type == 0">
 
                         <span v-if="stock.quantity / stock.rate >= 1">
-                          {{ Math.floor((stock.quantity / stock.rate)) }}{{
-                            stock.units[0].name
-                          }}
+
+                          <span>{{ Math.floor((stock.quantity / stock.rate)) }}</span><span style="color: red;"> {{
+                            stock.units[0].name }}</span>
+
                         </span>
 
                         <span v-if="stock.quantity % stock.rate >= 1">
-                          {{ Math.floor((stock.quantity % stock.rate)) }}{{
+
+                          <span>{{ Math.floor((stock.quantity % stock.rate)) }}</span><span style="color: red;">     {{
                             stock.units[1].name
-                          }}
+                          }}</span>
+                     
                         </span>
                       </span>
 
@@ -63,8 +71,7 @@
 
                   </td>
 
-            
-                  <td>{{ stock.store }}</td>
+
 
                 </tr>
               </tbody>
@@ -83,6 +90,8 @@
     </div>
     <!--/div-->
   </div>
+  </div>
+ 
 </template>
 <script>
 import pagination from "laravel-vue-pagination";

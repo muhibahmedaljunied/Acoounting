@@ -30,7 +30,7 @@
                   <!-- <th class="wd-15p border-bottom-0">الرقم الوظيفي</th> -->
                   <th class="wd-15p border-bottom-0">اسم المصروف</th>
 
-          
+
 
 
                   <th class="wd-15p border-bottom-0">العمليات</th>
@@ -42,18 +42,16 @@
                     {{ expence.name }}
                   </td>
 
-          
+
                   <td>
-                                        <button data-toggle="modal" data-target="#modal_vaciar1"
-                                    
-                                            class="tn btn-danger btn-sm waves-effect btn-agregar">
-                                            <i class="fa fa-trash"></i></button>
-                                 
-                                        <router-link to="/temporale_supply"
-                                            class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="tooltip"
-                                            title="تعديل">
-                                            <i class="fa fa-edit"></i></router-link>
-                                    </td>
+                    <button data-toggle="modal" data-target="#modal_vaciar1"
+                      class="tn btn-danger btn-sm waves-effect btn-agregar">
+                      <i class="fa fa-trash"></i></button>
+
+                    <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"
+                      data-toggle="tooltip" title="تعديل">
+                      <i class="fa fa-edit"></i></router-link>
+                  </td>
 
 
 
@@ -88,35 +86,79 @@
                 <div class="row row-sm">
                   <div class="col-xl-12">
                     <div class="card">
-                      <div class="card-header pb-0">
-                        <div class="d-flex justify-content-between">
-                          <h4 class="card-title mg-b-0">SIMPLE TABLE</h4>
-                          <i class="mdi mdi-dots-horizontal text-gray"></i>
-                        </div>
-                        <p class="tx-12 tx-gray-500 mb-2">
-                          Example of Valex Simple Table. <a href="">Learn more</a>
-                        </p>
-                      </div>
+
+
                       <div class="card-body">
-                        <div class="form">
-                          <h3 class="text-center">اضافه نوع المصروف</h3>
-                          <form method="post">
-                            <div class="form-group">
-                              <label for="name"> الاسم </label>
-                              <input type="text" name="name" id="name" class="form-control" />
-                            </div>
+                        <form method="post" enctype="multipart/form-data">
+
+                          <div class="table-responsive">
+                            <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
+                              <thead>
+                                <tr>
+
+                                  <th>الاسم </th>
+
+                                  <th>اسم الحساب </th>
+
+                                  <!-- <th>رقم الحساب </th> -->
+
+                                  <th>اضافه</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="index in count" :key="index">
+                                  <td>
+                                    <input v-model="expence[index]" type="text" class="form-control" name="name" id="name"
+                                      required />
+                                  </td>
+                                  <td>
+
+                                    <div class="custom-search">
+
+                                      <input :id="'Bank_account_tree' + index" type="text" class="custom-search-input">
+
+                                      <button class="custom-search-botton" type="button" data-toggle="modal"
+                                        @click="detect_index(index)" data-target="#exampleModalBank"> <i
+                                          class="fa fa-plus-circle"></i></button>
+
+                                    </div>
+
+                                    <input :id="'Bank_account_tree_id' + index" type="hidden" name="status"
+                                      class="form-control" />
+                                  </td>
 
 
 
 
 
 
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">
-                              Add
-                            </button>
-                          </form>
-                        </div>
+                                  <td v-if="index == 1">
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="addComponent(count)">
+                                      <i class="fa fa-plus-circle"></i></a>
+
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="disComponent(count)">
+                                      <i class="fa fa-minus-circle"></i></a>
+                                  </td>
+
+
+
+                                </tr>
+
+
+                              </tbody>
+                            </table>
+                          </div>
+                        </form>
+
                       </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                      </div>
+
 
                     </div>
                   </div>
@@ -139,7 +181,13 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
+import tree from '../../../../../js/tree/tree.js';
+import operation from '../../../../../js/operation.js';
 export default {
+  mixins: [
+    tree,
+    operation
+  ],
   components: {
     pagination,
   },
@@ -151,11 +199,15 @@ export default {
         default: null,
       },
       word_search: '',
+      counts: {},
+      expence:[],
     }
 
   },
   mounted() {
     this.list();
+
+    this.counts[0] = 1;
 
 
   },

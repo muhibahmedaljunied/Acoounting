@@ -3,6 +3,7 @@
 namespace App\Traits\Sale;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnDetail;
+use Illuminate\Support\Facades\DB;
 trait SaleReturnTrait
 {
 
@@ -10,40 +11,36 @@ trait SaleReturnTrait
     {
 
 
-
-        $table_one = SaleReturn::create(
-            [
-                'sale_id' => $this->core->data['customer_id'],
-                'quatity' => $this->core->data['customer_name'],
-                'date' => $this->core->data['date'],
-
-            ]
-        );
-        $this->core->sale =  $table_one;
-        $this->core->sale_id =  $table_one->id;
+        $return = new SaleReturn();
+        $return->sale_id = $this->core->data['sale_id'];
+        $return->date  = $this->core->data['date'];
+        // $return->quantity = $request->post('total');
+        $return->save();
+        $this->core->return_id = $return->id;
+        $this->core->return = $return;
  
     }
 
      function add_into_sale_return_details_table()
     {
 
-
-        $details = new SaleReturnDetail();
-        $details->sale_return_id = $this->core->sale_id;
-        $details->store_product_id = $this->core->id_store_product;
-        $details->unit_id = $this->core->unit_value;
-        $details->qty = $this->core->data['qty'][$this->core->value];
-        $details->save();
+        $Details = new SaleReturnDetail();
+        $Details->sale_return_id = $this->core->return_id;
+        $Details->store_product_id = $this->core->id_store_product;
+        $Details->unit_id = $this->core->unit_value;
+        // $Details->qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
+        $Details->qty = $this->core->micro_unit_qty;
+        $Details->save();
     }
 
      function refresh_sale_return_details_table()
     {
 
+ 
         DB::table('sale_details')
-                    ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
-                    ->increment('qty_return', $this->core->data['old'][$this->core->value]['qty_return_now']);
-            
-
+            ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
+            // ->increment('qty_return', $this->core->data['old'][$this->core->value]['qty_return_now']);
+            ->increment('qty_return', $this->core->micro_unit_qty);
 
 
     }

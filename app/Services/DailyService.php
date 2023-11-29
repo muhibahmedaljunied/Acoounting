@@ -1,59 +1,113 @@
 <?php
 
 namespace App\Services;
+use App\Models\DailyDetail;
 
-use App\RepositoryInterface\DailyRepositoryInterface;
-use App\Services\CoreService;
-use App\Traits\DailyTrait;
-class DailyService extends CoreService
+class DailyService
 {
-   use DailyTrait;
-   public $message;
-   public $status_request = 'faild';
-   public $core;
-   public function __construct(
-      protected DailyRepositoryInterface $daily,
-   ) {
-
-      // $this->core = app(CoreService::class);
-   }
+   public $daily_id;
+    public function daily($date,$total){
 
 
 
+        $daily = new Daily();
+        $daily->daily_date = $date;
+        $daily->total = $total;
+        $daily->save();
 
-   public function daily()
-   {
+        $this->daily_id = $daily->id;
+        return $this;
+
+    }
 
 
-      $this->daily->handle();
-      $this->db_create();
-      $this->db_store();
-   }
+    public function depit($depit,$value){
 
-   public function check_account()
-   {
 
-      $this->message = array(
-         'message' => '',
-      );
-      if (!$this->core->data['store_account']) {
 
-         $this->message['message'] = 'المخزن غير مرتيط بحساب';
-         return 0;
-      }
+        foreach ($depit as $value) {
+            $depit_data = [
+                'daily_id' => $this->daily_id,
+                'account_id' => $value,
+                'description' => $quantity[$i],
+                'debit' => ,
+                'credit' => ,
+            ];
+            DailyDetail::create($depit_data);
+        }
 
-      if (!$this->core->data['treasury_account']) {
+        return $this;
 
-         $this->message['message'] = 'الصندوق غير مرتيط بحساب';
-         return 0;
-      }
 
-      if (!$this->core->data['supplier_account']) {
 
-         $this->message['message'] = 'المورد غير مرتيط بحساب';
-         return 0;
-      }
-      $this->status_request = 'success';
-      return 1;
-   }
+    }
+
+
+    public function credit($credit,$value){
+
+
+
+        foreach ($credit as $value) {
+            $credit_data = [
+                'daily_id' => $this->daily_id,
+                'account_id' => ,
+                'description' =>,
+                'debit' => ,
+                'credit' => $,
+            ];
+            DailyDetail::create($credit_data);
+        }
+
+        return $this;
+
+    }
+
+    public function set(){
+
+
+        $receivab = new ReceivableNote();
+        $receivab->sale_id = $request->post('sale_id');
+        $receivab->daily_id = $this->daily_id;
+        $receivab->date = $request->post('date');
+        $receivab->save();
+      
+
+    }
+
+
+
 }
+
+
+
+
+
+
+
+
+
+        // foreach ($credit as $value) {
+
+        //     $dailyDetail = new DailyDetail();
+        //     $dailyDetail->daily_id = $daily->id;
+        //     $dailyDetail->account_id = $credit;
+        //     $dailyDetail->description = $request->post('description');
+        //     $dailyDetail->debit = 0;
+        //     $dailyDetail->credit = $value;
+        //     $dailyDetail->save();
+
+        // }
+
+
+        
+        // foreach ($depit as $value) {
+
+        //     $dailyDetail = new DailyDetail();
+        //     $dailyDetail->daily_id = $daily->id;
+        //     $dailyDetail->account_id = $depit;
+        //     $dailyDetail->description = $request->post('description');
+        //     $dailyDetail->debit = $value;
+        //     $dailyDetail->credit = 0;
+        //     $dailyDetail->save();
+
+        // }

@@ -3,12 +3,9 @@
 namespace App\Repository\Stock;
 
 use App\Traits\Transfer\TransferTrait;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Services\CoreService;
 use DB;
-
-class TransferRepository implements WarehouseRepositoryInterface, DetailRepositoryInterface
+class TransferRepository
 {
 
     public $core;

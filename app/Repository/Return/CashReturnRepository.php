@@ -3,13 +3,10 @@
 namespace App\Repository\Return;
 
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\ReturnRepositoryInterface;
-
 use App\Models\CashDetail;
-use App\Models\CashReturn;
 use DB;
 
-class CashReturnRepository implements DetailRepositoryInterface,ReturnRepositoryInterface
+class CashReturnRepository implements DetailRepositoryInterface
 {
 
     
@@ -54,46 +51,6 @@ class CashReturnRepository implements DetailRepositoryInterface,ReturnRepository
          return $detail;
     }
 
-    public function check_return($value)
-    {
-
-        $qty_return_now = $value['qty_return_now'];
-        $qty_remain = $value['qty_remain'];
-        $qty = $value['qty'];
-
-
-        foreach ($value['units'] as $key => $values) {   //this for converts qty_return into micro unit
-
-            //[0] =id,[1] = rate,[2] = unit_type
-            if ($value['unit_selected'][2] == 1) {
-
-
-                $qty_return_now = $value['qty_return_now'] * $value['rate'];
-                $qty_remain = $value['qty_remain'] * $value['rate'];
-                $qty = $value['qty'] * $value['rate'];
-            }
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------
-        if ($qty_return_now > $value['avilable_qty']) {
-            return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المتوفره"];
-        }
-
-        if ($qty_return_now > $qty_remain) {
-            return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المسموح بها"];
-        }
-
-        if ($qty_return_now > $qty) {
-            return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه اكبر من  الكميه المباعه"];
-        }
-
-        if ($qty_remain == 0) {
-            return ['message' => 0, 'text' => "لا يمكنك ارجاع كميه 0"];
-        }
-        return ['message' => 1, 'qty' => $qty_return_now];
-        
-    }
-    
         
 }
 

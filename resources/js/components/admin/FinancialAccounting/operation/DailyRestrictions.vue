@@ -65,7 +65,7 @@
                       <!-- <input :id="'Daily_account_tree_id' + index" type="hidden" readonly class="custom-search-input"> -->
 
                       <button class="custom-search-botton" type="button" data-toggle="modal" data-target="#exampleModal"
-                        @click="detect_index_account(index)"> <i class="fa fa-plus-circle"></i></button>
+                        @click="detect_index(index)"> <i class="fa fa-plus-circle"></i></button>
                     </div>
 
            
@@ -112,13 +112,21 @@
                 <tr>
 
                   <td colspan="3" style="text-align:center;color:red;font-size:large">الاجمالي</td>
-                  <td></td>
+                  <td colspan="2" style="text-align:center;color:red;font-size:large">
+                  
+                    <input  type="hidden" style="width: 250px" 
+                      class="form-control input_cantidad" onkeypress="return valida(event)" />
+
+                  </td>
+
+
+                  <td>          <a href="javascript:void" @click="addDaily()" class="btn btn-primary"><span>تاكيد
+              العمليه</span></a></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <a href="javascript:void" @click="addDaily()" class="btn btn-primary"><span>تاكيد
-              العمليه</span></a>
+
         </div>
       </div>
     </div>
@@ -276,10 +284,10 @@ export default {
   },
   mounted() {
 
-    this.showtree('account');
     this.type = 'Daily';
     this.counts[0] = 1;
     this.type_of_tree = 1;
+    this.showtree('account');
 
 
 

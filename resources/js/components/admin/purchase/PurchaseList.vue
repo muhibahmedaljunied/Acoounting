@@ -7,7 +7,7 @@
             <div class="d-flex justify-content-between">
               <span class="h2"> المشتريات</span>
             </div>
-       
+
             <div class="d-flex justify-content-between"></div>
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
@@ -85,8 +85,7 @@
                             v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
                             دفع
                           </option> -->
-                          <option  class="btn btn-success"
-                            v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
+                          <option class="btn btn-success" v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
                             صرف
                           </option>
                           <option class="btn btn-success"
@@ -155,7 +154,23 @@
                       <div v-for="temx in purchase_details.units">
 
 
-                        <span v-if="purchase_details.unit_id == temx.id">
+
+                        <span v-if="temx.unit_type == 0">
+
+                          <span v-if="purchase_details.qty / purchase_details.rate >= 1">
+                            {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
+                              purchase_details.units[0].name
+                            }}
+                          </span>
+
+                          <span v-if="purchase_details.qty % purchase_details.rate >= 1">
+                            {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
+                              purchase_details.units[1].name
+                            }}
+                          </span>
+                        </span>
+
+                        <!-- <span v-if="purchase_details.unit_id == temx.id">
                           <span v-if="temx.unit_type == 0">
 
                             <span v-if="purchase_details.qty / purchase_details.rate >= 1">
@@ -174,7 +189,7 @@
                           <span v-if="temx.unit_type == 1">
                             {{ purchase_details.qty }} {{ temx.name }}
                           </span>
-                        </span>
+                        </span> -->
                       </div>
 
 
@@ -223,7 +238,7 @@ export default {
       total: 0,
       word_search: "",
       table: 'purchase_details',
-      type:'',
+      type: '',
     };
   },
   mounted() {
@@ -241,7 +256,7 @@ export default {
 
       if (this.operationselected[index][2] == 0) {
 
-        
+
         this.axios
           .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
           .then((response) => {
@@ -271,13 +286,12 @@ export default {
           this.purchases = data.purchases;
         });
     },
-    list(page = 1) 
-    {
+    list(page = 1) {
 
       // alert('dddddddddddddddddddddddddd');
 
       this.axios
-        .post(`/listpurchase?page=${page}`,{ type: this.type })
+        .post(`/listpurchase?page=${page}`, { type: this.type })
         .then(({ data }) => {
           this.purchases = data.purchases;
         })

@@ -7,7 +7,7 @@
         <form method="post" @submit.prevent="addTransfer">
           <div class="card-header pb-0">
             <div class="d-flex justify-content-between">
-              <span class="h2"> تفاصيل التحويل المخزني </span>
+              <span class="h3"> تفاصيل التحويل المخزني </span>
             </div>
           </div>
           <div class="card-body" id="printme">

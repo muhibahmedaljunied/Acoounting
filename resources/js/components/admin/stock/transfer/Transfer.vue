@@ -9,7 +9,7 @@
       </div>
       <div class="card">
         <div class="card-header">
-          <span class="h2">التحويلات المخزنيه</span>
+          <span class="h3">التحويلات المخزنيه</span>
 
 
           <div style="display: flex;float: left; margin: 5px">
@@ -22,7 +22,7 @@
 
 
 
-            <div></div>
+         
           </div>
         </div>
         <div class="card-body" id="printme">

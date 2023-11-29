@@ -1,16 +1,10 @@
 <?php
 
 namespace App\Repository\Stock;
-use App\RepositoryInterface\DetailRefreshRepositoryInterface;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Traits\Sale\SaleReturnTrait;
 use App\Services\CoreService;
 use DB;
-
-class SaleReturnRepository  implements WarehouseRepositoryInterface, 
-DetailRepositoryInterface,
-DetailRefreshRepositoryInterface
+class SaleReturnRepository
 {
 
 use SaleReturnTrait;
@@ -23,6 +17,8 @@ use SaleReturnTrait;
         $this->core = app(CoreService::class);
     }
 
+  
+    
     public function add()
     {
 

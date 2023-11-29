@@ -28,7 +28,7 @@ trait TransferTrait
         $details->transfer_id = $this->core->transfer_id;
         $details->from_store = $this->core->data['fromstore'];
         $details->into_store = $this->core->data['intostore'];
-        $details->store_product_id = $this->core->id_store_product;
+        $details->store_product_id = $this->core->data_store_product['store_product_id'];
         $details->unit_id = $unit_id[0];
         $details->qty = $this->core->micro_unit_qty;
         $details->save();

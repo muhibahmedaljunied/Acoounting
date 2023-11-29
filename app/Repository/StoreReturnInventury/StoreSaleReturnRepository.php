@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Repository\Inventury\StoreInventury;
+namespace App\Repository\StoreReturnInventury;
 use App\RepositoryInterface\InventuryStoreRepositoryInterface;
 use App\Models\StoreProduct;
 use App\Services\CoreService;
-
+use Illuminate\Support\Facades\DB;
 class StoreSaleReturnRepository implements InventuryStoreRepositoryInterface
 {
     
@@ -39,7 +39,7 @@ class StoreSaleReturnRepository implements InventuryStoreRepositoryInterface
 
         $this->core->store_product_f =  DB::table('store_products')
             ->where(['id' => $this->core->id_store_product])
-            ->decrement('quantity', $this->core->micro_unit_qty);
+            ->increment('quantity', $this->core->micro_unit_qty);
     }
 
 

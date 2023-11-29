@@ -3,7 +3,7 @@
 namespace App\Services;
 class CoreService
 {
-
+    public $daily_id = 0;
     public $stock_f = 0;
     public $data;
     public $store_product_f = 0;
@@ -12,12 +12,14 @@ class CoreService
     public $micro_unit_qty;
     public $sale_id;
     public $sale;
+    public $return;
     public $return_id;
     public $purchase_id;
     public $purchase;
     public $transfer_id;
     public $transfer;
     public $id_store_product;
+    public $data_store_product;
     public $value; 
     public $discount;
 

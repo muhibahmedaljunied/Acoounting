@@ -6,7 +6,7 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <span class="h2"> مرتجع شراء</span>
+                <span class="h3"> مرتجع شراء</span>
               </div>
               <div class="text-center">
                 <!-- <span
@@ -269,7 +269,22 @@
 
                               <div v-for="temx in purchase_details.units">
 
+                                <span v-if="temx.unit_type == 0">
 
+                                  <span v-if="purchase_details.qty_remain / purchase_details.rate >= 1">
+                                    {{ Math.floor((purchase_details.qty_remain / purchase_details.rate)) }}{{
+                                      purchase_details.units[0].name
+                                    }}
+                                  </span>
+
+                                  <span v-if="purchase_details.qty_remain % purchase_details.rate >= 1">
+                                    {{ Math.floor((purchase_details.qty_remain % purchase_details.rate)) }}{{
+                                      purchase_details.units[1].name
+                                    }}
+                                  </span>
+                                </span>
+
+                                <!-- 
                                 <span v-if="purchase_details.unit_id == temx.id">
                                   <span v-if="temx.unit_type == 0">
 
@@ -289,7 +304,7 @@
                                     {{ purchase_details.qty_remain }} {{ temx.name }}
                                   </span>
 
-                                </span>
+                                </span> -->
 
                               </div>
 
@@ -322,50 +337,72 @@
 
 
 
-                            <td>
-                              <input v-if="purchase_details.qty_return !=
-                                purchase_details.quantity
-                                " v-model="check_state[index]" @change="
-    add_one_return(
-
-      // purchase_details.qty_remain,
-      index,
-      purchase_details.qty_return_now,
-      purchase_details.unit_selected
+                            <td v-if="purchase_details.qty_remain != 0">
+                              <input v-model="check_state[index]" @change="
+                                add_one_return(
+                                  purchase_details.avilable_qty,
+                                  purchase_details.qty_remain,
+                                  index,
+                                  purchase_details.qty_return_now,
+                                  purchase_details.unit_selected
 
 
-    )
-    " type="checkbox" class="btn btn-info waves-effect">
+                                )
+                                " type="checkbox" class="btn btn-info waves-effect">
                             </td>
+
+                            <td v-else>
+                              <input v-model="check_state[index]" @change="
+                                add_one_return(
+                                  purchase_details.avilable_qty,
+                                  purchase_details.qty_remain,
+                                  index,
+                                  purchase_details.qty_return_now,
+                                  purchase_details.unit_selected
+
+
+                                )
+                                " type="checkbox" class="btn btn-info waves-effect" disabled>
+                            </td>
+
                           </tr>
                           <tr>
-                            <td colspan="10">
-                              <div class="m-t-30 col-md-12">
+                            <td colspan="9">
+                              <div class="col-md-8">
                                 <label for="date">الاجمالي</label><br />
                                 <input readonly name="number" type="number" class="form-control" />
 
 
                               </div>
                             </td>
+
+                            <td>
+                              <div class="col-md-4">
+
+                                <button v-if="not_qty" @click="Add_return()" class="btn btn-info"><span>تاكيد
+                                    العمليه</span></button>
+
+
+                              </div>
+                            </td>
                           </tr>
 
 
-                          <tr>
+                          <!-- <tr>
                             <td colspan="10">
                               <div class="m-t-30 col-md-12">
                                 <label for="date">ملاحظات</label><br />
                                 <input v-model="note" type="text" name="name" id="name" class="form-control" />
                               </div>
                             </td>
-                          </tr>
+                          </tr> -->
 
-                          <a v-if="not_qty" @click="Add_return()" class="btn btn-success"><span>تاكيد العمليه</span></a>
 
-                          <div>
+                          <!-- <div>
                             <div v-if="seen" class="alert alert-warning" role="alert">
                               قم باضافه الكميه المرتجعه
                             </div>
-                          </div>
+                          </div> -->
                         </tbody>
                         <tbody v-else>
                           <tr>
@@ -435,7 +472,7 @@ export default {
   },
 
   methods: {
-    add_one_return(index, qty, unit) {
+    add_one_return(avilable_qty, qty_remain, index, qty, unit) {
 
 
 
@@ -443,9 +480,11 @@ export default {
 
       if (this.check_state[index] == true) {
 
-        // result = this.check_qty(qty, unit, availabe_qty);
 
-        // if (result == 0) { return 0; }
+
+        if (this.check_qty(avilable_qty, qty_remain, qty, unit) == 0) { return 0; }
+
+
 
         this.counts[index] = index;
         this.qty[index] = qty;
@@ -460,13 +499,51 @@ export default {
 
 
     },
+    check_qty(avilable_qty, qty_remain, qty, unit) {
+
+      var producter_qty = 0;
+
+      if (unit[2] == 1) {
+
+        producter_qty = qty * unit[1];
+      } else {
+
+        producter_qty = qty;
+      }
+
+      if (producter_qty > qty_remain) {
+
+        toastMessage('فشل', "الكميه المدخله اكبر من المسموحه", 'error');
+        return 0;
+
+      }
+
+      if (producter_qty > avilable_qty) {
+
+        toastMessage('فشل', "الكميه المدخله اكبر من المتوفره", 'error');
+        return 0;
+
+      }
+
+
+      if (producter_qty <= 0) {
+
+        toastMessage('فشل', "تأكد من الكميه المدخله", 'error');
+        return 0;
+
+      }
+
+
+      return 1;
+    },
+
     Add_return() {
 
 
       // if (this.return_qty.length != 0) {
 
       var url = this.type.toLowerCase();
-      // alert(url);
+      // console.log(response.data.suppliers);
       this.axios
         .post(`/${url}`, {
 
@@ -493,11 +570,9 @@ export default {
 
         })
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
 
-          if (response.data.message != 0) {
-
-            // console.log(response)
+          if (response.data.status != 0) {
 
             this.seen = false;
             toastMessage("تم الارجاع بنجاح");
@@ -505,7 +580,7 @@ export default {
 
           } else {
 
-            toastMessage("فشل", response.data.text);
+            toastMessage("فشل", response.data.message);
 
 
 
