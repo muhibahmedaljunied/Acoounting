@@ -17,7 +17,10 @@ class CreateSaleReturnsTable extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('sale_id')->unsigned()->nullable();
-            $table->foreign('sale_id')->references('id')->on('sales');
+            $table->foreign('sale_id')->references('id')->on('sales')->onDelete('cascade');
+
+            $table->unsignedInteger('daily_id')->nullable();
+            $table->foreign('daily_id')->references('id')->on('dailies')->onDelete('cascade');
 
            
             $table->integer('quantity')->nullable();

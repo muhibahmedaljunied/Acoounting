@@ -42,6 +42,7 @@ export default {
       customers: '',
       seen: false,
       id: '',
+      
 
 
 
@@ -125,6 +126,8 @@ export default {
       this.count -= 1;
       this.$delete(this.counts, index);
     },
+
+    
 
     // Add_new() {
 

@@ -21,6 +21,14 @@ trait SaleReturnTrait
  
     }
 
+    function refresh_sale_return_table()
+    {
+
+        DB::table('sale_returns')
+            ->where(['id' => $this->core->return_id])
+            ->update(['daily_id' => $this->core->daily_id]); 
+    }
+
      function add_into_sale_return_details_table()
     {
 
@@ -28,7 +36,6 @@ trait SaleReturnTrait
         $Details->sale_return_id = $this->core->return_id;
         $Details->store_product_id = $this->core->id_store_product;
         $Details->unit_id = $this->core->unit_value;
-        // $Details->qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
         $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
     }
@@ -39,7 +46,6 @@ trait SaleReturnTrait
  
         DB::table('sale_details')
             ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
-            // ->increment('qty_return', $this->core->data['old'][$this->core->value]['qty_return_now']);
             ->increment('qty_return', $this->core->micro_unit_qty);
 
 

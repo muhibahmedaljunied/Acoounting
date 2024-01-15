@@ -7,7 +7,8 @@ Route::post('/account/{id}', 'Account\AccountController@edit');
 Route::post('/delete_account/{id}', 'Account\AccountController@destroy');
 Route::post('/store_account', 'Account\AccountController@store');
 Route::post('/account_list', 'Account\DailyController@index');
-Route::post('/account_list/{id}', 'Account\AccountController@AccountStatement');
+Route::post('/account_report/{id}', 'Account\DailyController@account_report');
+// Route::post('/account_list/{id}', 'Account\AccountController@AccountStatement');
 Route::post('/account_details_node/{id}', 'Account\AccountController@account_details_node');
 Route::post('/account_update_node/{id}', 'Account\AccountController@account_update_node');
 Route::post('/account_edit_node/{id}', 'Account\AccountController@account_edit_node');
@@ -16,7 +17,7 @@ Route::post('/account_store_first_level', 'Account\AccountController@account_sto
 
 
 Route::post('/account_rename_node/{id}', 'Account\AccountController@account_rename_node');
-// Route::post('/dailys', 'DailyController@index');
+Route::post('/daily', 'Account\DailyController@index');
 Route::post('/store_daily', 'Account\DailyController@store');
 // ---------------------------------------------
 Route::post('/get_account_main/{id}', 'Account\AccountController@get_account_main');

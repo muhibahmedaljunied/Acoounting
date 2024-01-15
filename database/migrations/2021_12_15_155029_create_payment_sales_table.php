@@ -18,7 +18,7 @@ class CreatePaymentSalesTable extends Migration
             // $table->integer('sale_id');
             $table->unsignedInteger('sale_id')->unsigned()->nullable();
             $table->foreign('sale_id')->references('id')->on('sales');
-            $table->string('payment_info');
+            $table->string('payment_info')->nullable();
             $table->string('payment_status')->default('pending');
             $table->string('paid')->default(0);
             $table->string('remaining')->default(0);

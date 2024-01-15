@@ -37,12 +37,7 @@
                       <tr>
                         <th style="width: 60px">#</th>
                         <th style="width: 60px">المصروف</th>
-                        <!-- <th style="width: 60px">المجموعه</th> -->
-                        <!-- <th style="width: 60px">الصنف</th> -->
-                        <!-- <th style="width: 60px">المخزن</th> -->
-                        <!-- <th style="width: 60px">الرف</th> -->
-                        <!-- <th style="width: 60px">الحاله</th>
-                          <th style="width: 60px">المواصفات والطراز</th> -->
+                 
 
                         <th style="width: 60px">المبلغ</th>
                         <th style="width: 60px">التاريخ</th>
@@ -52,23 +47,10 @@
                     <tbody v-if="expences && expences.data.length > 0">
                       <tr v-for="(expence, index) in expences.data" :key="index">
                         <td style="width: 40px">{{ index + 1 }}</td>
-                        <td style="width: 40px">{{ expence.expence }}</td>
-                        <!-- <td style="width: 40px">
-                            {{ temporales.group_name }}
-                          </td>
-                          <td style="width: 40px">
-                            {{ temporales.category_name }}
-                          </td> -->
-                        <!-- <td style="width: 40px">
-                            {{ temporales.store }}
-                          </td> -->
-                        <!-- <td style="width: 40px">
-                            {{ temporales.shelve_name }}
-                          </td> -->
-                        <!-- <td style="width: 40px">{{ temporales.status }}</td> -->
-                        <!-- <td style="width: 40px">{{ temporales.desc }}</td> -->
+                        <td style="width: 40px">{{ expence.text }}</td>
+                      
 
-                        <td>{{ expence.quantity }}</td>
+                        <td>{{ expence.debit }}</td>
                         <td>{{ expence.date }}</td>
 
                         <td>

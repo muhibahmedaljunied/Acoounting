@@ -26,9 +26,10 @@ Route::post('/listpurchasesearch', 'Purchase\PurchaseController@search');
 Route::post('/add_Purchase', 'Purchase\PurchaseController@store');
 Route::post('/payPurchase', 'Purchase\purchaseController@payment');
 Route::post('/purchase_details/{id}', 'Purchase\PurchaseController@details');
-
-Route::post('/data_for_payment_bond/{id}', 'Purchase\PurchaseController@payment_bond');
+Route::post('/purchase_daily/{id}', 'Purchase\PurchaseController@purchase_daily');
+Route::post('/data_for_payment_bond/{id}', 'Purchase\PaymentBondController@payment_bond');
 Route::post('/store_PaymentBond', 'Purchase\PurchaseController@store_PaymentBond');
+Route::post('/payment_bond_list', 'Purchase\PurchaseController@paymentBondlist');
 
 
 
@@ -43,6 +44,7 @@ Route::post('/invoice_purchase/{id}', 'Purchase\PurchaseController@invoice_purch
 Route::post('/invoice_return_purchase/{id}', 'Purchase\PurchaseReturnController@return_invoice');
 Route::post('/payment_bond/{id}', 'Purchase\PurchaseController@payment_bond');
 
-Route::post('/payment_bond', 'PayableNoteController@index');
-Route::post('/payment_bond_store/{id}', 'PayableNoteController@store');
+// Route::post('/payment_bond', 'PayableNoteController@index');
+// Route::post('/payment_bond_list', 'PayableNoteController@paymentBondlist');
+// Route::post('/payment_bond_store/{id}', 'PayableNoteController@store');
 

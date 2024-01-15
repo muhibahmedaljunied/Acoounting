@@ -4,6 +4,8 @@ namespace App\Repository\StockInventury;
 use App\RepositoryInterface\InventuryStockRepositoryInterface;
 use App\Services\CoreService;
 use App\Models\Stock;
+use Illuminate\Support\Facades\DB;
+
 class StockSaleRepository implements InventuryStockRepositoryInterface
 {
 

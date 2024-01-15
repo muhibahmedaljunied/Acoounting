@@ -5,6 +5,8 @@ use App\RepositoryInterface\InventuryStockRepositoryInterface;
 use App\Services\CoreService;
 use App\Models\PurchaseDetail;
 use App\Models\Stock;
+use Illuminate\Support\Facades\DB;
+
 class StockPurchaseRepository implements InventuryStockRepositoryInterface
 {
 
@@ -21,6 +23,7 @@ class StockPurchaseRepository implements InventuryStockRepositoryInterface
         $this->refresh_price(); //this make refresh for cost of product
 
         $this->init_stock_table();
+ 
     }
 
     function refresh_stock_table($type_refresh = null)

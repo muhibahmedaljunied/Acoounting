@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Repository\Stock;
+use App\RepositoryInterface\DetailRepositoryInterface;
+use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\Traits\Sale\SaleReturnTrait;
 use App\Services\CoreService;
 use DB;
-class SaleReturnRepository
+class SaleReturnRepository implements DetailRepositoryInterface,DetailRefreshRepositoryInterface
 {
 
 use SaleReturnTrait;
@@ -23,15 +25,25 @@ use SaleReturnTrait;
     {
 
 
-        $this->add_into_sale_return_table($this->core);
+        $this->add_into_sale_return_table();
      
 
     }
 
+    public function refresh()
+    {
+
+
+        $this->refresh_sale_return_table();
+     
+
+    }
+
+
     public function init_details(...$list_data)
     {
 
-        $this->add_into_sale_return_details_table($this->core);
+        $this->add_into_sale_return_details_table();
   
     }
 

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductImport;
 use App\Exports\ProductExport;
-use App\Models\Status;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -88,6 +87,7 @@ class ProductController extends Controller
 
 
 
+        // dd($request->all());
         // $validator = Validator::make($request->all(), [
         //     'text' => 'required',
         //     'hash_rate' => 'required',

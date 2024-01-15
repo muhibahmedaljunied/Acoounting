@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Traits\Sale;
-
 use App\Models\Sale;
 use App\Models\SaleDetail;
+use Illuminate\Support\Facades\DB;
 
 trait SaleTrait
 {
@@ -22,13 +22,22 @@ trait SaleTrait
                 'sub_total' => $this->core->data['sub_total'],
                 'discount' => $this->core->discount,
                 'tax_amount' => $this->core->data['total_tax'],
-                'status' => 'pendding',
                 'date' => $this->core->data['date'],
 
             ]
         );
         $this->core->sale =  $table_one;
         $this->core->sale_id =  $table_one->id;
+ 
+    }
+
+    public function refresh_sale_table()
+    {
+
+  
+        DB::table('sales')
+            ->where(['id' => $this->core->sale_id])
+            ->update(['daily_id' => $this->core->daily_id]);
  
     }
 
@@ -42,7 +51,6 @@ trait SaleTrait
         $Details->total = $this->core->data['sub_total'];
         $Details->store_product_id = $this->core->id_store_product;
         $Details->unit_id = $this->core->unit_value;
-        // $Details->qty = $this->core->data['qty'][$this->core->value];
         $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
     }

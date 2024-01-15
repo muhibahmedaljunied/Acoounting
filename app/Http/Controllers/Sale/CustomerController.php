@@ -49,23 +49,25 @@ class CustomerController extends Controller
     {
         // return response()->json(['sales' => $request->all()]);
 
+
         $sales =  Sale::where('customer_id', $request->id)->with([
+
+            'receivable_notes' => function ($query) {
+                $query->select('*');
+            },
             'payment_sales' => function ($query) {
                 $query->select('*');
             },
             'sale_returns' => function ($query) {
                 $query->select('*');
             }
-            // ,
-            // 'receivable_notes' => function ($query) {
-            //     $query->select('*');
-            // }
-
+            
         ])->paginate(10);
 
 
 
-
+ 
+    
 
         return response()->json(['sales' => $sales]);
     }

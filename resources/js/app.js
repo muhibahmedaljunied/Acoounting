@@ -105,7 +105,6 @@ const options = {
 }
 
 Vue.use(VueHtmlToPaper, options);
-
 // or, using the defaults with no stylesheet
 Vue.use(VueHtmlToPaper);
 

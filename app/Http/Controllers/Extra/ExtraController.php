@@ -79,6 +79,7 @@ class ExtraController extends Controller
     public function store(Request $request)
     {
 
+
         $this->core->data = $request->all();
 
         try {

@@ -24,12 +24,13 @@ class UnitReturnRepository implements UnitRepositoryInterface
     function convert_qty()
     {
 
+       
 
         if ($this->core->unit_array[2] == 1) {  //this means unit_type
 
-            $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'] * $this->core->unit_array[1];
+            $this->core->micro_unit_qty = $this->core->data['qty'][$this->core->value] * $this->core->unit_array[1];
         } else {
-            $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
+            $this->core->micro_unit_qty = $this->core->data['qty'][$this->core->value] ;
         }
         return $this;
     }

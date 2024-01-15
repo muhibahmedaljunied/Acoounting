@@ -10,7 +10,7 @@ class Payment extends Model
 
       public function paymentable()
     {
-        return $this->morphTo('App\Purchase','App\Sale');
+        return $this->morphTo();
     }
 
     

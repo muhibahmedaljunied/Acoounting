@@ -7,14 +7,14 @@ use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\Repository\Stock\PurchaseReturnRepository;
 use App\Repository\Stock\SaleReturnRepository;
-use App\Repository\Stock\PurchaseRepository;
-use App\Repository\Stock\SaleRepository;
-use App\Repository\Stock\SupplyRepository;
-use App\Repository\Stock\CashRepository;
-use App\Repository\HR\AttendanceRepository;
-use App\Repository\Stock\TransferRepository;
-use App\Services\CoreStaffService;
-use App\Repository\HR\ExtraRepository;
+// use App\Repository\Stock\PurchaseRepository;
+// use App\Repository\Stock\SaleRepository;
+// use App\Repository\Stock\SupplyRepository;
+// use App\Repository\Stock\CashRepository;
+// use App\Repository\HR\AttendanceRepository;
+// use App\Repository\Stock\TransferRepository;
+// use App\Services\CoreStaffService;
+// use App\Repository\HR\ExtraRepository;
 
 class DetailServiceProvider extends ServiceProvider
 {
@@ -31,41 +31,87 @@ class DetailServiceProvider extends ServiceProvider
         
         $request = app(\Illuminate\Http\Request::class);
 
+
+      
+
         $this->app->bind(DetailRepositoryInterface::class, function ( ) use($request)  {
             
          
-            if ($request->type == 'PurchaseReturn' || $request->type == 'Purchase' ) {
+            if ($request->type == 'PurchaseReturn') {
            
-                return $this->details_purchase($request);
+                return new PurchaseReturnRepository();
+
             } 
 
-            if ($request->type == 'SaleReturn' || $request->type == 'Sale' ) {
+            if ($request->type == 'SaleReturn') {
            
-                return $this->details_sale($request);
+                return new SaleReturnRepository();
+
             } 
 
-            if ($request->type == 'Transfer') {
            
-                return  $this->details_transfer($request);
+
+
+          
+        });
+
+        $this->app->bind(DetailRefreshRepositoryInterface::class, function ( ) use($request)  {
+            
+         
+            if ($request->type == 'PurchaseReturn') {
+           
+                return new PurchaseReturnRepository();
+
             } 
 
-            if ($request->type == 'extra' || $request->type == 'attendance') {
+            if ($request->type == 'SaleReturn') {
            
-                return  $this->hr($request);
+                return new SaleReturnRepository();
+
             } 
 
+           
 
-            // $this->details_cash($request);
-            // $this->details_supply($request);
-            // $this->hr($request);
+
+          
+        });
+
+
+        // $this->app->bind(DetailRepositoryInterface::class, function ( ) use($request)  {
+            
+         
+        //     if ($request->type == 'PurchaseReturn' || $request->type == 'Purchase' ) {
+           
+        //         return $this->details_purchase($request);
+        //     } 
+
+        //     if ($request->type == 'SaleReturn' || $request->type == 'Sale' ) {
+           
+        //         return $this->details_sale($request);
+        //     } 
+
+        //     if ($request->type == 'Transfer') {
+           
+        //         return  $this->details_transfer($request);
+        //     } 
+
+        //     if ($request->type == 'extra' || $request->type == 'attendance') {
+           
+        //         return  $this->hr($request);
+        //     } 
+
+
+        //     // $this->details_cash($request);
+        //     // $this->details_supply($request);
+        //     // $this->hr($request);
        
            
-        });
+        // });
 
-        $this->app->bind(DetailRefreshRepositoryInterface::class, function () use($request ) {
+        // $this->app->bind(DetailRefreshRepositoryInterface::class, function () use($request ) {
           
-            return $this->refresh_detail_returns($request);
-        });
+        //     return $this->refresh_detail_returns($request);
+        // });
     }
 
     /**

@@ -123,11 +123,20 @@
                       </template>
 
                       <tr>
-                        <td colspan="4" style="color:red;font-size:30px;">
+                        <td colspan="2" style="color:red;font-size:30px;">
                           الاجمالي
                         </td>
                         <td>
 
+<span style="color:green;font-size:30px;"></span>
+
+</td>
+<td>
+
+<span style="color:green;font-size:30px;"></span>
+
+</td>
+                        <td>
 
                           <span style="color:green;font-size:30px;">{{ xx }}</span>
 
@@ -210,68 +219,43 @@ export default {
   data() {
     return {
 
+      xx:'',
       text_message: '',
       type: '',
-      type_refresh: '',
+  
       count: 1,
       counts: {},
-      intostore: [],
-      intostore_id: [],
-      product_name: [],
-      product: [],
-      products: '',
-      word_search: '',
+      
+     
+ 
       check_state: [],
-      qty: [],
-      availabe_qty: [],
-      price: [],
-      tax: [],
-      desc: [],
-      stores: '',
-      statuses: '',
+  
+      
+      
       total_quantity: 0,
       grand_total: 0,
       sub_total: 0,
-      To_pay: 0,
-      discount: 0,
-      total_tax: 0,
+    
+   
       customer: [],
       supplier: [],
       suppliers: '',
       customers: '',
       date: new Date().toISOString().substr(0, 10),
-      status: [],
-      store: [],
+     
       temporale: 1,
       type_payment: 0,
       Way_to_pay_selected: 1,
       show: false,
-      paid: 0,
-      remaining: 0,
-      return_qty: [],
-      note: '',
-      not_qty: true,
-      seen: false,
+     
+  
+  
       detail: '',
       id: '',
       sales: '',
 
 
-      // ----------------------------
-      // supply_detail: "",
-      // supply_id: "",
-      //---------------------------- 
-      // cash_detail: 0,
-      // cash_id: "",
-      // ---------------------------------------------------
-      // purchase_detail: 0,
-      // purchase_id: "",
-      // -----------------------------------
-      // sale_detail: 0,
-      // sale_id: "",
-      // ---------------------------------
-
-      // dateselected: new Date().toISOString().substr(0, 10),
+      
 
 
 
@@ -334,12 +318,10 @@ export default {
     onwaychange() {
 
 
+  
       this.axios.post(`/customer/customer_account_list/${this.customer[0]}`).then(({ data }) => {
-        console.log(data)
-        console.log(this.customer);
-
-
-
+        console.log(data.sales)
+        // console.log(this.customer);
 
         this.sales = Object.values(data.sales.data);
         // console.log(this.sales);

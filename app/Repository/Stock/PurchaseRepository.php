@@ -23,15 +23,25 @@ use PurchaseTrait;
     {
 
 
-        $this->add_into_purchase_table($this->core);
+        $this->add_into_purchase_table();
      
 
     }
 
+    public function refresh()
+    {
+
+
+        $this->refresh_purchase_table();
+     
+
+    }
+
+
     public function init_details(...$list_data)
     {
 
-        $this->add_into_purchase_details_table($this->core);
+        $this->add_into_purchase_details_table();
   
     }
 

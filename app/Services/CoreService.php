@@ -1,42 +1,49 @@
 <?php
 
 namespace App\Services;
+
 class CoreService
 {
+    public $id_store_product;
+    public $data_store_product;
+    public $store_product_f = 0;
+    public $micro_unit_qty;
+    public $unit_value;
+    public $unit_array;
     public $daily_id = 0;
     public $stock_f = 0;
     public $data;
-    public $store_product_f = 0;
-    public $unit_value;
-    public $unit_array;
-    public $micro_unit_qty;
     public $sale_id;
     public $sale;
+    public $cash_id;
+    public $cash;
     public $return;
     public $return_id;
     public $purchase_id;
     public $purchase;
+    public $supply_id;
+    public $supply;
     public $transfer_id;
     public $transfer;
-    public $id_store_product;
-    public $data_store_product;
-    public $value; 
+
+    public $value;
     public $discount;
 
-    public function setValue($value){
+    public function setValue($value)
+    {
 
         $this->value = $value;
     }
 
-    public function setData($data){
+    public function setData($data)
+    {
 
         $this->data = $data;
     }
-    
-    public function setDiscount($discount){
+
+    public function setDiscount($discount)
+    {
 
         $this->discount = $discount;
     }
-   
-
 }

@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Account;
-
-
+use App\Repository\Note\ExpenceRepository;
+use App\Services\CoreService;
 use App\Models\Expence;
 use App\Models\ExpenceType;
+use App\Services\DailyService;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -12,6 +13,12 @@ use App\Http\Controllers\Controller;
 class ExpenceController extends Controller
 {
     
+    public function __construct(Request $request,public CoreService $core)
+    {
+
+        $this->core->setData($request->all());
+        
+    }
    
     public function index()
     {
@@ -34,7 +41,9 @@ class ExpenceController extends Controller
         return response()->json(['expence_types' => $expence_types]);
     }
 
-    public function store(Request $request)
+    public function store(
+        DailyService $daily,
+        ExpenceRepository $note)
     {
 
 
@@ -48,36 +57,46 @@ class ExpenceController extends Controller
         //     return response()->json(['error' => $validator->errors()], 401);
         // }
 
-        foreach ($request->post('count') as $value) {
-     
-            $expence = new Expence();
-            $expence->date =  $request->post('date');
-            $expence->expence_type_id =  $request->all()['expence_type'][$value];
-            $expence->quantity =  $request->all()['qty'][$value];
 
-            $expence->save();
-            
-           
+        // dd($this->core->data);
+        
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
+
+            $daily->daily()->debit()->credit();
+            $note->finish();
+         
+            // dd(1);
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
+            return response([
+                'message' => "daily created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+
+
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
         }
-     
-        return response()->json(['message' => 'success']);
+
     }
 
     
-    public function create()
-    {
-        //
-    }
-
     
 
     public function show(Expence $Expence)
     {
          $expences = DB::table('expences')
-        ->join('expence_types','expence_types.id', '=', 'expences.expence_type_id')
-       
-        ->select('expences.*','expence_types.name as expence')
+        ->join('dailies','dailies.id', '=', 'expences.daily_id')
+        ->join('daily_details','daily_details.daily_id', '=', 'dailies.id')
+        ->join('accounts','accounts.id', '=', 'daily_details.account_id')
+        ->select('expences.*','dailies.*','daily_details.debit','accounts.*')
         ->paginate(10);
 
         return response()->json(['expences' => $expences]);

@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\Purchase;
+
 use App\Repository\StoreReturnInventury\StorePurchaseReturnRepository;
 use App\Repository\StockReturnInventury\StockPurchaseReturnRepository;
+use Illuminate\Support\Facades\Cache;
 use App\Repository\CheckData\CheckPurchaseReturnRepository;
 use App\Repository\Stock\PurchaseReturnRepository;
 use App\Traits\Details\ReturnDetailsTrait;
@@ -10,6 +12,8 @@ use App\Services\UnitService;
 use App\Services\CoreService;
 use App\Traits\GeneralTrait;
 use App\Http\Controllers\Controller;
+use App\Models\DailyDetail;
+use App\Models\PurchaseDetail;
 use Illuminate\Http\Request;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturn;
@@ -44,7 +48,7 @@ class PurchaseReturnController extends Controller
 
         return response()->json([
             'details' => $details,
-            'suppliers' => $this->suppliers(),
+            // 'suppliers' => $this->suppliers(),
             'treasuries' => $this->treasuries()
         ]);
     }
@@ -191,7 +195,7 @@ class PurchaseReturnController extends Controller
                 // -------------------------------------------------------------------------------------
 
                 // $result = $check->check_return($request['old'][$value]);
-       
+
                 // if ($result['status'] == 0) {
                 //     return response(['message' => $result['text'], 'status' => $result['status']]);
                 // }
@@ -203,12 +207,15 @@ class PurchaseReturnController extends Controller
                 $returnservice->details();
                 $stock->stock();
             }
+            $daily->daily()->debit()->credit();
+            $warehouse->refresh(); //this update purchase_return table by daily_id
+            Cache::forget('stock');
 
-            // dd('sdsd');
-            // $daily->daily();
+            // dd(DailyDetail::all());
+
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
-            // $this->daily->daily();
+
             return response([
                 'message' => "purchaseReturn created successfully",
                 'status' => "success"
@@ -223,4 +230,33 @@ class PurchaseReturnController extends Controller
 
         // return response()->json(['message' => $responce]);
     }
+
+    public function purchase_return_daily(Request $request)
+    {
+
+
+
+        $purchases = DB::table('purchases')
+            ->where('purchases.id', $request->id)
+            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+            ->join('dailies', 'dailies.id', '=', 'purchases.daily_id')
+            ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
+            ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
+            ->select(
+                // 'purchases.*',
+                'purchases.id as purchase_id',
+                'suppliers.name',
+                'dailies.*',
+                'daily_details.*',
+                'accounts.text',
+                'accounts.id as account_id',
+
+
+            )
+            ->get();
+
+        // dd($purchases);
+        return response()->json(['daily_details' => $purchases]);
+    }
+
 }

@@ -21,6 +21,7 @@ trait DetailsTrait
         $output = explode('_', $table);
         $column = $output[0];
 
+
         //-----------------------------------------------------------------------------------------------
         $details =   DB::table($table)->where($table . '.' . $column . '_id', $id)
             // ->where('store_products.quantity', '!=', 0)
@@ -38,6 +39,7 @@ trait DetailsTrait
                 'store_products.*',
                 'statuses.name as status',
                 'stores.text as store',
+                'stores.account_id as store_account',
                 'store_products.quantity as avilable_qty',
                 'store_products.desc',
                 DB::raw($table . '.qty-' . $table . '.qty_return AS qty_remain')

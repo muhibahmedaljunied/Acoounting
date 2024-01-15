@@ -15,11 +15,16 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->Increments('id');
+
+            $table->unsignedInteger('supplier_id');
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+
+            $table->unsignedInteger('daily_id')->nullable();
+            $table->foreign('daily_id')->references('id')->on('dailies')->onDelete('cascade');
+
             $table->date('date')->nullable();
             $table->date('due_date')->nullable();
             $table->string('note')->nullable();
-            $table->unsignedInteger('supplier_id');
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
             $table->string('supplier_name');
             $table->string('sub_total')->nullable();
             $table->decimal('discount')->nullable();
@@ -28,7 +33,7 @@ class CreatePurchasesTable extends Migration
             $table->string('status')->nullable();
 
             // $table->integer('quantity')->nullable();
-            $table->integer('qty_return')->default(0);
+            // $table->integer('qty_return')->default(0);
 
             // $table->unsignedInteger('store_id');
             // $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');

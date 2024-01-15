@@ -4,24 +4,23 @@ namespace App\Traits\Purchase;
 
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
-
+use Illuminate\Support\Facades\DB;
 trait PurchaseTrait
 {
 
-    public function add_into_purchase_table($core)
+    public function add_into_purchase_table()
     {
 
 
         $table_one = Purchase::create(
             [
-                'supplier_id' => $core->data['supplier_id'],
-                'supplier_name' => $core->data['supplier_name'],
-                'grand_total' => $core->data['grand_total'],
-                'sub_total' => $core->data['sub_total'],
-                'discount' => $core->discount,
-                'tax_amount' => $core->data['total_tax'],
-                'status' => 'pendding',
-                'date' => $core->data['date'],
+                'supplier_id' => $this->core->data['supplier_id'],
+                'supplier_name' => $this->core->data['supplier_name'],
+                'grand_total' => $this->core->data['grand_total'],
+                'sub_total' => $this->core->data['sub_total'],
+                'discount' => $this->core->discount,
+                'tax_amount' => $this->core->data['total_tax'],
+                'date' => $this->core->data['date'],
 
             ]
         );
@@ -32,19 +31,29 @@ trait PurchaseTrait
         // return $table_one;
     }
 
-    public function add_into_purchase_details_table($core)
+    public function refresh_purchase_table()
+    {
+
+
+        DB::table('purchases')
+            ->where(['id' => $this->core->purchase_id])
+            ->update(['daily_id' => $this->core->daily_id]);
+    }
+
+
+    public function add_into_purchase_details_table()
     {
 
 
 
         
+        // dd($this->core->data['grand_total']);
         $Details = new PurchaseDetail();
-        $Details->purchase_id = $core->purchase_id;
-        $Details->price = $core->data['price'][$core->value];
-        $Details->total = $core->data['sub_total'];
-        $Details->store_product_id = $core->id_store_product;
-        $Details->unit_id = $core->unit_value;
-        // $Details->qty = $core->data['qty'][$core->value];
+        $Details->purchase_id = $this->core->purchase_id;
+        $Details->price = $this->core->data['price'][$this->core->value];
+        $Details->total = $this->core->data['grand_total'];
+        $Details->store_product_id = $this->core->id_store_product;
+        $Details->unit_id = $this->core->unit_value;
         $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
     }

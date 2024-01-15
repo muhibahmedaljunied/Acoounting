@@ -17,7 +17,11 @@ class CreatePurchaseReturnsTable extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('purchase_id')->unsigned()->nullable();
-            $table->foreign('purchase_id')->references('id')->on('purchases');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
+
+            $table->unsignedInteger('daily_id')->nullable();
+            $table->foreign('daily_id')->references('id')->on('dailies')->onDelete('cascade');
+
 
            
             $table->integer('quantity')->nullable();

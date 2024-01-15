@@ -62,14 +62,15 @@
                     </div>
                   </div>
 
-                  <div class="col-md-3"><label for="pagoPrevio">البيان</label> <input type="text" class="form-control"
-                      style="background-color: beige;"></div>
+                  <div class="col-md-3"><label for="pagoPrevio">البيان</label> 
+                    <input v-model="description" type="text" class="form-control" style="background-color: beige;">
+                  </div>
 
 
 
                   <div class="col-md-2">
                     <label for="pagoPrevio">التاريخ</label>
-                    <input type="date" class="form-control input_cantidad" onkeypress="return valida(event)" />
+                    <input v-model="date" type="date" class="form-control input_cantidad" onkeypress="return valida(event)" />
 
                   </div>
                 </div>
@@ -87,7 +88,7 @@
                     <input type="hidden" v-model="details[0].account_id" class="form-control input_cantidad"
                       onkeypress="return valida(event)" />
 
-                      <input type="hidden" v-model="details[0].sale_id" class="form-control input_cantidad"
+                    <input type="hidden" v-model="details[0].sale_id" class="form-control input_cantidad"
                       onkeypress="return valida(event)" />
 
                   </div>
@@ -102,8 +103,8 @@
 
                   <div class="col-md-2">
                     <label for="pagoPrevio">المبلغ المدفوع</label>
-                    <input v-model="details[0].paid" style="background-color: beige;" type="number"
-                      class="form-control input_cantidad" onkeypress="return valida(event)" />
+                    <input @input="credit(details[0].paid)" v-model="details[0].paid" style="background-color: beige;"
+                      type="number" class="form-control input_cantidad" onkeypress="return valida(event)" />
 
                   </div>
 
@@ -274,8 +275,12 @@ export default {
       jsonTreeData: '',
       type_of_tree: 1,
       details: '',
+      remaining: '',
+      date:'',
+      description:'',
     };
   },
+  props: ['data'],
   mounted() {
 
     this.list();
@@ -291,35 +296,60 @@ export default {
   methods: {
 
     list(page = 1) {
-      let uri = `/data_for_receivable_bond/${this.$route.params.id}`;
+      let uri = `/data_for_receivable_bond/${this.data}`;
       this.axios.post(uri).then((response) => {
 
         this.details = response.data.list_data;
+        this.remaining = this.details[0].remaining;
 
       });
     },
 
 
-    payemnt() {
+    credit(paid) {
+
+
+      var remaining = this.remaining - paid;
+
+      if (remaining < 0) {
+
+        this.details[0].remaining = 0
+      } else {
+
+        this.details[0].remaining = remaining
+
+      }
+
+    },
+
+    payment() {
 
       this.axios
         .post(`/store_ReceivableBond`, {
-          type: 'Sale',
+          type: 'ReceivableBond',
+
           sale_id: this.details[0].sale_id,
-          customer_account_id: this.details[0].account_id,
-          account_id: $('#ReceivableBond_account_tree_id').value(),
-          description: this.description,
-          date: this.date,
           remaining: this.details[0].remaining,
+          date: this.date,
+          description: this.description,
+          sale_id: this.details[0].sale_id,
           paid: this.details[0].paid,
-          
-       
+          credit: {
+            credit_account_id: this.details[0].account_id,
+          },
+          debit: {
+            debit_account_id: $('#ReceivableBond_account_tree_id').val(),
+
+          },
+
+
+
         })
         .then((response) => {
 
-      
 
-       
+
+
           // this.$router.go(0);
         });
 

@@ -173,8 +173,6 @@
       </div>
     </div>
   </div>
-
-
 </template>
 <script>
 export default {
@@ -183,15 +181,17 @@ export default {
       return_sale: "yes",
       return_detail: '',
       operationselected: [],
-      type:'',
-      index:'',
+      type: '',
+      index: '',
     };
   },
+  props: ['data'],
+
   mounted() {
 
     this.table = 'sale';
 
-    this.axios.post(`/listreturn_sale/${this.$route.params.id}`).then((response) => {
+    this.axios.post(`/listreturn_sale/${this.data}`).then((response) => {
       this.return_sale = response.data.returns;
 
     });
@@ -203,7 +203,7 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1],{ table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
           .then((response) => {
 
             this.return_detail = response.data.return_details;
@@ -219,7 +219,7 @@ export default {
       }
 
     },
-   
+
   },
 };
 </script>

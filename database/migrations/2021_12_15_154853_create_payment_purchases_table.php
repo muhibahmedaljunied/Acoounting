@@ -17,9 +17,9 @@ class CreatePaymentPurchasesTable extends Migration
             $table->Increments('id');
             // $table->integer('purchase_id');
             $table->unsignedInteger('purchase_id')->unsigned()->nullable();
-            $table->foreign('purchase_id')->references('id')->on('purchases');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
 
-            $table->string('payment_info');
+            $table->string('payment_info')->nullable();
             $table->string('payment_status')->default('pending');
             $table->string('paid')->default(0);
             $table->string('remaining')->default(0);

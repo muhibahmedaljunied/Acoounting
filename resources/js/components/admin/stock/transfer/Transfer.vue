@@ -6,8 +6,7 @@
 
     <div class="row row-sm">
       <div class="col-xl-12">
-      </div>
-      <div class="card">
+        <div class="card">
         <div class="card-header">
           <span class="h3">التحويلات المخزنيه</span>
 
@@ -71,6 +70,8 @@
           <!-- <pagination align="center" :data="categorys" @pagination-change-page="list"></pagination> -->
         </div>
       </div>
+      </div>
+    
     </div>
     <!--/div-->
 

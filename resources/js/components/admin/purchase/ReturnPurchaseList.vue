@@ -243,6 +243,8 @@ export default {
 
     };
   },
+  props: ['data'],
+
   mounted() {
 
     this.table = 'purchase';
@@ -286,7 +288,7 @@ export default {
     },
     list(page = 1) {
       this.axios
-        .post(`/listreturn_purchase/${this.$route.params.id}`)
+        .post(`/listreturn_purchase/${this.data}`)
         .then(({ data }) => {
           console.log(data.returns);
           this.return_purchases = data.returns;

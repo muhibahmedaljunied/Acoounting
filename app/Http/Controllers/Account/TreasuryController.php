@@ -31,7 +31,7 @@ class TreasuryController extends Controller
 
             // -------------------------------------------------------------------------
             $parent =  DB::table('accounts')
-                ->where('accounts.id', $request['account'][$value])
+                ->where('accounts.id', $request['account'])
                 ->select(
                     'accounts.*',
 
@@ -41,7 +41,7 @@ class TreasuryController extends Controller
             // ---------------------------------------------------------------------------
 
             $childs = Account::where('parent_id', $parent->id)->select('accounts.*')->max('id');
-            $id = ($childs == null) ? $request['account'][$value] * 10 + 1 : $childs + 1;
+            $id = ($childs == null) ? $request['account'] * 10 + 1 : $childs + 1;
 
             // dd($id);
             // -------------------------------------------------------------------------

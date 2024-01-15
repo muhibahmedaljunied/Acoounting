@@ -20,6 +20,15 @@ use SaleTrait;
       
     }
 
+    public function refresh()
+    {
+
+
+        $this->refresh_sale_table();
+     
+
+    }
+
 
     public function init_details(...$list_data)
     {

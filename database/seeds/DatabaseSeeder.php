@@ -52,44 +52,6 @@ class DatabaseSeeder extends Seeder
             'remember_token' => '12313131313',
 
         ]);
-     
-        // -----------------------------------------------------------------------------------------
-
-        // DB::table('banks')->insert([
-        //     'id'        => 1,
-        //     'name'    => 'بنك التضامن',
-
-        // ]);
-
-        // DB::table('banks')->insert([
-        //     'id'        => 2,
-        //     'name'    => 'بنك الانشاء والتعمير',
-
-        // ]);
-
-        // DB::table('banks')->insert([
-        //     'id'        => 3,
-        //     'name'    => 'بنك سباء',
-
-        // ]);
-        // // ------------------------------------------------------
-        // DB::table('treasuries')->insert([
-        //     'id'        => 1,
-        //     'name'    => 'الصندوق الريسي',
-
-        // ]);
-
-        // DB::table('treasuries')->insert([
-        //     'id'        => 2,
-        //     'name'    => 'صندوق حده',
-
-        // ]);
-
-        // DB::table('treasuries')->insert([
-        //     'id'        => 1,
-        //     'name'    => 'تالف',
-
-        // ]);
 
         // --------------------------------------------------
         DB::table('currencies')->insert([
@@ -167,29 +129,7 @@ class DatabaseSeeder extends Seeder
             'name'    => 'عدن',
 
         ]);
-        //     // -----------------------------departments---------------------------
-        // DB::table('departments')->insert([
-        //     'id'        => 1,
-        //     'name'    => 'حاسوب',
-
-        // ]);
-        // DB::table('departments')->insert([
-        //     'id'        => 2,
-        //     'name'    => 'هندسه',
-
-        // ]);
-        //   -----------------------job----------------------------------
-
-        // DB::table('jobs')->insert([
-        //     'id'        => 1,
-        //     'name'    => 'IT',
-
-        // ]);
-        // DB::table('jobs')->insert([
-        //     'id'        => 2,
-        //     'name'    => 'computer',
-
-        // ]);
+        
         //   -----------------------stafftype----------------------------------
 
         DB::table('staff_types')->insert([
@@ -260,22 +200,6 @@ class DatabaseSeeder extends Seeder
 
 
 
-        //   -----------------------allowance----------------------------------
-
-        //  DB::table('allowances')->insert([
-        //     'id'        => 1,
-        //     'staff_id'    => 1,
-        //     'name'    => 'بدل سكن',
-        //     'allowance_type_id'=>1
-
-        // ]);
-        // DB::table('allowances')->insert([
-        //     'id'        => 2,
-        //     'staff_id'    => 1,
-        //     'name'    => 'بدل مواصلات',
-        //     'allowance_type_id'=>1
-
-        // ]);
 
         //   -----------------------delay_types----------------------------------
         DB::table('delay_types')->insert([
@@ -399,58 +323,6 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
-        //   -----------------------official_holidays----------------------------------
-        // DB::table('official_holidays')->insert([
-        //     'id'        => 1,
-        //     'name'    => 'عيد الفطر',
-        //     'from_date'      =>'',
-        //     'into_date'      =>''
-
-
-        // ]);
-        // DB::table('official_holidays')->insert([
-        //     'id'        => 2,
-        //     'name'    => 'عيد الاضحي',
-        //     'from_date'      =>'',
-        //     'into_date'      =>''
-
-        // ]);
-        // DB::table('official_holidays')->insert([
-        //     'id'        => 3,
-        //     'name'    => 'عطله اسبوعيه',
-        //     'from_date'      =>'',
-        //     'into_date'      =>''
-
-        // ]);
-        // DB::table('official_holidays')->insert([
-        //     'id'        => 4,
-        //     'name'    => 'عيد 22 مايو',
-        //     'from_date'      =>'',
-        //     'into_date'      =>''
-
-        // ]);
-        // DB::table('official_holidays')->insert([
-        //     'id'        => 5,
-        //     'name'    => 'عيد 14 اكتوبر',
-        //     'from_date'      =>'',
-        //     'into_date'      =>''
-
-        // ]);
-
-        // DB::table('official_holidays')->insert([
-        //     'id'        => 6,
-        //     'name'    => 'عيد 30 نوفمبر',
-        //     'from_date'      =>'',
-        //     'into_date'      =>''
-
-        // ]);
-        // DB::table('official_holidays')->insert([
-        //     'id'        => 7,
-        //     'name'    => 'عيد 26 سبتمبر',
-        //     'from_date'      =>'',
-        //     'into_date'      =>''
-
-        // ]);
         //   -----------------------extra_types----------------------------------
 
         DB::table('vacation_types')->insert([
@@ -507,34 +379,6 @@ class DatabaseSeeder extends Seeder
 
 
 
-        // --------------------------------------------------------------------
-        DB::table('expence_types')->insert([
-            'id'        => 1,
-            'name'    => 'كهرباء',
-
-        ]);
-
-        DB::table('expence_types')->insert([
-            'id'        => 2,
-            'name'    => 'ايجار',
-
-        ]);
-        // ---------------------------------------------------------------------------
-        DB::table('expences')->insert([
-            'id'        => 1,
-            'expence_type_id'    => '1',
-            'quantity'    => '200000',
-
-
-        ]);
-
-        DB::table('expences')->insert([
-            'id'        => 2,
-            'expence_type_id'    => '2',
-            'quantity'    => '200000',
-
-        ]);
-
         // ----------------------------------------------------------------------------------
 
         DB::table('sanction_discounts')->insert([
@@ -587,39 +431,6 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
-       
-// -----------------------------------
-        // DB::table('work_systems')->insert([
-        //     'id'        => 1,
-        //     'name'    => ' حراس امن',
-
-
-        // ]);
-
-        // DB::table('work_systems')->insert([
-        //     'id'        => 2,
-        //     'name'    => 'دوام  مدراء',
-
-
-        // ]);
-
-        // DB::table('work_systems')->insert([
-        //     'id'        => 3,
-        //     'name'    => 'فتره',
-
-
-        // ]);
-
-
-
-        // DB::table('work_systems')->insert([
-        //     'id'        => 4,
-        //     'name'    => 'فترتين',
-
-
-        // ]);
-
-
       
         // --------------------------------periods-------------------------------------------
           DB::table('periods')->insert([
@@ -649,63 +460,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // --------------------------------------------products--------------------------------------------------
-        // DB::table('products')->insert([
-        //     'id'        => 1,
-        //     'parent_id'    => '',
-        //     'text'=>'عصاير',
-        //     'rank'=>''
-
-        // ]);
-
-        // DB::table('products')->insert([
-        //     'id'        => 11,
-        //     'parent_id'    => 1,
-        //     'text'=>'يمني',
-        //     'rank'=>1
-
-        // ]);
-
-        // DB::table('products')->insert([
-        //     'id'        => 111,
-        //     'parent_id'    => 11,
-        //     'text'=>'هايل سعيد',
-        //     'rank'=>2
-
-        // ]);
-
-
-        // DB::table('products')->insert([
-        //     'id'        => 1111,
-        //     'parent_id'    => 111,
-        //     'text'=>'الهناء',
-        //     'rank'=>3
-
-        // ]);
-        // -----------------------------------stores-----------------------------------------------------
-
-
-        // DB::table('products')->insert([
-        //     'id'        => 1,
-        //     'parent_id'    => '',
-        //     'text'=>'جدر',
-        //     'rank'=>''
-
-        // ]);
-
-        // DB::table('products')->insert([
-        //     'id'        => 11,
-        //     'parent_id'    => 1,
-        //     'text'=>'المخزن1',
-        //     'rank'=>1
-
-        // ]);
-
-        // DB::table('products')->insert([
-        //     'id'        => 12,
-        //     'parent_id'    => 1,
-        //     'text'=>'المخزن2',
-        //     'rank'=>1
-
-        // ]);
+        
     }
 }

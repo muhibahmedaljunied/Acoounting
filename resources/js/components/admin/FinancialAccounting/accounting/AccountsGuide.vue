@@ -28,22 +28,39 @@
 
                       <div class="card-header">
 
-                        <a @click="exports_excel()" >
+                        <a @click="exports_excel()">
                           <img src="/assets/img/export.png" alt="" style="width: 10%;"></a>
 
-                        <a @click="imports_excel()" >
+                        <a @click="imports_excel()">
                           <img src="/assets/img/import.png" alt="" style="width: 10%;"></a>
                       </div>
 
                       <div class="card-body">
-                        <div class="container">
-                          <!-- <button @click="exporte">export</button>
-                          <button @click="importe">import</button> -->
-
-
+                        <!-- <div class="container">
                           <div class="well" id="treeview_json_account"></div>
+                        </div> -->
 
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="input-group">
+                         
+                                <input type="text" id="ricerca-enti" class="form-control"
+                                  placeholder="بحث" aria-describedby="search-addon">
+                           
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12" id="treeview_json_account">
+                       
+                              <div id="test">
+
+</div>
+                            </div>
+                          </div>
                         </div>
+
                       </div>
                     </div>
                   </div>

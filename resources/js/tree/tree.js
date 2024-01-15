@@ -4,7 +4,8 @@ export default {
     methods: {
 
         showtree(table) {
-
+            let gf = this;
+            var id =`treeview_json_${table}`;
             var uri = `/tree_${table}`;
             if(table == 'intostore'){
 
@@ -16,7 +17,12 @@ export default {
                 uri = `/tree_account`;
             }
 
-            let gf = this;
+            if(gf.type == 'Treasury'){
+
+                id =`treeview_json_${table}_treasury`;
+            }
+
+      
 
 
            
@@ -49,7 +55,7 @@ export default {
 
 
 
-                $(`#treeview_json_${table}`).jstree({
+                $(`#${id}`).jstree({
                     core: {
                         themes: {
                             responsive: false,
@@ -152,6 +158,11 @@ export default {
 
 
 
+                    if (table == 'expence' && gf.type == 'Expence') {
+
+                        gf.expence[gf.indexselected] = data.node.id;
+
+                    }
 
                     if (table == 'structure' && gf.type == 'Structure') {
 
@@ -185,6 +196,13 @@ export default {
                         gf.product_tree(gf, data, table)  //this for get units of product
 
                     }
+
+                    if (table == 'product' && gf.type == 'Supply') {
+
+
+                        gf.product_tree(gf, data, table)  //this for get units of product
+
+                    }
                     if (table == 'product' && gf.type == 'Opening') {
 
                         gf.product_tree(gf, data, table) //this for get units of product
@@ -202,6 +220,12 @@ export default {
                     if (table == 'product' && gf.type == 'Sale') {
 
                         gf.get_product_for_sale(gf, data.node.id,table);
+
+                    }
+
+                    if (table == 'product' && gf.type == 'Cash') {
+
+                        gf.get_product_for_cash(gf, data.node.id,table);
 
                     }
 
@@ -241,6 +265,15 @@ export default {
                         gf.get_account_for_store(gf);
                     }
 
+                    if (table == 'store' && gf.type == 'Cash') {
+
+
+                        gf.store = data.node.id;
+                        gf.get_product_for_cash(gf, data.node.id,table);
+                        gf.get_account_for_store(gf);
+                    }
+
+
                     if (table == 'intostore' && gf.type == 'Transfer') {
 
 
@@ -265,6 +298,15 @@ export default {
 
 
                     if (table == 'store' && gf.type == 'Purchase') {
+
+
+                        gf.store = data.node.id;
+                        gf.get_account_for_store(gf);
+
+
+                    }
+
+                    if (table == 'store' && gf.type == 'Supply') {
 
 
                         gf.store = data.node.id;
@@ -398,6 +440,13 @@ export default {
 
         get_product_for_sale(gf, id,table) {
             axios.post(`/sale/newsale/${id}`, { type: table }).then((responce) => {
+
+                gf.all_products = responce.data.products.data;
+
+            });
+        },
+        get_product_for_cash(gf, id,table) {
+            axios.post(`/cash/newcash/${id}`, { type: table }).then((responce) => {
 
                 gf.all_products = responce.data.products.data;
 

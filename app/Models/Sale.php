@@ -18,9 +18,11 @@ class Sale extends Model
         return $this->hasMany(SaleReturn::class);
     }
 
+    
+
     public function receivable_notes()
     {
-        return $this->hasMany(PayableNote::class);
+        return $this->hasMany(ReceivableNote::class);
     }
 
     public function payment_sales()
@@ -32,9 +34,9 @@ class Sale extends Model
     {
         return $this->morphMany(Stock::class, 'stockable');
     }
-     public function payments()
+    public function payments()
     {
-        return $this->morphMany('App\Payments', 'paymentable');
+        return $this->morphMany(Payment::class, 'paymentable');
     }
     
   

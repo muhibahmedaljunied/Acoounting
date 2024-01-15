@@ -23,7 +23,6 @@ class CreateExpencesTable extends Migration
             $table->foreign('daily_id')->references('id')->on('dailies');
             
             $table->date('date')->nullable();
-            $table->integer('total');
 
             $table->timestamps();
         });

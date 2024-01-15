@@ -57,8 +57,8 @@
 
                                                 <th>التاريخ</th>
                                                 <th>البيات</th>
-                                                <th>داين</th>
                                                 <th>مدين</th>
+                                                <th>داين</th>
                                                 <th>الرصيد</th>
 
 
@@ -95,8 +95,10 @@
 
                                                     </td>
                                                     <td>
-                                                        سند قبض
-
+                                                       
+                                                        <span style="color:red"> سند صرف رقم </span>  {{
+                                                       tem.id
+                                                }}
                                                     </td>
                                                     <td>
                                                         {{ tem.paid }}
@@ -120,9 +122,21 @@
                                             </template>
 
                                             <tr>
-                                                <td colspan="4" style="color:red;font-size:30px;">
+                                                <td colspan="2" style="color:red;font-size:30px;">
                                                     الاجمالي
                                                 </td>
+                                                <td>
+
+
+<span style="color:green;font-size:30px;"></span>
+
+</td>
+<td>
+
+
+<span style="color:green;font-size:30px;"></span>
+
+</td>
                                                 <td>
 
 
@@ -247,7 +261,7 @@ export default {
 
 
             this.axios.post(`/supplier/supplier_account_list/${this.supplier[0]}`).then(({ data }) => {
-                // console.log(data.purchases.data)
+                console.log(data.purchases)
 
 
 

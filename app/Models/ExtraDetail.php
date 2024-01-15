@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 class ExtraDetail extends Model
 {
     protected $fillable = ['extra_id','extra_sanction_id','date'];
-    // protected $table = 'admin';
 
     public function extra()
     {

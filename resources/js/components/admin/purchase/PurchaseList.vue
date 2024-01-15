@@ -42,9 +42,9 @@
                     <td>{{ purchase.grand_total }}</td>
                     <td>
 
-                      <span class="badge bg-warning" v-if="purchase.payment_status == 'pendding'">معلقه</span>
+                      <span class="badge bg-warning" v-if="purchase.payment_status == 'pendding'">غير مدفوعه</span>
                       <span class="badge bg-success" v-if="purchase.payment_status == 'paiding'">مدفوعه</span>
-                      <span class="badge bg-info" v-if="purchase.payment_status == 'Partially'">مدفوعه جزئيا</span>
+                      <span class="badge bg-info" v-if="purchase.payment_status == 'partialy'">مدفوعه جزئيا</span>
 
                     </td>
 
@@ -59,15 +59,16 @@
                           ]">
                             تفاصيل
                           </option>
+                          
                           <option class="btn btn-success" v-bind:value="[
-                            '/return_purchase/',
-                            purchase.purchases_id,
+                            'return_purchase',
+                            purchase,
                             1
                           ]">
                             ارجاع
                           </option>
                           <option class="btn btn-success" v-bind:value="[
-                            '/returnpurchaselist/',
+                            'returnpurchaselist',
                             purchase.purchases_id,
                             2
                           ]">
@@ -85,7 +86,7 @@
                             v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
                             دفع
                           </option> -->
-                          <option class="btn btn-success" v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
+                          <option class="btn btn-success" v-bind:value="['PaymentBond', purchase.purchase_id, 4]">
                             صرف
                           </option>
                           <option class="btn btn-success"
@@ -94,14 +95,22 @@
                           </option>
 
 
-                          <option class="btn btn-success"
-                            v-bind:value="['/purchase_invoice_update/', purchase.purchase_id, 6]">
+                          <option class="btn btn-success" v-bind:value="['purchase_daily', purchase.purchase_id, 6]">
                             عرض القيد المحاسبي
                           </option>
                         </select>
                       </div>
 
 
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مشتريات
+                      </h3>
                     </td>
                   </tr>
                 </tbody>
@@ -134,14 +143,14 @@
                     <th class="wd-15p border-bottom-0"> كميه الشراء</th>
                     <!-- <th>الوحده</th> -->
                     <th class="wd-15p border-bottom-0"> السعر </th>
-                    <th class="wd-15p border-bottom-0"> الاجمالي </th>
+                    <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
 
                     <!-- <th class="wd-15p border-bottom-0">  الكميه المرتحعه</th> -->
 
 
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="purchase_detail && purchase_detail.length > 0">
                   <tr v-for="purchase_details in purchase_detail">
                     <!-- <td>{{ purchase_details.id }}</td> -->
                     <td>{{ purchase_details.product }}</td>
@@ -170,26 +179,7 @@
                           </span>
                         </span>
 
-                        <!-- <span v-if="purchase_details.unit_id == temx.id">
-                          <span v-if="temx.unit_type == 0">
 
-                            <span v-if="purchase_details.qty / purchase_details.rate >= 1">
-                              {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
-                                purchase_details.units[0].name
-                              }}
-                            </span>
-
-                            <span v-if="purchase_details.qty % purchase_details.rate >= 1">
-                              {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
-                                purchase_details.units[1].name
-                              }}
-                            </span>
-                          </span>
-
-                          <span v-if="temx.unit_type == 1">
-                            {{ purchase_details.qty }} {{ temx.name }}
-                          </span>
-                        </span> -->
                       </div>
 
 
@@ -198,18 +188,27 @@
 
                     <!-- <td>{{ purchase_details.unit }}</td> -->
                     <td>{{ purchase_details.price }}</td>
-                    <td>{{ purchase_details.total }}</td>
+                    <!-- <td>{{ purchase_details.total }}</td> -->
                     <!-- <td>{{ purchase_details.qty_return }}</td> -->
 
 
 
                   </tr>
-                  <tr>
+                  <!-- <tr>
 
                     <td colspan="7" style="text-align:center;color:red;font-size:large">الاجمالي</td>
                     <td>{{ total }}</td>
-                  </tr>
+                  </tr> -->
 
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مشتريات
+                      </h3>
+                    </td>
+                  </tr>
                 </tbody>
 
               </table>
@@ -274,7 +273,13 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // console.log(this.operationselected[index][0]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
+
       }
 
     },

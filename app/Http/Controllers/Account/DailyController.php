@@ -15,19 +15,33 @@ class DailyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct(protected DailyService $service)
+    public function __construct(
+        // protected DailyService $service
+    )
     {
 
-        $this->service = $service;
+        // $this->service = $service;
     }
     public function index()
     {
 
         $daily_details =  Account::join('daily_details', 'daily_details.account_id', '=', 'accounts.id')
             ->select('accounts.*', 'daily_details.*')
-            ->paginate(10);
+            ->paginate(100);
         return response()->json(['daily_details' => $daily_details]);
     }
+
+    public function account_report(Request $request)
+    {
+
+        $account_details =  Account::join('daily_details', 'daily_details.account_id', '=', 'accounts.id')
+            ->where('daily_details.account_id',$request->id)
+            ->select('accounts.*', 'daily_details.*')
+            ->paginate(100);
+        return response()->json(['account_details' => $account_details]);
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -46,12 +60,12 @@ class DailyController extends Controller
      */
     public function store(Request $request)
     {
-        
 
 
-        $this->service->data_store = $request;
-        
-        $this->service->handle();
+
+        // $this->service->data_store = $request;
+
+        // $this->service->handle();
 
 
 

@@ -183,9 +183,7 @@
                         <input @change="
                           add_one_transfer(
                             index,
-                            data_product.qty_transfer,
-                            data_product.quantity,
-                            data_product.unit_selected
+                            data_product
                         
                           )
                           " type="checkbox" v-model="check_state[index]" class="btn btn-info waves-effect" />
@@ -368,10 +366,12 @@ export default {
 
     add_one_transfer(
       index,
-      qty,
-      quantity,
-      unit
+      data_product
     ) {
+
+      var qty =  data_product.qty_transfer;
+      var quantity =  data_product.quantity;
+      var unit =  data_product.unit_selected;
 
       var result;
 

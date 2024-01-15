@@ -2,13 +2,13 @@
 
 namespace App\Repository\CheckData;
 use App\Services\CoreService;
-use App\Traits\DailyTrait;
+// use App\Traits\DailyTrait;
 use DB;
 class CheckPurchaseReturnRepository
 
 {
 
-    use DailyTrait;
+    // use DailyTrait;
 
     public $qty_return_now = 0;
     public $qty_remain = 0;

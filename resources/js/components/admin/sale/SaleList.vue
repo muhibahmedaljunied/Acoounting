@@ -7,10 +7,10 @@
             <div class="d-flex justify-content-between">
               <span class="h2"> المبيعات</span>
             </div>
-    
+
             <div class="d-flex justify-content-between"></div>
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -43,9 +43,9 @@
                     <!-- <td>{{ sale.sale_status }}</td> -->
                     <td>
 
-                      <span class="badge bg-warning" v-if="sale.payment_status == 'pendding'">معلقه</span>
+                      <span class="badge bg-warning" v-if="sale.payment_status == 'pendding'">غير مدفوعه</span>
                       <span class="badge bg-success" v-if="sale.payment_status == 'paiding'">مدفوعه</span>
-                      <span class="badge bg-info" v-if="sale.payment_status == 'Partially'">مدفوعه جزئيا</span>
+                      <span class="badge bg-info" v-if="sale.payment_status == 'partialy'">مدفوعه جزئيا</span>
 
                     </td>
 
@@ -58,24 +58,24 @@
                             v-bind:value="['/sale_details/', sale.sale_id, 0]">
                             تفاصيل
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/return_sale/', sale.sale_id, 1]">
+                          <option class="btn btn-success" v-bind:value="['return_sale', sale, 1]">
                             ارجاع
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/returnsalelist/', sale.sale_id, 2]">
+                          <option class="btn btn-success" v-bind:value="['returnsalelist', sale.sale_id, 2]">
                             مرتجعات
                           </option>
 
                           <option class="btn btn-success" v-bind:value="['/sale_invoice/', sale.sale_id, 3]">
                             عرض الفاتوره
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/ReceivableBond/', sale.sale_id, 4]">
-                          قبض
+                          <option class="btn btn-success" v-bind:value="['ReceivableBond', sale.sale_id, 4]">
+                            قبض
                           </option>
                           <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.sale_id, 5]">
                             تعديل الفاتوره
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.sale_id, 6]">
+                          <option class="btn btn-success" v-bind:value="['sale_daily', sale.sale_id, 6]">
                             عرض القيد المحاسبي
                           </option>
 
@@ -107,6 +107,15 @@
                     </td>
                   </tr>
                 </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مبيعات
+                      </h3>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
             <pagination align="center" :data="sales" @pagination-change-page="list"></pagination>
@@ -134,12 +143,12 @@
                     <th>المخزن</th>
                     <th class="wd-15p border-bottom-0"> الكميه المباعه</th>
                     <th class="wd-15p border-bottom-0"> السعر </th>
-                    <th class="wd-15p border-bottom-0"> الاجمالي </th>
+                    <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
                     <!-- <th class="wd-15p border-bottom-0">  الكميه المرتحعه</th> -->
 
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="sale_detail && sale_detail.length > 0">
                   <tr v-for="sale_details in sale_detail">
                     <!-- <td>{{ sale_details.id }}</td> -->
                     <td>{{ sale_details.product }}</td>
@@ -151,7 +160,7 @@
                     <!-- <td>{{ sale_details.qty }}</td>  -->
                     <td>
 
-                         <div v-for="temx in sale_details.units">
+                      <div v-for="temx in sale_details.units">
 
 
 
@@ -170,26 +179,34 @@
                           </span>
                         </span>
 
-                        </div>
+                      </div>
                       <!-- {{ sale_details.qty }} {{ sale_details.unit }} -->
                     </td>
                     <td>{{ sale_details.price }}</td>
-                    <td>{{ sale_details.total }}</td>
+                    <!-- <td>{{ sale_details.total }}</td> -->
                     <!-- <td>{{ sale_details.qty_return }}</td> -->
 
                   </tr>
 
-                  <tr>
+                  <!-- <tr>
                     <td colspan="7" style="text-align:center;color:red;font-size:large">الاجمالي</td>
                     <td>{{ total }}</td>
-                  </tr>
+                  </tr> -->
                   <!-- <a 
                       @click="$router.go(-1)"
                       class="btn btn-success"
                       ><span> تراجع</span></a
                     > -->
                 </tbody>
-
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مبيعات
+                      </h3>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -198,7 +215,6 @@
     </div>
 
   </div>
-
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
@@ -217,7 +233,7 @@ export default {
       total: 0,
       word_search: "",
       table: '',
-      type:'',
+      type: '',
     };
   },
   mounted() {
@@ -249,7 +265,13 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
+
+
       }
 
     },
@@ -266,7 +288,7 @@ export default {
     },
     list(page = 1) {
       this.axios
-        .post(`/listsale?page=${page}`,{ type: this.type })
+        .post(`/listsale?page=${page}`, { type: this.type })
         .then(({ data }) => {
           //  console.log(data.sales);
           this.sales = data.sales;

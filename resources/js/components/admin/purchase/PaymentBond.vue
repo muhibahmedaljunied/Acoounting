@@ -22,7 +22,7 @@
                     <h5 class="card-title">رقم الحساب</h5>
                     <div class="custom-search">
 
-                     
+
                       <input :id="'PaymentBond_account_tree_id'" type="text" readonly class="custom-search-input">
 
                       <button class="custom-search-botton" type="button" data-toggle="modal"
@@ -52,22 +52,24 @@
                     <h5 class="card-title">العمله</h5>
                     <div class="custom-search">
 
-                      <select class="form-control" style="background-color: beige;" name="forma_pago"
-                      >
+                      <select class="form-control" style="background-color: beige;" name="forma_pago">
 
                       </select>
 
                     </div>
                   </div>
 
-                  <div class="col-md-3"><label for="pagoPrevio">البيان</label> <input type="text" class="form-control"
-                      style="background-color: beige;"></div>
+                  <div class="col-md-3">
+                    <label for="pagoPrevio">البيان</label>
+                     <input v-model= "description" type="text" class="form-control"
+                      style="background-color: beige;">
+                    </div>
 
 
 
                   <div class="col-md-2">
                     <label for="pagoPrevio">التاريخ</label>
-                    <input type="date" class="form-control input_cantidad" onkeypress="return valida(event)" />
+                    <input v-model= "date" type="date" class="form-control input_cantidad" onkeypress="return valida(event)" />
 
                   </div>
                 </div>
@@ -95,7 +97,7 @@
 
                   <div class="col-md-2">
                     <label for="pagoPrevio">المبلغ المدفوع</label>
-                    <input v-model="details[0].paid" style="background-color: beige;" type="number"
+                    <input @input="credit(details[0].paid)" v-model="details[0].paid" style="background-color: beige;" type="number"
                       class="form-control input_cantidad" onkeypress="return valida(event)" />
 
                   </div>
@@ -238,7 +240,7 @@
       </div>
     </section>
 
-      <div class="modal fade" id="exampleModalPaymentBond" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="exampleModalPaymentBond" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
       aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -273,9 +275,13 @@ export default {
       jsonTreeData: '',
       type_of_tree: 1,
       details: '',
+      date:'',
+      description:'',
+      remaining:'',
 
     };
   },
+  props: ['data'],
   mounted() {
     this.list();
 
@@ -288,37 +294,62 @@ export default {
   methods: {
 
     list(page = 1) {
-      let uri = `/data_for_payment_bond/${this.$route.params.id}`;
+      let uri = `/data_for_payment_bond/${this.data}`;
       this.axios.post(uri).then((response) => {
 
         this.details = response.data.list_data;
+        this.remaining =this.details[0].remaining;
 
       });
     },
 
-    payemnt() {
+    credit(paid) {
 
-this.axios
-  .post(`/store_PaymentBond`, {
-    type: 'Sale',
-    customer_account_id: this.details[0].account_id,
-    account_id: $('#PaymentBond_account_tree_id').value(),
-    description: this.description,
-    date: this.date,
-    remaining: this.details[0].remaining,
-    paid: this.details[0].paid,
-    
- 
-  })
-  .then((response) => {
+      
+        var remaining = this.remaining - paid;
+
+        if (remaining<0) {
+
+          this.details[0].remaining = 0
+        }else{
+
+          this.details[0].remaining = remaining
+
+        }
+      
+    },
+
+    payment() {
+
+      this.axios
+        .post(`/store_PaymentBond`, {
+          type: 'PaymentBond',
+          date: this.date,
+          remaining: this.details[0].remaining,
+          purchase_id: this.details[0].purchase_id,
+          description: this.description,
+          paid: this.details[0].paid,
+
+          debit:{
+            debit_account_id: this.details[0].account_id,
+          },
+          
+          credit:{
+            credit_account_id: $('#PaymentBond_account_tree_id').val(),
+          },
+          
+
+
+        })
+        .then((response) => {
 
 
 
- 
-    // this.$router.go(0);
-  });
 
-},
+          // this.$router.go(0);
+        });
+
+    },
 
   },
 

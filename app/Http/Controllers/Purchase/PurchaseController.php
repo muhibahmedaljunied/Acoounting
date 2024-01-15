@@ -1,19 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Purchase;
-
 use App\Repository\StoreInventury\StorePurchaseRepository;
 use App\Repository\StockInventury\StockPurchaseRepository;
+use Illuminate\Support\Facades\Cache;
 use App\Repository\Stock\PurchaseRepository;
 use App\Services\UnitService;
-use App\Models\PaymentPurchase;
 use App\Models\StoreProduct;
-use App\Services\PurchaseService;
+use App\Services\PurchasePaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\Daily;
-use App\Models\DailyDetail;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
@@ -22,7 +19,6 @@ use App\Models\Temporale;
 use App\Models\Purchase;
 use App\Services\CoreService;
 use App\Services\DailyService;
-use App\Models\PayableNote;
 
 
 class PurchaseController extends Controller
@@ -34,11 +30,12 @@ class PurchaseController extends Controller
     public function __construct(
 
         protected CoreService $core,
-        protected PurchaseService $purchase,
+        protected PurchasePaymentService $payment,
         protected UnitService $unit,
         Request $request,
 
     ) {
+
 
         $this->core->setData($request->all());
         $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
@@ -99,6 +96,8 @@ class PurchaseController extends Controller
             ->select(
                 'treasuries.id',
                 'treasuries.name',
+                'treasuries.account_id'
+
             )
             ->get();
 
@@ -106,6 +105,7 @@ class PurchaseController extends Controller
     }
 
     public function payment(
+        DailyService $daily,
         StorePurchaseRepository $store,
         StockPurchaseRepository $stock,
         PurchaseRepository $warehouse,
@@ -123,7 +123,7 @@ class PurchaseController extends Controller
         //     ], 400);
         // }
 
-
+        // dd($this->core->data);
 
 
         try {
@@ -133,7 +133,7 @@ class PurchaseController extends Controller
 
             foreach ($this->core->data['count'] as $value) {
 
-                $this->core->setValue($value + 1);
+                $this->core->setValue($value);
 
                 $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
 
@@ -142,16 +142,18 @@ class PurchaseController extends Controller
                 $warehouse->init_details(); // this make initial for details table
 
                 $stock->stock(); // this handle data in stock table
+
             }
 
-            $this->purchase->pay();
-
-            // dd('sdsdsd');
-            // $this->daily->daily();
-
+            $this->payment->pay();
+            $daily->daily()->debit()->credit();
+            $warehouse->refresh(); //this update purchase table by daily_id
+            Cache::forget('stock');
+            // dd(Purchase::all());
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
 
             return response([
                 'message' => "purchase created successfully",
@@ -168,114 +170,32 @@ class PurchaseController extends Controller
             ], 400);
         }
     }
-
-
-
-
-
-
-
-
-    public function payment_bond(Request $request)
+    public function purchase_daily(Request $request)
     {
 
-        $data = DB::table('purchases')
-            ->where('purchases.id', $request->id)
-            ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
-            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
-            ->join('accounts', 'accounts.id', '=', 'suppliers.account_id')
 
+
+        $purchases = DB::table('purchases')
+            ->where('purchases.id', $request->id)
+            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+            ->join('dailies', 'dailies.id', '=', 'purchases.daily_id')
+            ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
+            ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
             ->select(
-                'purchases.*',
-                'suppliers.id',
+                // 'purchases.*',
+                'purchases.id as purchase_id',
                 'suppliers.name',
-                'payment_purchases.*',
+                'dailies.*',
+                'daily_details.*',
+                'accounts.text',
                 'accounts.id as account_id',
-                'accounts.text'
+
+
             )
             ->get();
-        return response()->json(['list_data' => $data]);
-    }
 
-    public function store_PaymentBond(
-        Request $request,
-        DailyService $daily,
-    )
-    {
-
-
-
-        try {
-            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
-
-
-
-
-            $daily->daily('date','total')
-            ->depit('account_id'])
-            ->credit(['account_id', 'account_id', 'account_id'])
-            ->set();
-
-            // -------------------------------------------------------------
-
-            // $data = new Daily();
-            // $data->date = $request->post('date');
-            // $data->total = $request->post('paid');
-            // $data->save();
-
-            // -------------------------------------------------------------
-
-            // $data = new DailyDetail();
-            // $data->daily_id = $request->post('purchase_id');
-            // $data->account_id = $request->post('purchase_id');
-            // $data->description = $request->post('paid');
-            // $data->debit = $request->post('debit');
-            // $data->credit = $request->post('credit');
-            // $data->save();
-
-            // -------------------------------------------------------------
-
-            // $data = new PayableNote();
-            // $data->purchase_id = $request->post('purchase_id');
-            // $data->paid = $request->post('paid');
-            // $data->date = $request->post('date');
-            // $data->save();
-
-
-            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
-
-            return response([
-                'message' => "daily created successfully",
-                'status' => "success"
-            ], 200);
-        } catch (\Exception $exp) {
-
-            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
-
-
-            return response([
-                'message' => $exp->getMessage(),
-                'status' => 'failed'
-            ], 400);
-        }
-
-
-        return response()->json(['list_data' => $data]);
-    }
-
-    public function payment_bond_store(Request $request)
-    {
-
-
-        $payment = PaymentPurchase::find($request->id);
-        if ($request->post('total_remaining') == 0) {
-            $array_data = ['payment_status' => 'paiding', 'paid' => 1212, 'remaining' => 1212];
-        }
-        if ($request->post('total_remaining') > 0) {
-            $array_data = ['payment_status', 'Partialy'];
-        }
-
-        $payment->update($array_data);
+        // dd($purchases);
+        return response()->json(['daily_details' => $purchases]);
     }
     public function show(Request $request)
     {
@@ -287,7 +207,8 @@ class PurchaseController extends Controller
                 'purchases.*',
                 'purchases.id as purchases_id',
                 'suppliers.*',
-                'payment_purchases.*'
+                'payment_purchases.*',
+                'payment_purchases.payment_status'
             )
             ->paginate(10);
 

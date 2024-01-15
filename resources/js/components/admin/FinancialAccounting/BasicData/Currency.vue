@@ -73,6 +73,13 @@
                   </td>
                 </tr>
               </tbody>
+              <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="3">
+                      <h3> لايوجد بيانات </h3>
+                    </td>
+                  </tr>
+                </tbody>
 
             </table>
           </div>

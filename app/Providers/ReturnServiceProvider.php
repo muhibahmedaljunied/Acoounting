@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\RepositoryInterface\ReturnRepositoryInterface;
 use App\Repository\Return\PurchaseReturnRepository;
 use App\Repository\Return\SaleReturnRepository;
-use App\RepositoryInterface\DailyRepositoryInterface;
+// use App\RepositoryInterface\DailyRepositoryInterface;
 
 class ReturnServiceProvider extends ServiceProvider
 {
@@ -21,43 +21,43 @@ class ReturnServiceProvider extends ServiceProvider
     {
 
         
-        $this->app->bind(ReturnRepositoryInterface::class, function () {
+        // $this->app->bind(ReturnRepositoryInterface::class, function () {
 
-            $request = app(\Illuminate\Http\Request::class);
+        //     $request = app(\Illuminate\Http\Request::class);
 
-            if ($request->type == 'PurchaseReturn') {
+        //     if ($request->type == 'PurchaseReturn') {
 
-                return new PurchaseReturnRepository();
-            }
+        //         return new PurchaseReturnRepository();
+        //     }
 
-            if ($request->type == 'SaleReturn') {
+        //     if ($request->type == 'SaleReturn') {
 
-                return new SaleReturnRepository();
-            }
-
-          
-
-            return new PurchaseReturnRepository();
-        });
-
-        $this->app->bind(DailyRepositoryInterface::class, function () {
-
-            $request = app(\Illuminate\Http\Request::class);
-
-            if ($request->type == 'PurchaseReturn') {
-
-                return new PurchaseReturnRepository();
-            }
-
-            if ($request->type == 'SaleReturn') {
-
-                return new SaleReturnRepository();
-            }
+        //         return new SaleReturnRepository();
+        //     }
 
           
 
-            return new PurchaseReturnRepository();
-        });
+        //     return new PurchaseReturnRepository();
+        // });
+
+        // $this->app->bind(DailyRepositoryInterface::class, function () {
+
+        //     $request = app(\Illuminate\Http\Request::class);
+
+        //     if ($request->type == 'PurchaseReturn') {
+
+        //         return new PurchaseReturnRepository();
+        //     }
+
+        //     if ($request->type == 'SaleReturn') {
+
+        //         return new SaleReturnRepository();
+        //     }
+
+          
+
+        //     return new PurchaseReturnRepository();
+        // });
 
         
         

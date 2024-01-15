@@ -4,24 +4,22 @@ namespace App\Http\Controllers\Sale;
 use App\Repository\CheckData\CheckSaleReturnRepository;
 use App\Repository\StoreInventury\StoreSaleRepository;
 use App\Repository\StockInventury\StockSaleRepository;
+use Illuminate\Support\Facades\Cache;
 use App\Repository\Stock\SaleRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Models\ReceivableNote;
-use App\Models\DailyDetail;
 use App\Services\UnitService;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\StoreProduct;
 use App\Services\CoreService;
 use App\Services\DailyService;
-use App\Services\SaleService;
+use App\Services\SalePaymentService;
 use App\Traits\Unit\UnitsTrait;
-use App\Models\Daily;
-use App\Services\DailyService;
 use App\Models\Sale;
+use App\Models\SaleDetail;
 
 class SaleController extends Controller
 {
@@ -32,10 +30,12 @@ class SaleController extends Controller
 
     public function __construct(
         Request $request,
+        public SalePaymentService $payment,
         protected CoreService $core,
 
 
     ) {
+
         $this->core->setData($request->all());
         $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
     }
@@ -142,16 +142,17 @@ class SaleController extends Controller
         SaleRepository $warehouse,
         CheckSaleReturnRepository $check,
         UnitService $unit,
-        SaleService $sale,
         DailyService $daily,
 
 
     ) {
 
 
+        // dd($this->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
+  
 
             $warehouse->add();
 
@@ -180,16 +181,16 @@ class SaleController extends Controller
                 $stock->stock(); // this handle data in stock table
             }
 
-            $sale->pay();
-            // dd('sdsdsdsdsdsd');
+            $this->payment->pay();
+            $daily->daily()->debit()->credit();
+            $warehouse->refresh(); //this update sale table by daily_id
+            Cache::forget('stock');
 
-            // $daily->daily();
-
+            // dd(SaleDetail::all());
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
-
-
+     
             return response([
                 'message' => "sale created successfully",
                 'status' => "success"
@@ -205,66 +206,31 @@ class SaleController extends Controller
 
 
 
-    public function receivable_bond(Request $request)
-    {
+    public function sale_daily(Request $request){
 
-
-
-
-        $data = DB::table('sales')
-            ->where('sales.id', $request->id)
-            ->join('payment_sales', 'payment_sales.sale_id', '=', 'sales.id')
-            ->join('customers', 'customers.id', '=', 'sales.customer_id')
-            ->join('accounts', 'accounts.id', '=', 'customers.account_id')
-            ->select(
-                'sales.id as sale_id',
-                'customers.id',
-                'customers.name',
-                'payment_sales.*',
-                'accounts.id as account_id',
-                'accounts.text'
-
-            )
-            ->get();
-
-        return response()->json(['list_data' => $data]);
-    }
-
-    public function store_ReceivableBond(Request $request,DailyService $daily)
-    {
-
-
-
-        // dd($request->all());
-
-        try {
-            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
-
+        
        
+        $sales = DB::table('sales')->where('sales.id',$request->id)
+        ->join('customers', 'customers.id', '=', 'sales.customer_id')
+        ->join('dailies', 'dailies.id', '=', 'sales.daily_id')
+        ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
+        ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
+        ->select(
+            // 'sales.*',
+            'sales.id as sale_id',
+            'customers.name',
+            'dailies.*',
+            'daily_details.*',
+            'accounts.text',
+            'accounts.id as account_id',
 
-
-            $daily->daily('date','total')
-            ->depit(['account_id'])
-            ->credit(['account_id', 'account_id', 'account_id'])
-            ->set();
           
+        )
+        ->get();
 
-            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+        // dd($sales);
+    return response()->json(['daily_details' => $sales]);
 
-            return response([
-                'message' => "daily created successfully",
-                'status' => "success"
-            ], 200);
-        } catch (\Exception $exp) {
-
-            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
-
-
-            return response([
-                'message' => $exp->getMessage(),
-                'status' => 'failed'
-            ], 400);
-        }
     }
 
     function show()
@@ -273,10 +239,11 @@ class SaleController extends Controller
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
             ->join('payment_sales', 'payment_sales.sale_id', '=', 'sales.id')
             ->select(
-                // 'sales.*',
+                'sales.*',
                 'sales.id as sale_id',
                 'customers.name',
-                'payment_sales.*'
+                'payment_sales.*',
+                'payment_sales.payment_status'
             )
             ->paginate(10);
 
@@ -300,10 +267,4 @@ class SaleController extends Controller
         $users = Auth::user();
         return response()->json([$table => $details, 'sales' => $sales, 'users' => $users]);
     }
-
-
-   
-
-  
-
 }

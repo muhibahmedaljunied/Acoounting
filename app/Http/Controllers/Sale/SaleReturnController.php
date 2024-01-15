@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sale;
 use App\Repository\StoreReturnInventury\StoreSaleReturnRepository;
 use App\Repository\StockReturnInventury\StockSaleReturnRepository;
 use App\Repository\CheckData\CheckSaleReturnRepository;
+use Illuminate\Support\Facades\Cache;
 use App\Repository\Stock\SaleReturnRepository;
 use App\Traits\Return\ReturnTrait;
 use App\Traits\Details\ReturnDetailsTrait;
@@ -14,6 +15,8 @@ use App\Services\ReturnService;
 use Illuminate\Http\Request;
 use App\Models\SaleReturnDetail;
 use App\Http\Controllers\Controller;
+use App\Models\DailyDetail;
+use App\Models\SaleDetail;
 use App\Services\DailyService;
 use App\Models\SaleReturn;
 use DB;
@@ -46,7 +49,7 @@ class SaleReturnController extends Controller
 
         return response()->json([
             'details' => $details,
-            'customers' => $this->customers(),
+            // 'customers' => $this->customers(),
             'treasuries' => $this->treasuries()
         ]);
     }
@@ -55,7 +58,7 @@ class SaleReturnController extends Controller
     public function index(Request $request, $id)
     {
 
-        $details = $this->details($request->all(), $id);
+        $details = $this->details($request, $id);
 
         return response()->json([
             'sale_details' => $details,
@@ -177,7 +180,7 @@ class SaleReturnController extends Controller
     )   // this create return for supply,cashing,sale,purchase
     {
 
-        // dd($request->all());
+        // dd($this->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -187,13 +190,13 @@ class SaleReturnController extends Controller
 
                 // -------------------------------------------------------------------------------------
 
-                $result = $check->check_return($this->core->data['old'][$value]);
+                // $result = $check->check_return($this->core->data['old'][$value]);
          
-                if ($result['status'] == 0) {
+                // if ($result['status'] == 0) {
                  
-                 return response(['message' => $result['text'] ,'status' => $result['status']]);
+                //  return response(['message' => $result['text'] ,'status' => $result['status']]);
            
-                }
+                // }
                  // -------------------------------------------------------------------------------------
 
                 $this->core->setValue($value);
@@ -207,15 +210,17 @@ class SaleReturnController extends Controller
                 $stock->stock();
                 
             }
+            $daily->daily()->debit()->credit();
 
-            //   dd('wewewe');
-        
-          
+            $warehouse->refresh();//this update sale_return table by daily_id
+            Cache::forget('stock');
+
+            // dd(DailyDetail::all());
+
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
-
-            // $this->daily->daily();
+  
             return response([
                 'message' => "SaleReturn created successfully",
                 'status' => "success"
@@ -229,6 +234,33 @@ class SaleReturnController extends Controller
         }
 
         // return response()->json(['message' => $responce]);
+
+    }
+
+    public function sale_return_aily(Request $request){
+
+        
+       
+        $sales = DB::table('sales')->where('sales.id',$request->id)
+        ->join('customers', 'customers.id', '=', 'sales.customer_id')
+        ->join('dailies', 'dailies.id', '=', 'sales.daily_id')
+        ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
+        ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
+        ->select(
+            // 'sales.*',
+            'sales.id as sale_id',
+            'customers.name',
+            'dailies.*',
+            'daily_details.*',
+            'accounts.text',
+            'accounts.id as account_id',
+
+          
+        )
+        ->get();
+
+        // dd($sales);
+    return response()->json(['daily_details' => $sales]);
 
     }
 }

@@ -62,6 +62,7 @@
                 </select>
               </div>
 
+              
               <div class="col-md-2">
                 <label for="cliente"> المورد</label>
 
@@ -177,7 +178,7 @@
                       <td>
                         <div id="factura_producto">
 
-                          <select style="background-color: beige;" v-model="unit[index]" name="type"
+                          <select v-on:change="calculate_price(index)" style="background-color: beige;" v-model="unit[index]" name="type"
                             :id="'select_unit' + index" class="form-control" required>
 
                           </select>
@@ -186,7 +187,7 @@
 
 
                       <td>
-                        <input style="background-color: beige;" type="number" v-model="price[index]" id="qty"
+                        <input v-on:input="calculate_price(index)" style="background-color: beige;" type="number" v-model="price[index]" id="qty"
                           class="form-control" />
                       </td>
                       <td>
@@ -215,10 +216,10 @@
 
                       <td v-if="index == 1">
 
-                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent">
+                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
                           <i class="fa fa-plus-circle"></i></button>
 
-                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent">
+                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
                           <i class="fa fa-minus-circle"></i></button>
 
 
@@ -268,7 +269,7 @@
 
                   <div class="col-md-12">
                     <label for="pagoPrevio">تاريخ الاستحقاق</label>
-                    <input type="date" id="remaining" class="form-control" v-model="remaining" />
+                    <input type="date" class="form-control" />
 
                   </div>
                   <div class="col-md-3">&nbsp;</div>
@@ -462,7 +463,7 @@ export default {
 
   mounted() {
     this.list();
-    this.counts[0] = 0;
+    this.counts[0] = 1;
     this.type = 'Purchase';
     this.type_refresh = 'increment';
 
@@ -483,19 +484,8 @@ export default {
   methods: {
 
 
-
-    show_modal(id) {
-      $("#vaciar1").val(id);
-    },
-
     calculate_price(index) {
 
-      if (this.qty[index] <= 0 || this.price[index] <= 0) {
-
-        toastMessage('فشل', "تأكد من البيانات المدخله", 'error');
-        return 0;
-
-      }
 
       this.grand_total = 0;
       this.total_tax = 0;
@@ -534,6 +524,14 @@ export default {
       this.sub_total = parseInt(this.grand_total) - parseInt(this.total_tax)
 
 
+      if (this.qty[index] <= 0 || this.price[index] <= 0) {
+
+        toastMessage('فشل', "تأكد من البيانات المدخله", 'error');
+        return 0;
+
+      }
+
+
 
     },
 
@@ -556,7 +554,7 @@ export default {
 
 
 
-        this.paid = this.grand_total;
+        // this.paid = this.grand_total;
       }
     },
 
@@ -645,10 +643,13 @@ export default {
     },
 
     onwaychange(e) {
+      this.paid = 0;
+      this.remaining  = 0;
       let input = e.target;
       this.type_payment = input.value;
       if (input.value == 2) {
         this.show = true;
+        this.remaining = this.grand_total;
       } else {
         this.show = false;
       }
@@ -657,21 +658,44 @@ export default {
       if (input.value == 1) {
         this.show_treasury = true;
         this.show_bank = false;
+        this.paid = this.grand_total;
       }
 
       if (input.value == 3) {
         this.show_bank = true;
         this.show_treasury = false;
+        this.paid = this.grand_total;
       }
     },
-    credit(e) {
-      this.remaining = this.grand_total - this.paid;
-      this.To_pay = this.paid;
-    },
+   
 
     payment() {
 
 
+      if (this.Way_to_pay_selected == 1) { //this is default if user not detect any way
+        
+        this.paid = this.grand_total;
+
+      }
+      var credit_account_id = 0;
+      if (this.Way_to_pay_selected == 1) {
+        
+        credit_account_id = this.treasury[2];
+
+      } 
+      if (this.Way_to_pay_selected == 2) {
+        
+        credit_account_id = this.supplier[2];
+
+      }
+
+      // if (Way_to_pay_selected == 3) {
+        
+      //   credit_account_id = 0;
+
+      // }
+      
+      
       this.To_pay = this.grand_total;
       this.axios
         .post(`/payPurchase`, {
@@ -685,21 +709,22 @@ export default {
           price: this.price,
           total: this.total,
           tax: this.tax,
-
           store: $('#Purchase_store_tree_id').val(),
-          store_account: $(`#select_account_${this.type}`).val(),
           description: this.description,
           type_refresh: this.type_refresh,
-          supplier_account: this.supplier[2],
+          // -------------this for dailies----------------------------------------------
+          debit:{
+            debit_account_id: $(`#select_account_${this.type}`).val(),
+          },
+          credit:{
+            credit_account_id: credit_account_id,
+          },
+          // -----------------------------------------------------------
           supplier_id: this.supplier[0],
           supplier_name: this.supplier[1],
           date: this.date,
-          treasury_account: this.treasury[2],
           treasury: this.treasury[0],
-
-          // -------------------
-
-
+          // ------------------------------------------------------------------------------
           grand_total: this.grand_total,
           sub_total: this.sub_total,
           discount: this.discount,
@@ -707,9 +732,14 @@ export default {
           type_payment: this.type_payment,
           remaining: this.remaining,
           paid: this.paid,
-          // -------------------
+          // ------------------------------------------------------------------------------
 
           total_quantity: this.total_quantity,
+
+          // --------------------------------------------------------
+          // supplier_account: this.supplier[2],
+          // treasury_account: this.treasury[2],
+          // store_account: $(`#select_account_${this.type}`).val(),
         })
         .then((response) => {
 

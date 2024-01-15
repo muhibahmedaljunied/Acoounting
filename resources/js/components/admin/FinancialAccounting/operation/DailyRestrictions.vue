@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class = 'container-fluid'>
     <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
@@ -171,7 +171,13 @@
             <div class="col-sm-12">
               <div class="form-group">
                 <div class="row">
-                  <div class="col-md-10">
+                  <div class="col-md-2">
+                    <label for="desde">رقم القيد </label>
+                    <input type="number" class="form-control hasDatepicker" 
+                     v-model="daily" onkeypress="return controltag(event)"
+                      style="background-color: white" />
+                  </div>
+                  <div class="col-md-8">
                     <label for="desde">تاريخ القيد </label>
                     <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
                       name="modal_reporte_venta_inicio" v-model="daily_date" onkeypress="return controltag(event)"
@@ -192,35 +198,30 @@
                   <th class="wd-15p border-bottom-0">اسم الحساب</th>
                   <th class="wd-15p border-bottom-0">البيان</th>
                   <th class="wd-15p border-bottom-0">مدين</th>
-
                   <th class="wd-15p border-bottom-0">داين</th>
-      
+       
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="index in count" :key="index">
+              <tbody v-if="value_list && value_list.data.length > 0">
+                <tr v-for="(daily, index) in value_list.data" :key="index">
                   <!-- <tr > -->
                   <td>
-                  
+                  {{ daily.id }}
                   </td>
                   <td>
 
-                
+                    {{ daily.text }}
 
-
-           
-
-
-                  
                   </td>
                   <td>
   
+                    {{ daily.description }}
                   </td>
                   <td>
-       
+                    {{ daily.debit }}
                   </td>
                   <td>
-                
+                    {{ daily.credit }}
                   </td>
              
 
@@ -228,6 +229,13 @@
                 </tr>
              
               </tbody>
+              <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="5">
+                      <h3> لايوجد بيانات </h3>
+                    </td>
+                  </tr>
+                </tbody>
             </table>
           </div>
    
@@ -251,7 +259,10 @@ export default {
     return {
 
 
-  
+      value_list: {
+          type: Object,
+          default: null,
+        },
       counts: {},
   
       date: new Date().toISOString().substr(0, 10),
@@ -264,6 +275,7 @@ export default {
       // -----------------------------------------
       count: 1,
       daily_date: "2021-11-24",
+      daily_id:'',
       trees: "",
       account: [],
       account_name: [],
@@ -283,7 +295,7 @@ export default {
     };
   },
   mounted() {
-
+    this.list();
     this.type = 'Daily';
     this.counts[0] = 1;
     this.type_of_tree = 1;
@@ -296,6 +308,18 @@ export default {
 
   methods: {
 
+    list(){
+
+      this.axios
+          .post(`/daily`)
+          .then(({ data }) => {
+            console.log('daily',data.daily_details.data);
+            this.value_list = data.daily_details;
+          })
+          .catch(({ response }) => {
+            console.error(response);
+          });
+    },
     addComponent(index) {
       // alert(index);
       this.count += 1;

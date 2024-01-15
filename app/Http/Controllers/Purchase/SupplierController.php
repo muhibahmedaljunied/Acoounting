@@ -124,22 +124,23 @@ class SupplierController extends Controller
 
     public function show(Request $request)
     {
+         
+
         $purchases =  Purchase::where('supplier_id', $request->id)->with([
+
+            'payable_notes' => function ($query) {
+                $query->select('*');
+            },
+
             'payment_purchases' => function ($query) {
                 $query->select('*');
             },
             'purchase_returns' => function ($query) {
                 $query->select('*');
-            },
-            'payable_notes' => function ($query) {
-                $query->select('*');
             }
 
         ])
             ->paginate(10);
-
-
-
 
 
         return response()->json(['purchases' => $purchases]);

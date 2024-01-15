@@ -9,7 +9,6 @@ trait StoreProductTrait
 {
 
 
-
     public function init_store_product_table() // this intial store that transfer into it if it empty
     {
 

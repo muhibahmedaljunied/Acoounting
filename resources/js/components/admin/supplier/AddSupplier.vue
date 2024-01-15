@@ -57,7 +57,7 @@
               </div>
               <div class="form-group">
                 <label for="status">اسم الحساب</label>
-                <input :id = "'Supplier_account_tree'+indexselected" v-model="status" type="text" name="status"  class="form-control" />
+                <input id = "Supplier_account_tree"  type="text" name="status"  class="form-control" />
               </div>
               <!-- = -->
               <div class="form-group">
