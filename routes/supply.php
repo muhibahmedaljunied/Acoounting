@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 /*--------------------------Supplier---------------------------------------*/
-
 Route::post('/store_supplier', 'Supply\SupplierController@store');
 Route::post('/update_supplier/{id}', 'Supply\SupplierController@update');
 Route::post('/supplier/{id}', 'Supply\SupplierController@edit');
