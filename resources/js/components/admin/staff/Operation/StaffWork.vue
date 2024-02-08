@@ -1,6 +1,8 @@
 <template>
   <!-- row opened -->
-  <div class="row row-sm">
+
+  <div class="container-fluid">
+    <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
         <div class="card-header">
@@ -11,7 +13,7 @@
 
           <div style="display: flex;float: left; margin: 5px">
 
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addstaffwork">
               <i class="fa fa-plus-circle"></i></a>
 
@@ -53,13 +55,13 @@
 
               
                   <td>
-                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
+                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="btn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
                     <button type="button" @click="delete_item(extra.id)" class="btn btn-danger btn-sm waves-effect">
                       <i class="fa fa-trash"></i>
                     </button>
 
 
-                    <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+                    <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
                       data-target="#updateExtra">
                       <i class="fa fa-edit"></i></a>
                   </td>
@@ -140,11 +142,11 @@
 
 
                                     <td v-if="index == 1">
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                         v-on:click="addComponent(count)">
                                         <i class="fa fa-plus-circle"></i></a>
 
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                         v-on:click="disComponent(count)">
                                         <i class="fa fa-minus-circle"></i></a>
                                     </td>
@@ -193,6 +195,7 @@
       </div>
     </div>
     <!--/div-->
+  </div>
   </div>
   <!-- /row -->
 </template>
@@ -256,9 +259,9 @@ export default {
     list(page = 1) {
 
       this.axios
-        .post(`/staff_work?page=${page}`, { type: 'staff_work' })
+        .post(`/staff_work_system?page=${page}`, { type: 'staff_work' })
         .then(({ data }) => {
-          console.log(data);
+          console.log('zokhem',data.list);
 
           this.value_list = data.list;
           this.work_systems = data.work_systems;

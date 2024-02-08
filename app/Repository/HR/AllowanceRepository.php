@@ -1,19 +1,23 @@
 <?php
 
 namespace App\Repository\HR;
-
-use App\RepositoryInterface\HRRepositoryInterface;
-use App\RepositoryInterface\PayrollRepositoryInterface;
 use App\Services\CoreStaffService;
 use App\Models\Allowance;
-use App\Models\Payroll;
+use App\Services\PayrollService;
 use DB;
 
-class AllowanceRepository implements HRRepositoryInterface, PayrollRepositoryInterface
+class AllowanceRepository
 {
 
-    public function __construct(public CoreStaffService $core)
+    public function __construct(public CoreStaffService $core,public PayrollService $payroll)
     {
+    }
+    public function handle()
+    {
+
+        $this->update();
+        $this->store();
+        $this->refresh();
     }
     function Sum($data)
     {
@@ -27,38 +31,45 @@ class AllowanceRepository implements HRRepositoryInterface, PayrollRepositoryInt
             }
         }
     }
-    function add(...$list_data)
+    function store()
     {
 
-        // dd($this->core->data);
-        $temporale = new Allowance();
-        $temporale->staff_id = $this->core->data['staff'][$this->core->value];
-        $temporale->allowance_type_id = $this->core->data['allowance_type'][$this->core->value];
-        // $temporale->date = $this->core->data['date'][$this->core->value];
-        $temporale->qty = $this->core->data['qty'][$this->core->value];
+        if ($this->core->temporale_f->isEmpty()) {
 
-        $temporale->save();
-        return $temporale->id;
+            $temporale = Allowance::updateOrCreate(
+                [
+                    'staff_id' => $this->core->data['staff'][$this->core->value],
+                    'quantity' => $this->core->data['qty'][$this->core->value],
+                    'allowance_type_id' => $this->core->data['allowance_type'][$this->core->value],
+
+                ]
+            );
+            // $this->core->id = $temporale->id;
+            return $temporale->id;
+        }
     }
 
     public function update()
     {
-        $temporale_f = tap(Allowance::whereAllowance($this->core->data))
-            ->update(['qty' => $this->core->data['qty'][$this->core->value]])
+        $this->core->temporale_f = tap(Allowance::whereAllowance($this->core->data))
+            ->update(['quantity' => $this->core->data['qty'][$this->core->value]])
             ->get('id');
-        return $temporale_f;
     }
 
-    public function refresh($request, $value)
+    public function refresh()
     {
 
 
-        $payroll = DB::table('allowances')->where('staff_id', $this->core->data['staff'][$this->core->value])->sum('qty');
+        $payroll = DB::table('allowances')->where('staff_id', $this->core->data['staff'][$this->core->value])->sum('quantity');
         $data = ['total_allowance' => $payroll];
-        $payroll = tap(Payroll::where(['staff_id' => $this->core->data['staff'][$this->core->value]]))
-            ->update($data)
-            ->get('id');
+        $this->core->data_of_hr_for_update_payroll = $data;
 
-        return $payroll;
+        // $this->payroll->payroll();
+
+        // $payroll = tap(Payroll::where(['staff_id' => $this->core->data['staff'][$this->core->value]]))
+        //     ->update($data)
+        //     ->get('id');
+
+            // dd($payroll);
     }
 }

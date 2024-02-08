@@ -19,7 +19,7 @@ class PaymentBondRepository
         $data->purchase_id = $this->core->data['purchase_id'];
         $data->daily_id = $this->core->daily_id;
         $data->date = $this->core->data['date'];
-        $data->paid = $this->core->data['paid'];
+        // $data->paid = $this->core->data['paid'];
         $data->save();
 
 

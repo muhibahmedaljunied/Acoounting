@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Services\Staff;
-
-use App\RepositoryInterface\PayrollRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
+use App\Repository\StaffSaction\StaffExtraSanctionRepository;
 use App\Traits\staff\Sanction\ExtraSanctionTrait;
 use App\Services\CoreStaffService;
 use App\Services\Core\SanctionService;
@@ -16,8 +14,7 @@ class ExtraService extends SanctionService
 
     public function __construct(
 
-        protected PayrollRepositoryInterface $payroll,
-        protected DetailRepositoryInterface $details,
+        protected StaffExtraSanctionRepository $details,
         protected CoreStaffService $core,
 
     ) {
@@ -27,27 +24,23 @@ class ExtraService extends SanctionService
     public function create()
     {
 
-        // if ($this->core->temporale_f->isEmpty()) {
-        //     return 0;
-        // }
-
-        $data  = $this->get();  //this get extra_sanctions
-
+        $this->get();  //this get extra_sanctions
         // -------------------------------------this calc from extra_table-----------------------------------------------------------
         $extra = DB::table('extras')->where('number_hours', $this->core->data['duration'][$this->core->value][0])->get();
 
-        for ($i = 0; $i < count($data); $i++) {
+        for ($i = 0; $i < count($this->core->data_sanction); $i++) {
 
-            $this->core->status_sanction = false;
+            //this check if type of extra equal type of sanction
+            if ($this->core->data['extra_type'][$this->core->value] == $this->core->data_sanction[$i]->extra_type_id) {
 
+                // $this->check_type($i, $data, $extra);
+                $this->state_tow($i, $extra);
+                if ($i + 1 < count($this->core->data_sanction) && $this->core->status_sanction != true) {
 
-            if ($this->core->data['extra_type'][$this->core->value] == $data[$i]->extra_type_id) {
+                    $this->state_three($i,$extra);
+                }
 
-
-
-                $this->check_type($i, $data, $extra);
             }
-            
         }
 
 
@@ -55,82 +48,50 @@ class ExtraService extends SanctionService
     }
 
 
-    public function check_type($i, $data, $extra)
+    public function state_tow($i,$extra)
     {
 
+        if ($this->core->data['duration'][$this->core->value][0] == $this->core->data_sanction[$i]->duration) {
 
-
-        if ($i == 0) {
-
-            $this->state_one($i, $data, $extra);
+            $this->handle($i, $extra);
         }
 
-
-        if ($this->core->status_sanction != true) {
-
-            $this->state_tow($i, $data, $extra);
-        }
-
-
-
-        if ($i + 1 < count($data) && $this->core->status_sanction != true) {
-
-            $this->state_three($i, $data, $extra);
-        }
-    }
-    public function state_one($i, $data, $extra)
-    {
-
-
-        if (($this->core->data['duration'][$this->core->value][0]) < ($data[$i]->duration)) {
-            
-            $this->handle($i, $data, $extra);
-        }
     }
 
-    public function state_tow($i, $data, $extra)
+    public function state_three($i, $extra)
     {
 
 
-
-
-
-        if ($this->core->data['duration'][$this->core->value][0] == $data[$i]->duration) {
-
-
-
-            $this->handle($i, $data, $extra);
-        }
-    }
-
-    public function state_three($i, $data, $extra)
-    {
-
-
+        // هذه في حاله مده الاضافي بين قيمتين
         if (
-            ($this->core->data['duration'][$this->core->value][0]) > ($data[$i]->duration) &&
-            ($this->core->data['duration'][$this->core->value][0]) < ($data[$i + 1]->duration)
+            ($this->core->data['duration'][$this->core->value][0]) > ($this->core->data_sanction[$i]->duration) &&
+            ($this->core->data['duration'][$this->core->value][0]) < ($this->core->data_sanction[$i + 1]->duration)
 
         ) {
 
-
-
-            $this->handle($i, $data, $extra);
+            $this->handle($i, $extra);
         }
     }
 
 
-    public function handle($i, $data, $extra)
+    public function handle($i, $extra)
     {
 
 
 
-   
-        if (count($extra) == $data[$i]->iteration) {
+        $this->show($this->core->data_sanction[$i]->sanction_id);  
 
-            $this->details->init_details(value: $data[$i]);
+        if ($this->core->data_sanction[$i]->iteration == 6) { //هذا في حاله كان الخيار اي مره
+           
 
-            $this->payroll->refresh($this->core->data['staff'][$this->core->value], $data[$i]);
+            $this->details->sanction();
+
+
+        }
+        if (count($extra) == $this->core->data_sanction[$i]->iteration) { //هذا في حاله كان الخيار عدد المرات
+
+            $this->details->sanction();
+
         }
     }
 }

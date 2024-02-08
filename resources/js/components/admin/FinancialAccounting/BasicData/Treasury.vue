@@ -6,8 +6,7 @@
       <div class="col-xl-12">
         <div class="card">
           <div class="card-header">
-
-            <h4 class="modal-title" id="myLargeModalLabel">اضافه صندوق</h4>
+            <span class="h4"> اضافه صندوق</span>
 
 
           </div>

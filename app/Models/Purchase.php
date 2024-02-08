@@ -20,10 +20,10 @@ class Purchase extends Model
         return $this->hasMany(PayableNote::class);
     }
 
-    public function payment_purchases()
-    {
-        return $this->hasMany(PaymentPurchase::class);
-    }
+    // public function payment_purchases()
+    // {
+    //     return $this->hasMany(PaymentPurchase::class);
+    // }
 
 
     public function stock()

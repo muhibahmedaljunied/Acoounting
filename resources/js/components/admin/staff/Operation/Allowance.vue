@@ -1,5 +1,6 @@
 <template>
   <!-- row opened -->
+ <div class="container-fluid">
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
@@ -73,7 +74,7 @@
                   <td>
 
                     <div v-for="(allowance, index) in staff_allowance.allowance" :key="index" style="color:red;">
-                      {{ allowance.qty }}
+                      {{ allowance.quantity }}
                       <hr>
                     </div>
                   </td>
@@ -84,6 +85,10 @@
                     </button>
 
 
+                    <a class="btn btn-info btn-sm waves-effect btn-agregar" data-target="#updateAd" data-toggle="modal"
+                      id="agregar_productos">
+                      <i class="fa fa-edit"></i></a>
+              
                   </td>
                 </tr>
               </tbody>
@@ -232,11 +237,11 @@
 
                                     <td v-if="index == 1">
 
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                         v-on:click="addComponent(count, 0)">
                                         <i class="fa fa-plus-circle"></i></a>
 
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                         v-on:click="disComponent(count, 0)">
                                         <i class="fa fa-minus-circle"></i></a>
 
@@ -284,6 +289,7 @@
     <!-- ================================== -->
 
   </div>
+ </div>
 </template>
 
 <script>

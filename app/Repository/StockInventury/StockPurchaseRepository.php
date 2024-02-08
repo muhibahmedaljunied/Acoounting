@@ -58,7 +58,7 @@ class StockPurchaseRepository implements InventuryStockRepositoryInterface
         $stocks->unit_id = $this->core->unit_value;
         $stocks->quantity = $this->core->micro_unit_qty;
         $stocks->date = $this->core->data['date'];
-        $stocks->stockable()->associate($this->core->purchase);
+        $stocks->stockable()->associate($this->core->stockable); //$this->core->purchase === $this->core->stockable
         $stocks->save();
 
  

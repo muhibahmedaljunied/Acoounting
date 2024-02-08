@@ -32,14 +32,14 @@
                 </thead>
                 <tbody v-if="sales && sales.data.length > 0">
                   <tr v-for="(sale, index) in sales.data" :key="index">
-                    <td>{{ sale.sale_id }}</td>
-                    <td>{{ sale.name }}</td>
+                    <td>{{ sale.paymentable.sale_id }}</td>
+                    <td>{{ sale.paymentable.customer_name }}</td>
                     <!-- <td>{{ sale.quantity }}</td>
                   <td>{{ sale.qty_return }}</td> -->
-                    <td>{{ sale.created_at }}</td>
+                    <td>{{ sale.paymentable.created_at }}</td>
                     <td>{{ sale.paid }}</td>
                     <td>{{ sale.remaining }}</td>
-                    <td>{{ sale.grand_total }}</td>
+                    <td>{{ sale.paymentable.grand_total }}</td>
                     <!-- <td>{{ sale.sale_status }}</td> -->
                     <td>
 
@@ -55,27 +55,27 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option :selected="true" class="btn btn-success"
-                            v-bind:value="['/sale_details/', sale.sale_id, 0]">
+                            v-bind:value="['/sale_details/', sale.paymentable.sale_id, 0]">
                             تفاصيل
                           </option>
-                          <option class="btn btn-success" v-bind:value="['return_sale', sale, 1]">
+                          <option class="btn btn-success" v-bind:value="['return_sale', sale.paymentable, 1]">
                             ارجاع
                           </option>
-                          <option class="btn btn-success" v-bind:value="['returnsalelist', sale.sale_id, 2]">
+                          <option class="btn btn-success" v-bind:value="['returnsalelist', sale.paymentable.sale_id, 2]">
                             مرتجعات
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice/', sale.sale_id, 3]">
+                          <option class="btn btn-success" v-bind:value="['/sale_invoice/', sale.paymentable.sale_id, 3]">
                             عرض الفاتوره
                           </option>
-                          <option class="btn btn-success" v-bind:value="['ReceivableBond', sale.sale_id, 4]">
+                          <option class="btn btn-success" v-bind:value="['ReceivableBond', sale.paymentable.sale_id, 4]">
                             قبض
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.sale_id, 5]">
+                          <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.paymentable.sale_id, 5]">
                             تعديل الفاتوره
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['sale_daily', sale.sale_id, 6]">
+                          <option class="btn btn-success" v-bind:value="['sale_daily', sale.paymentable.sale_id, 6]">
                             عرض القيد المحاسبي
                           </option>
 
@@ -84,20 +84,20 @@
 
 
                       <!-- <router-link
-                      :to="`/sale_details/${sale.sale_id}`"
+                      :to="`/sale_details/${sale.paymentable.sale_id}`"
                       class="btn btn-success"
                     >
                       <span><i class="fa fa-search-plus"></i></span>
                     </router-link>
 
                     <router-link
-                      :to="`/return_sale/${sale.sale_id}`"
+                      :to="`/return_sale/${sale.paymentable.sale_id}`"
                       class="btn btn-success"
                     >
                       <span> ارجاع</span>
                     </router-link>
                      <router-link
-                    :to="`/sale_invoice/${sale.sale_id}`"
+                    :to="`/sale_invoice/${sale.paymentable.sale_id}`"
                         class="btn btn-success">
                     
                       <span>فاتوره</span>

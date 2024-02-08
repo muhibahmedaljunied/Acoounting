@@ -270,17 +270,31 @@ class SalaryController extends Controller
 
         foreach ($salaries as $value) {
 
-            $value->all_discount = ($value->total_discount + $value->total_advance);
-            $value->total = ($value->salary + $value->total_allowance + $value->total_extra) - ($value->all_discount);
-            $value->total = ($value->salary + $value->total_allowance + $value->total_extra) - ($value->all_discount);
+            $value->total = $value->salary+
+            $value->total_allowance+
+            $value->total_discount-
+            $value->total_advance-
+            $value->total_absence_sanction-
+            $value->total_delay_sanction-
+            $value->total_leave_sanction+
+            $value->total_extra_sanction;
 
-            // $value->total = ($value->salary + $value->total_allowance) - ($value->all_discount);
+            $value->discount = $value->total_discount+$value->total_advance+
+            $value->total_absence_sanction+
+            $value->total_delay_sanction+
+            $value->total_leave_sanction;
+            $value->extra = $value->total_allowance+$value->total_extra_sanction;
+
+            // $value->total_advance = $value->total_advance;
+            // $value->all_allowance = $value->total_allowance;
+            // $value->total = ($value->salary + $value->total_allowance + $value->total_extra) - ($value->all_discount);
+ 
         }
 
 
 
 
-
+// dd($salaries);
         return response()->json(['list' => $salaries]);
     }
 }

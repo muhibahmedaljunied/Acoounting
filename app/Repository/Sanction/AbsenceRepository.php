@@ -41,7 +41,7 @@ class AbsenceRepository implements SanctionRepositoryInterface {
      
         $this->get_sanction('AbsenceSanction');
         $this->staff_sanction();
-        $this->payroll();
+        // $this->payroll();
 
 
     }

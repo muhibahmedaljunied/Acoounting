@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Attendance;
+
 use App\Services\core\CoreStaffAttendanceService;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Traits\Details\DetailsTrait;
 use App\Http\Controllers\Controller;
 use App\Services\CoreStaffService;
@@ -24,7 +24,6 @@ class AttendanceController extends Controller
 
     public function __construct(
         protected AttendanceService $service,
-        protected DetailRepositoryInterface $details,
         protected CoreStaffService $core,
         protected CoreStaffAttendanceService $attendance_core,
 
@@ -48,12 +47,18 @@ class AttendanceController extends Controller
             return DB::table('staff')->get();
         });
 
+        $work_systems = DB::table('work_systems')
+            ->join('work_system_types', 'work_system_types.id', '=', 'work_systems.work_system_type_id')
+            ->select('work_system_types.name', 'work_systems.id')
+            ->get();
+
+
 
         return response()->json([
 
             'list' => $staff_list,
             'staffs' => $staffs,
-            'work_systems' => WorkSystem::all(),
+            'work_systems' => $work_systems,
 
         ]);
     }
@@ -94,16 +99,17 @@ class AttendanceController extends Controller
             ->get();
 
 
-            
-        $work_types = WorkSystem::where('work_systems.id', $request->id)
-        ->join('work_system_details', 'work_system_details.work_system_id', '=', 'work_systems.id')
-        ->join('work_types', 'work_types.id', '=', 'work_system_details.work_type_id')
-        ->select(
-            'work_types.id',
-            'work_types.name',
-        )
-        ->get();
-        
+        // -------------------------------------------------------------------------------
+        // $work_types = WorkSystem::where('work_systems.id', $request->id)
+        //     ->join('work_system_details', 'work_system_details.work_system_id', '=', 'work_systems.id')
+        //     // ->join('work_system_types', 'work_system_types.id', '=', 'work_systems.work_system_type_id')
+        //     ->join('work_types', 'work_types.id', '=', 'work_system_types.work_type_id')
+        //     ->select(
+        //         'work_types.id',
+        //         'work_types.name',
+        //     )
+        //     ->get();
+
 
 
         // dd($work_types);
@@ -111,7 +117,7 @@ class AttendanceController extends Controller
 
         return response()->json([
             'periods' => $periods,
-            'work_types' => $work_types
+            // 'work_types' => $work_types
         ]);
     }
 
@@ -235,7 +241,7 @@ class AttendanceController extends Controller
         }
 
         // -------------------------------------------------------------------------------------------
-        
+
         if ($period->isEmpty()) {
 
             $period =  DB::table('staff')
@@ -253,10 +259,10 @@ class AttendanceController extends Controller
     {
 
 
-     
+
         $this->attendance_core->data = $request->all();
 
-     
+
         try {
 
             DB::beginTransaction();
@@ -267,7 +273,7 @@ class AttendanceController extends Controller
 
                 if ($this->attendance_core->data['attendance_status'] == 1) {
 
-          
+
                     $this->service->attende();
                 } else {
                     $this->service->absence();

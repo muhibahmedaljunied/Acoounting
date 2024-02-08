@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Repository\HR;
-use App\RepositoryInterface\HRRepositoryInterface;
 use App\Services\CoreStaffService;
 use App\Models\ExtraSanction;
-use DB;
-
-class ExtraSanctionRepository implements HRRepositoryInterface
+class ExtraSanctionRepository
 {
 
     public function __construct(public CoreStaffService $core)
     {
-        
+    }
+    public function handle()
+    {
+
+        $this->update();
+        $this->store();
     }
 
     function Sum($data)
@@ -26,30 +28,36 @@ class ExtraSanctionRepository implements HRRepositoryInterface
             }
         }
     }
-    function add(...$list_data)
+    function store()
     {
 
 
-    
-        $temporale = new ExtraSanction();
-        $temporale->extra_type_id = $this->core->data['extra'][$this->core->value];
-        $temporale->part_id = $this->core->data['extra_part'][$this->core->value];
-        $temporale->sanction_discount_id = $this->core->data['discount_type'][$this->core->value];
-        // $temporale->discount = $this->core->data['discount'][$this->core->value];
-        $temporale->iteration = $this->core->data['iteration'][$this->core->value];
-        $temporale->sanction = $this->core->data['sanction'][$this->core->value];
-        $temporale->save();
-        $this->core->id = $temporale->id;
+        if ($this->core->temporale_f->isEmpty()) {
+
+            $temporale = ExtraSanction::updateOrCreate(
+                [
+                    'extra_type_id' => $this->core->data['extra'][$this->core->value],
+                    'part_id' => $this->core->data['extra_part'][$this->core->value],
+                    'sanction_discount_id' => $this->core->data['discount_type'][$this->core->value],
+                    'iteration' => $this->core->data['iteration'][$this->core->value],
+                    'sanction' => $this->core->data['sanction'][$this->core->value]
+
+
+                ]
+            );
+            $this->core->id = $temporale->id;
+        }
+        // return $temporale_f;
     }
-  
+
 
     public function update()
     {
- 
-        $temporale_f = tap(ExtraSanction::whereExtraSanction($this->core->data))
-        ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
-        ->get('id');
 
-        return $temporale_f;
+        $this->core->temporale_f = tap(ExtraSanction::whereExtraSanction($this->core->data))
+            ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
+            ->get('id');
     }
+
+   
 }

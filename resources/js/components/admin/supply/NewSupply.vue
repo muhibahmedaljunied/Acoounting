@@ -7,7 +7,7 @@
           <div class="card-header">
 
 
-            <h3>فاتوره توريد مخزني <span id="codigo"></span></h3>
+            <h3>امر توريد مخزني <span id="codigo"></span></h3>
           </div>
           <div class="card-body">
 

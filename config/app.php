@@ -187,6 +187,7 @@ return [
         App\Providers\DailyServiceProvider::class,
         App\Providers\NoteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\PeriodServiceProvider::class,
         // Fhsinchy\Inspire\Providers\InspirationProvider::class,
  
 

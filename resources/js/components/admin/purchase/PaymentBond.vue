@@ -329,6 +329,7 @@ export default {
           purchase_id: this.details[0].purchase_id,
           description: this.description,
           paid: this.details[0].paid,
+          grand_total: this.details[0].paid,
 
           debit:{
             debit_account_id: this.details[0].account_id,

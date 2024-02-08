@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits\staff\Sanction;
+
 use App\Models\AbsenceSanction;
 use DB;
 
@@ -19,10 +20,9 @@ trait AbsenceSanctionTrait
         $temporale->sanction = $request['sanction'][$value];
         $temporale->save();
         return $temporale->id;
-
     }
 
-    
+
     public function update($temporale, $request)
     {
 
@@ -33,17 +33,29 @@ trait AbsenceSanctionTrait
         return $temporale_f;
     }
 
-    
+
     public function get()
     {
 
-        $extra = DB::table('absence_sanctions')
+        $this->core->data_sanction = DB::table('absence_sanctions')
             ->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id')
-            ->join('parts', 'parts.id', '=', 'absence_sanctions.part_id')
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
-            ->select('absence_sanctions.*', 'absence_sanctions.id as absence_sanction_id', 'parts.duration', 'absence_types.*', 'sanction_discounts.*')
+            ->select(
+                'absence_sanctions.*',
+                'absence_sanctions.id as sanction_id',
+                'absence_sanctions.id as absence_sanction_id',
+                'absence_types.*',
+                'sanction_discounts.*'
+            )
             ->get();
-        return $extra;
-    
+   
+    }
 
+    public function show($id)
+    {
+
+
+        $this->core->specific_sanction = AbsenceSanction::find($id);
+      
+    }
 }

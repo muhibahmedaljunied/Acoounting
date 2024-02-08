@@ -1,398 +1,415 @@
 <template>
   <!-- row opened -->
-  <div class="row row-sm">
-  
-    <div class="col-xl-12">
-      <div class="card">
-        <div class="card-header">
+  <div class="container-fluid">
+    <div class="row row-sm">
 
-          <span class="h2"> البيانات الشخصيه</span>
+      <div class="col-xl-12">
+        <div class="card">
+          <div class="card-header">
 
-
-
-          <div style="display: flex;float: left; margin: 5px">
-
-            <!-- <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-              data-target="#addPI">
-              <i class="fa fa-plus-circle"></i></a> -->
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-              data-target="#exampleModal">
-              <i class="fa fa-plus-circle"></i>
-            </a>
+            <span class="h2"> البيانات الشخصيه</span>
 
 
-            <input autocomplete="on" v-model="word_search" type="text" class="form-control input-text"
-              placeholder="بحث ...." aria-label="Recipient's username" aria-describedby="basic-addon2"
-              @input="get_search()">
 
-            <div></div>
+            <div style="display: flex;float: left; margin: 5px">
+
+              <!-- <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            data-target="#addPI">
+            <i class="fa fa-plus-circle"></i></a> -->
+              <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+                data-target="#exampleModal">
+                <i class="fa fa-plus-circle"></i>
+              </a>
+
+
+              <input autocomplete="on" v-model="word_search" type="text" class="form-control input-text"
+                placeholder="بحث ...." aria-label="Recipient's username" aria-describedby="basic-addon2"
+                @input="get_search()">
+
+              <div></div>
+            </div>
           </div>
-        </div>
-        <div class="card-body" id="printme">
-          <div class="table-responsive">
-            <table class="table table-bordered text-center">
-              <thead>
-                <tr>
-                  <th class="wd-15p border-bottom-0">الرقم الوظيفي</th>
-                  <th class="wd-15p border-bottom-0">اسم المؤظف</th>
-                  <th class="wd-15p border-bottom-0">الهويه</th>
-                  <th class="wd-15p border-bottom-0">تاريخ الميلاد</th>
-                  <th class="wd-15p border-bottom-0">الهاتف</th>
+          <div class="card-body" id="printme">
+            <div class="table-responsive">
+              <table class="table table-bordered text-center">
+                <thead>
+                  <tr>
+                    <th class="wd-15p border-bottom-0">الرقم الوظيفي</th>
+                    <th class="wd-15p border-bottom-0">اسم المؤظف</th>
+                    <th class="wd-15p border-bottom-0">الهويه</th>
+                    <th class="wd-15p border-bottom-0">تاريخ الميلاد</th>
+                    <th class="wd-15p border-bottom-0">الهاتف</th>
 
 
-                  <!-- <th class="wd-15p border-bottom-0">القسم</th> -->
+                    <!-- <th class="wd-15p border-bottom-0">القسم</th> -->
 
-                  <th class="wd-15p border-bottom-0">الوظيفه</th>
-                  <th class="wd-15p border-bottom-0">الفرع</th>
+                    <th class="wd-15p border-bottom-0">الوظيفه</th>
+                    <th class="wd-15p border-bottom-0">الفرع</th>
 
-                  <!-- <th class="wd-15p border-bottom-0">تاريخ التعين</th> -->
-                  <th class="wd-15p border-bottom-0">الايميل</th>
-                  <th class="wd-15p border-bottom-0">المؤهلات</th>
-                  <th class="wd-15p border-bottom-0">الجنسيه</th>
-                  <th class="wd-15p border-bottom-0">الحنس</th>
-                  <!-- <th class="wd-15p border-bottom-0">نظام العمل</th> -->
+                    <!-- <th class="wd-15p border-bottom-0">تاريخ التعين</th> -->
+                    <th class="wd-15p border-bottom-0">الايميل</th>
+                    <th class="wd-15p border-bottom-0">المؤهلات</th>
+                    <th class="wd-15p border-bottom-0">الجنسيه</th>
+                    <th class="wd-15p border-bottom-0">الحنس</th>
+                    <!-- <th class="wd-15p border-bottom-0">نظام العمل</th> -->
 
-                  <!-- <th class="wd-15p border-bottom-0">نوع المؤظف</th> -->
-                  <!-- <th class="wd-15p border-bottom-0">الدياته</th> -->
-                  <!-- <th class="wd-15p border-bottom-0">الحاله الاجتماعيه</th>
-                  <th class="wd-15p border-bottom-0">حاله الوظيفه</th> -->
-                  <!-- <th class="wd-15p border-bottom-0">الراتب الاساسي</th> -->
-
-
-                  <!-- <th class="wd-15p border-bottom-0">ملاجظه</th> -->
-
-                  <th class="wd-15p border-bottom-0">العمليات</th>
-                </tr>
-              </thead>
-              <tbody v-if="value_list && value_list.data.length > 0">
-                <tr v-for="(staff, index) in value_list.data" :key="index">
-                  <td>{{ staff.id }}</td>
-
-                  <td>{{ staff.name }}</td>
-                  <td>{{ staff.personal_card }}</td>
-                  <td>{{ staff.barth_date }}</td>
-                  <td>{{ staff.phone }}</td>
-
-                  <td>{{ staff.department.text }}</td>
-                  <td>{{ staff.job.text }}</td>
-                  <td>{{ staff.branch.name }}</td>
-                  <!-- <td>{{ staff.date }}</td> -->
-                  <!-- <td>{{ staff.phone }}</td> -->
-                  <td>{{ staff.email }}</td>
-                  <!-- <td>{{ staff.barth_date }}</td> -->
-                  <td>{{ staff.qualification.name }}</td>
-                  <td>{{ staff.nationality.name }}</td>
-
-                  <td v-if="staff.gender == 1">ذكر</td>
-                  <td v-if="staff.gender == 0">انثي</td>
-            
+                    <!-- <th class="wd-15p border-bottom-0">نوع المؤظف</th> -->
+                    <!-- <th class="wd-15p border-bottom-0">الدياته</th> -->
+                    <!-- <th class="wd-15p border-bottom-0">الحاله الاجتماعيه</th>
+                <th class="wd-15p border-bottom-0">حاله الوظيفه</th> -->
+                    <!-- <th class="wd-15p border-bottom-0">الراتب الاساسي</th> -->
 
 
-                  <td>
-                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
-                    <button type="button" @click="delete_staff(staff.id)" class="btn btn-danger btn-sm waves-effect">
-                      <i class="fa fa-trash"></i>
-                    </button>
+                    <!-- <th class="wd-15p border-bottom-0">ملاجظه</th> -->
 
-                    <!--  -->
+                    <th class="wd-15p border-bottom-0">العمليات</th>
+                  </tr>
+                </thead>
+                <tbody v-if="value_list && value_list.data.length > 0">
+                  <tr v-for="(staff, index) in value_list.data" :key="index">
+                    <td>{{ staff.id }}</td>
 
-                    <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
-                      @click="update_modal(staff)" data-target="#exampleModalupdate">
-                      <i class="fa fa-edit"></i>
-                    </a>
+                    <td>{{ staff.name }}</td>
+                    <td>{{ staff.personal_card }}</td>
+                    <td>{{ staff.barth_date }}</td>
+                    <td>{{ staff.phone }}</td>
 
-                  </td>
-                </tr>
-              </tbody>
-              <tbody v-else>
-                <tr>
-                  <td align="center" colspan="3">لايوجد بياتات.</td>
-                </tr>
-              </tbody>
-            </table>
+                    <td>{{ staff.department.text }}</td>
+                    <td>{{ staff.job.text }}</td>
+                    <td>{{ staff.branch.name }}</td>
+                    <!-- <td>{{ staff.date }}</td> -->
+                    <!-- <td>{{ staff.phone }}</td> -->
+                    <td>{{ staff.email }}</td>
+                    <!-- <td>{{ staff.barth_date }}</td> -->
+                    <td>{{ staff.qualification.name }}</td>
+                    <td>{{ staff.nationality.name }}</td>
+
+                    <td v-if="staff.gender == 1">ذكر</td>
+                    <td v-if="staff.gender == 0">انثي</td>
+
+
+
+                    <td>
+                      <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="btn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
+                      <button type="button" @click="delete_staff(staff.id)" class="btn btn-danger btn-sm waves-effect">
+                        <i class="fa fa-trash"></i>
+                      </button>
+
+                      <!--  -->
+
+                      <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+                        @click="update_modal(staff)" data-target="#exampleModalupdate">
+                        <i class="fa fa-edit"></i>
+                      </a>
+
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="3">لايوجد بياتات.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
           </div>
-          <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
-        </div>
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <form method="post">
-            <div class="modal-dialog modal-fullscreen">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
-                  اضافه
-                </div>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <form method="post">
+              <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                    اضافه
+                  </div>
 
 
-                <div class="modal-body">
-                  <div class="row row-sm">
-                    <div class="col-xl-12">
-                      <!-- <form method="post"> -->
-                      <div class="card">
-                        <div class="card-header pb-0">
-                          <div class="d-flex justify-content-between">
-                            <h4 class="modal-title" id="myLargeModalLabel">
-                              البياتات الشخصيه
-                            </h4>
-                            <i class="mdi mdi-dots-horizontal text-gray"></i>
+                  <div class="modal-body">
+                    <div class="row row-sm">
+                      <div class="col-xl-12">
+                        <!-- <form method="post"> -->
+                        <div class="card">
+                          <div class="card-header pb-0">
+                            <div class="d-flex justify-content-between">
+                              <h4 class="modal-title" id="myLargeModalLabel">
+                                البياتات الشخصيه
+                              </h4>
+                              <i class="mdi mdi-dots-horizontal text-gray"></i>
+                            </div>
                           </div>
-                        </div>
-                        <div class="card-body">
+                          <div class="card-body">
 
-                          <div class="row">
-                            <div class="col-md-4">
-                              <label for="inputEmail4">اسم المؤظف</label>
-                              <input v-model="name" type="text" class="form-control" placeholder="ادخل اسم المؤظف" />
-                            </div>
-                            <div class="col-md-2">
-                              <label for="inputAddress">الفرع</label>
-                              <select v-model="branchselected" class="form-control" required>
-                                <option v-for="branch in branches" v-bind:value="branch.id">
-                                  {{ branch.name }}
-                                </option>
-                              </select>
-                            </div>
-                            <div class="col-md-3">
-                              <label for="inputPassword4">الهويه</label>
-                              <input v-model="card" type="number" class="form-control" />
-                            </div>
-                            <div class="col-md-3">
-                              <label for="inputPassword4">الهاتف</label>
-                              <input v-model="phone" type="number" class="form-control" />
-                            </div>
-
-
-                          </div>
-                          <div class="row">
-
-                            <!-- <div class="col-md-3">
-                              <label for="inputAddress">القسم</label>
-                              <select v-model="departmentselected" class="form-control" required>
-                                <option v-for="department in departments" v-bind:value="department.id">
-                                  {{ department.name }}
-                                </option>
-                              </select>
-                            </div> -->
-
-                            <div class="col-md-3">
-                              <label for="inputZip">تاريخ المبلاد </label>
-                              <input v-model="barth_date" type="date" class="form-control" id="inputZip" />
-                            </div>
-
-                            <!-- <div class="col-md-3">
-                              <label for="inputZip">نظام الدوام </label>
-
-
-                              <select v-model="work_selected" name="type" class="form-control " required>
-                                <option v-for="work_system in work_systems" v-bind:value="work_system.id">
-                                  {{ work_system.name }}
-                                </option>
-                              </select>
-                            </div> -->
-
-
-
-
-                          </div>
-                          <div class="row">
-
-
-
-                            <div class="col-md-3">
-                              <label for="inputAddress">الهيكل الاداري</label>
-
-                              <div class="custom-search">
-                                <input :id="'Structure_structure_tree' + index" type="text" readonly
-                                  class="custom-search-input">
-                                <input :id="'Structure_structure_tree_id' + index" type="hidden" readonly
-                                  class="custom-search-input">
-
-                                <button class="custom-search-botton" type="button" data-toggle="modal"
-                                  data-target="#exampleModalStructure" @click="detect_index_structure(index)"> <i
-                                    class="fa fa-plus-circle"></i></button>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <label for="inputEmail4">اسم المؤظف</label>
+                                <input style="background-color: beige;" v-model="name" type="text" class="form-control"
+                                  placeholder="ادخل اسم المؤظف" />
                               </div>
-                            </div>
-                            <div class="col-md-3">
-                              <label for="inputAddress"> التعين</label>
-
-                              <div class="custom-search">
-                                <select v-model="jobselected" id="select_structure" class="form-control" required>
-
+                              <div class="col-md-2">
+                                <label for="inputAddress">الفرع</label>
+                                <select style="background-color: beige;" v-model="branchselected" class="form-control"
+                                  required>
+                                  <option v-for="branch in branches" v-bind:value="branch.id">
+                                    {{ branch.name }}
+                                  </option>
                                 </select>
-                             
+                              </div>
+                              <div class="col-md-3">
+                                <label for="inputPassword4">الهويه</label>
+                                <input v-model="card" type="number" class="form-control" />
+                              </div>
+                              <div class="col-md-3">
+                                <label for="inputPassword4">الهاتف</label>
+                                <input v-model="phone" type="number" class="form-control" />
                               </div>
 
 
                             </div>
-                            <div class="col-md-3">
-                              <label for="inputCity">تاريخ التعين</label>
-                              <input v-model="date" type="date" class="form-control" id="inputCity" />
-                            </div>
-                            <hr />
-                            <div class="col-md-3">
-                              <label for="inputState">حاله المؤظف</label>
-                              <select v-model="statusselected" name="type" id="type" class="form-control" required>
-                                <option v-bind:value="1">بدء العمل</option>
-                                <option v-bind:value="2">لم يبدء العمل</option>
-                              </select>
-                            </div>
+                            <div class="row">
+
+                              <!-- <div class="col-md-3">
+                            <label for="inputAddress">القسم</label>
+                            <select v-model="departmentselected" class="form-control" required>
+                              <option v-for="department in departments" v-bind:value="department.id">
+                                {{ department.name }}
+                              </option>
+                            </select>
+                          </div> -->
+
+                              <div class="col-md-3">
+                                <label for="inputZip">تاريخ المبلاد </label>
+                                <input v-model="barth_date" type="date" class="form-control" id="inputZip" />
+                              </div>
+
+                              <!-- <div class="col-md-3">
+                            <label for="inputZip">نظام الدوام </label>
 
 
+                            <select v-model="work_selected" name="type" class="form-control " required>
+                              <option v-for="work_system in work_systems" v-bind:value="work_system.id">
+                                {{ work_system.name }}
+                              </option>
+                            </select>
+                          </div> -->
+
+
+
+
+                            </div>
+                            <div class="row">
+
+
+
+                              <div class="col-md-3">
+                                <label for="inputAddress">الهيكل الاداري</label>
+
+                                <div class="custom-search">
+                                  <input style="background-color: beige;" :id="'Structure_structure_tree' + index"
+                                    type="text" readonly class="custom-search-input">
+                                  <input style="background-color: beige;" :id="'Structure_structure_tree_id' + index"
+                                    type="hidden" readonly class="custom-search-input">
+
+                                  <button class="custom-search-botton" type="button" data-toggle="modal"
+                                    data-target="#exampleModalStructure" @click="detect_index_structure(index)"> <i
+                                      class="fa fa-plus-circle"></i></button>
+                                </div>
+                              </div>
+                              <div class="col-md-3">
+                                <label for="inputAddress"> التعين</label>
+
+                                <div class="custom-search">
+                                  <select style="background-color: beige;" v-model="jobselected" id="select_structure"
+                                    class="form-control" required>
+
+                                  </select>
+
+                                </div>
+
+
+                              </div>
+                              <div class="col-md-3">
+                                <label for="inputCity">تاريخ التعين</label>
+                                <input v-model="date" type="date" class="form-control" />
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="inputCity">الراتب</label>
+                                <input v-model="salary" type="number" class="form-control" />
+                              </div>
+                              <hr />
+                              <div class="col-md-3">
+                                <label for="inputState">حاله المؤظف</label>
+                                <select v-model="statusselected" name="type" id="type" class="form-control" required>
+                                  <option v-bind:value="1">بدء العمل</option>
+                                  <option v-bind:value="2">لم يبدء العمل</option>
+                                </select>
+                              </div>
+
+
+                            </div>
+                            <div class="row">
+
+                              <div class="col-md-3">
+                                <label for="inputZip">المؤهلات </label>
+                                <select v-model="qualificationselected" name="type" id="type" class="form-control"
+                                  required>
+                                  <option v-for="qualification in qualifications" v-bind:value="qualification.id">
+                                    {{ qualification.name }}
+                                  </option>
+                                </select>
+                              </div>
+                              <div class="col-md-3">
+                                <label for="inputZip">الجنسيه </label>
+                                <select style="background-color: beige;" v-model="nationalityselected" name="type"
+                                  id="type" class="form-control" required>
+                                  <option v-for="nationality in nationalities" v-bind:value="nationality.id">
+                                    {{ nationality.name }}
+                                  </option>
+                                </select>
+                              </div>
+                              <hr />
+                              <div class="col-md-3">
+                                <label for="inputZip">الجنس </label>
+                                <select style="background-color: beige;" v-model="genderselected" name="type" id="type"
+                                  class="form-control" required>
+                                  <option v-bind:value="1">ذكر</option>
+                                  <option v-bind:value="2">انثى</option>
+                                </select>
+                              </div>
+
+                              <div class="col-md-3">
+                                <label for="inputZip">توع المؤظف </label>
+                                <select v-model="social_statusselected" name="type" id="type" class="form-control"
+                                  required>
+                                  <option v-bind:value="1">متعاقد</option>
+                                  <option v-bind:value="2">رسمي</option>
+                                </select>
+                              </div>
+
+
+
+
+
+
+                            </div>
+                            <div class="row">
+                              <div class="col-md-2">
+                                <label for="inputZip">الديانه </label>
+                                <select style="background-color: beige;" v-model="religionselected" name="type" id="type"
+                                  class="form-control" required>
+                                  <option v-for="religion in religions" v-bind:value="religion.id">
+                                    {{ religion.name }}
+                                  </option>
+                                </select>
+                              </div>
+                              <div class="col-md-2">
+                                <label for="inputZip"> الحاله الاجتماعيه </label>
+                                <select style="background-color: beige;" v-model="staff_statusselected" name="type"
+                                  id="type" class="form-control" required>
+                                  <option v-bind:value="1">عازب</option>
+                                  <option v-bind:value="2">متزوج</option>
+                                </select>
+                              </div>
+
+                              <div class="col-md-4">
+                                <label for="inputZip"> البريد الالكتروني</label>
+                                <input style="background-color: beige;" v-model="email" type="text" class="form-control"
+                                  id="inputZip" />
+                              </div>
+                              <!-- 
+                          <div class="col-md-2">
+                            <label for="inputZip"> الراتب الاساسي</label>
+                            <input v-model="salary" type="text" class="form-control" id="inputZip" />
+                          </div> -->
+                            </div>
                           </div>
-                          <div class="row">
-
-                            <div class="col-md-3">
-                              <label for="inputZip">المؤهلات </label>
-                              <select v-model="qualificationselected" name="type" id="type" class="form-control" required>
-                                <option v-for="qualification in qualifications" v-bind:value="qualification.id">
-                                  {{ qualification.name }}
-                                </option>
-                              </select>
+                          <div class="card-footer pb-0">
+                            <div class="d-flex justify-content-between">
+                              <i class="mdi mdi-dots-horizontal text-gray"></i>
                             </div>
-                            <div class="col-md-3">
-                              <label for="inputZip">الجنسيه </label>
-                              <select v-model="nationalityselected" name="type" id="type" class="form-control" required>
-                                <option v-for="nationality in nationalities" v-bind:value="nationality.id">
-                                  {{ nationality.name }}
-                                </option>
-                              </select>
-                            </div>
-                            <hr />
-                            <div class="col-md-3">
-                              <label for="inputZip">الجنس </label>
-                              <select v-model="genderselected" name="type" id="type" class="form-control" required>
-                                <option v-bind:value="1">ذكر</option>
-                                <option v-bind:value="2">انثى</option>
-                              </select>
-                            </div>
-
-                            <div class="col-md-3">
-                              <label for="inputZip">توع المؤظف </label>
-                              <select v-model="social_statusselected" name="type" id="type" class="form-control" required>
-                                <option v-bind:value="1">متعاقد</option>
-                                <option v-bind:value="2">رسمي</option>
-                              </select>
-                            </div>
-
-
-
-
-
-
-                          </div>
-                          <div class="row">
-                            <div class="col-md-2">
-                              <label for="inputZip">الديانه </label>
-                              <select v-model="religionselected" name="type" id="type" class="form-control" required>
-                                <option v-for="religion in religions" v-bind:value="religion.id">
-                                  {{ religion.name }}
-                                </option>
-                              </select>
-                            </div>
-                            <div class="col-md-2">
-                              <label for="inputZip"> الحاله الاجتماعيه </label>
-                              <select v-model="staff_statusselected" name="type" id="type" class="form-control" required>
-                                <option v-bind:value="1">عازب</option>
-                                <option v-bind:value="2">متزوج</option>
-                              </select>
-                            </div>
-
-                            <div class="col-md-4">
-                              <label for="inputZip"> البريد الالكتروني</label>
-                              <input v-model="email" type="text" class="form-control" id="inputZip" />
-                            </div>
-<!-- 
-                            <div class="col-md-2">
-                              <label for="inputZip"> الراتب الاساسي</label>
-                              <input v-model="salary" type="text" class="form-control" id="inputZip" />
-                            </div> -->
                           </div>
                         </div>
-                        <div class="card-footer pb-0">
-                          <div class="d-flex justify-content-between">
-                            <i class="mdi mdi-dots-horizontal text-gray"></i>
-                          </div>
-                        </div>
+
+
+                        <!-- </form> -->
                       </div>
-
-
-                      <!-- </form> -->
                     </div>
                   </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="submitForm()">حفظ </button>
+                    <!-- <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"@click="submitForm()">
+                      حفظ
+                    </button> -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal fade" id="exampleModalStructure" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  <div class="well" id="treeview_json_structure"></div>
+
                 </div>
 
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" @click="submitForm()">حفظ </button>
-                  <!-- <button type="button" class="btn btn-primary btn-lg btn-block" @click="submitForm()"@click="submitForm()">
-                        حفظ
-                      </button> -->
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="exampleModalStructureupdate" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
-              </div>
-            </div>
-          </form>
-        </div>
-       
-        <div class="modal fade" id="exampleModalStructure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
+                <div class="modal-body">
 
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
+                  <div class="well" id="treeview_json_structureupdate"></div>
 
-                <div class="well" id="treeview_json_structure"></div>
+                </div>
 
               </div>
-
             </div>
           </div>
-        </div>
-        <div class="modal fade" id="exampleModalStructureupdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
+          <div class="modal fade" id="exampleModalJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
 
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
 
-                <div class="well" id="treeview_json_structureupdate"></div>
+                  <div class="well" id="treeview_json_job"></div>
 
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <div class="modal fade" id="exampleModalJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-
-                <div class="well" id="treeview_json_job"></div>
+                </div>
 
               </div>
-
             </div>
           </div>
         </div>
       </div>
+      <!--/div-->
     </div>
-    <!--/div-->
   </div>
   <!-- /row -->
 </template>
@@ -414,11 +431,11 @@ export default {
         type: Object,
         default: null,
       },
-      
 
-      
-      
-      value_list_update:'',
+
+
+
+      value_list_update: '',
 
       indexselectedstructure: '',
       indexselectedjob: '',
@@ -460,7 +477,7 @@ export default {
       work_systems: '',
       word_search: "",
       work_selected: '',
-      data_update:'',
+      data_update: '',
     };
   },
   mounted() {
@@ -481,8 +498,8 @@ export default {
       this.staff_typeselected = data.staff_type.id;
       this.nationalityselected = data.nationality.id;
       this.work_selected = data.work_type.id;
-      
-     
+
+
 
     },
     detect_index_structure(index) {
@@ -573,9 +590,9 @@ export default {
       // this.$router.go(0);
     },
 
-    delete_staff(id){
+    delete_staff(id) {
 
-      this.axios.post(`/delete_staff/${id}`).then((response) => {});
+      this.axios.post(`/delete_staff/${id}`).then((response) => { });
 
       // toastMessage("تم الحذف", error.response.data.message.message, 'نجاح');
 

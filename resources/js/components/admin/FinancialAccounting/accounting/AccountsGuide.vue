@@ -22,7 +22,7 @@
             <div class="card-body">
               <div class="container">
                 <div class="row justify-content-left">
-                  <div class="col-md-6">
+                  <div class="col-md-8">
                     <div class="card">
 
 

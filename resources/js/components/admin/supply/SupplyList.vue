@@ -3,15 +3,24 @@
     <div class="row row-sm">
       <div class="col-xl-12">
         <div class="card">
-          <div class="card-header pb-0">
-            <div class="d-flex justify-content-between">
-              <span class="h2"> المشتريات</span>
-            </div>
+       
+          <div class="card-header">
+          <span class="h3">اوامر التوريد</span>
 
-            <div class="d-flex justify-content-between"></div>
+
+          <div style="display: flex;float: left; margin: 5px">
+            <router-link to="NewSupply" id="agregar_productos"
+              class="tn btn-info btn-sm waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link>
+
+
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+              aria-expanded="true" v-model="word_search" @input="get_search()" />
+
+
+
+         
           </div>
+        </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table text-md-nowrap" id="example1">
@@ -21,7 +30,7 @@
                     <th class="wd-15p border-bottom-0">المورد</th>
                     <!-- <th class="wd-15p border-bottom-0">الكميه </th>
                   <th class="wd-15p border-bottom-0">الكميه المرتحعه</th> -->
-                    <th class="wd-15p border-bottom-0">تاريخ الشراء</th>
+                    <th class="wd-15p border-bottom-0">تاريخ التوريد</th>
 
                     <th class="wd-15p border-bottom-0"> المدفوع</th>
                     <th class="wd-15p border-bottom-0">المتبقي</th>
@@ -30,16 +39,16 @@
                     <th class="wd-15p border-bottom-0">العمليات</th>
                   </tr>
                 </thead>
-                <tbody v-if="supplys && supplys.data.length > 0">
-                  <tr v-for="(supply, index) in supplys.data" :key="index">
-                    <td>{{ supply.supplys_id }}</td>
-                    <td>{{ supply.supplier_name }}</td>
+                <tbody v-if="supplies && supplies.data.length > 0">
+                  <tr v-for="(supply, index) in supplies.data" :key="index">
+                    <td>{{ supply.paymentable.supply_id }}</td>
+                    <td>{{ supply.paymentable.supplier_name }}</td>
                     <!-- <td>{{ supply.quantity }}</td>
                   <td>{{ supply.qty_return }}</td> -->
-                    <td>{{ supply.date }}</td>
+                    <td>{{ supply.paymentable.date }}</td>
                     <td>{{ supply.paid }}</td>
                     <td>{{ supply.remaining }}</td>
-                    <td>{{ supply.grand_total }}</td>
+                    <td>{{ supply.paymentable.grand_total }}</td>
                     <td>
 
                       <span class="badge bg-warning" v-if="supply.payment_status == 'pendding'">غير مدفوعه</span>
@@ -54,7 +63,7 @@
                           class="form-control">
                           <option :selected="true" class="btn btn-success" v-bind:value="[
                             '/supply_details/',
-                            supply.supplys_id,
+                            supply.supply_id,
                             0
                           ]">
                             تفاصيل
@@ -62,14 +71,14 @@
                           
                           <option class="btn btn-success" v-bind:value="[
                             'return_supply',
-                            supply,
+                            supply.paymentable,
                             1
                           ]">
                             ارجاع
                           </option>
                           <option class="btn btn-success" v-bind:value="[
                             'returnsupplylist',
-                            supply.supplys_id,
+                            supply.supply_id,
                             2
                           ]">
                             مرتجعات
@@ -77,25 +86,25 @@
 
                           <option class="btn btn-success" v-bind:value="[
                             '/supply_invoice/',
-                            supply.supplys_id,
+                            supply.supply_id,
                             3
                           ]">
                             عرض الفاتوره
                           </option>
                           <!-- <option v-if="supply.payment_status != 'paiding'" class="btn btn-success"
-                            v-bind:value="['/PaymentBond/', supply.supply_id, 4]">
+                            v-bind:value="['/PaymentBond/', supply.paymentable.supply_id, 4]">
                             دفع
                           </option> -->
-                          <option class="btn btn-success" v-bind:value="['PaymentBond', supply.supply_id, 4]">
+                          <option class="btn btn-success" v-bind:value="['PaymentBond', supply.paymentable.supply_id, 4]">
                             صرف
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/supply_invoice_update/', supply.supply_id, 5]">
+                            v-bind:value="['/supply_invoice_update/', supply.paymentable.supply_id, 5]">
                             تعديل الفاتوره
                           </option>
 
 
-                          <option class="btn btn-success" v-bind:value="['supply_daily', supply.supply_id, 6]">
+                          <option class="btn btn-success" v-bind:value="['supply_daily', supply.paymentable.supply_id, 6]">
                             عرض القيد المحاسبي
                           </option>
                         </select>
@@ -116,7 +125,7 @@
                 </tbody>
               </table>
             </div>
-            <pagination align="center" :data="supplys" @pagination-change-page="list"></pagination>
+            <pagination align="center" :data="supplies" @pagination-change-page="list"></pagination>
           </div>
         </div>
       </div>
@@ -125,7 +134,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <span class="h2">تفاصيل الشراء</span>
+            <span class="h2">تفاصيل التوريد</span>
 
 
           </div>
@@ -140,7 +149,7 @@
                     <th>الحاله</th>
                     <th>المخزن</th>
 
-                    <th class="wd-15p border-bottom-0"> كميه الشراء</th>
+                    <th class="wd-15p border-bottom-0"> كميه التوريد</th>
                     <!-- <th>الوحده</th> -->
                     <th class="wd-15p border-bottom-0"> السعر </th>
                     <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
@@ -228,7 +237,7 @@ export default {
   },
   data() {
     return {
-      supplys: {
+      supplies: {
         type: Object,
         default: null,
       },
@@ -285,10 +294,10 @@ export default {
     },
     get_search() {
       this.axios
-        .post(`/listsupplysearch`, { word_search: this.word_search })
+        .post(`/listsuppliesearch`, { word_search: this.word_search })
         .then(({ data }) => {
           console.log(data);
-          this.supplys = data.supplys;
+          this.supplies = data.supplies;
         });
     },
     list(page = 1) {
@@ -298,7 +307,7 @@ export default {
       this.axios
         .post(`/listsupply?page=${page}`, { type: this.type })
         .then(({ data }) => {
-          this.supplys = data.supplys;
+          this.supplies = data.supplies;
         })
         .catch(({ response }) => {
           console.error(response);

@@ -265,6 +265,7 @@
             <li class="slide">
               <router-link class="slide-item" to="/accounts_basic_data">البيانات الاساسيه </router-link>
             </li>
+            
             <li class="slide">
               <router-link class="slide-item" to="accounts_guide">الدليل المجاسبي</router-link>
             </li>
@@ -272,27 +273,36 @@
               <router-link class="slide-item" to="daily_restrictions">
                 قيود اليوميه</router-link>
             </li>
+            
+            <li>
+              <router-link class="slide-item" to="/expence">المصروفات والايرادات</router-link>
+            </li>
             <li class="slide">
               <router-link class="slide-item" to="/account_list">
-                ارصده الحسابات</router-link>
-            </li>
-
-            <li>
-              <router-link class="slide-item" to="/expence">المصروفات </router-link>
-            </li>
-            <li>
-              <router-link class="slide-item" to="/income">الايرادات </router-link>
-            </li>
-            <li class="slide">
-              <router-link class="slide-item" to="auditBalance">
                 دفتر الاستاذ العام</router-link>
             </li>
+
+            <!-- <li>
+              <router-link class="slide-item" to="/income">الايرادات </router-link>
+            </li> -->
+            <!-- <li class="slide">
+              <router-link class="slide-item" to="auditBalance">
+                دفتر الاستاذ العام</router-link>
+            </li> -->
             <li class="slide">
               <router-link class="slide-item" to="auditBalance">
                 ميزان المراجعه</router-link>
             </li>
-
-
+            <li class="slide">
+              <router-link class="slide-item" to="auditBalance">
+                 الارباح والخسائر</router-link>
+            </li>
+            <li class="slide">
+              <router-link class="slide-item" to="/closing_year"> الاقفالات السنويه </router-link>
+            </li>
+            <li class="slide">
+              <router-link class="slide-item" to="/closing_year"> الاقفالات الشهريه </router-link>
+            </li>
 
           </ul>
         </li>
@@ -321,6 +331,12 @@
           <ul class="slide-menu">
             <li>
               <router-link class="slide-item" to="/staff/operation">ِشؤون الموظفين</router-link>
+            </li>
+          </ul>
+
+          <ul class="slide-menu">
+            <li>
+              <router-link class="slide-item" to="/staff/attendance"> الحضور والغياب</router-link>
             </li>
           </ul>
 
@@ -402,14 +418,24 @@
               <router-link class="slide-item" to="/stock">المخزون</router-link>
             </li>
           </ul>
+          <!-- <ul class="slide-menu">
+          <li>
+              <router-link class="slide-item" to="/newcash">امر صرف مخزني</router-link>
+            </li>
+          </ul> -->
           <ul class="slide-menu">
           <li>
-              <router-link class="slide-item" to="/newcash">صرف</router-link>
+              <router-link class="slide-item" to="/listcash">اوامر الصرف</router-link>
             </li>
           </ul>
+          <!-- <ul class="slide-menu">
+          <li>
+              <router-link class="slide-item" to="/newsupply">امر توريد مخزني</router-link>
+            </li>
+          </ul> -->
           <ul class="slide-menu">
           <li>
-              <router-link class="slide-item" to="/newsupply">توريد</router-link>
+              <router-link class="slide-item" to="/listsupply">اوامر التوريد</router-link>
             </li>
           </ul>
 

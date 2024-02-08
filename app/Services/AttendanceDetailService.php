@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\RepositoryInterface\SanctionRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Traits\staff\AttendanceTrait;
 use App\Services\core\CoreStaffAttendanceService;
 use Illuminate\Http\Request;
@@ -14,7 +13,6 @@ class AttendanceDetailService
 
     use AttendanceTrait;
     public function __construct(
-        protected DetailRepositoryInterface $details,
         protected CoreStaffAttendanceService $attendance_core,
         protected Request $request,
     ) {
@@ -75,17 +73,7 @@ class AttendanceDetailService
                
                     $repo = app($value_sanction)
                     ->create($this->attendance_core);
-                    // dd($repo);
-
-                    // if ($value_sanction != 'absence_sanction') {
-
-                    // dd(app('delay_sanction'));
-
-                    // $repo = app($value_sanction)
-                    // ->get($value_sanction)
-                    // ->create();
-
-
+                   
 
                 }
             }

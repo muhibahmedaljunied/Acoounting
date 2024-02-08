@@ -55,7 +55,7 @@ class CustomerController extends Controller
             'receivable_notes' => function ($query) {
                 $query->select('*');
             },
-            'payment_sales' => function ($query) {
+            'payments' => function ($query) {
                 $query->select('*');
             },
             'sale_returns' => function ($query) {
@@ -83,6 +83,20 @@ class CustomerController extends Controller
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
+
+
+            //   // -------------------------------------------------------------------------
+            //   $customer_service->get_parent();
+            //   // ---------------------------------------------------------------------------
+            //   $customer_service->get_child();
+            //   // -------------------------------------------------------------------------
+            //   $customer_service->add_account();
+            //   // -------------------------------------------------------------------------
+            //   $customer_service->add_supplier();
+  
+           
+
+              
 
 
             // -------------------------------------------------------------------------

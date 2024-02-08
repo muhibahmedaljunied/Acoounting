@@ -8,7 +8,8 @@ class Allowance extends Model
     //
 
 
-    
+    protected $fillable = ['staff_id','allowance_type_id','quantity','status','date'];
+
     public function staff()
     {
         return $this->belongsTo(Staff::class);

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\DailyService;
+use Illuminate\Support\Facades\DB;
 use App\Models\Account;
 
 class DailyController extends Controller
@@ -25,20 +26,50 @@ class DailyController extends Controller
     public function index()
     {
 
+
+        $sum_debit = 0;
+        $sum_credit = 0;
+
         $daily_details =  Account::join('daily_details', 'daily_details.account_id', '=', 'accounts.id')
             ->select('accounts.*', 'daily_details.*')
             ->paginate(100);
-        return response()->json(['daily_details' => $daily_details]);
+
+        foreach ($daily_details as $value) {
+
+            $sum_debit += $value->debit;
+            $sum_credit += $value->credit;
+        }
+
+        // dd($daily_details->sum_credit);
+        return response()->json([
+            'daily_details' => $daily_details, 'sum_debit' => $sum_debit,
+            'sum_credit' => $sum_credit
+        ]);
     }
 
     public function account_report(Request $request)
     {
 
+        $sum_debit = 0;
+        $sum_credit = 0;
         $account_details =  Account::join('daily_details', 'daily_details.account_id', '=', 'accounts.id')
-            ->where('daily_details.account_id',$request->id)
+            ->where('daily_details.account_id', $request->id)
             ->select('accounts.*', 'daily_details.*')
             ->paginate(100);
-        return response()->json(['account_details' => $account_details]);
+
+        foreach ($account_details as $value) {
+
+            $sum_debit += $value->debit;
+            $sum_credit += $value->credit;
+        }
+
+
+        // dd($account_details->sum_credit);
+        return response()->json([
+            'account_details' => $account_details,
+            'sum_debit' => $sum_debit,
+            'sum_credit' => $sum_credit
+        ]);
     }
 
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits\staff\Sanction;
+
 use App\Models\DelaySanction;
 use DB;
 
@@ -34,20 +35,29 @@ trait DelaySanctionTrait
     }
 
 
-    
+
     public function get()
     {
 
-        $delay = DB::table('delay_sanctions')
+        $this->core->data_sanction = DB::table('delay_sanctions')
             ->join('delay_types', 'delay_types.id', '=', 'delay_sanctions.delay_type_id')
             ->join('parts', 'parts.id', '=', 'delay_sanctions.part_id')
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'delay_sanctions.sanction_discount_id')
-            ->select('delay_sanctions.*', 'delay_sanctions.id as delay_sanction_id', 'parts.duration', 'delay_types.*', 'sanction_discounts.*')
+            ->select(
+                'delay_sanctions.*',
+                'delay_sanctions.id as sanction_id',
+                'delay_sanctions.id as delay_sanction_id',
+                'parts.duration',
+                'delay_types.*',
+                'sanction_discounts.*'
+            )
             ->get();
-
-        return $delay;
     }
-    
 
-  
+    public function show($id)
+    {
+
+
+        $this->core->specific_sanction = DelaySanction::find($id);
+    }
 }

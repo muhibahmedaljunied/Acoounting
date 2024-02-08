@@ -1,13 +1,12 @@
 <?php
 
 namespace App\Repository\Daily;
-use App\RepositoryInterface\DailyRepositoryInterface;
-use App\RepositoryInterface\NoteRepositoryInterface;
+
 use App\Services\CoreService;
 use App\Models\Daily;
 use App\Models\DailyDetail;
 use DB;
-class ExpenceRepository implements DailyRepositoryInterface
+class ExpenceRepository  
 {
     public $dailyId;
     public $core;

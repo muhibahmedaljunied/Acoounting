@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Cache;
 use App\Repository\Stock\SupplyRepository;
 use App\Services\UnitService;
 use App\Models\StoreProduct;
-use App\Services\SupplyPaymentService;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ use App\Models\Temporale;
 use App\Models\Supply;
 use App\Services\CoreService;
 use App\Services\DailyService;
-
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class SupplyController extends Controller
 {
@@ -30,7 +31,7 @@ class SupplyController extends Controller
     public function __construct(
 
         protected CoreService $core,
-        protected SupplyPaymentService $payment,
+        protected PaymentService $payment,
         protected UnitService $unit,
         Request $request,
 
@@ -130,7 +131,7 @@ class SupplyController extends Controller
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $warehouse->add(); // this insert data into purchase table
+            $warehouse->add(); // this insert data into supply table
 
             foreach ($this->core->data['count'] as $value) {
 
@@ -140,7 +141,6 @@ class SupplyController extends Controller
               
                 $store->store(); // this handle data in store_product table
 
-
                 $warehouse->init_details(); // this make initial for details table
 
                 $stock->stock(); // this handle data in stock table
@@ -149,16 +149,17 @@ class SupplyController extends Controller
 
             $this->payment->pay();
             $daily->daily()->debit()->credit();
-            $warehouse->refresh(); //this update purchase table by daily_id
+
+            $warehouse->refresh(); //this update supply table by daily_id
             Cache::forget('stock');
-            dd(Supply::all());
+            // dd(Supply::all());
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
 
 
             return response([
-                'message' => "purchase created successfully",
+                'message' => "supply created successfully",
                 'status' => "success"
             ], 200);
         } catch (\Exception $exp) {
@@ -172,20 +173,20 @@ class SupplyController extends Controller
             ], 400);
         }
     }
-    public function purchase_daily(Request $request)
+    public function supply_daily(Request $request)
     {
 
 
 
-        $purchases = DB::table('purchases')
-            ->where('purchases.id', $request->id)
-            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
-            ->join('dailies', 'dailies.id', '=', 'purchases.daily_id')
+        $supplies = DB::table('supplies')
+            ->where('supplies.id', $request->id)
+            ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
+            ->join('dailies', 'dailies.id', '=', 'supplies.daily_id')
             ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
             ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
             ->select(
-                // 'purchases.*',
-                'purchases.id as purchase_id',
+                // 'supplies.*',
+                'supplies.id as supply_id',
                 'suppliers.name',
                 'dailies.*',
                 'daily_details.*',
@@ -196,25 +197,29 @@ class SupplyController extends Controller
             )
             ->get();
 
-        // dd($purchases);
-        return response()->json(['daily_details' => $purchases]);
+        // dd($supplies);
+        return response()->json(['daily_details' => $supplies]);
     }
-    public function show(Request $request)
+
+    public function show()
     {
 
-        $purchases = DB::table('purchases')
-            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
-            ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
-            ->select(
-                'purchases.*',
-                'purchases.id as purchases_id',
-                'suppliers.*',
-                'payment_purchases.*',
-                'payment_purchases.payment_status'
-            )
-            ->paginate(10);
+    
+        $supplies = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Supply::class=> function ($query) {
+                    $query->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id');
+                    $query->select('supplies.*','supplies.id as supply_id');
+                }
+                   
+            ]);
+        }])
+        ->where('paymentable_type','App\\Models\\Supply')
 
-        return response()->json(['purchases' => $purchases]);
+        ->paginate();
+
+       
+        return response()->json(['supplies' => $supplies]);
     }
 
     public function search(Request $request)
@@ -236,15 +241,15 @@ class SupplyController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function invoice_purchase($id, $table = 'purchase_details')
+    public function invoice_supply($id, $table = 'supply_details')
     {
 
-        $purchases = Supply::where('purchases.id', $id)
-            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+        $supplies = Supply::where('supplies.id', $id)
+            ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
             ->select(
-                'purchases.*',
-                'purchases.id as purchase_id',
-                'purchases.*'
+                'supplies.*',
+                'supplies.id as supply_id',
+                'supplies.*'
             )
             ->get();
 
@@ -252,14 +257,14 @@ class SupplyController extends Controller
 
         $users = Auth::user();
 
-        return response()->json([$table => $details, 'purchases' => $purchases, 'users' => $users]);
+        return response()->json([$table => $details, 'supplies' => $supplies, 'users' => $users]);
     }
     public function destroy(Request $request)
     {
         if ($request->id) {
-            Temporale::where('type_process', 'purchase')->where('temporales.product_id', $request->id)->delete();
+            Temporale::where('type_process', 'supply')->where('temporales.product_id', $request->id)->delete();
         } else {
-            Temporale::where('type_process', 'purchase')->delete();
+            Temporale::where('type_process', 'supply')->delete();
         }
 
 

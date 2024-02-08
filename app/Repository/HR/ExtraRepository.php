@@ -2,15 +2,9 @@
 
 namespace App\Repository\HR;
 use App\Services\CoreStaffService;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\HRRepositoryInterface;
-use App\RepositoryInterface\PayrollRepositoryInterface;
 use App\Models\Extra;
-use App\Models\ExtraDetail;
-use App\Models\Payroll;
-use DB;
 
-class ExtraRepository implements HRRepositoryInterface, DetailRepositoryInterface, PayrollRepositoryInterface
+class ExtraRepository
 {
     
     public function __construct(public CoreStaffService $core)
@@ -20,6 +14,12 @@ class ExtraRepository implements HRRepositoryInterface, DetailRepositoryInterfac
         
     }
 
+    public function handle()
+    {
+        // dd($this->core->data);
+        $this->update();
+        $this->store();
+    }
     function Sum($data)
     {
 
@@ -33,60 +33,46 @@ class ExtraRepository implements HRRepositoryInterface, DetailRepositoryInterfac
             }
         }
     }
-    function add()
-    {
+ 
 
-      
-     
-        $temporale = new Extra();
-        $temporale->staff_id = $this->core->data['staff'][$this->core->value];
-        $temporale->extra_type_id = $this->core->data['extra_type'][$this->core->value];
-        $temporale->date = $this->core->data['date'][$this->core->value];
-        $temporale->start_time = $this->core->data['start_time'][$this->core->value];
-        $temporale->end_time = $this->core->data['end_time'][$this->core->value];
-        $temporale->number_hours = $this->core->data['duration'][$this->core->value][0];
-        $temporale->save();
+    function store()
+    {
+        if ($this->core->temporale_f->isEmpty()) {
+
+        $temporale = Extra::updateOrCreate(
+            [
+                'staff_id' => $this->core->data['staff'][$this->core->value],
+                'extra_type_id' => $this->core->data['extra_type'][$this->core->value],
+                'date' => $this->core->data['date'][$this->core->value],
+                'start_time' => $this->core->data['start_time'][$this->core->value],
+                'end_time' => $this->core->data['end_time'][$this->core->value],
+                'number_hours' => $this->core->data['duration'][$this->core->value][0],
+
+            ]
+        );
         $this->core->id = $temporale->id;
-     
     }
 
+    }
     public function update()
     {
 
    
    
-        $temporale_f = tap(Extra::whereExtra($this->core->data))
+        $this->core->temporale_f= tap(Extra::whereExtra($this->core))
             ->update([
-                'date' => $this->core->data['date'][$this->core->value],
-                'start_time' => $this->core->data['start_time'][$this->core->value],
-                'end_time' => $this->core->data['end_time'][$this->core->value],
                 'number_hours' => $this->core->data['duration'][$this->core->value]
             ])
             ->get('id');
          
-        return $temporale_f;
     }
 
-    public function init_details(...$list_data)
-    {
-
-
-       
-        $value = $list_data['value'];
-        $extra = new ExtraDetail();
-        $extra->extra_id = $this->core->id;
-        $extra->extra_sanction_id = $value->extra_sanction_id;
-        $extra->save();
-
-        $this->core->status_sanction = true;
+   
+    // public function refresh($id,$value)
+    // {
         
-    }
+    //     // dd($value->sanction);
+    //   tap(Payroll::where('staff_id',$id))->increment('total_extra',$value->sanction)->get(); 
 
-    public function refresh($id,$value)
-    {
-        
-        // dd($value->sanction);
-      tap(Payroll::where('staff_id',$id))->increment('total_extra',$value->sanction)->get(); 
-
-    }
+    // }
 }

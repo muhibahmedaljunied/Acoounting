@@ -17,7 +17,7 @@ class CreateCashDetailsTable extends Migration
         Schema::create('cash_details', function (Blueprint $table) {
             $table->Increments('id');
             $table->unsignedInteger('cash_id');
-            $table->foreign('cash_id')->references('id')->on('cashs')->onDelete('cascade');
+            $table->foreign('cash_id')->references('id')->on('cashes')->onDelete('cascade');
 
           
             $table->unsignedInteger('store_product_id');

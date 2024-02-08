@@ -8,7 +8,7 @@
 
           <span class="h2">  الغياب</span>
           <div style="display: flex;float: left; margin: 5px">
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addSA">
               <i class="fa fa-plus-circle"></i></a>
 
@@ -46,7 +46,12 @@
               <td>{{ index + 1 }}</td>
               <!-- <td>{{ absence_sanction.staff_name }}</td> -->
               <td>{{ absence_sanction.absence }}</td>
-              <td>{{ absence_sanction.iteration }}</td>
+              <td v-if="absence_sanction.iteration == 1"> مره واحده</td>
+              <td v-if="absence_sanction.iteration == 2">  مرتين</td>
+              <td v-if="absence_sanction.iteration == 3">ثلاث مرات</td>
+              <td v-if="absence_sanction.iteration == 4">اربع مرات</td>
+              <td v-if="absence_sanction.iteration == 5"> خمس مرات او اكثر</td>
+              <td v-if="absence_sanction.iteration == 6"> اي مره</td>
               <td>{{ absence_sanction.discount_name }}</td>
               <td v-if="absence_sanction.discount == 1">قيمه</td>
               <td v-if="absence_sanction.discount == 2">نسبه</td>
@@ -61,7 +66,7 @@
 
 
 
-                <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSA" data-toggle="modal"
+                <a class="btn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSA" data-toggle="modal"
                   id="agregar_productos">
                   <i class="fa fa-edit"></i></a>
               </td>
@@ -158,6 +163,10 @@
                                     <option v-bind:value="5">
                                       خمس مرات او اكثر
                                     </option>
+                                    <option v-bind:value="6">
+
+اي مره 
+</option>
                                   </select>
                                 </td>
                                 <td>
@@ -188,10 +197,10 @@
 
 
                                 <td v-if="index == 1">
-                                  <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
+                                  <a class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
                                     <i class="fa fa-plus-circle"></i></a>
 
-                                  <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
+                                  <a class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
                                     <i class="fa fa-minus-circle"></i></a>
                                 </td>
 
@@ -229,7 +238,7 @@
         </div>
       </form>
     </div>
-    <div class="modal fade" id="updateSA" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="updateSA" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <form method="post">
         <div class="modal-dialog modal-fullscreen">
           <div class="modal-content">
@@ -241,7 +250,7 @@
             <div class="modal-body">
               <div class="row row-sm">
                 <div class="col-xl-12">
-                  <!-- <form method="post"> -->
+             
                   <div class="card">
                     <div class="card-header pb-0">
                       <div class="d-flex justify-content-between">
@@ -259,7 +268,7 @@
                               <tr>
 
 
-                                <!-- <th>اسم الموظف</th> -->
+                               
                                 <th>الغياب</th>
                                 <th>عدد مرات التكرار</th>
                                 <th> طريقه الخصم</th>
@@ -271,14 +280,7 @@
                             </thead>
                             <tbody>
                               <tr v-for="index in count" :key="index">
-                                <!-- <td>
-                                  <select v-model="staffselected[index]" name="type" id="type" class="form-control "
-                                    required>
-                                    <option v-for="staff in staffs" v-bind:value="staff.id">
-                                      {{ staff.name }}
-                                    </option>
-                                  </select>
-                                </td> -->
+                             
                                 <td>
                                   <select v-model="absenceselected[index]" name="type" id="type" class="form-control "
                                     required>
@@ -340,10 +342,10 @@
 
 
                                 <td v-if="index == 1">
-                                  <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
+                                  <a class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
                                     <i class="fa fa-plus-circle"></i></a>
 
-                                  <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
+                                  <a class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
                                     <i class="fa fa-minus-circle"></i></a>
                                 </td>
 
@@ -366,7 +368,6 @@
                   </div>
 
 
-                  <!-- </form> -->
                 </div>
               </div>
             </div>
@@ -380,7 +381,7 @@
           </div>
         </div>
       </form>
-    </div>
+    </div> -->
 
 
 

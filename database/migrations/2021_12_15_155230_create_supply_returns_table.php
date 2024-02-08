@@ -17,7 +17,7 @@ class CreateSupplyReturnsTable extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('supply_id')->unsigned()->nullable();
-            $table->foreign('supply_id')->references('id')->on('supplys')->onDelete('cascade');
+            $table->foreign('supply_id')->references('id')->on('supplies')->onDelete('cascade');
 
             $table->unsignedInteger('daily_id')->nullable();
             $table->foreign('daily_id')->references('id')->on('dailies')->onDelete('cascade');

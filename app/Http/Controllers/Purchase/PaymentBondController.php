@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Purchase;
 use App\Repository\Note\PaymentBondRepository;
 use App\Services\UnitService;
-use App\Services\PurchasePaymentService;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Traits\Invoice\InvoiceTrait;
@@ -23,7 +23,7 @@ class PaymentBondController extends Controller
     public function __construct(
 
         protected CoreService $core,
-        protected PurchasePaymentService $payment,
+        protected PaymentService $payment,
         protected UnitService $unit,
         Request $request,
 
@@ -33,6 +33,7 @@ class PaymentBondController extends Controller
         $this->core->setData($request->all());
     }
 
+    
 
 
     public function payment_bond(Request $request)
@@ -63,18 +64,17 @@ class PaymentBondController extends Controller
 
     ) {
 
-        // dd($request->all());
+        // dd($this->core->data);
 
 
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            // $dailyService->daily();
             $dailyService->daily()->debit()->credit();
             $note->finish();
-            $this->payment->update_paymentBond();
+            $this->payment->update();
 
-
+    
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
 
             return response([

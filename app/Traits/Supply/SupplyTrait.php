@@ -23,7 +23,9 @@ trait SupplyTrait
         );
 
         $this->core->supply_id = $table_one->id;
-        $this->core->supply = $table_one;
+        // $this->core->supply = $table_one;
+        $this->core->stockable = $table_one;
+        $this->core->paymentable = $table_one;
 
         // return $table_one;
     }

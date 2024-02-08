@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AbsenceSanction extends Model
 {
-    // protected $fillable = ['staff_id','absence_type_id','date'];
+    protected $fillable = ['absence_type_id','sanction_discount_id','discount','iteration','sanction'];
 
 
     public function scopeWhereAbsenceSanction($query, $value)

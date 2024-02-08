@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Repository\Daily;
-use App\RepositoryInterface\DailyRepositoryInterface;
 use App\Services\CoreService;
 use App\Models\Daily;
 use App\Models\DailyDetail;

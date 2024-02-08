@@ -17,7 +17,9 @@ trait PurchaseReturnTrait
         $return->save();
 
         $this->core->return_id = $return->id;
-        $this->core->return = $return;
+        // $this->core->return = $return;
+        $this->core->stockable = $return;
+
     }
 
     public function refresh_purchase_return_table()

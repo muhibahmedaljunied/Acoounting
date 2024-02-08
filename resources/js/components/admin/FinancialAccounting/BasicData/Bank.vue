@@ -8,7 +8,9 @@
                 <div class="card">
 
                     <div class="card-header">
-                        <h4 class="modal-title" id="myLargeModalLabel">اضافه بنك </h4>
+                    
+                        <span class="h4"> اضافه بنك</span>
+
                     </div>
                     <div class="card-body">
 

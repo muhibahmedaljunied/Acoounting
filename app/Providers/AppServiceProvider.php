@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use App\Services\CoreStaffService;
 use App\Services\CoreService;
 
+
+
 class AppServiceProvider extends ServiceProvider
 {
 
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
        
+  
    
         $this->app->singleton(CoreStaffAttendanceService::class, function () {
             
@@ -74,6 +77,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+       
         DB::listen(function ($query) {
             Log::info(
                 $query->sql,

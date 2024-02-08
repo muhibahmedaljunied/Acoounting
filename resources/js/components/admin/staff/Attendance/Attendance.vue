@@ -1,343 +1,358 @@
 <template>
-    <div class="row row-sm">
-        <div class="col-xl-12">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <div class="d-flex justify-content-between">
-                        <span class="h2"> تحضير الموظف</span>
+    <div class="container-fluid">
+        <div class="row row-sm">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="d-flex justify-content-between">
+                            <span class="h2"> تحضير الموظف</span>
+                        </div>
+
                     </div>
+                    <div class="card-body" id="printme">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for="status"> وقت التحضير</label>
+                                <select v-model="attendance_in_out" class="form-control " required>
+                                    <option v-bind:value=1>
+                                        دخول
+                                    </option>
+                                    <option v-bind:value=2>
+                                        خروج
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="status"> نوع التحضير</label>
+                                <select v-model="attendance_type" class="form-control " required>
+                                    <option v-bind:value=1>
+                                        حاضر
 
-                </div>
-                <div class="card-body" id="printme">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label for="status"> وقت التحضير</label>
-                            <select v-model="attendance_in_out" class="form-control " required>
-                                <option v-bind:value=1>
-                                    دخول
-                                </option>
-                                <option v-bind:value=2>
-                                    خروج
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="status"> نوع التحضير</label>
-                            <select v-model="attendance_type" class="form-control " required>
-                                <option v-bind:value=1>
-                                    حاضر
+                                    </option>
 
-                                </option>
-
-                                <option v-bind:value=2>
-                                    غايب
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="status">نظام العمل</label>
-                            <select @change="get_period(work_selected)" v-model="work_selected" name="type"
-                                class="form-control " required>
-                                <option v-for="work_system in work_systems" v-bind:value="work_system.id">
-                                    {{ work_system.name }}
-                                </option>
-                            </select>
+                                    <option v-bind:value=2>
+                                        غايب
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="status">نظام العمل</label>
+                                <select @change="get_period(work_selected)" v-model="work_selected" name="type"
+                                    class="form-control " required>
+                                    <option v-for="work_system in work_systems" v-bind:value="work_system.id">
+                                        {{ work_system.name }}
+                                    </option>
+                                </select>
 
 
 
 
-                        </div>
+                            </div>
 
-                        <div class="col-md-2">
+                            <!-- <div class="col-md-2">
                             <label for="status">نوع العمل</label>
 
                             <span id='select_work_type'></span>
                            
-                        </div>
-                        <div class="col-md-2">
-
-                    
-
-                            <label for="status"> الفتره</label>
-                            <select @change="get_time(period_selected)" id='select_period' v-model="period_selected"
-                                name="type" class="form-control " required>
-
-                            </select>
+                        </div> -->
+                            <div class="col-md-2">
 
 
 
+                                <label for="status"> الفتره</label>
+                                <select @change="get_time(period_selected)" id='select_period' v-model="period_selected"
+                                    name="type" class="form-control " required>
 
-
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="status"> التأريخ</label>
-                            <input class="form-control" type="date" name="" id="" v-model="attendance_date">
-
-
-                        </div>
-
-
-
-                    </div>
-
-                    <div class="row">
+                                </select>
 
 
 
 
 
-                        <div class="col-md-3">
-                            <label> بدايه الفتره</label>
+                            </div>
 
-                            <span id="start_period">
+                            <div class="col-md-4">
+                                <label for="status"> التأريخ</label>
+                                <input class="form-control" type="date" name="" id="" v-model="attendance_date">
 
-                                <input type="time" class="form-control">
 
+                            </div>
 
-                            </span>
 
 
                         </div>
 
-                        <div class="col-md-3">
-                            <label> نهايه الفتره</label>
-
-                            <span id="end_period">
-                                <input type="time" class="form-control">
-
-                            
-                            </span>
-
-
-                        </div>
+                        <div class="row">
 
 
 
 
-                        <div class="col-md-3">
-                            <label for="status"> الموظف</label>
-                            <select id='select_staff' v-model="staff_search" name="type" class="form-control " required>
 
-                            </select>
-                        </div>
+                            <div class="col-md-3">
+                                <label> بدايه الفتره</label>
+
+                                <span id="start_period">
+
+                                    <input type="time" class="form-control">
 
 
-                        <div class="col-sm-6 col-md-3" style="margin-top: auto;">
-                            <!-- <a href="#" onclick="get_time_for_all_staff(period_selected)"><img src="/assets/img/search.png"
+                                </span>
+
+
+                            </div>
+
+                            <div class="col-md-3">
+                                <label> نهايه الفتره</label>
+
+                                <span id="end_period">
+                                    <input type="time" class="form-control">
+
+
+                                </span>
+
+
+                            </div>
+
+
+
+
+                            <div class="col-md-3">
+                                <label for="status"> الموظف</label>
+                                <select id='select_staff' v-model="staff_search" name="type" class="form-control " required>
+
+                                </select>
+                            </div>
+
+
+                            <div class="col-sm-6 col-md-3" style="margin-top: auto;">
+                                <!-- <a href="#" onclick="get_time_for_all_staff(period_selected)"><img src="/assets/img/search.png"
                                     alt="" style="width: 15%;"> </a> -->
 
-                            <a @click="get_time_for_all_staff(period_selected)" id="agregar_productos"
-                                data-target=".bs-example-modal-sm">
-                                <img src="/assets/img/search.png" alt="" style="width: 15%;"></a>
+                                <a @click="get_time_for_all_staff(period_selected)" id="agregar_productos"
+                                    data-target=".bs-example-modal-sm">
+                                    <img src="/assets/img/search.png" alt="" style="width: 15%;"></a>
+                            </div>
                         </div>
+
+
                     </div>
-                    <hr>
-                    <!--<hr>
-                    <hr> -->
-                    <form action="post">
-                        <div class="table-responsive">
-                            <table class="table table-bordered text-center">
-                                <thead>
-                                    <tr>
-                                        <!-- <th class="wd-15p border-bottom-0">الرقم الوظيفي</th> -->
-                                        <th class="wd-10p border-bottom-0">اسم المؤظف</th>
-                                        <!-- <th class="wd-10p border-bottom-0">الوظيفه</th> -->
-                                        <!-- <th class="wd-10p border-bottom-0">التاريخ</th> -->
-                                        <!-- <th class="wd-10p border-bottom-0">نوع الحضور</th> -->
 
 
-                                        <th class="wd-10p border-bottom-0">الوقت</th>
-                                        <th class="wd-10p border-bottom-0">عدد الساعات</th>
-                                        <th class="wd-10p border-bottom-0">مده التأخير</th>
-                                        <th class="wd-10p border-bottom-0"> الانصراف قبل الدوام</th>
-                                        <th class="wd-10p border-bottom-0"> الاضافي</th>
+                </div>
+            </div>
+        </div>
+        <div class="row row-sm">
+            <div class="col-xl-12">
+                <div class="card">
 
-                                        <th>اضافه</th>
+                    <div class="card-body" id="printme">
 
-                                        <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
-                                    </tr>
-                                </thead>
-                                <tbody v-if="value_list && value_list.data.length > 0">
-                                    <tr v-for="(staff, indexs) in value_list.data" :key="indexs">
-                                        <!-- <td>{{ staff.id }}</td> -->
 
-                                        <!-- <input v-model="staff_id = staff.id" type="hidden" name="name" id="name"
+                        <form action="post">
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th class="wd-15p border-bottom-0">الرقم الوظيفي</th> -->
+                                            <th class="wd-10p border-bottom-0">اسم المؤظف</th>
+                                            <!-- <th class="wd-10p border-bottom-0">الوظيفه</th> -->
+                                            <!-- <th class="wd-10p border-bottom-0">التاريخ</th> -->
+                                            <!-- <th class="wd-10p border-bottom-0">نوع الحضور</th> -->
+
+
+                                            <th class="wd-10p border-bottom-0">الوقت</th>
+                                            <th class="wd-10p border-bottom-0">عدد الساعات</th>
+                                            <th class="wd-10p border-bottom-0">مده التأخير</th>
+                                            <th class="wd-10p border-bottom-0"> الانصراف قبل الدوام</th>
+                                            <th class="wd-10p border-bottom-0"> الاضافي</th>
+
+                                            <th>اضافه</th>
+
+                                            <!-- <th class="wd-15p border-bottom-0">العمليات</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="value_list && value_list.data.length > 0">
+                                        <tr v-for="(staff, indexs) in value_list.data" :key="indexs">
+                                            <!-- <td>{{ staff.id }}</td> -->
+
+                                            <!-- <input v-model="staff_id = staff.id" type="hidden" name="name" id="name"
                                             class="form-control" /> -->
-                                        <td>{{ staff.name }}</td>
+                                            <td>{{ staff.name }}</td>
 
 
-                                        <template v-if="staff.details">
+                                            <template v-if="staff.details">
 
 
-                                            <div v-for="details in staff.details" style="display: flex;">
-
-
-
-                                                <td>
-                                                    <label for="in" style="color:red"> حضور</label>
-                                                    <input type="time" name="in" v-bind:id='"in" + indexs'
-                                                        :value="details.check_in">
+                                                <div v-for="details in staff.details" style="display: flex;">
 
 
 
-                                                </td>
-
-
-                                                <td>
-                                                    <label for="out" style="color:red"> انصراف</label>
-                                                    <input v-if="staff.attendance_final == 'complete'" type="time"
-                                                        name="out" v-bind:id='"out" + indexs' :value="details.check_out">
-                                                    <input v-else type="time" name="out" v-bind:id='"out" + indexs'>
-
-
-                                                </td>
+                                                    <td>
+                                                        <label for="in" style="color:red"> حضور</label>
+                                                        <input type="time" name="in" v-bind:id='"in" + indexs'
+                                                            :value="details.check_in">
 
 
 
+                                                    </td>
 
 
-
-                                            </div>
-
-
-                                            <td v-for="details_duration in staff.details">
-
-
-                                                <input @keypress="calc_time(indexs)" type="text" class="form-control"
-                                                    name="name" v-bind:id='"attendance_duration" + indexs' />
-                                                <input v-bind:id='"attendance_duration_hidden" + indexs' type="hidden"
-                                                    class="form-control" name="name" :value="details_duration.duration">
+                                                    <td>
+                                                        <label for="out" style="color:red"> انصراف</label>
+                                                        <input v-if="staff.attendance_final == 'complete'" type="time"
+                                                            name="out" v-bind:id='"out" + indexs' 
+                                                            :value="details.check_out" >
+                                                        <input v-else type="time" name="out" v-bind:id='"out" + indexs'>
 
 
-                                            </td>
-                                            <td v-for="details_delay in staff.details">
-
-                                                <input v-bind:id='"attendance_delay" + indexs' type="text"
-                                                    class="form-control">
-                                                <input type="hidden" v-bind:id='"attendance_delay_hidden" + indexs'
-                                                    class="form-control" name="name" :value="details_delay.delay">
-
-                                            </td>
-                                            <td v-for="details_leave in staff.details">
-
-                                                <input v-bind:id='"attendance_leave" + indexs' type="text"
-                                                    class="form-control">
-                                                <input type="hidden" v-bind:id='"attendance_leave_hidden" + indexs'
-                                                    class="form-control" readonly :value="details_leave.leave">
-
-                                            </td>
-                                            <td v-for="details_extra in staff.details">
-
-                                                <input v-bind:id='"attendance_extra" + indexs' type="text"
-                                                    class="form-control">
-                                                <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
-                                                    class="form-control" readonly :value="details_extra.extra">
-
-                                            </td>
+                                                    </td>
 
 
 
 
-                                        </template>
-
-                                        <template v-else>
-                                            <div style="display: flex;">
 
 
+                                                </div>
 
-                                                <td>
-                                                    <label for="in" style="color:red"> حضور</label>
-                                                    <input type="time" name="in" v-bind:id='"in" + indexs'>
+
+                                                <td v-for="details_duration in staff.details">
+
+
+                                                    <input @keypress="calc_time(indexs)" type="text" class="form-control"
+                                                        name="name" v-bind:id='"attendance_duration" + indexs' readonly />
+                                                    <input v-bind:id='"attendance_duration_hidden" + indexs' type="hidden"
+                                                        class="form-control" name="name" :value="details_duration.duration">
 
 
                                                 </td>
+                                                <td v-for="details_delay in staff.details">
 
+                                                    <input v-bind:id='"attendance_delay" + indexs' type="text"
+                                                        class="form-control" readonly>
+                                                    <input type="hidden" v-bind:id='"attendance_delay_hidden" + indexs'
+                                                        class="form-control" name="name" :value="details_delay.delay">
 
-                                                <td>
-                                                    <label for="out" style="color:red"> انصراف</label>
-                                                    <input type="time" name="out" v-bind:id='"out" + indexs'>
+                                                </td>
+                                                <td v-for="details_leave in staff.details">
 
+                                                    <input v-bind:id='"attendance_leave" + indexs' type="text"
+                                                        class="form-control" readonly>
+                                                    <input type="hidden" v-bind:id='"attendance_leave_hidden" + indexs'
+                                                        class="form-control" readonly :value="details_leave.leave">
+
+                                                </td>
+                                                <td v-for="details_extra in staff.details">
+
+                                                    <input v-bind:id='"attendance_extra" + indexs' type="text"
+                                                        class="form-control" readonly>
+                                                    <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
+                                                        class="form-control" readonly :value="details_extra.extra">
 
                                                 </td>
 
 
 
 
+                                            </template>
+
+                                            <template v-else>
+                                                <div style="display: flex;">
 
 
-                                            </div>
+
+                                                    <td>
+                                                        <label for="in" style="color:red"> حضور</label>
+                                                        <input type="time" name="in" v-bind:id='"in" + indexs'>
+
+
+                                                    </td>
+
+
+                                                    <td>
+                                                        <label for="out" style="color:red"> انصراف</label>
+                                                        <input type="time" name="out" v-bind:id='"out" + indexs'>
+
+
+                                                    </td>
+
+
+
+
+
+
+                                                </div>
+
+                                                <td>
+
+
+                                                    <input @keypress="calc_time(indexs)" type="text" class="form-control"
+                                                        name="name" v-bind:id='"attendance_duration" + indexs' />
+                                                    <input v-bind:id='"attendance_duration_hidden" + indexs' type="hidden"
+                                                        class="form-control" name="name">
+
+
+                                                </td>
+                                                <td>
+                                                    <input v-bind:id='"attendance_delay" + indexs' type="text"
+                                                        class="form-control">
+                                                    <input type="hidden" v-bind:id='"attendance_delay_hidden" + indexs'
+                                                        class="form-control" name="name">
+
+                                                </td>
+                                                <td>
+                                                    <input v-bind:id='"attendance_leave" + indexs' type="text"
+                                                        class="form-control">
+                                                    <input type="hidden" v-bind:id='"attendance_leave_hidden" + indexs'
+                                                        class="form-control" readonly>
+
+                                                </td>
+                                                <td>
+                                                    <input v-bind:id='"attendance_extra" + indexs' type="text"
+                                                        class="form-control">
+                                                    <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
+                                                        class="form-control">
+
+                                                </td>
+                                            </template>
+
 
                                             <td>
 
+                                                <input @change="
+                                                    add_one_attendance(
+                                                        staff.staff_id,
+                                                        staff.attendance_status,
+                                                        indexs
 
-                                                <input @keypress="calc_time(indexs)" type="text" class="form-control"
-                                                    name="name" v-bind:id='"attendance_duration" + indexs' />
-                                                <input v-bind:id='"attendance_duration_hidden" + indexs' type="hidden"
-                                                    class="form-control" name="name">
+                                                    )
+                                                    " type="checkbox" v-model="check_state[indexs]"
+                                                    class="btn btn-info waves-effect" />
 
 
                                             </td>
-                                            <td>
-                                                <input v-bind:id='"attendance_delay" + indexs' type="text"
-                                                    class="form-control">
-                                                <input type="hidden" v-bind:id='"attendance_delay_hidden" + indexs'
-                                                    class="form-control" name="name">
-
-                                            </td>
-                                            <td>
-                                                <input v-bind:id='"attendance_leave" + indexs' type="text"
-                                                    class="form-control">
-                                                <input type="hidden" v-bind:id='"attendance_leave_hidden" + indexs'
-                                                    class="form-control" readonly>
-
-                                            </td>
-                                            <td>
-                                                <input v-bind:id='"attendance_extra" + indexs' type="text"
-                                                    class="form-control">
-                                                <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
-                                                    class="form-control">
-
-                                            </td>
-                                        </template>
-
-
-                                        <td>
-
-                                            <input @change="
-                                                add_one_attendance(
-                                                    staff.staff_id,
-                                                    staff.attendance_status,
-                                                    indexs
-
-                                                )
-                                                " type="checkbox" v-model="check_state[indexs]"
-                                                class="btn btn-info waves-effect" />
-
-
-                                        </td>
 
 
 
-                                    </tr>
-                                </tbody>
-                                <tbody v-else>
-                                    <tr>
-                                        <td align="center" colspan="3">لايوجد بياتات.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
+                                        </tr>
+                                    </tbody>
+                                    <tbody v-else>
+                                        <tr>
+                                            <td align="center" colspan="3">لايوجد بياتات.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
                     العمليه</span></a> -->
-                    </form>
-                    <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
-                </div>
-                <div class="modal-footer">
-                    <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
-                            العمليه</span></a>
-                </div>
+                        </form>
+                        <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:void" @click="Add_new()" class="btn btn-success"><span>تاكيد
+                                العمليه</span></a>
+                    </div>
 
+                </div>
             </div>
         </div>
     </div>
@@ -346,7 +361,7 @@
 <script>
 
 import pagination from "laravel-vue-pagination";
-import operation from '../../../../../js/staff/operation/operation.js';
+import operation from '../../../../staff/operation/operation.js';
 
 export default {
     components: {
@@ -382,13 +397,13 @@ export default {
             fieldset3: [],
             staff: [],
 
-            work_type_selected:'',
+            work_type_selected: '',
             staff_search: '',
             attendance_in_out: '',
             work_selected: '',
             period_selected: '',
             period_times: '',
-            work_types:'',
+            work_types: '',
 
 
 
@@ -416,7 +431,7 @@ export default {
                     code: $(`#code`).val(),
                     attendance_date: this.attendance_date,
                     attendance_final: this.attendance_final,
-                    work_type:this.work_type_selected,
+                    work_type: this.work_type_selected,
                     attendance_status: this.attendance_type,
                     time_in: this.check_in,
                     time_out: this.check_out,
@@ -503,8 +518,9 @@ export default {
             $(`#attendance_duration${index}`).val(`${hh}ساعه,${mm}دقيقه`);
             $(`#attendance_duration_hidden${index}`).val(mm + (hh * 60));
             this.calc_delay(index);
-            this.calc_extra(index);
             this.calc_leave(index);
+            this.calc_extra(index);
+
 
 
         },
@@ -625,6 +641,27 @@ export default {
             var date1 = new Date(date[0], date[1], date[2], split_in[0], split_in[1]); // 9:00 AM
             var date2 = new Date(date[0], date[1], date[2], split_out[0], split_out[1]); // 5:00 PM
 
+
+            // if (date2 < date1) {
+
+            //     [time, mm, hh] = this.get_diff(date2, date1);
+
+            //     this.leave[index] = time;
+            //     $(`#attendance_leave${index}`).val(`${hh}ساعه,${mm}دقيقه`);
+            //     $(`#attendance_leave_hidden${index}`).val(time);
+
+
+            // } else {
+
+            //     [time, mm, hh] = this.get_diff(date1, date2);
+
+            //     this.leave[index] = 0;
+            //     $(`#attendance_leave${index}`).val(`${0}ساعه,${0}دقيقه`);
+            //     $(`#attendance_leave_hidden${index}`).val(0);
+
+
+
+            // }
 
             [time, mm, hh] = this.get_diff(date2, date1);
 
@@ -812,6 +849,7 @@ export default {
 
             // console.log(staff_id, attendance_status, index);
 
+            this.calc_time(index);
             if ($(`#in${index}`).val() && $(`#out${index}`).val()) {
 
                 this.attendance_final = 'complete';
@@ -881,10 +919,10 @@ export default {
                 // html = html + `<input data-worktype-${id}= ${response.data.work_types.id}   value= ${response.data.work_types.id} >${response.data.work_types.name}  </option>`
 
 
-                $(`#select_work_type`).html(`<input id='work_type' type='text'  value= ${this.work_types[0].name} class='form-control' readonly >`);
+                // $(`#select_work_type`).html(`<input id='work_type' type='text'  value= ${this.work_types[0].name} class='form-control' readonly >`);
 
                 $(`#select_period`).html(html);
-            
+
 
 
 

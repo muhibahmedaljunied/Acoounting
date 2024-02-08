@@ -3,10 +3,12 @@ import Dashboard from './components/Dashboard'
 import Company from './components/admin/setting/Company'
 // import Category from './components/admin/category/Category'
 
+import RepoAuditBalance from './components/admin/FinancialAccounting/report/RepoAuditBalance'
 import AccountsGuide from './components/admin/FinancialAccounting/accounting/AccountsGuide'
 import AccountList from './components/admin/FinancialAccounting/accounting/AccountList'
 import DailyRestrictions from './components/admin/FinancialAccounting/operation/DailyRestrictions'
 import AccountBasicData from './components/admin/FinancialAccounting/AccountBasicData'
+import ClosingYears from './components/admin/FinancialAccounting/ClosingYears'
 
 
 // ------------------------------------------------------------------staff---------------------------------------------------------------------------
@@ -18,6 +20,7 @@ import Staff from './components/admin/staff/Staff'
 import Sanction from './components/admin/staff/Sanction'
 import StaffSanction from './components/admin/staff/StaffSanction'
 import Operation from './components/admin/staff/Operation'
+import Attendance from './components/admin/staff/Attendance'
 import StaffReport from './components/admin/staff/StaffReport'
 // ----------------------------------Category----------------------------------------------------------------------------------------------------------------------
 import User from './components/admin/user/User'
@@ -29,9 +32,6 @@ import UpdateUnit from './components/admin/unit/UpdateUnit'
 import AddUnit from './components/admin/unit/AddUnit'
 // ----------------------------------User---------------------------------------------------------------------------------------------------
 import Product from './components/admin/product/Product'
-
-// ----------------------------------Store---------------------------------------------------------------------------------------------------
-// ----------------------------------Shelve----------------------------------------------------------------------------------------------------------------------
 
 import Store from './components/admin/store/Store'
 
@@ -170,8 +170,16 @@ const routes = [
     component: AccountsGuide
   },
   {
+    path: '/auditBalance',
+    component: RepoAuditBalance
+  },
+  {
     path: '/accounts_basic_data',
     component: AccountBasicData
+  },
+  {
+    path: '/closing_year',
+    component: ClosingYears
   },
   {
     path: '/account_list',
@@ -225,6 +233,11 @@ const routes = [
   {
     path: '/staff/operation',
     component: Operation
+
+  },
+  {
+    path: '/staff/attendance',
+    component: Attendance
 
   },
   {
@@ -610,6 +623,10 @@ const routes = [
   {
     path: '/temporale_Supply',
     component: TemporaleSupply
+  },
+  {
+    path: '/listsupply',
+    component: SupplyList
   },
   // {
   //   path: '/supplies',

@@ -19,10 +19,9 @@ class CreateStaffSanctionsTable extends Migration
             $table->unsignedInteger('staff_id');
             $table->foreign('staff_id')->references('id')->on('staff');
             // --------------------------------------------------------------
-            $table->unsignedInteger('attendance_id');
-            $table->foreign('attendance_id')->references('id')->on('attendances');
-            // --------------------------------------------------------------
-
+            // $table->unsignedInteger('attendance_id');
+            // $table->foreign('attendance_id')->references('id')->on('attendances');
+            // // --------------------------------------------------------------
             $table->morphs('sanctionable');
 
             $table->date('date');

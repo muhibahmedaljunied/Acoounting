@@ -49,7 +49,6 @@ class PurchasePaymentService
 
         }
 
-        
         // ($this->core->data['remaining'] == 1) ? $payment_info = $this->core->data['type'] : $payment_info = 'credit';
         // $payment_status = 'paiding';
         // -----------------------------------------------------------------------------------------

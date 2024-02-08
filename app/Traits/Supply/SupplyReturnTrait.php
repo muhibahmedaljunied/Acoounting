@@ -17,7 +17,9 @@ trait SupplyReturnTrait
         $return->save();
 
         $this->core->return_id = $return->id;
-        $this->core->return = $return;
+        // $this->core->return = $return;
+        $this->core->stockable = $return;
+
     }
 
     public function refresh_supply_return_table()

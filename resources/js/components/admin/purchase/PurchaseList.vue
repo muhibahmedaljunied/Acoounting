@@ -32,14 +32,14 @@
                 </thead>
                 <tbody v-if="purchases && purchases.data.length > 0">
                   <tr v-for="(purchase, index) in purchases.data" :key="index">
-                    <td>{{ purchase.purchases_id }}</td>
-                    <td>{{ purchase.supplier_name }}</td>
+                    <td>{{ purchase.paymentable.purchase_id }}</td>
+                    <td>{{ purchase.paymentable.supplier_name }}</td>
                     <!-- <td>{{ purchase.quantity }}</td>
                   <td>{{ purchase.qty_return }}</td> -->
-                    <td>{{ purchase.date }}</td>
+                    <td>{{ purchase.paymentable.date }}</td>
                     <td>{{ purchase.paid }}</td>
                     <td>{{ purchase.remaining }}</td>
-                    <td>{{ purchase.grand_total }}</td>
+                    <td>{{ purchase.paymentable.grand_total }}</td>
                     <td>
 
                       <span class="badge bg-warning" v-if="purchase.payment_status == 'pendding'">غير مدفوعه</span>
@@ -54,7 +54,7 @@
                           class="form-control">
                           <option :selected="true" class="btn btn-success" v-bind:value="[
                             '/purchase_details/',
-                            purchase.purchases_id,
+                            purchase.paymentable.purchase_id,
                             0
                           ]">
                             تفاصيل
@@ -62,14 +62,14 @@
                           
                           <option class="btn btn-success" v-bind:value="[
                             'return_purchase',
-                            purchase,
+                            purchase.paymentable,
                             1
                           ]">
                             ارجاع
                           </option>
                           <option class="btn btn-success" v-bind:value="[
                             'returnpurchaselist',
-                            purchase.purchases_id,
+                            purchase.paymentable.purchase_id,
                             2
                           ]">
                             مرتجعات
@@ -77,25 +77,25 @@
 
                           <option class="btn btn-success" v-bind:value="[
                             '/purchase_invoice/',
-                            purchase.purchases_id,
+                            purchase.paymentable.purchase_id,
                             3
                           ]">
                             عرض الفاتوره
                           </option>
                           <!-- <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
-                            v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
+                            v-bind:value="['/PaymentBond/', purchase.paymentable.purchase_id, 4]">
                             دفع
                           </option> -->
-                          <option class="btn btn-success" v-bind:value="['PaymentBond', purchase.purchase_id, 4]">
+                          <option class="btn btn-success" v-bind:value="['PaymentBond', purchase.paymentable.purchase_id, 4]">
                             صرف
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/purchase_invoice_update/', purchase.purchase_id, 5]">
+                            v-bind:value="['/purchase_invoice_update/', purchase.paymentable.purchase_id, 5]">
                             تعديل الفاتوره
                           </option>
 
 
-                          <option class="btn btn-success" v-bind:value="['purchase_daily', purchase.purchase_id, 6]">
+                          <option class="btn btn-success" v-bind:value="['purchase_daily', purchase.paymentable.purchase_id, 6]">
                             عرض القيد المحاسبي
                           </option>
                         </select>
@@ -298,6 +298,7 @@ export default {
       this.axios
         .post(`/listpurchase?page=${page}`, { type: this.type })
         .then(({ data }) => {
+          console.log(data.purchases);
           this.purchases = data.purchases;
         })
         .catch(({ response }) => {

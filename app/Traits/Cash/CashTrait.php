@@ -25,6 +25,8 @@ trait CashTrait
         );
         $this->core->cash =  $table_one;
         $this->core->cash_id =  $table_one->id;
+        $this->core->stockable = $table_one;
+        $this->core->paymentable = $table_one;
  
     }
 
@@ -32,7 +34,7 @@ trait CashTrait
     {
 
   
-        DB::table('cashs')
+        DB::table('cashes')
             ->where(['id' => $this->core->cash_id])
             ->update(['daily_id' => $this->core->daily_id]);
  

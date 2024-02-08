@@ -6,7 +6,7 @@
           <div class="card">
             <div class="card-header">
               <div class="pull-right">
-                <span style="font-size: x-large">مصروفات</span>
+                <span style="font-size: x-large">المصروفات والايرادات</span>
               </div>
 
 
@@ -36,9 +36,9 @@
                     <thead>
                       <tr>
                         <th style="width: 60px">#</th>
-                        <th style="width: 60px">المصروف</th>
-                 
+                        <th style="width: 60px">نوع السند</th>
 
+                        <th style="width: 60px">الحساب</th>
                         <th style="width: 60px">المبلغ</th>
                         <th style="width: 60px">التاريخ</th>
                         <th style="width: 60px">العمليات</th>
@@ -47,6 +47,8 @@
                     <tbody v-if="expences && expences.data.length > 0">
                       <tr v-for="(expence, index) in expences.data" :key="index">
                         <td style="width: 40px">{{ index + 1 }}</td>
+                        <td style="width: 40px">{{ index + 1 }}</td>
+
                         <td style="width: 40px">{{ expence.text }}</td>
                       
 

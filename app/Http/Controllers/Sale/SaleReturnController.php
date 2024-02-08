@@ -15,8 +15,6 @@ use App\Services\ReturnService;
 use Illuminate\Http\Request;
 use App\Models\SaleReturnDetail;
 use App\Http\Controllers\Controller;
-use App\Models\DailyDetail;
-use App\Models\SaleDetail;
 use App\Services\DailyService;
 use App\Models\SaleReturn;
 use DB;

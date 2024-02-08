@@ -3,13 +3,12 @@
 namespace App\Repository\Daily;
 
 use App\RepositoryInterface\DailyRepositoryInterface;
-use App\RepositoryInterface\NoteRepositoryInterface;
 use App\Services\CoreService;
 use App\Models\Daily;
 use App\Models\DailyDetail;
 use DB;
 
-class PaymentBondRepository implements DailyRepositoryInterface
+class PaymentBondRepository  
 {
     public $dailyId;
     public $core;

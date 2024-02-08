@@ -91,11 +91,11 @@
                         </li>
 
 
-                        <!-- <li class="nav-item">
-                          <a href="#tab22" class="nav-link" data-toggle="tab"> اوقات الاستراحه</a>
+                        <li class="nav-item">
+                          <a href="#tab22" class="nav-link" data-toggle="tab">انواع انظمه الدوام</a>
                         </li>
 
-                         -->
+                        
                   
 
 
@@ -173,7 +173,9 @@
                         <work-type></work-type> 
                       </div>
 
-
+                      <div class="tab-pane" id="tab22">
+                        <work-system-type></work-system-type> 
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -204,7 +206,7 @@ import WorkSystem from "./BasicData/WorkSystem";
 import WorkType from "./BasicData/WorkType";
 import Period from "./BasicData/Period";
 import PeriodTime from "./BasicData/PeriodTime";
-
+import WorkSystemType from "./BasicData/WorkSystemType";
 
 
 
@@ -226,6 +228,7 @@ export default {
     WorkType,
     Period,
     PeriodTime,
+    WorkSystemType
 
 
   },

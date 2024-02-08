@@ -9,7 +9,9 @@ export default {
       // ----------------------------
       type:'',
       work_types: '',
+      work_system_types:'',
       periods: '',
+      period_times:'',
       breaks: '',
   
     }

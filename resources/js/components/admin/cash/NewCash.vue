@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="card text-right">
         <div class="card-header">
-          <h3>فاتوره صرف مخزني<span id="codigo"></span></h3>
+          <h3>امر صرف مخزني<span id="codigo"></span></h3>
         </div>
         <div class="card-body">
           <div class="row">
@@ -674,6 +674,7 @@ export default {
       paid: 0,
       remaining: 0,
       return_qty: [],
+      credit:'',
 
     }
   },

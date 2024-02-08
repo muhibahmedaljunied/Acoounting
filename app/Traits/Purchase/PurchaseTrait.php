@@ -26,7 +26,10 @@ trait PurchaseTrait
         );
 
         $this->core->purchase_id = $table_one->id;
-        $this->core->purchase = $table_one;
+        // $this->core->purchase = $table_one;
+        $this->core->stockable = $table_one;
+        $this->core->paymentable = $table_one;
+
 
         // return $table_one;
     }

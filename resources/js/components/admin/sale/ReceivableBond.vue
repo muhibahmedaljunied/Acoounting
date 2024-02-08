@@ -334,6 +334,7 @@ export default {
           description: this.description,
           sale_id: this.details[0].sale_id,
           paid: this.details[0].paid,
+          grand_total: this.details[0].paid,
           credit: {
             credit_account_id: this.details[0].account_id,
           },

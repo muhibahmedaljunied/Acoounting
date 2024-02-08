@@ -17,8 +17,9 @@ trait SaleReturnTrait
         // $return->quantity = $request->post('total');
         $return->save();
         $this->core->return_id = $return->id;
-        $this->core->return = $return;
- 
+        // $this->core->return = $return;
+        $this->core->stockable = $return;
+
     }
 
     function refresh_sale_return_table()

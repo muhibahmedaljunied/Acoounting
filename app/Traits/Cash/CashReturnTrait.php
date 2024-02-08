@@ -17,7 +17,9 @@ trait CashReturnTrait
         // $return->quantity = $request->post('total');
         $return->save();
         $this->core->return_id = $return->id;
-        $this->core->return = $return;
+        // $this->core->return = $return;
+        $this->core->stockable = $return;
+
  
     }
 

@@ -15,7 +15,9 @@ trait TransferTrait
         $table_one->date =  $this->core->data['date'];
         $table_one->save();
         $this->core->transfer_id = $table_one->id;
-        $this->core->transfer = $table_one;
+        // $this->core->transfer = $table_one;
+        $this->core->stockable = $table_one;
+
 
     }
 

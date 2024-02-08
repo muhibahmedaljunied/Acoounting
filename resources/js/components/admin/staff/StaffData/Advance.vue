@@ -1,6 +1,8 @@
 <template>
   <!-- row opened -->
-  <div class="row row-sm">
+
+  <div class="container-fluid">
+    <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
         <div class="card-header">
@@ -31,7 +33,20 @@
               <a href="#" @click="report()"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
             </div>
           </div>
-          <div class="table-responsive">
+        
+        </div>
+    
+      </div>
+    </div>
+    <!--/div-->
+  </div>
+  <div class="row row-sm">
+    <div class="col-xl-12">
+      <div class="card">
+
+        <div class="card-body" id="printme">
+          <div class="row">
+            <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
                 <tr>
@@ -105,221 +120,16 @@
             </table>
           </div>
           <pagination align="center" :data="advances" @pagination-change-page="list"></pagination>
-        </div>
-        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-          aria-hidden="true" style="display: none" id="addAd">
-          <div class="modal-dialog modal-lg" style="width: 100%">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                  x
-                </button>
-                <div class="col-md-8">
-                  <h4 class="modal-title" id="myLargeModalLabel">السلف</h4>
-                </div>
-                <div class="col-md-4">
-                  <div class="col-sm-12">
-                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto" id="buscar_producto"
-                      v-model="word_search" @input="get_search()" />
-                  </div>
-                </div>
-              </div>
-              <div class="modal-body">
-                <div class="row row-sm">
-                  <div class="col-xl-12">
-                    <div class="card">
-                      <div class="card-header pb-0">
-                        <!-- <div class="d-flex justify-content-between">
-                          <h4 class="card-title mg-b-0">SIMPLE TABLE</h4>
-                          <i class="mdi mdi-dots-horizontal text-gray"></i>
-                        </div>
-                        <p class="tx-12 tx-gray-500 mb-2">
-                          Example of Valex Simple Table.
-                          <a href="">Learn more</a>
-                        </p> -->
-                      </div>
-                      <div class="card-body">
-                        <div class="form">
-
-                          <form method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
-                            <h3 class="text-center">أضافه </h3>
-                            <div class="table-responsive">
-                              <table class="table table-bordered text-right">
-                                <thead>
-                                  <tr>
-
-
-                                    <th>اسم المؤظف</th>
-
-                                    <th>المبلغ</th>
-
-                                    <th>التاريخ</th>
-
-                                    <th>اضافه</th>
-
-
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <!-- <tr v-for="(allowance, index) in allowances" :key="index" class="form-check">
-                                      <div v-if="allowance.allowance_type_id == 1">
-                                        <td> <input v-model="checkselected[index]" @change="
-                                          handleAllowance(
-                                            index,
-                                            checkselected[index],
-                                            allowance.id
-                                          )
-                                        " class="form-check-input" type="checkbox" name="exampleRadios"
-                                            id="exampleRadios1" /></td>
-
-                                        <td>
-                                          <div class="form-group">
-                                            <input v-model="allowance.name" readonly type="text" name="name" id="name"
-                                              class="form-control" />
-                                          </div>
-                                        </td>
-                                        <td><input type="number" v-model="salv1[index]"
-                                            class="form-control input_cantidad"></td>
-                                      </div>
-                                    </tr> -->
-
-                                  <tr v-for="index in count" :key="index">
-
-
-
-                                    <td>
-
-                                      <select v-model="staffselected[index]" name="type" id="type" class="form-control"
-                                        required>
-                                        <option v-for="staff in staffs" v-bind:value="staff.id">
-                                          {{ staff.name }}
-                                        </option>
-                                      </select>
-
-                                    </td>
-
-
-                                    <td>
-
-
-                                      <input v-model="quantity[index]" type="number" class="form-control" name="name"
-                                        id="name" required />
-                                    </td>
-
-                                    <td>
-
-                                      <input v-model="date[index]" type="date" class="form-control" name="name" id="name"
-                                        required />
-
-                                    </td>
-
-                                    <td v-if="index == 1">
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                        v-on:click="addComponent(count)">
-                                        <i class="fa fa-plus-circle"></i></a>
-
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
-                                        v-on:click="disComponent(count)">
-                                        <i class="fa fa-minus-circle"></i></a>
-                                    </td>
-
-
-                                  </tr>
-
-                                </tbody>
-
-                              </table>
-                            </div>
-
-                            <!-- <form
-                            method="post"
-                            @submit.prevent="submitForm"
-                            enctype="multipart/form-data"
-                          >
-                
-                            <div class="form-group">
-                              <label for="name">اسم المؤظف</label>
-                             <select
-                                        v-model="staffselected"
-                                name="type"
-                                id="type"
-                                class="form-control"
-                                required
-                              >
-                                 <option
-                                  v-for="staff in staffs"
-                                  v-bind:value="staff.id"
-                                >
-                                  {{ staff.name }}
-                                </option>
-                              </select>
-                            </div>
-                              <div class="form-group">
-                              <label for="name">المبلغ</label>
-                              <input
-                               v-model="quantityselected"
-                                type="number"
-                                class="form-control"
-                                name="name"
-                                id="name"
-                                required
-                              />
-                            </div>
-                            <div class="form-group">
-                              <label for="Category">التاريخ</label>
-                              <input
-                                 v-model="date"
-                                type="date"
-                                class="form-control"
-                                name="name"
-                                id="name"
-                                required
-                              />
-                            </div>
-
-                             <div class="form-group">
-                              <label for="name">ملاحظه</label>
-                              <input
-                                v-model="note"
-                                type="text"
-                                class="form-control"
-                                name="name"
-                                id="name"
-                     
-                              />
-                            </div>
-
-                            <button
-                              type="submit"
-                              class="btn btn-primary btn-lg btn-block"
-                            >
-                              حفظ
-                            </button>
-                          </form> -->
-                            <a href="javascript:void" @click="Add_newadvance()" class="btn btn-success"><span>تاكيد
-                                العمليه</span></a>
-
-                          </form>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-                  <!--/div-->
-                </div>
-              </div>
-
-
-            </div>
-            <!-- /.modal-content -->
           </div>
 
-          <!-- /.modal-dialog -->
         </div>
+      
       </div>
     </div>
     <!--/div-->
   </div>
+  </div>
+ 
   <!-- /row -->
 </template>
 

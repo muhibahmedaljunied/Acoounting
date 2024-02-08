@@ -26,9 +26,10 @@ trait SaleTrait
 
             ]
         );
-        $this->core->sale =  $table_one;
+        // $this->core->sale =  $table_one;
         $this->core->sale_id =  $table_one->id;
- 
+        $this->core->stockable = $table_one;
+        $this->core->paymentable = $table_one;
     }
 
     public function refresh_sale_table()

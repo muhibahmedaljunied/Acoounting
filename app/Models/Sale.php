@@ -25,10 +25,10 @@ class Sale extends Model
         return $this->hasMany(ReceivableNote::class);
     }
 
-    public function payment_sales()
-    {
-        return $this->hasMany(PaymentSale::class);
-    }
+    // public function payment_sales()
+    // {
+    //     return $this->hasMany(PaymentSale::class);
+    // }
 
     public function stock()
     {

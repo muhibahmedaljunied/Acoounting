@@ -1,5 +1,6 @@
 <template>
   <!-- row opened -->
+<div class="container-fluid">
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
@@ -10,7 +11,7 @@
 
           <div style="display: flex;float: left; margin: 5px">
 
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addAd">
               <i class="fa fa-plus-circle"></i></a>
 
@@ -70,19 +71,15 @@
 
 
                   <td>
-                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
+                    <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="btn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
                     <button type="button" @click="delete_advance(advance.id)" class="btn btn-danger btn-sm waves-effect">
                       <i class="fa fa-trash"></i>
                     </button>
 
-                    <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateAd" data-toggle="modal"
+                    <a class="btn btn-info btn-sm waves-effect btn-agregar" data-target="#updateAd" data-toggle="modal"
                       id="agregar_productos">
                       <i class="fa fa-edit"></i></a>
-                    <router-link :to="{
-                      name: 'edit_advance',
-                      params: { id: advance.id },
-                    }" class="edit btn btn-success">
-                      <i class="fa fa-eye"></i></router-link>
+           
                   </td>
                 </tr>
               </tbody>
@@ -171,11 +168,11 @@
                                       </td>
 
                                       <td v-if="index == 1">
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                        <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                           v-on:click="addComponent(count)">
                                           <i class="fa fa-plus-circle"></i></a>
 
-                                        <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                        <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                           v-on:click="disComponent(count)">
                                           <i class="fa fa-minus-circle"></i></a>
                                       </td>
@@ -225,6 +222,7 @@
     </div>
 
   </div>
+</div>
 </template>
 
 <script>

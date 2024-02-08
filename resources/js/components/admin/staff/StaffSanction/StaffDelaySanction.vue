@@ -32,49 +32,68 @@
                                 </tr>
                             </thead>
                             <tbody v-if="value_list && value_list.data.length > 0">
-                                <tr v-for="(advance, index) in value_list.data" :key="index">
+                                <tr v-for="(delay, index) in value_list.data" :key="index">
 
 
-                                    <td>{{ advance.name }}</td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
+                                    <td>{{ delay.name }}</td>
+                                
 
-                                        تأخير {{ item.type_name }}
+
+                                    <td>
+
+                                        تأخير  {{ delay.sanctionable.type_name }}
 
                                     </td>
                                     <td>
 
 
 
-                                        {{ advance.sanction_date }}
+                                        {{ delay.sanction_date }}
 
                                     </td>
+                                    <td>
 
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
-
-                                        {{ item.discount_name }}
-
-                                    </td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
-
-                                        {{ item.parts_name }}
+                                   من     {{ delay.sanctionable.discount_name }}
 
                                     </td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
-
-                                        {{ item.iteration }}
-
-                                    </td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
-
-                                        {{ item.sanction }}
+                                    <td>
+                                        {{ delay.sanctionable.part_name }}
 
                                     </td>
+                                    <td>
+                                        {{ delay.sanctionable.iteration }}
 
+                                    </td>
+                                    <td>
+                                        {{ delay.sanctionable.sanction }}
+                                    </td>
                                     <td style="color:goldenrod">
-                                        <span class="badge text-bg-warning">غير معتمد</span>
+                                        <span v-if="delay.status ==0" class="badge text-bg-warning">غير معتمد</span>
+                                        <span v-if="delay.status ==1" class="badge text-bg-success"> معتمد</span>
 
                                     </td>
+                                    <td>
+                                        <div class="optionbox">
+                                            <select v-model="status_selected" @change="change_status(
+                                                delay.id,
+                                                delay.sanction_date,
+                                                delay.sanctionable.sanction,
+                                                delay.sanctionable_id,
+                                                delay.sanctionable_type
+                                            )" class="form-control">
+                                                <option :selected="true" class="btn btn-success" v-bind:value="1">
+                                                    معتمد
+                                                </option>
 
+                                                <option :selected="true" class="btn btn-success" v-bind:value="0">
+                                                    غير معتمد
+                                                </option>
+
+                                            </select>
+                                        </div>
+
+
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -89,7 +108,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <pagination align="center" :data="advances" @pagination-change-page="list"></pagination>
+                    <pagination align="center" :data="delays" @pagination-change-page="list"></pagination>
                 </div>
                 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
                     aria-hidden="true" style="display: none" id="addAd">
@@ -195,7 +214,7 @@
                                                         </div>
 
 
-                                                        <a href="javascript:void" @click="Add_newadvance()"
+                                                        <a href="javascript:void" @click="Add_newdelay()"
                                                             class="btn btn-success"><span>تاكيد
                                                                 العمليه</span></a>
 
@@ -240,6 +259,7 @@ export default {
                 type: Object,
                 default: null,
             },
+            status_selected: '',
 
         };
     },
@@ -264,7 +284,33 @@ export default {
                 });
         },
 
+        change_status(
+            staff,
+            date,
+            sanction,
+            sanctionable_id,
+            sanctionable_type,
+            ) {
 
+            this.axios
+                .post(`/change_status_delay_sanction`, {
+
+                    sanctionable_id: sanctionable_id,
+                    sanctionable_type: sanctionable_type,
+                    staff: staff,
+                    date: date,
+                    sanction: sanction,
+                    status: this.status_selected,
+
+                })
+                .then(({ data }) => {
+
+                    // this.value_list = data.list;
+                })
+                .catch(({ response }) => {
+                    console.error(response);
+                });
+        }
 
 
 
@@ -273,3 +319,17 @@ export default {
 };
 </script>
 
+<style scoped>
+.optionbox select {
+    background: #E62968;
+    color: #fff;
+    padding: 10px;
+    width: 120px;
+    height: 30px;
+    border: none;
+    font-size: 20px;
+    box-shadow: 0 5px 18px rgb(93, 15, 9);
+    -webkit-appearance: button;
+    outline: none;
+}
+</style>

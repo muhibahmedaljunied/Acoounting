@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class WorkSystem extends Model
 {
-    protected $fillable = ['id','name','work_type'];
+    protected $fillable = ['id','work_system_type_id'];
 
 
 

@@ -16,10 +16,12 @@ use Illuminate\Http\Request;
 use App\Models\StoreProduct;
 use App\Services\CoreService;
 use App\Services\DailyService;
-use App\Services\CashPaymentService;
+use App\Services\PaymentService;
 use App\Traits\Unit\UnitsTrait;
 use App\Models\Cash;
 use App\Models\CashDetail;
+use App\Models\Payment;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class CashController extends Controller
 {
@@ -30,7 +32,7 @@ class CashController extends Controller
 
     public function __construct(
         Request $request,
-        public CashPaymentService $payment,
+        public PaymentService $payment,
         protected CoreService $core,
 
 
@@ -234,21 +236,24 @@ class CashController extends Controller
 
     }
 
-    function show()
+    public function show()
     {
-        $cashs = DB::table('cashs')
-            ->join('customers', 'customers.id', '=', 'cashs.customer_id')
-            ->join('payment_cashs', 'payment_cashs.cash_id', '=', 'cashs.id')
-            ->select(
-                'cashs.*',
-                'cashs.id as cash_id',
-                'customers.name',
-                'payment_cashs.*',
-                'payment_cashs.payment_status'
-            )
-            ->paginate(10);
 
-        return response()->json(['cashs' => $cashs]);
+    
+        $cashes = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Cash::class=> function ($query) {
+                    $query->join('customers', 'customers.id', '=', 'cashes.customer_id');
+                    $query->select('cashes.*','cashes.id as cash_id','customers.name as customer_name');
+                },
+            ]);
+        }])
+        ->where('paymentable_type','App\\Models\\Cash')
+
+        ->paginate();
+
+       
+        return response()->json(['cashes' => $cashes]);
     }
 
 

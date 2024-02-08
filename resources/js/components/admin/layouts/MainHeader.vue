@@ -26,11 +26,18 @@
 					
 
 				
-						<img src="" alt="" class="img-fluid">النظام المحاسبي الحديث
-						<!-- نظام اداره المخازن الالكتروني -->
+						النظام المحاسبي الحديث
+				
 			
 				</h3>
 			</div>
+			<!-- <div class="col-md-2">
+				<label for="">السنه المالبه</label>
+
+
+                <input class="form-control" style="background-color: beige;" name="date" type="date" v-model="date" />
+              </div> -->
+		
 			<div class="main-header-right">
 				<div class="nav nav-item  navbar-nav-right ml-auto">
 					<div class="nav-link" id="bs-example-navbar-collapse-1">

@@ -8,7 +8,7 @@
 
         </div>
         <div class="card-body" id="printme">
-          
+
           <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
@@ -32,56 +32,77 @@
                 </tr>
               </thead>
               <tbody v-if="value_list && value_list.data.length > 0">
-                                <tr v-for="(advance, index) in value_list.data" :key="index">
+                <tr v-for="(leave, index) in value_list.data" :key="index">
 
 
-                                    <td>{{ advance.name }}</td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
+                  <td>{{ leave.name }}</td>
 
-                                        تأخير {{ item.type_name }}
+
+
+                  <td>
+
+                    انصراف {{ leave.sanctionable.type_name }}
+
+                  </td>
+                  <td>
+
+
+
+                    {{ leave.sanction_date }}
+
+                  </td>
+                  <td>
+
+                    من {{ leave.sanctionable.discount_name }}
+
+                  </td>
+                  <td>
+                    {{ leave.sanctionable.part_name }}
+
+                  </td>
+                  <td>
+                    {{ leave.sanctionable.iteration }}
+
+                  </td>
+                  <td>
+                    {{ leave.sanctionable.sanction }}
+                  </td>
+
+                  <td style="color:goldenrod">
+                                        <span v-if="leave.status ==0" class="badge text-bg-warning">غير معتمد</span>
+                                        <span v-if="leave.status ==1" class="badge text-bg-success"> معتمد</span>
 
                                     </td>
-                                    <td>
 
+                  <td>
+                                        <div class="optionbox">
+                                            <select v-model="status_selected" @change="change_status(
+                                                leave.id,
+                                                leave.sanction_date,
+                                                leave.sanctionable.sanction,
+                                                leave.sanctionable_id,
+                                                leave.sanctionable_type
+                                            )" class="form-control">
+                                                <option :selected="true" class="btn btn-success" v-bind:value="1">
+                                                    معتمد
+                                                </option>
 
+                                                <option :selected="true" class="btn btn-success" v-bind:value="0">
+                                                    غير معتمد
+                                                </option>
 
-                                        {{ advance.sanction_date }}
+                                            </select>
+                                        </div>
+
 
                                     </td>
 
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
+                </tr>
+                <tr>
+                  <td colspan="3" style="color:red;font-size: x-large;">الاجمالي</td>
 
-                                        {{ item.discount_name }}
-
-                                    </td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
-
-                                        {{ item.parts_name }}
-
-                                    </td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
-
-                                        {{ item.iteration }}
-
-                                    </td>
-                                    <td v-for="(item, index) in advance.DelaySanction" :key="index">
-
-                                        {{ item.sanction }}
-
-                                    </td>
-
-                                    <td style="color:goldenrod">
-                                        <span class="badge text-bg-warning">غير معتمد</span>
-
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="color:red;font-size: x-large;">الاجمالي</td>
-
-                                </tr>
-                            </tbody>
+                </tr>
+              </tbody>
               <tbody v-else>
                 <tr>
                   <td align="center" colspan="3">لايوجد بياتات.</td>
@@ -232,15 +253,9 @@ export default {
         type: Object,
         default: null,
       },
+      status_selected: '',
 
-      // discountselected: [],
-      // leaveselected: [],
-      // leavepartselected: [],
-      // iterationselected: [],
-      // discounttypeselected: [],
-      // sanctionselected: [],
-
-      // word_search: '',
+ 
     };
   },
   mounted() {
@@ -259,6 +274,8 @@ export default {
           // this.leave_parts = data.leave_parts;
           // this.discount_types = data.discount_types;
           // this.staffs = data.staffs;
+
+          console.log('wewewe',data.list);
           this.value_list = data.list;
         })
         .catch(({ response }) => {
@@ -266,9 +283,50 @@ export default {
         });
     },
 
+    change_status(
+            staff,
+            date,
+            sanction,
+            sanctionable_id,
+            sanctionable_type,
+            ) {
 
+            this.axios
+                .post(`/change_status_leave_sanction`, {
+
+                    sanctionable_id: sanctionable_id,
+                    sanctionable_type: sanctionable_type,
+                    staff: staff,
+                    date: date,
+                    sanction: sanction,
+                    status: this.status_selected,
+
+                })
+                .then(({ data }) => {
+
+                    // this.value_list = data.list;
+                })
+                .catch(({ response }) => {
+                    console.error(response);
+                });
+        }
 
   },
+
 };
 </script>
 
+<style scoped>
+.optionbox select {
+    background: #E62968;
+    color: #fff;
+    padding: 10px;
+    width: 120px;
+    height: 30px;
+    border: none;
+    font-size: 20px;
+    box-shadow: 0 5px 18px rgb(93, 15, 9);
+    -webkit-appearance: button;
+    outline: none;
+}
+</style>

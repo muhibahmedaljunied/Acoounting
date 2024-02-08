@@ -53,7 +53,7 @@ class StockCashRepository implements InventuryStockRepositoryInterface
         $stocks->unit_id = $this->core->unit_value;
         $stocks->quantity = $this->core->micro_unit_qty;
         $stocks->date = $this->core->data['date'];
-        $stocks->stockable()->associate($this->core->cash);
+        $stocks->stockable()->associate($this->core->stockable);//$this->core->cash === $this->core->stockable
         $stocks->save();
 
 

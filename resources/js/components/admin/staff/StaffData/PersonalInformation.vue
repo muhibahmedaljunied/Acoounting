@@ -1,39 +1,56 @@
 <template>
   <!-- row opened -->
+  <div class="container-fluid">
+    <div class="row row-sm">
+      <div class="col-xl-12">
+        <div class="card">
+
+          <div class="card-header pb-0">
+
+            <h2> بيانات الموظف</h2>
+
+          </div>
+          <div class="card-body" id="printme">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="status">اسم الموظف</label>
+                <select @change="select_staff" v-model="staff_selected" name="type" id="type" class="form-control "
+                  required>
+                  <option v-for="staff in staffs" v-bind:value="staff.id">
+                    {{ staff.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="status"> من تأريخ</label>
+                <input v-model="from_date" type="date" name="" id="" class="form-control">
+              </div>
+
+              <div class="col-md-2">
+                <label for="status">الي تأريخ</label>
+                <input v-model="from_date" type="date" name="" id="" class="form-control">
+              </div>
+              <div class="col-sm-6 col-md-3" style="margin-top: auto;">
+                <a href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+      <!--/div-->
+    </div>
+
+
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
 
-        <div class="card-header pb-0">
-
-          <h2> بيانات الموظف</h2>
-
-        </div>
+     
         <div class="card-body" id="printme">
           <div class="row">
-            <div class="col-md-4">
-              <label for="status">اسم الموظف</label>
-              <select @change="select_staff" v-model="staff_selected" name="type" id="type" class="form-control "
-                required>
-                <option v-for="staff in staffs" v-bind:value="staff.id">
-                  {{ staff.name }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="status"> من تأريخ</label>
-             <input v-model="from_date" type="date" name="" id="" class="form-control">
-            </div>
-
-            <div class="col-md-2">
-              <label for="status">الي تأريخ</label>
-              <input v-model="from_date" type="date" name="" id="" class="form-control">
-            </div>
-            <div class="col-sm-6 col-md-3" style="margin-top: auto;">
-              <a href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
-            </div>
-          </div>
-          <div class="table-responsive">
+            <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
                 <tr>
@@ -67,11 +84,11 @@
                   <td>{{ staff.name }}</td>
                   <td>{{ staff.personal_card }}</td>
                   <td>{{ staff.department.text }}
-                  
-                   
+
+
 
                   </td>
-                      
+
                   <td>{{ staff.job.text }}</td>
                   <td>{{ staff.date }}</td>
                   <!-- <td>{{ staff.register }}</td> -->
@@ -89,7 +106,7 @@
                   <!-- <td>{{ staff.salary }}</td>
                   <td>{{ staff.branch }}</td> -->
                   <!-- <td>{{ staff.department }}</td> -->
-            
+
                   <!-- <td>{{ staff.staff_type }}</td>
                   <td>{{ staff.staff_type }}</td> -->
 
@@ -114,12 +131,15 @@
             </table>
           </div>
           <pagination align="center" :data="list_data" @pagination-change-page="list"></pagination>
+          </div>
+       
         </div>
 
       </div>
     </div>
     <!--/div-->
   </div>
+</div>
   <!-- /row -->
 </template>
 

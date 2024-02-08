@@ -21,8 +21,8 @@ Route::post('/add_Supply', 'Supply\SupplyController@store');
 Route::post('/paySupply', 'Supply\supplyController@payment');
 Route::post('/supply_details/{id}', 'Supply\SupplyController@details');
 Route::post('/supply_daily/{id}', 'Supply\SupplyController@supply_daily');
-Route::post('/data_for_payment_bond/{id}', 'Supply\PaymentBondController@payment_bond');
-Route::post('/store_PaymentBond', 'Supply\SupplyController@store_PaymentBond');
+// Route::post('/data_for_payment_bond/{id}', 'Supply\PaymentBondController@payment_bond');
+// Route::post('/store_PaymentBond', 'Supply\SupplyController@store_PaymentBond');
 Route::post('/payment_bond_list', 'Supply\SupplyController@paymentBondlist');
 
 // ------------------------------------------------------------------------------------------
@@ -34,5 +34,5 @@ Route::post('/listreturn_supplysearch', 'Supply\SupplyReturnController@search');
 Route::post('/returnsupply_details/{id}', 'Supply\SupplyReturnController@return_detail');
 Route::post('/invoice_supply/{id}', 'Supply\SupplyController@invoice_supply');
 Route::post('/invoice_return_supply/{id}', 'Supply\SupplyReturnController@return_invoice');
-Route::post('/payment_bond/{id}', 'Supply\SupplyController@payment_bond');
+// Route::post('/payment_bond/{id}', 'Supply\SupplyController@payment_bond');
 

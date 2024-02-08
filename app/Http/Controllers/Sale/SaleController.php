@@ -9,6 +9,7 @@ use App\Repository\Stock\SaleRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use App\Services\UnitService;
 use App\Traits\GeneralTrait;
@@ -16,10 +17,10 @@ use Illuminate\Http\Request;
 use App\Models\StoreProduct;
 use App\Services\CoreService;
 use App\Services\DailyService;
-use App\Services\SalePaymentService;
+use App\Services\PaymentService;
 use App\Traits\Unit\UnitsTrait;
 use App\Models\Sale;
-use App\Models\SaleDetail;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class SaleController extends Controller
 {
@@ -30,7 +31,7 @@ class SaleController extends Controller
 
     public function __construct(
         Request $request,
-        public SalePaymentService $payment,
+        public PaymentService $payment,
         protected CoreService $core,
 
 
@@ -186,7 +187,7 @@ class SaleController extends Controller
             $warehouse->refresh(); //this update sale table by daily_id
             Cache::forget('stock');
 
-            // dd(SaleDetail::all());
+            // dd(1);
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
@@ -233,20 +234,23 @@ class SaleController extends Controller
 
     }
 
-    function show()
+    public function show()
     {
-        $sales = DB::table('sales')
-            ->join('customers', 'customers.id', '=', 'sales.customer_id')
-            ->join('payment_sales', 'payment_sales.sale_id', '=', 'sales.id')
-            ->select(
-                'sales.*',
-                'sales.id as sale_id',
-                'customers.name',
-                'payment_sales.*',
-                'payment_sales.payment_status'
-            )
-            ->paginate(10);
 
+    
+        $sales = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Sale::class => function ($query) {
+
+                    $query->join('customers', 'customers.id', '=', 'sales.customer_id');
+                    $query->select('sales.*','sales.id as sale_id','customers.name as customer_name');
+                },
+            ]);
+        }])
+        ->where('paymentable_type','App\\Models\\Sale')
+        ->paginate();
+
+       
         return response()->json(['sales' => $sales]);
     }
 

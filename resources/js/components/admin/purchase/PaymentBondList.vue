@@ -140,6 +140,7 @@ export default {
       let uri = `/payment_bond_list`;
       this.axios.post(uri).then((response) => {
 
+        
         console.log(response.data.payable.data);
         this.Bonds = response.data.payable.data;
 

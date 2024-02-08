@@ -12,8 +12,6 @@ use App\Services\UnitService;
 use App\Services\CoreService;
 use App\Traits\GeneralTrait;
 use App\Http\Controllers\Controller;
-use App\Models\DailyDetail;
-use App\Models\PurchaseDetail;
 use Illuminate\Http\Request;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturn;

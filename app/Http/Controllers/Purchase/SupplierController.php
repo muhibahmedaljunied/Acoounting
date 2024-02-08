@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Purchase;
 
 use Illuminate\Http\Request;
+use App\Services\SupplierService;
 use App\Models\Supplier;
 use App\Models\Purchase;
 use App\Models\Account;
@@ -50,7 +51,7 @@ class SupplierController extends Controller
 
 
 
-    public function store(Request $request)
+    public function store(Request $request,SupplierService $supplier_service)
     {
 
         // $validator = Validator::make($request->all(), [
@@ -70,40 +71,17 @@ class SupplierController extends Controller
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
 
+
             // -------------------------------------------------------------------------
-            $parent =  DB::table('accounts')
-                ->where('accounts.id', $request->post('account'))
-                ->select(
-                    'accounts.*',
-
-                )
-                ->first();
-
+            $supplier_service->get_parent();
             // ---------------------------------------------------------------------------
-
-            $childs = Account::where('parent_id', $parent->id)->select('accounts.*')->max('id');
-            $id = ($childs == null) ? $request->post('account') * 10 + 1 : $childs + 1;
-
+            $supplier_service->get_child();
             // -------------------------------------------------------------------------
+            $supplier_service->add_account();
+            // -------------------------------------------------------------------------
+            $supplier_service->add_supplier();
 
-            $account = new Account();
-            $account->id = $id;
-            $account->text = 'المورد' . ' ' . $request->post('name') . ' ' . $request->post('last_name');
-            $account->parent_id = $parent->id;
-            $account->rank = $parent->rank + 1;
-            $account->status_account = false;
-            $account->save();
-
-            // ---------------------------------------------------------------
-
-            $user = new Supplier();
-            $user->name = $request->post('name');
-            $user->last_name = $request->post('last_name');
-            $user->email = $request->post('email');
-            $user->phone = $request->post('phone');
-            $user->account_id = $id;
-            $user->address = $request->post('address');
-            $user->save();
+         
 
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
@@ -122,24 +100,28 @@ class SupplierController extends Controller
     }
 
 
+   
+
+
     public function show(Request $request)
     {
-         
 
-        $purchases =  Purchase::where('supplier_id', $request->id)->with([
 
-            'payable_notes' => function ($query) {
-                $query->select('*');
-            },
+        $purchases =  Purchase::where('supplier_id', $request->id)
+            ->with([
 
-            'payment_purchases' => function ($query) {
-                $query->select('*');
-            },
-            'purchase_returns' => function ($query) {
-                $query->select('*');
-            }
+                'payable_notes' => function ($query) {
+                    $query->select('*');
+                },
 
-        ])
+                'payments' => function ($query) {
+                    $query->select('*');
+                },
+                'purchase_returns' => function ($query) {
+                    $query->select('*');
+                }
+
+            ])
             ->paginate(10);
 
 

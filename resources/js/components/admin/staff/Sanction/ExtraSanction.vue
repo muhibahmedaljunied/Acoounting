@@ -7,7 +7,7 @@
 
           <span class="h2">  الاضافي</span>
           <div style="display: flex;float: left; margin: 5px">
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addSE">
               <i class="fa fa-plus-circle"></i></a>
 
@@ -46,7 +46,14 @@
               <!-- <td>{{ extra_sanction.staff_name }}</td> -->
               <td>{{ extra_sanction.extra }}</td>
               <td>{{ extra_sanction.duration }}</td>
-              <td>{{ extra_sanction.iteration }}</td>
+           
+              <td v-if="extra_sanction.iteration == 1"> مره واحده</td>
+              <td v-if="extra_sanction.iteration == 2">  مرتين</td>
+              <td v-if="extra_sanction.iteration == 3">ثلاث مرات</td>
+              <td v-if="extra_sanction.iteration == 4">اربع مرات</td>
+              <td v-if="extra_sanction.iteration == 5"> خمس مرات او اكثر</td>
+              <td v-if="extra_sanction.iteration == 6"> اي مره</td>
+
               <td>{{ extra_sanction.sanction }}</td>
  
 
@@ -55,7 +62,7 @@
                   <i class="fa fa-trash"></i>
                 </button>
 
-                <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSE" data-toggle="modal"
+                <a class="btn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSE" data-toggle="modal"
                   id="agregar_productos">
                   <i class="fa fa-edit"></i></a>
               </td>
@@ -175,6 +182,9 @@
                                             <option v-bind:value="5">
                                               خمس مرات او اكثر
                                             </option>
+                                            <option v-bind:value="6">
+                                            اي مره
+                                            </option>
                                           </select>
                                         </td>
                                         <td>
@@ -193,11 +203,11 @@
 
 
                                         <td v-if="index == 1">
-                                          <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                          <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                             v-on:click="addComponent(count)">
                                             <i class="fa fa-plus-circle"></i></a>
 
-                                          <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                          <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                             v-on:click="disComponent(count)">
                                             <i class="fa fa-minus-circle"></i></a>
                                         </td>

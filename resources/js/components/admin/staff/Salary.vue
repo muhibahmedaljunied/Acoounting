@@ -6,7 +6,7 @@
         <div class="card-header">
 
 
-          <h2>  الرواتب </h2>
+          <h2> الرواتب </h2>
 
         </div>
 
@@ -16,15 +16,30 @@
             <table class="table table-bordered text-center">
               <thead>
                 <tr>
-                  <th class="wd-15p border-bottom-0">الرقم الوظيفي</th>
-                  <th class="wd-15p border-bottom-0">اسم المؤظف</th>
-                  <th class="wd-15p border-bottom-0">الراتب الاساسي</th>
-                  <th class="wd-15p border-bottom-0"> بدلات</th>
-                  <th class="wd-15p border-bottom-0"> خصومات</th>
-                  <th class="wd-15p border-bottom-0"> جزاءات</th>
-                  <th class="wd-15p border-bottom-0"> اضافي</th>
-                  <th class="wd-15p border-bottom-0"> الصافي</th>
+                  <th style="color: blue; font-size: medium;" class="wd-15p border-bottom-0" rowspan="2">الرقم الوظيفي</th>
+                  <th style="color: blue;font-size: medium;" class="wd-15p border-bottom-0" rowspan="2">اسم المؤظف</th>
+                  <th style="color: blue;font-size: medium;" class="wd-15p border-bottom-0" rowspan="2">الراتب الاساسي</th>
+                  <th style="color: blue;font-size: medium;" class="wd-15p border-bottom-0" colspan="3"> الاضافي</th>
+                  <th style="color: blue;font-size: medium;" class="wd-15p border-bottom-0" colspan="6"> المستقطع</th>
+
+                  <th style="color: blue;font-size: medium;" class="wd-15p border-bottom-0" rowspan="2"> الصافي</th>
                 </tr>
+                <tr>
+            
+                  <th style="color: blue;" class="wd-15p border-bottom-0"> بدلات</th>
+                  <th style="color: blue;" class="wd-15p border-bottom-0"> اضافي</th>
+                  <th style="color: blue;font-size: medium;" class="wd-15p border-bottom-0"> ج الاضاقي</th>
+
+                  <th style="color: blue;" class="wd-15p border-bottom-0"> خصم</th>
+                  <th style="color: blue;" class="wd-15p border-bottom-0"> سلف</th>
+                  <th style="color: blue;" class="wd-15p border-bottom-0">  غياب</th>
+                  <th style="color: blue;" class="wd-15p border-bottom-0">  تاخير</th>
+                  <th style="color: blue;" class="wd-15p border-bottom-0">  انصراف</th>
+                  <th style="color: blue;font-size: medium;" class="wd-15p border-bottom-0" > ج الاستقطاعات</th>
+
+
+                </tr>
+
               </thead>
               <tbody v-if="list_data && list_data.data.length > 0">
                 <tr v-for="(salary, index) in list_data.data" :key="index">
@@ -33,8 +48,24 @@
                   <td>{{ salary.id }}</td>
                   <td>{{ salary.name }}</td>
                   <td>{{ salary.salary }}</td>
+                  <td>{{ salary.total_allowance }}</td>
+                  <td>{{ salary.total_extra_sanction }}</td>
+                  <td>{{ salary.extra }}</td>
+
+                  <td>{{ salary.total_discount }}</td>
+                  <td>{{ salary.total_advance }}</td>
+                  <td>{{ salary.total_absence_sanction }}</td>
+                  <td>{{ salary.total_delay_sanction }}</td>
+                  <td>{{ salary.total_leave_sanction }}</td>
+                  <td>{{ salary.discount }}</td>
+
+                  <td>
+                    <span style="color: red;">{{ salary.total }}</span>
+                  </td>
 
 
+
+                  <!-- 
                   <td>
 
                     <div v-for="(allowance, index) in salary.allowance" :key="index" style="color:green;">
@@ -53,7 +84,6 @@
                   <td>
 
                     <div v-for="(sanction, index) in salary.staff_sanction" :key="index" style="color:red;">
-                      <!-- {{ sanction.sanctionable.sanction }} : -->
                       <span v-if="!sanction.sanctionable.extra_type_id">
                         <span v-if="sanction.sanctionable.sanction != 0">
                           {{ sanction.sanctionable.sanction }}
@@ -70,7 +100,6 @@
 
                     <div v-for="(extra, index) in salary.extra" :key="index" style="color:blue;">
                       <div v-for="(extra_sanc, index) in extra.extra_detail" :key="index">
-                        <!-- {{ extra_sanc.extra_sanction.sanction }} :  -->
                         <span v-if="extra_sanc.extra_sanction.sanction != 0">
                           {{ extra_sanc.extra_sanction.sanction }}
 
@@ -80,7 +109,6 @@
                       </div>
                     </div>
                     <div v-for="(sanction, index) in salary.staff_sanction" :key="index" style="color:blue;">
-                          <!-- {{ sanction.sanctionable.sanction }} : -->
                           <span v-if="sanction.sanctionable.extra_type_id">
                             <span v-if="sanction.sanctionable.sanction != 0">
                               {{ sanction.sanctionable.sanction }}
@@ -105,10 +133,10 @@
                     <div v-for="(pay, index) in salary.payroll" :key="index" style="color:blue;">
                       {{ pay.net_salary }}
                     </div>
-                  </td>
+                  </td> -->
 
                 </tr>
-                <tr v-for="(salary, index) in list_data.data" :key="index">
+                <!-- <tr v-for="(salary, index) in list_data.data" :key="index">
                   <td colspan="2" style="color:red;font-size: x-large;">الاجمالي</td>
 
                   <td style="color:green;font-size: x-large;">{{ salary.salary }}</td>
@@ -119,7 +147,7 @@
                   <td style="color:green;font-size: x-large;">{{ salary.sum_extra }}</td>
                   <td style="color:green;font-size: x-large;">{{ salary.salary }}</td>
 
-                </tr>
+                </tr> -->
               </tbody>
               <tbody v-else>
                 <tr>
@@ -198,9 +226,9 @@ export default {
     list(page = 1) {
 
       this.axios
-        .post(`/salary_details/${this.$route.params.id}`)
+        .post(`/salary_details`)
         .then(({ data }) => {
-          console.log('muhib', data);
+          console.log('muhib', data.list);
           this.list_data = data.list;
           this.staffs = data.staffs;
         })

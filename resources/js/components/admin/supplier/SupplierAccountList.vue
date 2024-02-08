@@ -8,7 +8,7 @@
                         <!-- <span class="h2"> المخزون</span> -->
 
                         <div class="pull-right">
-                            <h1>كشف حساب مورد <span id="codigo"></span></h1>
+                            <h3>كشف حساب مورد <span id="codigo"></span></h3>
                         </div>
 
 
@@ -77,11 +77,11 @@
                                                 <td> <span style="color:red">فاتوره شراء رقم </span> {{
                                                     temporales.id
                                                 }}</td>
-                                                <td v-for="tes in temporales.payment_purchases">{{ tes.paid }}</td>
-                                                <td v-for="tes in temporales.payment_purchases">{{ tes.remaining }}
+                                                <td v-for="tes in temporales.payments">{{ tes.paid }}</td>
+                                                <td v-for="tes in temporales.payments">{{ tes.remaining }}
                                                 </td>
 
-                                                <td v-for="tes in temporales.payment_purchases">
+                                                <td v-for="tes in temporales.payments">
                                                     {{ tes.remaining - tes.paid }}
                                                     <input type="hidden" v-model="xx = tes.remaining - tes.paid">
                                                 </td>

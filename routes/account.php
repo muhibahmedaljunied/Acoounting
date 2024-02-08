@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Account\AccountController;
 
 Route::post('/tree_account', 'Account\AccountController@tree_account');
 Route::post('/account/{id}', 'Account\AccountController@edit');
@@ -63,3 +64,10 @@ Route::post('/recive_expence/{id}', 'Account\ExpenceController@recive_supply');
 
 Route::post('import_account', [AccountController::class, 'import']);
 Route::post('export_account', [AccountController::class, 'export']);
+
+Route::post('/store_account_period', 'Account\PeriodController@store_account_period');
+Route::post('/account_year', 'Account\PeriodController@index');
+
+
+
+

@@ -22,7 +22,7 @@ class ReceivableBondRepository
         $receivab->sale_id = $this->core->data['sale_id'];
         $receivab->daily_id = $this->core->daily_id;
         $receivab->date = $this->core->data['date'];
-        $receivab->paid = $this->core->data['paid'];
+        // $receivab->paid = $this->core->data['paid'];
         $receivab->save();
 
         

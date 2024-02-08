@@ -8,7 +8,7 @@ class StaffSanction extends Model
 {
 
   
-    protected $fillable = ['staff_id','attendance_id','sanctionable_type','sanctionable_id','date'];
+    protected $fillable = ['id','staff_id','sanctionable_type','sanctionable_id','date'];
 
 
     public function sanctionable()

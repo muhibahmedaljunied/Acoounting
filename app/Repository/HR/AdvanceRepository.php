@@ -1,21 +1,24 @@
 <?php
 
 namespace App\Repository\HR;
-use App\RepositoryInterface\HRRepositoryInterface;
-use App\RepositoryInterface\PayrollRepositoryInterface;
 use App\Services\CoreStaffService;
 use App\Models\Advance;
-use App\Models\Payroll;
+use App\Services\PayrollService;
 use DB;
 
-class AdvanceRepository implements HRRepositoryInterface,PayrollRepositoryInterface
+class AdvanceRepository
 {
 
     public function __construct(public CoreStaffService $core)
     {
+    }
 
+    public function handle()
+    {
 
-        
+        $this->update();
+        $this->store();
+        $this->refresh();
     }
 
     function Sum($data)
@@ -30,40 +33,43 @@ class AdvanceRepository implements HRRepositoryInterface,PayrollRepositoryInterf
             }
         }
     }
-    function add(...$list_data)
+    function store()
     {
 
-    
-    
-        $temporale = new Advance();
-        $temporale->staff_id = $this->core->data['staff'][$this->core->value];
-        // $temporale->extra_type_id = $request->post('extra_type')[$value];
-        $temporale->date = $this->core->data['date'][$this->core->value];
-        $temporale->quantity = $this->core->data['qty'][$this->core->value];
-             
-        $temporale->save();
-        $this->core->id = $temporale->id;
+        if ($this->core->temporale_f->isEmpty()) {
+            $temporale = Advance::updateOrCreate(
+                [
+                    'staff_id' => $this->core->data['staff'][$this->core->value],
+                    'quantity' => $this->core->data['qty'][$this->core->value],
+                    'date' => $this->core->data['date'][$this->core->value],
+
+                ]
+            );
+            $this->core->id = $temporale->id;
+        }
     }
-    public function refresh($request, $value)
-    {
-        
-
-        $payroll = DB::table('advances')->where('staff_id', $this->core->data['staff'][$this->core->value])->sum('quantity');
-        $data = ['total_advance' => $payroll];
-
-        $payroll = tap(Payroll::where(['staff_id' => $this->core->data['staff'][$this->core->value]]))
-        ->update($data)
-        ->get('id');
-
-        return $payroll;
-    }
+  
 
     public function update()
     {
-        $temporale_f = tap(Advance::whereAdvance($this->core->data))
-        ->update(['quantity' => $this->core->data['qty'][$this->core->value]])
-        ->get('id');
+        $this->core->temporale_f = tap(Advance::whereAdvance($this->core->data))
+            ->update(['quantity' => $this->core->data['qty'][$this->core->value]])
+            ->get('id');
+    }
 
-        return $temporale_f;
+    public function refresh()
+    {
+
+
+        $payroll = DB::table('advances')->where('staff_id', $this->core->data['staff'][$this->core->value])->sum('quantity');
+        $data = ['total_advance' => $payroll];
+   
+        $this->core->data_of_hr_for_update_payroll = $data;
+        // $this->payroll->payroll();
+
+        // $payroll = tap(Payroll::where(['staff_id' => $this->core->data['staff'][$this->core->value]]))
+        //     ->update($data)
+        //     ->get('id');
+        // return $payroll;
     }
 }

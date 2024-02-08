@@ -60,6 +60,14 @@
                           <a href="#tab8" class="nav-link" data-toggle="tab">الجزاء والعقوبات</a>
                         </li>
 
+                        <li class="nav-item">
+                          <a href="#tab9" class="nav-link" data-toggle="tab">دوام الموظفين</a>
+                        </li>
+
+                        <li class="nav-item">
+                          <a href="#tab10" class="nav-link" data-toggle="tab">بدلات الموظفين</a>
+                        </li>
+
                       
                       
                       </ul>
@@ -103,6 +111,12 @@
                       <div class="tab-pane" id="tab8">
                         <staff-sanction></staff-sanction>
                       </div>
+                      <div class="tab-pane" id="tab9">
+                        <work-system></work-system>
+                      </div>
+                      <div class="tab-pane" id="tab10">
+                        <staff-allowance></staff-allowance>
+                      </div>
                 
                     
                   </div>
@@ -142,6 +156,8 @@ import Extra from "./StaffData/Extra";
 import Discount from "./StaffData/Discount";
 
 import StaffSanction from "./StaffData/StaffSanction";
+import WorkSystem from "./StaffData/WorkSystem";
+import StaffAllowance from "./StaffData/StaffAllowance";
 
 
 
@@ -155,7 +171,9 @@ export default {
     Attendance,
     Extra,
     Discount,
-    StaffSanction
+    StaffSanction,
+    WorkSystem,
+    StaffAllowance
   
   
 

@@ -1,21 +1,21 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-use App\RepositoryInterface\PayrollRepositoryInterface;
+use App\Services\DailyService;
 use App\Http\Controllers\Controller;
 use App\Services\CoreStaffService;
-use App\Services\Core\HrService;
+use App\Repository\HR\AllowanceRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Models\AllowanceType;
 use App\Models\Staff;
-use DB;
+use App\Services\PayrollService;
+use Illuminate\Support\Facades\DB;
 class AllowanceController extends Controller
 {
 
     public function __construct(
-        protected HrService $hr,
-        protected PayrollRepositoryInterface $payroll,
+        protected AllowanceRepository $hr,
         protected CoreStaffService $core,
 
     ) {
@@ -65,10 +65,11 @@ class AllowanceController extends Controller
 
         return $staff_allowances;
     }
-    public function store(Request $request)
+    public function store(Request $request,DailyService $daily,PayrollService  $payroll)
     {
-        $this->core->data = $request->all();
+        $this->core->setData($request->all());
 
+        // dd($this->core->data);
         try {
 
             DB::beginTransaction();
@@ -76,11 +77,10 @@ class AllowanceController extends Controller
             foreach ($request->post('count') as $value) {
 
                 $this->core->setValue($value);
-                $this->hr->store();
-
+                $this->hr->handle();
+                $payroll->refresh_payroll_for_hr();
+                $daily->daily()->debit()->credit();
                 Cache::forget('staff_allowances');
-
-                // $this->payroll->refresh();
             }
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB

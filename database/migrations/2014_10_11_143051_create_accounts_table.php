@@ -13,6 +13,8 @@ class CreateAccountsTable extends Migration
      */
     public function up()
     {
+
+        // Schema::connection('mysql2')->create('some_table', function($table)
         Schema::create('accounts', function (Blueprint $table) {
 
 

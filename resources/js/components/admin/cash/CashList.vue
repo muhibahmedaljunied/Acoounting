@@ -3,15 +3,24 @@
     <div class="row row-sm">
       <div class="col-xl-12">
         <div class="card">
-          <div class="card-header pb-0">
-            <div class="d-flex justify-content-between">
-              <span class="h2"> المبيعات</span>
-            </div>
+       
+          <div class="card-header">
+          <span class="h3">اوامر الصرف</span>
 
-            <div class="d-flex justify-content-between"></div>
+
+          <div style="display: flex;float: left; margin: 5px">
+            <router-link to="NewCash" id="agregar_productos"
+              class="tn btn-info btn-sm waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link>
+
+
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+              aria-expanded="true" v-model="word_search" @input="get_search()" />
+
+
+
+         
           </div>
+        </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table text-md-nowrap" id="example1">
@@ -21,7 +30,7 @@
                     <th class="wd-15p border-bottom-0">العميل</th>
                     <!-- <th class="wd-15p border-bottom-0">الكميه </th> -->
                     <!-- <th class="wd-15p border-bottom-0">الكميه المرتحعه</th> -->
-                    <th class="wd-15p border-bottom-0">تاريخ البيع</th>
+                    <th class="wd-15p border-bottom-0">تاريخ الصرف</th>
                     <th class="wd-15p border-bottom-0"> المدفوع</th>
                     <th class="wd-15p border-bottom-0">المتبقي</th>
                     <th class="wd-15p border-bottom-0">اجمالي الفاتوره</th>
@@ -30,16 +39,16 @@
                     <th class="wd-15p border-bottom-0">العمليات</th>
                   </tr>
                 </thead>
-                <tbody v-if="cashs && cashs.data.length > 0">
-                  <tr v-for="(cash, index) in cashs.data" :key="index">
-                    <td>{{ cash.cash_id }}</td>
-                    <td>{{ cash.name }}</td>
+                <tbody v-if="cashes && cashes.data.length > 0">
+                  <tr v-for="(cash, index) in cashes.data" :key="index">
+                    <td>{{ cash.paymentable.cash_id }}</td>
+                    <td>{{ cash.paymentable.customer_name }}</td>
                     <!-- <td>{{ cash.quantity }}</td>
                   <td>{{ cash.qty_return }}</td> -->
-                    <td>{{ cash.created_at }}</td>
+                    <td>{{ cash.paymentable.created_at }}</td>
                     <td>{{ cash.paid }}</td>
                     <td>{{ cash.remaining }}</td>
-                    <td>{{ cash.grand_total }}</td>
+                    <td>{{ cash.paymentable.grand_total }}</td>
                     <!-- <td>{{ cash.cash_status }}</td> -->
                     <td>
 
@@ -55,27 +64,27 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option :selected="true" class="btn btn-success"
-                            v-bind:value="['/cash_details/', cash.cash_id, 0]">
+                            v-bind:value="['/cash_details/', cash.paymentable.cash_id, 0]">
                             تفاصيل
                           </option>
-                          <option class="btn btn-success" v-bind:value="['return_cash', cash, 1]">
+                          <option class="btn btn-success" v-bind:value="['return_cash', cash.paymentable, 1]">
                             ارجاع
                           </option>
-                          <option class="btn btn-success" v-bind:value="['returncashlist', cash.cash_id, 2]">
+                          <option class="btn btn-success" v-bind:value="['returncashlist', cash.paymentable.cash_id, 2]">
                             مرتجعات
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['/cash_invoice/', cash.cash_id, 3]">
+                          <option class="btn btn-success" v-bind:value="['/cash_invoice/', cash.paymentable.cash_id, 3]">
                             عرض الفاتوره
                           </option>
-                          <option class="btn btn-success" v-bind:value="['ReceivableBond', cash.cash_id, 4]">
+                          <option class="btn btn-success" v-bind:value="['ReceivableBond', cash.paymentable.cash_id, 4]">
                             قبض
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/cash_invoice_update/', cash.cash_id, 5]">
+                          <option class="btn btn-success" v-bind:value="['/cash_invoice_update/', cash.paymentable.cash_id, 5]">
                             تعديل الفاتوره
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['cash_daily', cash.cash_id, 6]">
+                          <option class="btn btn-success" v-bind:value="['cash_daily', cash.paymentable.cash_id, 6]">
                             عرض القيد المحاسبي
                           </option>
 
@@ -84,20 +93,20 @@
 
 
                       <!-- <router-link
-                      :to="`/cash_details/${cash.cash_id}`"
+                      :to="`/cash_details/${cash.paymentable.cash_id}`"
                       class="btn btn-success"
                     >
                       <span><i class="fa fa-search-plus"></i></span>
                     </router-link>
 
                     <router-link
-                      :to="`/return_cash/${cash.cash_id}`"
+                      :to="`/return_cash/${cash.paymentable.cash_id}`"
                       class="btn btn-success"
                     >
                       <span> ارجاع</span>
                     </router-link>
                      <router-link
-                    :to="`/cash_invoice/${cash.cash_id}`"
+                    :to="`/cash_invoice/${cash.paymentable.cash_id}`"
                         class="btn btn-success">
                     
                       <span>فاتوره</span>
@@ -118,7 +127,7 @@
                 </tbody>
               </table>
             </div>
-            <pagination align="center" :data="cashs" @pagination-change-page="list"></pagination>
+            <pagination align="center" :data="cashes" @pagination-change-page="list"></pagination>
           </div>
         </div>
       </div>
@@ -127,7 +136,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <span class="h2">تفاصيل لبيع</span>
+            <span class="h2">تفاصيل الصرف</span>
 
 
           </div>
@@ -224,7 +233,7 @@ export default {
   },
   data() {
     return {
-      cashs: {
+      cashes: {
         type: Object,
         default: null,
       },
@@ -278,10 +287,10 @@ export default {
 
     get_search() {
       this.axios
-        .post(`/listcashsearch`, { word_search: this.word_search })
+        .post(`/listcashesearch`, { word_search: this.word_search })
         .then(({ data }) => {
           // console.log(data);
-          this.cashs = data.cashs;
+          this.cashes = data.cashes;
 
           // this.$root.logo = "Category";
         });
@@ -290,8 +299,8 @@ export default {
       this.axios
         .post(`/listcash?page=${page}`, { type: this.type })
         .then(({ data }) => {
-          //  console.log(data.cashs);
-          this.cashs = data.cashs;
+           console.log(data.cashes);
+          this.cashes = data.cashes;
         })
         .catch(({ response }) => {
           console.error(response);

@@ -16,7 +16,7 @@ class CreateSupplyDetailsTable extends Migration
         Schema::create('supply_details', function (Blueprint $table) {
             $table->Increments('id');
             $table->unsignedInteger('supply_id');
-            $table->foreign('supply_id')->references('id')->on('supplys')->onDelete('cascade');
+            $table->foreign('supply_id')->references('id')->on('supplies')->onDelete('cascade');
 
             $table->unsignedInteger('store_product_id');
             $table->foreign('store_product_id')->references('id')->on('store_products');

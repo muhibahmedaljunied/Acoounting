@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Purchase;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Models\Payment;
 use App\Repository\StoreInventury\StorePurchaseRepository;
 use App\Repository\StockInventury\StockPurchaseRepository;
 use Illuminate\Support\Facades\Cache;
 use App\Repository\Stock\PurchaseRepository;
 use App\Services\UnitService;
 use App\Models\StoreProduct;
-use App\Services\PurchasePaymentService;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -30,7 +32,7 @@ class PurchaseController extends Controller
     public function __construct(
 
         protected CoreService $core,
-        protected PurchasePaymentService $payment,
+        protected PaymentService $payment,
         protected UnitService $unit,
         Request $request,
 
@@ -40,6 +42,7 @@ class PurchaseController extends Controller
         $this->core->setData($request->all());
         $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
     }
+
 
     public function details(Request $request, $id)
     {
@@ -149,7 +152,7 @@ class PurchaseController extends Controller
             $daily->daily()->debit()->credit();
             $warehouse->refresh(); //this update purchase table by daily_id
             Cache::forget('stock');
-            // dd(Purchase::all());
+            // dd(1);
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
@@ -197,21 +200,25 @@ class PurchaseController extends Controller
         // dd($purchases);
         return response()->json(['daily_details' => $purchases]);
     }
-    public function show(Request $request)
+
+
+    public function show()
     {
 
-        $purchases = DB::table('purchases')
-            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
-            ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
-            ->select(
-                'purchases.*',
-                'purchases.id as purchases_id',
-                'suppliers.*',
-                'payment_purchases.*',
-                'payment_purchases.payment_status'
-            )
-            ->paginate(10);
+    
+        $purchases = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Purchase::class => function ($query) {
+                    $query->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id');
+                    $query->select('purchases.*','purchases.id as purchase_id');
+                   
+                },
+            ]);
+        }])
+        ->where('paymentable_type','App\\Models\\Purchase')
+        ->paginate();
 
+       
         return response()->json(['purchases' => $purchases]);
     }
 

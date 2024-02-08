@@ -58,7 +58,7 @@ class StockSupplyRepository implements InventuryStockRepositoryInterface
         $stocks->unit_id = $this->core->unit_value;
         $stocks->quantity = $this->core->micro_unit_qty;
         $stocks->date = $this->core->data['date'];
-        $stocks->stockable()->associate($this->core->supply);
+        $stocks->stockable()->associate($this->core->stockable);//$this->core->supply === $this->core->stockable
         $stocks->save();
 
  
@@ -76,6 +76,7 @@ class StockSupplyRepository implements InventuryStockRepositoryInterface
             ->select('supply_details.*')
             ->get();
 
+            
         if (count($data) > 1) {
 
             foreach ($data as $key => $value) {

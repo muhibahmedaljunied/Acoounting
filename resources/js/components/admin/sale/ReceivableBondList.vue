@@ -174,64 +174,68 @@ export default {
   methods: {
 
     list(page = 1) {
-      let uri = `/data_for_receivable_bond/${this.$route.params.id}`;
+      let uri = `/receivable_bond_list/${this.$route.params.id}`;
       this.axios.post(uri).then((response) => {
+
 
         this.details = response.data.list_data;
         this.remaining = this.details[0].remaining;
+
+     
+
 
       });
     },
 
 
-    credit(paid) {
+    // credit(paid) {
 
 
-      var remaining = this.remaining - paid;
+    //   var remaining = this.remaining - paid;
 
-      if (remaining < 0) {
+    //   if (remaining < 0) {
 
-        this.details[0].remaining = 0
-      } else {
+    //     this.details[0].remaining = 0
+    //   } else {
 
-        this.details[0].remaining = remaining
+    //     this.details[0].remaining = remaining
 
-      }
+    //   }
 
-    },
+    // },
 
-    payment() {
+    // payment() {
 
-      this.axios
-        .post(`/store_ReceivableBond`, {
-          type: 'ReceivableBond',
+    //   this.axios
+    //     .post(`/store_ReceivableBond`, {
+    //       type: 'ReceivableBond',
 
-          sale_id: this.details[0].sale_id,
-          remaining: this.details[0].remaining,
-          date: this.date,
-          description: this.description,
-          sale_id: this.details[0].sale_id,
-          paid: this.details[0].paid,
-          credit: {
-            credit_account_id: this.details[0].account_id,
-          },
-          debit: {
-            debit_account_id: $('#ReceivableBond_account_tree_id').val(),
+    //       sale_id: this.details[0].sale_id,
+    //       remaining: this.details[0].remaining,
+    //       date: this.date,
+    //       description: this.description,
+    //       sale_id: this.details[0].sale_id,
+    //       paid: this.details[0].paid,
+    //       credit: {
+    //         credit_account_id: this.details[0].account_id,
+    //       },
+    //       debit: {
+    //         debit_account_id: $('#ReceivableBond_account_tree_id').val(),
 
-          },
-
-
-
-        })
-        .then((response) => {
+    //       },
 
 
 
+    //     })
+    //     .then((response) => {
 
-          // this.$router.go(0);
-        });
 
-    },
+
+
+    //       // this.$router.go(0);
+    //     });
+
+    // },
 
 
   },

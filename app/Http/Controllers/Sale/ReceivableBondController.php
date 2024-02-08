@@ -9,7 +9,7 @@ use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Services\CoreService;
 use App\Services\DailyService;
-use App\Services\SalePaymentService;
+use App\Services\PaymentService;
 use App\Traits\Unit\UnitsTrait;
 class ReceivableBondController extends Controller
 {
@@ -20,7 +20,7 @@ class ReceivableBondController extends Controller
 
     public function __construct(
         Request $request,
-        public SalePaymentService $payment,
+        public PaymentService $payment,
         protected CoreService $core,
 
     ) {
@@ -76,9 +76,6 @@ class ReceivableBondController extends Controller
         ReceivableBondRepository $note
     ) {
 
-
-
-
         // dd($this->core->data);
 
         try {
@@ -87,9 +84,7 @@ class ReceivableBondController extends Controller
 
             $dailyService->daily()->debit()->credit();
             $note->finish();
-            $this->payment->update_receivableBond();
-
-
+            $this->payment->update();
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
 
@@ -110,23 +105,25 @@ class ReceivableBondController extends Controller
     }
 
 
-    public function ReceivableBondlist()
+ 
+
+    public function receivableBondlist()
     {
 
 
-        $payable = DB::table('payable_notes')
-            ->join('purchases', 'purchases.id', '=', 'payable_notes.purchase_id')
-            ->join('dailies', 'dailies.id', '=', 'payable_notes.daily_id')
-            // ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
+        $receivable = DB::table('receivable_notes')
+            ->join('sales', 'sales.id', '=', 'receivable_notes.purchase_id')
+            ->join('dailies', 'dailies.id', '=', 'receivable_notes.daily_id')
+            // ->join('payment_sales', 'payment_sales.purchase_id', '=', 'sales.id')
             ->select(
-                'purchases.supplier_name',
-                'purchases.id as purchase_id',
-                'payable_notes.*',
+                'sales.supplier_name',
+                'sales.id as purchase_id',
+                'receivable_notes.*',
                 'dailies.total',
             )
             ->paginate(10);
 
-        return response()->json(['payable' => $payable]);
+        return response()->json(['receivable' => $receivable]);
     }
 
    

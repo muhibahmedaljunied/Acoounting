@@ -18,6 +18,7 @@ trait AttendanceTrait
         $attendance->attendance_status = $this->attendance_core->data['attendance_status'];
         $attendance->save();
 
+     
         $this->attendance_core->attendance_id = $attendance->id;
     }
 

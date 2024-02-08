@@ -24,6 +24,9 @@ class CreateDelaysTable extends Migration
             $table->unsignedInteger('delay_type_id');
             $table->foreign('delay_type_id')->references('id')->on('delay_types');
             // --------------------------------------------------------------
+            $table->unsignedInteger('part_id');
+            $table->foreign('part_id')->references('id')->on('parts');
+            // --------------------------------------------------------------
 
             $table->string('note')->nullable();
             $table->date('date');

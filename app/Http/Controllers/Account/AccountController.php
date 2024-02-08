@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Account;
+
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
@@ -9,7 +10,8 @@ use App\Models\DailyDetail;
 use Illuminate\Http\Request;
 use App\Exports\AccountExport;
 use App\Imports\AccountImport;
-use DB;
+use Illuminate\Support\Facades\DB;
+
 class AccountController extends Controller
 {
 
@@ -28,9 +30,9 @@ class AccountController extends Controller
     {
 
         $accounts = DB::table('stores')->where('stores.id', $request->id)
-        ->join('accounts', 'stores.account_id', '=', 'accounts.id')
-        ->select('accounts.id', 'accounts.text')
-        ->get();
+            ->join('accounts', 'stores.account_id', '=', 'accounts.id')
+            ->select('accounts.id', 'accounts.text')
+            ->get();
 
         return response()->json(['accounts' => $accounts]);
     }
@@ -40,14 +42,15 @@ class AccountController extends Controller
     {
 
 
-        // $auditBalances = DB::table('daily_details ')
-        // ->select('daily_details.account_name', DB::raw('SUM(daily_details.debit) as debit','SUM(daily_details.credit) as credit'))       
-        // ->get();
-
-
-        $auditBalances = DB::table('daily_details')
-            ->select('daily_details.account_name', DB::raw('SUM(daily_details.debit) as debit'), DB::raw('SUM(daily_details.debit)-SUM(daily_details.credit) as s'), DB::raw('SUM(daily_details.credit)-SUM(daily_details.debit) as s1'), DB::raw('SUM(daily_details.credit) as credit'))
-            ->groupBy('daily_details.account_name')
+        $auditBalances = Account::where('accounts.status_account', '=', 'false')
+            ->addSelect([
+                'credit' => DailyDetail::select(DB::Raw('SUM(credit)'))
+                    ->whereColumn('account_id', 'accounts.id'),
+                'debit' => DailyDetail::select(DB::Raw('SUM(debit)'))
+                    ->whereColumn('account_id', 'accounts.id'),
+                'balance' => DailyDetail::select(DB::raw('SUM(credit)-SUM(debit)'))
+                    ->whereColumn('account_id', 'accounts.id')
+            ])
             ->get();
 
         return response()->json(['auditBalances' => $auditBalances]);
@@ -90,7 +93,6 @@ class AccountController extends Controller
         Cache::forget('tree_accounts_node');
 
         return response()->json($request->all());
-
     }
 
 
@@ -104,7 +106,7 @@ class AccountController extends Controller
             ->select('accounts.*')
             ->get();
 
-         
+
 
         $childs = Account::where('parent_id', $id)->select('accounts.*')->max('id');
 
@@ -132,43 +134,37 @@ class AccountController extends Controller
 
 
     }
-   
-  
+
+
 
     public function tree_account()
     {
 
-        $accounts = Cache::rememberForever('tree_accounts',function(){
+        $accounts = Cache::rememberForever('tree_accounts', function () {
 
             return Account::where('parent_id', null)->with('children')->get();
         });
-        $last_nodes = Cache::rememberForever('tree_accounts_node',function(){
+        $last_nodes = Cache::rememberForever('tree_accounts_node', function () {
 
             return Account::where('parent_id', null)->select('accounts.*')->max('id');
         });
 
-        return response()->json(['trees' => $accounts,'last_nodes' => $last_nodes]);
-
-
-
-        
-        
+        return response()->json(['trees' => $accounts, 'last_nodes' => $last_nodes]);
     }
 
-   
+
     public function import(Request $request)
     {
-   
+
         Excel::import(new AccountImport, storage_path('account.xlsx'));
 
         return response()->json([
             'status' =>
             'The file has been excel/csv imported to database in laravel 9'
         ]);
-
     }
 
-   
+
     public function export()
     {
 
@@ -182,7 +178,7 @@ class AccountController extends Controller
         // $check = (in_array($value, $this->array_parent)) ? 1 : 0;
         // return $check;
     }
-   
+
 
     public function show(Account $account)
     {
@@ -197,21 +193,21 @@ class AccountController extends Controller
 
     public function edit($id)
     {
-       
+
         $account = Account::find($id);
         return response()->json(['account' => $account]);
     }
 
-    public function account_edit_node(Request $request,$id)
+    public function account_edit_node(Request $request, $id)
     {
-       
+
         $data = Account::find($id);
         return response()->json(['data' => $data]);
     }
 
-   
 
-   
+
+
 
     public function destroy($id)
     {

@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Services;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\HRRepositoryInterface;
+// use App\RepositoryInterface\HRRepositoryInterface;
 use App\Traits\staff\AttendanceTrait;
 use App\Services\core\CoreStaffAttendanceService;
 use App\Services\AttendanceDetailService;
@@ -15,10 +14,9 @@ class AttendanceService
     use AttendanceTrait;
     public function __construct(
 
-        protected DetailRepositoryInterface $details,
         protected CoreStaffAttendanceService $attendance_core,
         protected AttendanceDetailService $details_service,
-        protected HRRepositoryInterface $hr,
+        // protected HRRepositoryInterface $hr,
         protected Request $request,
     ) {
 
@@ -35,7 +33,7 @@ class AttendanceService
 
             $this->attendance_core->attendance_id = $this->add_into_attendance_table();
 
-            $this->sanction();
+            $this->details_service->sanction();
         }
     }
 
@@ -63,6 +61,7 @@ class AttendanceService
     public function check_attendance()
     {
 
+        // dd($this->attendance_core->data['attendance_in_out']);
 
         if ($this->attendance_core->data['attendance_in_out'] == 1) {
 
@@ -71,6 +70,7 @@ class AttendanceService
                 'check_in' => $this->attendance_core->data['time_in'][$this->attendance_core->value]
 
             ];
+            // dd($this->attendance_core->updating_data);
         } else {
 
             $this->attendance_core->updating_data = [
@@ -97,6 +97,8 @@ class AttendanceService
             $this->attendance_core->data['attendance_date'],
             $this->attendance_core->data['staff'][$this->attendance_core->value]
         );
+
+        // dd($attendance_id);
 
         $this->return_attendance_id($attendance_id);
     }

@@ -4,16 +4,16 @@
       <div class="card">
         <div class="card-header pb-0">
           <div class="d-flex justify-content-between">
-            <span class="h2"> كشف ارصده الحسابات</span>
+            <span class="h2">دفتر الاستاذ العام</span>
           </div>
           <p class="tx-12 tx-gray-500 mb-2">
 
           </p>
-          <div class="d-flex justify-content-between">
+          <!-- <div class="d-flex justify-content-between">
 
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
-          </div>
+          </div> -->
         </div>
         <div class="card-body">
 
@@ -22,7 +22,7 @@
               <div class="form-group">
                 <div class="row">
 
-                  <div class="col-xl-2">
+                  <div class="col-xl-3">
                     <label for="">الحساب </label>
 
                     <div class="custom-search">
@@ -78,6 +78,9 @@
                       <th class="wd-15p border-bottom-0">#</th>
                       <th class="wd-15p border-bottom-0">رقم الحساب</th>
                       <th class="wd-15p border-bottom-0"> اسم الحساب</th>
+                      <th class="wd-15p border-bottom-0"> نوع الحركه</th>
+                      <th class="wd-15p border-bottom-0">التاريخ</th>
+
                       <th> مدين</th>
                       <th class="wd-15p border-bottom-0"> داين</th>
 
@@ -91,18 +94,23 @@
                       <td>{{ index + 1 }}</td>
                       <td>{{ daily.account_id }}</td>
                       <td>{{ daily.text }}</td>
+                      <td>{{ daily.text }}</td>
+                      <td>{{ daily.text }}</td>
+
                       <td>{{ daily.debit }}</td>
                       <td>{{ daily.credit }}</td>
 
                     </tr>
                     <tr>
-                      <td colspan="3">الاجمالي</td>
+                      <td colspan="5">الاجمالي</td>
                       <td>
-                        {{ 1 }}
+                        <span style="color:green">{{ sum_debit }}</span>
+                        
                       </td>
 
                       <td>
-                        {{ 1 }}
+                  
+                        <span style="color:green">{{ sum_credit }}</span>
                       </td>
 
                     </tr>
@@ -168,7 +176,8 @@ export default {
         type: Object,
         default: null,
       },
-
+      sum_debit:'',
+      sum_credit:'',
       word_search: "",
 
 
@@ -183,14 +192,14 @@ export default {
   },
   methods: {
 
-    get_search(word_search) {
-      this.axios.post(`/stocksearch`, { word_search: this.word_search }).then(({ data }) => {
+    // get_search(word_search) {
+    //   this.axios.post(`/stocksearch`, { word_search: this.word_search }).then(({ data }) => {
 
 
-        this.stocks = data;
+    //     this.stocks = data;
 
-      });
-    },
+    //   });
+    // },
     onwaychange(){
 
       var account_id = $('#AccountReport_account_tree_id').val();
@@ -199,8 +208,11 @@ export default {
       this.axios
         .post(uri)
         .then(({ data }) => {
-          // console.log(data.daily_details);
+          console.log(data.account_details);
           this.value_list = data.account_details;
+          this.sum_debit = data.sum_debit;
+          this.sum_credit = data.sum_credit
+
         })
         .catch(({ response }) => {
           console.error(response);
@@ -212,6 +224,8 @@ export default {
         .then(({ data }) => {
           console.log(data.daily_details);
           this.value_list = data.daily_details;
+          this.sum_debit = data.sum_debit;
+          this.sum_credit = data.sum_credit
         })
         .catch(({ response }) => {
           console.error(response);
