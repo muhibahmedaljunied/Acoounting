@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header">
 
-                    <span class="h2"> جزاءات ضافي الموظف </span>
+                    <span class="h2"> مكافئات اضافي الموظف </span>
 
                 </div>
                 <div class="card-body" id="printme">
@@ -41,7 +41,7 @@
 
 
 
-                                    اضافي    {{ extra.sanctionable.type_name }}
+                                        اضافي {{ extra.sanctionable.type_name }}
 
                                     </td>
                                     <td>
@@ -56,7 +56,7 @@
 
                                     <td>
 
-                                     علي   {{ extra.sanctionable.discount_name }}
+                                        علي {{ extra.sanctionable.discount_name }}
 
                                     </td>
                                     <td>
@@ -72,13 +72,13 @@
                                     </td>
 
                                     <td style="color:goldenrod">
-                                        <span v-if="extra.status ==0" class="badge text-bg-warning">غير معتمد</span>
-                                        <span v-if="extra.status ==1" class="badge text-bg-success"> معتمد</span>
+                                        <span v-if="extra.status == 0" class="badge text-bg-warning">غير معتمد</span>
+                                        <span v-if="extra.status == 1" class="badge text-bg-success"> معتمد</span>
 
                                     </td>
                                     <td>
                                         <div class="optionbox">
-                                            <select v-model="status_selected" @change="change_status(
+                                            <select v-model="status_selected[index]" @change="change_status(
                                                 extra.id,
                                                 extra.sanction_date,
                                                 extra.sanctionable.sanction,
@@ -261,7 +261,7 @@ export default {
                 type: Object,
                 default: null,
             },
-            status_selected: '',
+            status_selected: [],
 
 
         };
@@ -287,12 +287,13 @@ export default {
         },
 
         change_status(
+            index,
             staff,
             date,
             sanction,
             sanctionable_id,
             sanctionable_type,
-            ) {
+        ) {
 
             this.axios
                 .post(`/change_status_extra_sanction`, {
@@ -302,7 +303,7 @@ export default {
                     staff: staff,
                     date: date,
                     sanction: sanction,
-                    status: this.status_selected,
+                    status: this.status_selected[index],
 
                 })
                 .then(({ data }) => {

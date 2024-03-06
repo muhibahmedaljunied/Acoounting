@@ -182,21 +182,21 @@ class DatabaseSeeder extends Seeder
 
         //   -----------------------allowance----------------------------------
 
-        DB::table('allowance_types')->insert([
-            'id'        => 1,
-            'name'    => 'بدل مواصلات',
+        // DB::table('allowance_types')->insert([
+        //     'id'        => 1,
+        //     'name'    => 'بدل مواصلات',
 
-        ]);
-        DB::table('allowance_types')->insert([
-            'id'        => 2,
-            'name'    => 'بدل سكن',
+        // ]);
+        // DB::table('allowance_types')->insert([
+        //     'id'        => 2,
+        //     'name'    => 'بدل سكن',
 
-        ]);
-        DB::table('allowance_types')->insert([
-            'id'        => 3,
-            'name'    => 'تغذيه',
+        // ]);
+        // DB::table('allowance_types')->insert([
+        //     'id'        => 3,
+        //     'name'    => 'تغذيه',
 
-        ]);
+        // ]);
 
 
 

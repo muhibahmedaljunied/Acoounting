@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
+
 use App\Models\Staff;
 use App\Repository\HR\AdvanceRepository;
 use App\Services\CoreStaffService;
@@ -8,6 +9,7 @@ use App\Services\DailyService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\HrAccount;
 use App\Services\PayrollService;
 use Illuminate\Support\Facades\DB;
 
@@ -25,16 +27,26 @@ class AdvanceController extends Controller
 
         $advances = Staff::with(['advance'])->paginate(10);
 
-        // ---------------------------------
         $this->hr->Sum($advances, 'advance');
-
         // ------------------------------------------------------------------------------------------------
-        $staffs = Cache::rememberForever('staff', function () {
-            return DB::table('staff')->get();
-        });
+        $staffs =  DB::table('staff')
+            ->select(
+                'staff.name',
+                'staff.id',
+            )
+            ->get();
+
+
         // -------------------------------------------------------------------------------------------------
 
-        return response()->json(['staffs' => $staffs, 'list' => $advances]);
+        return response()->json([
+
+            'staffs' => $staffs,
+            'list' => $advances,
+            'debit'=>HrAccount::where('code','advance')->select('account_id','id as hr_account_id')->get(),
+
+
+        ]);
     }
 
 
@@ -44,14 +56,13 @@ class AdvanceController extends Controller
 
         $advances = Staff::with(['advance' => function ($query) use ($request) {
             $query->select('advances.*')
-            ->where('advances.staff_id','=', $request->staff)
-            ->whereBetween('advances.date', array($request->post('from_date'), $request->post('into_date')));
-
+                ->where('advances.staff_id', '=', $request->staff)
+                ->whereBetween('advances.date', array($request->post('from_date'), $request->post('into_date')));
         }])
-        // 
-        // ->whereBetween('date', array($request->post('from_date'), $request->post('into_date')))
-        ->select('*')
-        ->paginate(10);
+            // 
+            // ->whereBetween('date', array($request->post('from_date'), $request->post('into_date')))
+            ->select('*')
+            ->paginate(10);
         // dd($advances);
         $this->hr->Sum($advances, 'advance');
 
@@ -68,12 +79,12 @@ class AdvanceController extends Controller
 
 
 
-    public function store(Request $request,DailyService $daily, PayrollService  $payroll)
+    public function store(Request $request, DailyService $daily, PayrollService  $payroll)
     {
 
         $this->core->setData($request->all());
 
-        // dd($this->core->data);
+        // dd($request->all());
         try {
 
             DB::beginTransaction();
@@ -81,8 +92,11 @@ class AdvanceController extends Controller
             foreach ($request->post('count') as $value) {
 
                 $this->core->setValue($value);
+
                 $this->hr->handle();
+     
                 $payroll->refresh_payroll_for_hr();
+             
                 $daily->daily()->debit()->credit();
             }
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB

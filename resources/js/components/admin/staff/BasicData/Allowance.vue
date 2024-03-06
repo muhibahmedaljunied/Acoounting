@@ -179,7 +179,7 @@ export default {
   mounted() {
     this.list();
     this.counts[0] = 1;
-    this.type = 'allowance_type';
+    this.type = 'allowance';
   },
   methods: {
 

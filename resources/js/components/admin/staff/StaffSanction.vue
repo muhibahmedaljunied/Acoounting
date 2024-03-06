@@ -4,7 +4,7 @@
         <div class="col-lg-12 col-md-12">
           <div class="card" id="basic-alert">
             <div class="card-header">
-              جزاءات وحوافز الموظف
+              مكافئات وجزاءات الحضور والغياب
             </div>
             <div class="card-body">
               <!-- <div>
@@ -31,7 +31,7 @@
   
   
                           <li class="nav-item">
-                            <a href="#tab3" class="nav-link" data-toggle="tab">جزاءات اضافي الموظف  </a>
+                            <a href="#tab3" class="nav-link" data-toggle="tab">مكافئات اضافي الموظف  </a>
                           </li>
   
                           <li class="nav-item">

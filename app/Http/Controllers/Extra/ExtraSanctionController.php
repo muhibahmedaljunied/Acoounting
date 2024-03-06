@@ -133,7 +133,7 @@ class ExtraSanctionController extends Controller
             foreach ($request->post('count') as $value) {
 
                 $this->core->setValue($value);
-                $this->hr->store();
+                $this->hr->handle();
             }
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([
@@ -163,6 +163,7 @@ class ExtraSanctionController extends Controller
     {
 
 
+        $this->core->data = $request->all();
 
         // dd($request->all());
         try {
@@ -171,14 +172,6 @@ class ExtraSanctionController extends Controller
 
             $staff_sanction->update_sanction();
             $payroll->payroll();
-            // $daily->daily()->debit()->credit();  //this for create daily
-
-            // if ($request->status == 1) {
-
-            //     tap(Payroll::where('staff_id', $request->staff))
-            //         ->increment('total_extra_sanction', $request->sanction)
-            //         ->get();
-            // }
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([

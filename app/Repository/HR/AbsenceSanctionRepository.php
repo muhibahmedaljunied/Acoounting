@@ -35,7 +35,7 @@ class AbsenceSanctionRepository
     function store()
     {
 
-        if ($this->core->temporale_f->isEmpty()) {
+        if (empty($this->core->temporale_f)) {
 
             $temporale = AbsenceSanction::updateOrCreate(
                 [
@@ -53,9 +53,10 @@ class AbsenceSanctionRepository
 
     public function update()
     {
-        $this->core->temporale_f = tap(AbsenceSanction::whereAbsenceSanction($this->core->data))
+        $this->core->temporale_f = collect(tap(AbsenceSanction::whereAbsenceSanction($this->core->data,$this->core->value))
             ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
-            ->get('id');
+            ->get('id'))
+            ->toArray();
     }
     // public function sanction()
     // {

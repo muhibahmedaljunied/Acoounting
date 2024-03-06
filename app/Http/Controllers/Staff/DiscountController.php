@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
+
 use App\Services\DailyService;
 use App\Repository\HR\DiscountRepository;
 use App\Http\Controllers\Controller;
 use App\Services\CoreStaffService;
 use App\Models\Staff;
 use App\Models\DiscountType;
+use App\Models\HrAccount;
 use App\Services\PayrollService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -32,32 +34,44 @@ class DiscountController extends Controller
         $discount_types = DiscountType::all();
         // ------------------------------------------------------------------------------------------------
         $minutes = 60;
-        $staffs = Cache::remember('staff', $minutes, function () {
-            return DB::table('staff')->get();
-        });
+        // $staffs = Cache::remember('staff', $minutes, function () {
+        //     return DB::table('staff')->get();
+        // });
+
+        $staffs =  DB::table('staff')
+            ->select(
+                'staff.name',
+                'staff.id',
+            )
+            ->get();
+
         // -------------------------------------------------------------------------------------------------
 
-        return response()->json(['discount_types' => $discount_types, 'staffs' => $staffs, 'list' => $discounts]);
+        return response()->json([
+            'discount_types' => $discount_types,
+            'staffs' => $staffs,
+            'list' => $discounts,
+            'debit'=>HrAccount::where('code','discount')->select('account_id','id as hr_account_id')->get(),
+
+        ]);
     }
 
-    public function report(Request $request){
+    public function report(Request $request)
+    {
 
-        
+
         $discounts = Staff::with(['discount' => function ($query) use ($request) {
             $query->select('discounts.*')
-            ->where('discounts.staff_id','=', $request->staff)
-            ->whereBetween('discounts.date', array($request->post('from_date'), $request->post('into_date')));
-
+                ->where('discounts.staff_id', '=', $request->staff)
+                ->whereBetween('discounts.date', array($request->post('from_date'), $request->post('into_date')));
         }])
-        ->select('*')
-        ->paginate(10);
+            ->select('*')
+            ->paginate(10);
         // dd($advances);
         $this->hr->Sum($discounts);
 
         // dd($advances);
         return response()->json(['list' => $discounts]);
-
-
     }
 
     public function select_staff(Request $request)
@@ -68,10 +82,11 @@ class DiscountController extends Controller
         return response()->json(['list' => $staffs]);
     }
 
-    public function store(Request $request,DailyService $daily,PayrollService  $payroll)
+    public function store(Request $request, DailyService $daily, PayrollService  $payroll)
     {
-
+        // dd($request->all());
         $this->core->setData($request->all());
+     
         try {
 
             DB::beginTransaction();
@@ -81,7 +96,7 @@ class DiscountController extends Controller
                 $this->core->setValue($value);
                 $this->hr->handle();
                 $payroll->refresh_payroll_for_hr();
-                $daily->daily()->debit()->credit();
+                // $daily->daily()->debit()->credit();
             }
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
@@ -118,7 +133,4 @@ class DiscountController extends Controller
 
         return response()->json('successfully deleted');
     }
-
-
-  
 }

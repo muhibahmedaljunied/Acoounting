@@ -119,10 +119,10 @@
             <form method="post">
               <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
-                  <div class="modal-header">
+                  <!-- <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                     اضافه
-                  </div>
+                  </div> -->
 
 
                   <div class="modal-body">
@@ -133,7 +133,7 @@
                           <div class="card-header pb-0">
                             <div class="d-flex justify-content-between">
                               <h4 class="modal-title" id="myLargeModalLabel">
-                                البياتات الشخصيه
+                                بياتات الموظف
                               </h4>
                               <i class="mdi mdi-dots-horizontal text-gray"></i>
                             </div>
@@ -141,34 +141,115 @@
                           <div class="card-body">
 
                             <div class="row">
-                              <div class="col-md-4">
-                                <label for="inputEmail4">اسم المؤظف</label>
-                                <input style="background-color: beige;" v-model="name" type="text" class="form-control"
-                                  placeholder="ادخل اسم المؤظف" />
-                              </div>
-                              <div class="col-md-2">
-                                <label for="inputAddress">الفرع</label>
-                                <select style="background-color: beige;" v-model="branchselected" class="form-control"
-                                  required>
-                                  <option v-for="branch in branches" v-bind:value="branch.id">
-                                    {{ branch.name }}
-                                  </option>
-                                </select>
-                              </div>
-                              <div class="col-md-3">
-                                <label for="inputPassword4">الهويه</label>
-                                <input v-model="card" type="number" class="form-control" />
-                              </div>
-                              <div class="col-md-3">
-                                <label for="inputPassword4">الهاتف</label>
-                                <input v-model="phone" type="number" class="form-control" />
-                              </div>
+                              <fieldset class="scheduler-border">
+                                <legend style="float: right;" class="scheduler-border"> البياتات الشخصيه
+                                </legend>
+                                <div class="row" style="line-height: 44px;">
+                                  <div class="col-md-2">
+                                    <label for="inputEmail4">اسم المؤظف</label>
+                                    <input style="background-color: beige;" v-model="name" type="text"
+                                      class="form-control" placeholder="ادخل اسم المؤظف" />
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label for="inputAddress">الفرع</label>
+                                    <select style="background-color: beige;" v-model="branchselected" class="form-control"
+                                      required>
+                                      <option v-for="branch in branches" v-bind:value="branch.id">
+                                        {{ branch.name }}
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label for="inputPassword4">الهويه</label>
+                                    <input v-model="card" type="number" class="form-control" />
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label for="inputPassword4">الهاتف</label>
+                                    <input v-model="phone" type="number" class="form-control" />
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label for="inputZip">تاريخ المبلاد </label>
+                                    <input v-model="barth_date" type="date" class="form-control" id="inputZip" />
+                                  </div>
+                                  <div class="col-md-3">
+                                    <label for="inputZip">المؤهلات </label>
+                                    <select v-model="qualificationselected" name="type" id="type" class="form-control"
+                                      required>
+                                      <option v-for="qualification in qualifications" v-bind:value="qualification.id">
+                                        {{ qualification.name }}
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <label for="inputZip">الجنسيه </label>
+                                    <select style="background-color: beige;" v-model="nationalityselected" name="type"
+                                      id="type" class="form-control" required>
+                                      <option v-for="nationality in nationalities" v-bind:value="nationality.id">
+                                        {{ nationality.name }}
+                                      </option>
+                                    </select>
+                                  </div>
+
+                                  <div class="col-md-3">
+                                    <label for="inputZip">الجنس </label>
+                                    <select style="background-color: beige;" v-model="genderselected" name="type"
+                                      id="type" class="form-control" required>
+                                      <option v-bind:value="1">ذكر</option>
+                                      <option v-bind:value="2">انثى</option>
+                                    </select>
+                                  </div>
+
+                                  <div class="col-md-3">
+                                    <label for="inputZip">توع المؤظف </label>
+                                    <select v-model="social_statusselected" name="type" id="type" class="form-control"
+                                      required>
+                                      <option v-bind:value="1">متعاقد</option>
+                                      <option v-bind:value="2">رسمي</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label for="inputZip">الديانه </label>
+                                    <select style="background-color: beige;" v-model="religionselected" name="type"
+                                      id="type" class="form-control" required>
+                                      <option v-for="religion in religions" v-bind:value="religion.id">
+                                        {{ religion.name }}
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label for="inputZip"> الحاله الاجتماعيه </label>
+                                    <select style="background-color: beige;" v-model="staff_statusselected" name="type"
+                                      id="type" class="form-control" required>
+                                      <option v-bind:value="1">عازب</option>
+                                      <option v-bind:value="2">متزوج</option>
+                                    </select>
+                                  </div>
+
+                                  <div class="col-md-4">
+                                    <label for="inputZip"> البريد الالكتروني</label>
+                                    <input style="background-color: beige;" v-model="email" type="text"
+                                      class="form-control" id="inputZip" />
+                                  </div>
+                                  <!-- 
+                          <div class="col-md-2">
+                            <label for="inputZip"> الراتب الاساسي</label>
+                            <input v-model="salary" type="text" class="form-control" id="inputZip" />
+                          </div> -->
+                                </div>
+
+                              </fieldset>
+
+
 
 
                             </div>
-                            <div class="row">
+                            <!--  <div class="row">
 
-                              <!-- <div class="col-md-3">
+                              <fieldset class="scheduler-border">
+                                <legend class="scheduler-border">Technical Ameen</legend>
+
+                                <div class="row">
+                                 <div class="col-md-3">
                             <label for="inputAddress">القسم</label>
                             <select v-model="departmentselected" class="form-control" required>
                               <option v-for="department in departments" v-bind:value="department.id">
@@ -177,12 +258,9 @@
                             </select>
                           </div> -->
 
-                              <div class="col-md-3">
-                                <label for="inputZip">تاريخ المبلاد </label>
-                                <input v-model="barth_date" type="date" class="form-control" id="inputZip" />
-                              </div>
 
-                              <!-- <div class="col-md-3">
+
+                            <!-- <div class="col-md-3">
                             <label for="inputZip">نظام الدوام </label>
 
 
@@ -191,138 +269,102 @@
                                 {{ work_system.name }}
                               </option>
                             </select>
-                          </div> -->
-
-
-
-
-                            </div>
-                            <div class="row">
-
-
-
-                              <div class="col-md-3">
-                                <label for="inputAddress">الهيكل الاداري</label>
-
-                                <div class="custom-search">
-                                  <input style="background-color: beige;" :id="'Structure_structure_tree' + index"
-                                    type="text" readonly class="custom-search-input">
-                                  <input style="background-color: beige;" :id="'Structure_structure_tree_id' + index"
-                                    type="hidden" readonly class="custom-search-input">
-
-                                  <button class="custom-search-botton" type="button" data-toggle="modal"
-                                    data-target="#exampleModalStructure" @click="detect_index_structure(index)"> <i
-                                      class="fa fa-plus-circle"></i></button>
+                          </div> 
                                 </div>
-                              </div>
-                              <div class="col-md-3">
-                                <label for="inputAddress"> التعين</label>
+                              </fieldset>
 
-                                <div class="custom-search">
-                                  <select style="background-color: beige;" v-model="jobselected" id="select_structure"
-                                    class="form-control" required>
 
-                                  </select>
 
+
+
+
+                            </div>-->
+                            <div class="row">
+
+                              <fieldset class="scheduler-border">
+                                <legend style="float: right;" class="scheduler-border">بيانات التوظيف</legend>
+                                <div class="row" style="line-height: 44px;">
+                                  <div class="col-md-3">
+                                    <label for="inputAddress">الهيكل الاداري</label>
+
+                                    <div class="custom-search">
+                                      <input style="background-color: beige;" :id="'Structure_structure_tree'" type="text"
+                                        readonly class="custom-search-input">
+                                      <input style="background-color: beige;" :id="'Structure_structure_tree_id'"
+                                        type="hidden" readonly class="custom-search-input">
+
+                                      <button class="custom-search-botton" type="button" data-toggle="modal"
+                                        data-target="#exampleModalStructure"> <i class="fa fa-plus-circle"></i></button>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <label for="inputAddress"> الوظيفه</label>
+
+                                    <div class="custom-search">
+                                      <select style="background-color: beige;" v-model="jobselected" id="select_structure"
+                                        class="form-control" required>
+
+                                      </select>
+
+                                    </div>
+
+
+                                  </div>
+                                  <div class="col-md-3">
+                                    <label for="inputCity">تاريخ التعين</label>
+                                    <input v-model="date" type="date" class="form-control" />
+                                  </div>
+
+                                  <div class="col-md-2">
+                                    <label for="inputCity">الراتب</label>
+                                    <input v-model="salary" type="number" class="form-control" />
+                                  </div>
+
+                                  <div class="col-md-3">
+                                    <label for="inputState">حاله المؤظف</label>
+                                    <select v-model="statusselected" name="type" id="type" class="form-control" required>
+                                      <option v-bind:value="1">بدء العمل</option>
+                                      <option v-bind:value="2">لم يبدء العمل</option>
+                                    </select>
+                                  </div>
+                                  <!-- <div class="col-md-3">
+                                    <label for="inputAddress"> ح/راتب الموظف</label>
+
+                                    <div class="custom-search">
+                                      <input style="background-color: beige;" :id="'Structure_salary_tree'"
+                                        type="text" readonly class="custom-search-input">
+                                      <input style="background-color: beige;" :id="'Structure_salary_tree_id'"
+                                        type="hidden" readonly class="custom-search-input">
+
+                                      <button class="custom-search-botton" type="button" data-toggle="modal"
+                                        data-target="#exampleModalSalary"  > <i
+                                          class="fa fa-plus-circle"></i></button>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-md-3">
+                                    <label for="inputAddress">ح/سلف الموظف </label>
+
+                                    <div class="custom-search">
+                                      <input style="background-color: beige;" :id="'Structure_advance_tree'"
+                                        type="text" readonly class="custom-search-input">
+                                      <input style="background-color: beige;" :id="'Structure_advance_tree_id'"
+                                        type="hidden" readonly class="custom-search-input">
+
+                                      <button class="custom-search-botton" type="button" data-toggle="modal"
+                                        data-target="#exampleModalAdvance"> <i
+                                          class="fa fa-plus-circle"></i></button>
+                                    </div>
+                                  </div> -->
                                 </div>
-
-
-                              </div>
-                              <div class="col-md-3">
-                                <label for="inputCity">تاريخ التعين</label>
-                                <input v-model="date" type="date" class="form-control" />
-                              </div>
-
-                              <div class="col-md-2">
-                                <label for="inputCity">الراتب</label>
-                                <input v-model="salary" type="number" class="form-control" />
-                              </div>
-                              <hr />
-                              <div class="col-md-3">
-                                <label for="inputState">حاله المؤظف</label>
-                                <select v-model="statusselected" name="type" id="type" class="form-control" required>
-                                  <option v-bind:value="1">بدء العمل</option>
-                                  <option v-bind:value="2">لم يبدء العمل</option>
-                                </select>
-                              </div>
-
-
-                            </div>
-                            <div class="row">
-
-                              <div class="col-md-3">
-                                <label for="inputZip">المؤهلات </label>
-                                <select v-model="qualificationselected" name="type" id="type" class="form-control"
-                                  required>
-                                  <option v-for="qualification in qualifications" v-bind:value="qualification.id">
-                                    {{ qualification.name }}
-                                  </option>
-                                </select>
-                              </div>
-                              <div class="col-md-3">
-                                <label for="inputZip">الجنسيه </label>
-                                <select style="background-color: beige;" v-model="nationalityselected" name="type"
-                                  id="type" class="form-control" required>
-                                  <option v-for="nationality in nationalities" v-bind:value="nationality.id">
-                                    {{ nationality.name }}
-                                  </option>
-                                </select>
-                              </div>
-                              <hr />
-                              <div class="col-md-3">
-                                <label for="inputZip">الجنس </label>
-                                <select style="background-color: beige;" v-model="genderselected" name="type" id="type"
-                                  class="form-control" required>
-                                  <option v-bind:value="1">ذكر</option>
-                                  <option v-bind:value="2">انثى</option>
-                                </select>
-                              </div>
-
-                              <div class="col-md-3">
-                                <label for="inputZip">توع المؤظف </label>
-                                <select v-model="social_statusselected" name="type" id="type" class="form-control"
-                                  required>
-                                  <option v-bind:value="1">متعاقد</option>
-                                  <option v-bind:value="2">رسمي</option>
-                                </select>
-                              </div>
-
-
+                              </fieldset>
 
 
 
 
                             </div>
-                            <div class="row">
-                              <div class="col-md-2">
-                                <label for="inputZip">الديانه </label>
-                                <select style="background-color: beige;" v-model="religionselected" name="type" id="type"
-                                  class="form-control" required>
-                                  <option v-for="religion in religions" v-bind:value="religion.id">
-                                    {{ religion.name }}
-                                  </option>
-                                </select>
-                              </div>
-                              <div class="col-md-2">
-                                <label for="inputZip"> الحاله الاجتماعيه </label>
-                                <select style="background-color: beige;" v-model="staff_statusselected" name="type"
-                                  id="type" class="form-control" required>
-                                  <option v-bind:value="1">عازب</option>
-                                  <option v-bind:value="2">متزوج</option>
-                                </select>
-                              </div>
 
-                              <div class="col-md-4">
-                                <label for="inputZip"> البريد الالكتروني</label>
-                                <input style="background-color: beige;" v-model="email" type="text" class="form-control"
-                                  id="inputZip" />
-                              </div>
-                              <!-- 
-                          <div class="col-md-2">
-                            <label for="inputZip"> الراتب الاساسي</label>
-                            <input v-model="salary" type="text" class="form-control" id="inputZip" />
-                          </div> -->
-                            </div>
+
                           </div>
                           <div class="card-footer pb-0">
                             <div class="d-flex justify-content-between">
@@ -368,7 +410,45 @@
               </div>
             </div>
           </div>
-          <div class="modal fade" id="exampleModalStructureupdate" tabindex="-1" role="dialog"
+          <!-- <div class="modal fade" id="exampleModalSalary" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  <div class="well" id="treeview_json_salary"></div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="exampleModalAdvance" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  <div class="well" id="treeview_json_advance"></div>
+
+                </div>
+
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="modal fade" id="exampleModalStructureupdate" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -386,8 +466,8 @@
 
               </div>
             </div>
-          </div>
-          <div class="modal fade" id="exampleModalJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          </div> -->
+          <!-- <div class="modal fade" id="exampleModalJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -405,7 +485,7 @@
 
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <!--/div-->
@@ -483,9 +563,12 @@ export default {
   mounted() {
     this.list();
     this.type_of_tree = 1;
-    this.showtree('structure');
-    this.showtree('job');
     this.type = 'Structure';
+    this.showtree('structure','tree_structure');
+    // this.showtree('job');
+    // this.showtree('salary');
+    // this.showtree('advance');
+ 
   },
   methods: {
 
@@ -601,4 +684,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+fieldset.scheduler-border {
+  border: 1px groove #ddd !important;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  -webkit-box-shadow: 0px 0px 0px 0px #000;
+  box-shadow: 0px 0px 0px 0px #000;
+  margin-top: 30px !important;
+}
+
+legend.scheduler-border {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  width: auto;
+  padding: 0 10px;
+  border-bottom: none;
+  margin-top: -15px;
+  background-color: white;
+  color: black;
+}
+</style>
 

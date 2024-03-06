@@ -30,7 +30,8 @@ class StaffAbsenceSanctionRepository
 
 
         
-        tap(StaffSanction::where([
+        // dd($this->core->data['status']);
+         tap(StaffSanction::where([
             'staff_id' => $this->core->data['staff'],
             'sanctionable_id' => $this->core->data['sanctionable_id'],
             'sanctionable_type' => $this->core->data['sanctionable_type'],
@@ -40,6 +41,9 @@ class StaffAbsenceSanctionRepository
         ]))
             ->update(['status' => $this->core->data['status']])
             ->get('id');
+
+       
+
 
         
     }

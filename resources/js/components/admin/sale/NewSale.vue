@@ -706,9 +706,9 @@ export default {
 
     this.type_of_tree = 1;
 
-    this.showtree('store');
-    this.showtree('product');
-    this.showtree('account');
+    this.showtree('store','tree_store');
+    this.showtree('product','tree_product');
+    this.showtree('account','tree_account');
 
 
   },

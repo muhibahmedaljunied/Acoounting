@@ -9,16 +9,16 @@ class AbsenceSanction extends Model
     protected $fillable = ['absence_type_id','sanction_discount_id','discount','iteration','sanction'];
 
 
-    public function scopeWhereAbsenceSanction($query, $value)
+    public function scopeWhereAbsenceSanction($query, $value,$val)
 
     {
 
 
         return $query->where([
-            'absence_type_id' => $value['absence'],
-            'iteration' => $value['iteration'],
-            'sanction_discount_id' => $value['discount_type'],
-            'discount' => $value['discount']
+            'absence_type_id' => $value['absence'][$val],
+            'iteration' => $value['iteration'][$val],
+            'sanction_discount_id' => $value['discount_type'][$val],
+            'discount' => $value['discount'][$val]
         ]);
     }
 

@@ -41,7 +41,7 @@ class AdvanceRepository
                 [
                     'staff_id' => $this->core->data['staff'][$this->core->value],
                     'quantity' => $this->core->data['qty'][$this->core->value],
-                    'date' => $this->core->data['date'][$this->core->value],
+                    'date' => $this->core->data['date'],
 
                 ]
             );

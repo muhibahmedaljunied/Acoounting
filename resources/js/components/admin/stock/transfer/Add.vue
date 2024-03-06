@@ -345,9 +345,9 @@ export default {
 
     this.type_of_tree = 1;
     this.type = "Transfer";
-    this.showtree("product");
-    this.showtree("intostore");
-    this.showtree("store");
+    this.showtree("product",'tree_product');
+    this.showtree("intostore",'tree_store');
+    this.showtree("store",'tree_store');
     this.get_transfer();
   },
   methods: {

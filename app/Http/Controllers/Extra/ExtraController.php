@@ -89,7 +89,7 @@ class ExtraController extends Controller
 
                 $this->core->setValue($value);
 
-                $this->hr->handle();
+                $this->hr->store();
 
                 $this->extra_sanction->create();
             }

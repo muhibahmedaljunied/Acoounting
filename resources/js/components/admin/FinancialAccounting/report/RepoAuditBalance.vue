@@ -11,52 +11,52 @@
           </div>
           <div class="card-body" id="printme">
             <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-                <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <div class="row">
 
-                  <div class="col-xl-3">
-                    <label for="">الحساب </label>
+                    <div class="col-xl-3">
+                      <label for="">الحساب </label>
 
-                    <div class="custom-search">
+                      <div class="custom-search">
 
-                      <input id="AccountReport_account_tree" type="text" class="custom-search-input">
+                        <input id="AccountReport_account_tree" type="text" class="custom-search-input">
 
-                      <button class="custom-search-botton" type="button" data-toggle="modal"
-                        data-target="#exampleModalAccountReport"> <i class="fa fa-plus-circle"></i></button>
+                        <button class="custom-search-botton" type="button" data-toggle="modal"
+                          data-target="#exampleModalAccountReport"> <i class="fa fa-plus-circle"></i></button>
 
+
+
+                      </div>
+
+                      <input type="hidden" name="status" id="AccountReport_account_tree_id" class="form-control" />
 
 
                     </div>
 
-                    <input type="hidden" name="status" id="AccountReport_account_tree_id" class="form-control" />
 
+                    <div class="col-md-3">
+                      <label for="desde">من تاريخ </label>
+                      <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
+                        name="modal_reporte_venta_inicio" v-model="daily_date" onkeypress="return controltag(event)"
+                        style="background-color: white" />
+                    </div>
+
+                    <div class="col-md-3">
+                      <label for="desde">الي تاريخ </label>
+                      <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
+                        name="modal_reporte_venta_inicio" v-model="daily_date" onkeypress="return controltag(event)"
+                        style="background-color: white" />
+                    </div>
+                    <div class="col-sm-2 col-md-3" style="margin-top: auto;">
+                      <a @click="onwaychange()" href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;">
+                      </a>
+                    </div>
 
                   </div>
-            
-
-                  <div class="col-md-3">
-                    <label for="desde">من تاريخ </label>
-                    <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
-                      name="modal_reporte_venta_inicio" v-model="daily_date" onkeypress="return controltag(event)"
-                      style="background-color: white" />
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="desde">الي تاريخ </label>
-                    <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
-                      name="modal_reporte_venta_inicio" v-model="daily_date" onkeypress="return controltag(event)"
-                      style="background-color: white" />
-                  </div>
-                  <div class="col-sm-2 col-md-3" style="margin-top: auto;">
-                                <a @click="onwaychange()" href="#"><img src="/assets/img/search.png" alt=""
-                                        style="width: 10%;"> </a>
-                            </div>
-
                 </div>
               </div>
             </div>
-          </div>
 
             <div class="table-responsive">
               <table class="table table-bordered text-center">
@@ -128,8 +128,8 @@
 
                   <tr>
                     <td colspan="2">الاجمالي</td>
-                    <td></td>
-                    <td></td>
+                    <td> <span style="color:green">{{ sum_debit }}</span></td>
+                    <td> <span style="color:green">{{ sum_credit }}</span></td>
                     <!-- <td></td> -->
 
 
@@ -185,12 +185,16 @@ export default {
         balance: "",
         daily_date: "",
       },
+      sum_debit: '',
+      sum_credit: '',
     };
   },
   mounted() {
     this.axios.post("/auditBalance").then((response) => {
       console.log(response.data);
       this.auditBalances = response.data.auditBalances;
+      this.sum_debit = response.data.sum_debit;
+      this.sum_credit = response.data.sum_credit
     });
   },
   created() {
@@ -199,14 +203,14 @@ export default {
     });
   },
   methods: {
-    account_list(id) {
-      // alert(id);
-      let uri = `/account_list/${id}`;
-      this.axios.get(uri).then((response) => {
-        console.log(response.data.daily_details);
-        // this.repoaccounts = response.data.daily_details;
-      });
-    },
+    // account_list(id) {
+    //   // alert(id);
+    //   let uri = `/account_list/${id}`;
+    //   this.axios.get(uri).then((response) => {
+    //     console.log(response.data.daily_details);
+    //     // this.repoaccounts = response.data.daily_details;
+    //   });
+    // },
     add_row() { },
   },
 };

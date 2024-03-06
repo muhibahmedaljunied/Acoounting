@@ -12,14 +12,17 @@ import ClosingYears from './components/admin/FinancialAccounting/ClosingYears'
 
 
 // ------------------------------------------------------------------staff---------------------------------------------------------------------------
-import Salary from './components/admin/staff/Salary'
-import SalaryDetails from './components/admin/staff/SalaryDetails'
+// import Salary from './components/admin/staff/Salary'
+// import SalaryDetails from './components/admin/staff/SalaryWage/SalaryDetails'
 import AdministrativeStructure from './components/admin/staff/AdministrativeStructure'
 import BasicData from './components/admin/staff/BasicData'
+import SettingAccount from './components/admin/FinancialAccounting/SettingAccount'
 import Staff from './components/admin/staff/Staff'
 import Sanction from './components/admin/staff/Sanction'
 import StaffSanction from './components/admin/staff/StaffSanction'
 import Operation from './components/admin/staff/Operation'
+import SalaryWage from './components/admin/staff/SalaryWage'
+import SalaryDetails from './components/admin/staff/SalaryWage/SalaryDetails'
 import Attendance from './components/admin/staff/Attendance'
 import StaffReport from './components/admin/staff/StaffReport'
 // ----------------------------------Category----------------------------------------------------------------------------------------------------------------------
@@ -198,13 +201,20 @@ const routes = [
     component: BasicData
 
   },
-    {
-      path: '/staff/salary',
-      component: Salary
+  {
+    path: '/financial_accounting/setting_account',
+    component: SettingAccount
+
+  },
+    // {
+    //   path: '/staff/salary',
+    //   component: Salary
   
-    },
+    // },
   {
     path: '/salary_details/:id',
+    name: "salary_details",
+    props: true,
     component: SalaryDetails
 
   },
@@ -233,6 +243,11 @@ const routes = [
   {
     path: '/staff/operation',
     component: Operation
+
+  },
+  {
+    path: '/staff/salary_wage',
+    component: SalaryWage
 
   },
   {

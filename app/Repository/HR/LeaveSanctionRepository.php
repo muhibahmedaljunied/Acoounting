@@ -29,7 +29,7 @@ class LeaveSanctionRepository
     }
     function store()
     {
-        if ($this->core->temporale_f->isEmpty()) {
+        if (empty($this->core->temporale_f)) {
 
 
             $temporale = LeaveSanction::updateOrCreate(
@@ -50,9 +50,10 @@ class LeaveSanctionRepository
 
     public function update()
     {
-        $this->core->temporale_f  = tap(LeaveSanction::whereLeaveSanction($this->core->data))
+        $this->core->temporale_f  = collect(tap(LeaveSanction::whereLeaveSanction($this->core->data,$this->core->value))
             ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
-            ->get('id');
+            ->get('id'))->toArray();
+
 
     }
 

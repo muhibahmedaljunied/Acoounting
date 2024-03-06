@@ -1,13 +1,15 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <div class="row row-sm">
       <div class="col-lg-12 col-md-12">
         <div class="card" id="basic-alert">
+          <div class="card-header pb-0">
+            <div class="d-flex justify-content-between">
+              <span class="h2">المدخلات الرئيسيه</span>
+            </div>
+          </div>
           <div class="card-body">
-            <!-- <div>
-                      <h6 class="card-title mb-1">Basic Style Tabs</h6>
-                      <p class="text-muted card-sub-title">It is Very Easy to Customize and it uses in your website apllication.</p>
-                  </div> -->
+       
             <div class="text-wrap">
               <div class="example">
                 <div class="panel panel-primary tabs-style-1">

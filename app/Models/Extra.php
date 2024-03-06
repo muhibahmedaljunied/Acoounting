@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Extra extends Model
 {
-    protected $fillable = ['staff_id','date', 'extra_type_id', 'start_time', 'end_time'];
+    protected $fillable = ['staff_id','date', 'extra_type_id', 'start_time', 'end_time','number_hours'];
 
   
     public function staff()

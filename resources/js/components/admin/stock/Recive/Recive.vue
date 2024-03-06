@@ -266,8 +266,8 @@
     mounted() {
       this.type_of_tree=1;
       this.type = 'Transfer';
-      this.showtree('product');
-      this.showtree('store');
+      this.showtree('product','tree_product');
+      this.showtree('store','tree_store');
       this.get_transfer();
       // this.axios
       //   .post(`/data_for_transfer`)

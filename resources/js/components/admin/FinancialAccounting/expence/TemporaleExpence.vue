@@ -294,8 +294,8 @@ export default {
 
     this.counts[0] = 1;
     this.type = 'Expence';
-    this.showtree('payment');
-    this.showtree('expence');
+    this.showtree('payment','tree_account');
+    this.showtree('expence','tree_account');
 
   },
 
@@ -328,7 +328,7 @@ export default {
           date: this.date,
           description: this.description,
           grand_total: this.total,
-          credit: {
+          credit: { //دائن
 
             credit_account_id: $('#Expence_payment_tree_id').val(),
           },

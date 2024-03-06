@@ -275,7 +275,7 @@ export default {
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'product');
 
-    this.showtree('product');
+    this.showtree('product','tree_product');
   },
 
   methods: {

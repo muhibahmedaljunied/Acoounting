@@ -287,8 +287,8 @@ export default {
 
         this.counts[0] = 1;
         this.type = 'Expence';
-        this.showtree('payment');
-        this.showtree('expence');
+        this.showtree('payment','tree_account');
+        this.showtree('expence','tree_account');
 
     },
 

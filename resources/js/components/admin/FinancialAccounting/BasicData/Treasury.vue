@@ -18,7 +18,7 @@
 
                 <div class="custom-search">
 
-                  <input id="Treasury_account_tree" type="text" class="custom-search-input">
+                  <input id="Treasury_account_treasury_tree" type="text" class="custom-search-input">
 
                   <button class="custom-search-botton" type="button" data-toggle="modal"
                     data-target="#exampleModalTreasury"> <i class="fa fa-plus-circle"></i></button>
@@ -30,7 +30,7 @@
               <div class="col-xl-2">
                 <label for="">رقم الحساب </label>
 
-                <input type="text"  name="status" id="Treasury_account_tree_id"
+                <input type="text"  name="status" id="Treasury_account_treasury_tree_id"
                   class="form-control" />
               </div>
             </div>
@@ -256,7 +256,7 @@ export default {
     this.counts[0] = 1;
     this.type = 'Treasury';
     this.type_of_tree == 1
-    this.showtree('account');
+    this.showtree('account_treasury','tree_account');
 
 
 

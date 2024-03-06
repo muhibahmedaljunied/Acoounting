@@ -165,7 +165,7 @@ export default {
 
     this.type = 'ReceivableBond';
     this.type_of_tree = 1;
-    this.showtree('account');
+    this.showtree('account','tree_account');
 
     // console.log(this.$route.params);
 

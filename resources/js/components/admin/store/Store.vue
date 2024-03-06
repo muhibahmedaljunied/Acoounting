@@ -210,7 +210,7 @@ export default {
 
   mounted() {
     this.type = 'Store';
-    this.showtree('account');
+    this.showtree('account','tree_account');
 
   },
   created() {

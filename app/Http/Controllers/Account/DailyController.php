@@ -42,7 +42,8 @@ class DailyController extends Controller
 
         // dd($daily_details->sum_credit);
         return response()->json([
-            'daily_details' => $daily_details, 'sum_debit' => $sum_debit,
+            'daily_details' => $daily_details, 
+            'sum_debit' => $sum_debit,
             'sum_credit' => $sum_credit
         ]);
     }

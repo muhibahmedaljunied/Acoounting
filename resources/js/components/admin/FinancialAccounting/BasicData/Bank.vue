@@ -1,6 +1,6 @@
 <template>
     <!-- row opened -->
-    <div>
+    <div class="container-fluid">
 
 
         <div class="row row-sm">
@@ -260,7 +260,7 @@ export default {
         this.counts[0] = 1;
         this.type = 'Bank';
         this.type_of_tree == 1
-        this.showtree('account');
+        this.showtree('account','tree_account');
 
 
     },

@@ -3,6 +3,11 @@
     <div class="row row-sm">
       <div class="col-lg-12 col-md-12">
         <div class="card" id="basic-alert">
+          <div class="card-header pb-0">
+            <div class="d-flex justify-content-between">
+              <span class="h2">الاقفالات السنويه</span>
+            </div>
+          </div>
           <div class="card-body">
             <!-- <div>
                       <h6 class="card-title mb-1">Basic Style Tabs</h6>

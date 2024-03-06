@@ -19,10 +19,10 @@ class PayrollService
     {
 
 
-        if ($this->core->data->status == 1) {
+        if ($this->core->data['status'] == 1) {
 
-            tap(Payroll::where('staff_id', $this->core->data->staff))
-                ->increment('total_absence_sanction', $this->core->data->sanction)
+            tap(Payroll::where('staff_id', $this->core->data['staff']))
+                ->increment('total_absence_sanction', $this->core->data['sanction'])
                 ->get();
         }
     }
@@ -30,9 +30,9 @@ class PayrollService
 
     public function refresh_payroll_for_hr()
     {
-
         tap(Payroll::where(['staff_id' => $this->core->data['staff'][$this->core->value]]))
             ->update($this->core->data_of_hr_for_update_payroll)
             ->get('id');
+       
     }
 }

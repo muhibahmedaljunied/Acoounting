@@ -170,7 +170,7 @@ export default {
         localStorage.setItem('rank', 0);
         localStorage.setItem('table', 'structure');
 
-        this.showtree('structure');
+        this.showtree('structure','tree_structure');
     },
 
     methods: {

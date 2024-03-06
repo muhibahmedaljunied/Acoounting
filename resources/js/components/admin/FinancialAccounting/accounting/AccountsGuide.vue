@@ -134,7 +134,7 @@
 
                         <input id='parent' type="hidden" />
 
-                        <input id='rank' type="hidden" />
+                        <input id='rank' type="text" />
 
                       </div>
                     </div>
@@ -182,7 +182,7 @@ export default {
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'account');
 
-    this.showtree('account');
+    this.showtree('account','tree_account');
   },
   methods: {
 

@@ -74,7 +74,7 @@
                                     </td>
                                     <td>
                                         <div class="optionbox">
-                                            <select v-model="status_selected" @change="change_status(
+                                            <select v-model="status_selected[index]" @change="change_status(
                                                 delay.id,
                                                 delay.sanction_date,
                                                 delay.sanctionable.sanction,
@@ -259,7 +259,7 @@ export default {
                 type: Object,
                 default: null,
             },
-            status_selected: '',
+            status_selected: [],
 
         };
     },
@@ -285,6 +285,7 @@ export default {
         },
 
         change_status(
+            index,
             staff,
             date,
             sanction,
@@ -300,7 +301,7 @@ export default {
                     staff: staff,
                     date: date,
                     sanction: sanction,
-                    status: this.status_selected,
+                    status: this.status_selected[index],
 
                 })
                 .then(({ data }) => {

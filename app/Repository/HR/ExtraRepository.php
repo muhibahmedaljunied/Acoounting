@@ -14,12 +14,12 @@ class ExtraRepository
         
     }
 
-    public function handle()
-    {
-        // dd($this->core->data);
-        $this->update();
-        $this->store();
-    }
+    // public function handle()
+    // {
+    //     // dd($this->core->data);
+    //     // $this->update();
+    //     $this->store();
+    // }
     function Sum($data)
     {
 
@@ -37,8 +37,9 @@ class ExtraRepository
 
     function store()
     {
-        if ($this->core->temporale_f->isEmpty()) {
+        // if (empty($this->core->temporale_f)) {
 
+            // dd($this->core->data['duration'][$this->core->value][0]);
         $temporale = Extra::updateOrCreate(
             [
                 'staff_id' => $this->core->data['staff'][$this->core->value],
@@ -51,21 +52,21 @@ class ExtraRepository
             ]
         );
         $this->core->id = $temporale->id;
-    }
+    // }
 
     }
-    public function update()
-    {
+    // public function update()
+    // {
 
    
    
-        $this->core->temporale_f= tap(Extra::whereExtra($this->core))
-            ->update([
-                'number_hours' => $this->core->data['duration'][$this->core->value]
-            ])
-            ->get('id');
+    //     $this->core->temporale_f= tap(Extra::whereExtra($this->core))
+    //         ->update([
+    //             'number_hours' => $this->core->data['duration'][$this->core->value]
+    //         ])
+    //         ->get('id');
          
-    }
+    // }
 
    
     // public function refresh($id,$value)

@@ -32,7 +32,7 @@ class ExtraSanctionRepository
     {
 
 
-        if ($this->core->temporale_f->isEmpty()) {
+        if (empty($this->core->temporale_f)) {
 
             $temporale = ExtraSanction::updateOrCreate(
                 [
@@ -47,16 +47,17 @@ class ExtraSanctionRepository
             );
             $this->core->id = $temporale->id;
         }
-        // return $temporale_f;
     }
 
 
     public function update()
     {
 
-        $this->core->temporale_f = tap(ExtraSanction::whereExtraSanction($this->core->data))
+        $this->core->temporale_f = collect(tap(ExtraSanction::whereExtraSanction($this->core->data,$this->core->value))
             ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
-            ->get('id');
+            ->get('id'))
+            ->toArray();
+
     }
 
    

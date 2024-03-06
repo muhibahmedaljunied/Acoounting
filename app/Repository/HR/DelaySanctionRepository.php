@@ -13,7 +13,7 @@ class DelaySanctionRepository
     }
     public function handle()
     {
-
+       
         $this->update();
         $this->store();
     }
@@ -33,9 +33,12 @@ class DelaySanctionRepository
     function store()
     {
 
-        if ($this->core->temporale_f->isEmpty()) {
+       
+        if (empty($this->core->temporale_f)) {
 
 
+
+            // dd($this->core->data['sanction'][$this->core->value]);
             $temporale = DelaySanction::updateOrCreate(
                 [
                     'delay_type_id' => $this->core->data['delay'][$this->core->value],
@@ -56,9 +59,11 @@ class DelaySanctionRepository
     public function update()
     {
 
-        $this->core->temporale_f = tap(DelaySanction::whereDelaySanction($this->core->data))
+       
+        $this->core->temporale_f = collect(tap(DelaySanction::whereDelaySanction($this->core->data,$this->core->value))
             ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
-            ->get('id');
+            ->get('id'))
+            ->toArray();
     }
 
  

@@ -187,7 +187,7 @@ export default {
     this.list();
     this.type = 'AccountReport';
     this.type_of_tree = 1;
-    this.showtree('account');
+    this.showtree('account','tree_account');
 
   },
   methods: {

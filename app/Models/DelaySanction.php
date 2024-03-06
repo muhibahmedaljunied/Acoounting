@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class DelaySanction extends Model
 {
-    // protected $fillable = ['staff_id','delay_type_id','date'];
+    protected $fillable = ['part_id','delay_type_id','sanction_discount_id','discount','iteration','sanction'];
 
 
-    public function scopeWhereDelaySanction($query, $value)
+    public function scopeWhereDelaySanction($query, $value,$val)
 
     {
 
 
         return $query->where([
-            'delay_type_id' => $value['delay'],
-            'part_id' => $value['delay_part'],
-            'iteration' => $value['iteration'],
-            'sanction_discount_id' => $value['discount_type'],
-            'discount' => $value['discount']
+            'delay_type_id' => $value['delay'][$val],
+            'part_id' => $value['delay_part'][$val],
+            'iteration' => $value['iteration'][$val],
+            'sanction_discount_id' => $value['discount_type'][$val],
+            'discount' => $value['discount'][$val]
         ]);
     }
 

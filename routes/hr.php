@@ -1,7 +1,10 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-
+Route::post('/store_account_setting', 'Staff\staffController@store_account_setting');
+Route::post('/store_staff_account_setting', 'Staff\staffController@store_staff_account_setting');
+Route::post('/get_staff_account_setting', 'Staff\staffController@get_staff_account_setting');
+// ---------------------------------------------------------------------------------
 Route::post('/tree_structure', 'Staff\AdministrativeStructureController@tree_structure');
 Route::post('/structure_details_node/{id}', 'Staff\AdministrativeStructureController@structure_details_node');
 Route::post('/tree_job', 'Staff\AdministrativeStructureController@tree_structure');
@@ -53,6 +56,8 @@ Route::post('/attendance/get_time/{id}', 'Attendance\AttendanceController@get_ti
 /*  --------------------------------------------------------------------------*/
 Route::post('/salary', 'Staff\SalaryController@index');
 Route::post('/store_salary', 'Staff\SalaryController@store');
+Route::post('/prove_salary/{id}', 'Staff\SalaryController@prove_salary');
+Route::post('/prove_all_salary', 'Staff\SalaryController@prove_all_salary');
 Route::post('/update_salary/{id}', 'Staff\SalaryController@update');
 Route::post('/salary/{id}', 'Staff\SalaryController@edit');
 Route::post('/delete_salary/{id}', 'Staff\SalaryController@destroy');

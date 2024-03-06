@@ -69,33 +69,33 @@
                   </td>
 
                   <td style="color:goldenrod">
-                                        <span v-if="leave.status ==0" class="badge text-bg-warning">غير معتمد</span>
-                                        <span v-if="leave.status ==1" class="badge text-bg-success"> معتمد</span>
+                    <span v-if="leave.status == 0" class="badge text-bg-warning">غير معتمد</span>
+                    <span v-if="leave.status == 1" class="badge text-bg-success"> معتمد</span>
 
-                                    </td>
+                  </td>
 
                   <td>
-                                        <div class="optionbox">
-                                            <select v-model="status_selected" @change="change_status(
-                                                leave.id,
-                                                leave.sanction_date,
-                                                leave.sanctionable.sanction,
-                                                leave.sanctionable_id,
-                                                leave.sanctionable_type
-                                            )" class="form-control">
-                                                <option :selected="true" class="btn btn-success" v-bind:value="1">
-                                                    معتمد
-                                                </option>
+                    <div class="optionbox">
+                      <select v-model="status_selected[index]" @change="change_status(
+                        leave.id,
+                        leave.sanction_date,
+                        leave.sanctionable.sanction,
+                        leave.sanctionable_id,
+                        leave.sanctionable_type
+                      )" class="form-control">
+                        <option :selected="true" class="btn btn-success" v-bind:value="1">
+                          معتمد
+                        </option>
 
-                                                <option :selected="true" class="btn btn-success" v-bind:value="0">
-                                                    غير معتمد
-                                                </option>
+                        <option :selected="true" class="btn btn-success" v-bind:value="0">
+                          غير معتمد
+                        </option>
 
-                                            </select>
-                                        </div>
+                      </select>
+                    </div>
 
 
-                                    </td>
+                  </td>
 
                 </tr>
                 <tr>
@@ -253,9 +253,9 @@ export default {
         type: Object,
         default: null,
       },
-      status_selected: '',
+      status_selected: [],
 
- 
+
     };
   },
   mounted() {
@@ -275,7 +275,7 @@ export default {
           // this.discount_types = data.discount_types;
           // this.staffs = data.staffs;
 
-          console.log('wewewe',data.list);
+          console.log('wewewe', data.list);
           this.value_list = data.list;
         })
         .catch(({ response }) => {
@@ -284,32 +284,33 @@ export default {
     },
 
     change_status(
-            staff,
-            date,
-            sanction,
-            sanctionable_id,
-            sanctionable_type,
-            ) {
+      index,
+      staff,
+      date,
+      sanction,
+      sanctionable_id,
+      sanctionable_type,
+    ) {
 
-            this.axios
-                .post(`/change_status_leave_sanction`, {
+      this.axios
+        .post(`/change_status_leave_sanction`, {
 
-                    sanctionable_id: sanctionable_id,
-                    sanctionable_type: sanctionable_type,
-                    staff: staff,
-                    date: date,
-                    sanction: sanction,
-                    status: this.status_selected,
+          sanctionable_id: sanctionable_id,
+          sanctionable_type: sanctionable_type,
+          staff: staff,
+          date: date,
+          sanction: sanction,
+          status: this.status_selected[index],
 
-                })
-                .then(({ data }) => {
+        })
+        .then(({ data }) => {
 
-                    // this.value_list = data.list;
-                })
-                .catch(({ response }) => {
-                    console.error(response);
-                });
-        }
+          // this.value_list = data.list;
+        })
+        .catch(({ response }) => {
+          console.error(response);
+        });
+    }
 
   },
 
@@ -318,15 +319,15 @@ export default {
 
 <style scoped>
 .optionbox select {
-    background: #E62968;
-    color: #fff;
-    padding: 10px;
-    width: 120px;
-    height: 30px;
-    border: none;
-    font-size: 20px;
-    box-shadow: 0 5px 18px rgb(93, 15, 9);
-    -webkit-appearance: button;
-    outline: none;
+  background: #E62968;
+  color: #fff;
+  padding: 10px;
+  width: 120px;
+  height: 30px;
+  border: none;
+  font-size: 20px;
+  box-shadow: 0 5px 18px rgb(93, 15, 9);
+  -webkit-appearance: button;
+  outline: none;
 }
 </style>

@@ -7,12 +7,21 @@ use App\Models\Branch;
 use App\Models\StaffType;
 use App\Models\Allowance;
 use App\Models\AllowanceType;
+use App\Models\HrAccount;
 use App\Models\Staff;
+use App\Services\CoreStaffService;
+use App\Services\DailyService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
+
 class SalaryController extends Controller
 {
+
+    public function __construct(
+        protected CoreStaffService $core,
+    ) {
+    }
 
     public function index()
     {
@@ -97,6 +106,71 @@ class SalaryController extends Controller
         return response()->json($request->all());
     }
 
+    public function prove_salary(Request $request,DailyService $daily){
+
+
+        $this->core->setData($request->all());
+
+        // dd($request->all());
+        try {
+
+            DB::beginTransaction();
+             
+                $daily->daily()->debit()->credit();
+            
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "Salary proved successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
+
+        return response()->json(['message' => $request->all()]);
+
+    }
+    public function prove_all_salary(Request $request,DailyService $daily){
+
+
+        $this->core->setData($request->all());
+
+
+        try {
+
+            DB::beginTransaction();
+             
+            $daily->daily();
+            foreach ($this->core->data['data_staff'] as $key =>$value) {
+          
+                $this->core->setValue($key);
+                $daily->debit()->credit();
+            }
+                
+            
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "Salary proved successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
+
+        return response()->json(['message' => $request->all()]);
+
+    }
+
 
     public function get_staff_allowance($request)
     {
@@ -159,51 +233,46 @@ class SalaryController extends Controller
     public function salary_details(Request $request)
     {
 
-        $salaries = Cache::rememberForever('salaries_details', function () use ($request) {
-            return staff::where('id', $request->id)->with([
-                'payroll' => function ($query) {
-                    $query->select('*');
-                },
-                'extra' => function ($query) {
-                    $query->select('*');
-                },
-                'allowance' => function ($query) {
-                    $query->select('*');
-                },
-                'discount' => function ($query) {
-                    $query->select('*');
-                },
-                'advance' => function ($query) {
-                    $query->select('*');
-                },
-                // 'extra.extra_type' => function ($query) {
-                //     $query->select('*');
-                // },
-                'staff_sanction.sanctionable' => function ($query) {
-                    $query->select('*');
-                },
-                // 'staff_sanction' => function ($query) {
-                //     $query->where('sanctionable_type','!=','App\Models\ExtraSanction')->select('*');
-                // },
-                'extra.extra_detail.extra_sanction' => function ($query) {
-                    $query->select('*');
-                },
-                'allowance.allowance_type' => function ($query) {
-                    $query->select('*');
-                },
-                'discount.discount_type' => function ($query) {
-                    $query->select('*');
-                },
 
-            ])
-                ->paginate(10);
-        });
+        $salaries = DB::table('staff')->where('staff.id', $request->id)
+            ->join('payrolls', 'payrolls.staff_id', '=', 'staff.id')
+            // ->join('allowances', 'allowances.staff_id', '=', 'staff.id')
+            // ->join('allowance_types', 'allowance_types.id', '=', 'allowances.allowance_type_id')
+            ->select(
+                'payrolls.*',
+                'staff.*'
+                // 'allowance_types.name as type_name','allowances.quantity as quantity_allowance'
+            )
+            ->paginate(100);
+
+        foreach ($salaries as $value) {
+
+            $value->total = $value->salary +
+                $value->total_allowance -
+                $value->total_discount -
+                $value->total_advance -
+                $value->total_absence_sanction -
+                $value->total_delay_sanction -
+                $value->total_leave_sanction +
+                $value->total_extra_sanction;
+
+            $value->discount = $value->total_discount + $value->total_advance +
+                $value->total_absence_sanction +
+                $value->total_delay_sanction +
+                $value->total_leave_sanction;
+            $value->extra = $value->total_allowance + $value->total_extra_sanction;
+
+            // $value->total_advance = $value->total_advance;
+            // $value->all_allowance = $value->total_allowance;
+            // $value->total = ($value->salary + $value->total_allowance + $value->total_extra) - ($value->all_discount);
+
+        }
 
 
-        $this->sum($salaries);
 
 
-        return response()->json(['list' => $salaries, 'staffs' => Staff::all()]);
+        // dd($salaries);
+        return response()->json(['list' => $salaries]);
     }
 
     public function sum($salaries)
@@ -267,34 +336,44 @@ class SalaryController extends Controller
             ->join('payrolls', 'payrolls.staff_id', '=', 'staff.id')
             ->select('payrolls.*', 'staff.*')
             ->paginate(100);
-
+        $basic_salary = 0;
+        $net_salary = 0;
         foreach ($salaries as $value) {
 
-            $value->total = $value->salary+
-            $value->total_allowance+
-            $value->total_discount-
-            $value->total_advance-
-            $value->total_absence_sanction-
-            $value->total_delay_sanction-
-            $value->total_leave_sanction+
-            $value->total_extra_sanction;
+            $value->total = $value->salary +
+                $value->total_allowance -
+                $value->total_discount -
+                $value->total_advance -
+                $value->total_absence_sanction -
+                $value->total_delay_sanction -
+                $value->total_leave_sanction +
+                $value->total_extra_sanction;
 
-            $value->discount = $value->total_discount+$value->total_advance+
-            $value->total_absence_sanction+
-            $value->total_delay_sanction+
-            $value->total_leave_sanction;
-            $value->extra = $value->total_allowance+$value->total_extra_sanction;
+            $value->discount = $value->total_discount + $value->total_advance +
+                $value->total_absence_sanction +
+                $value->total_delay_sanction +
+                $value->total_leave_sanction;
+            $value->extra = $value->total_allowance + $value->total_extra_sanction;
 
             // $value->total_advance = $value->total_advance;
             // $value->all_allowance = $value->total_allowance;
             // $value->total = ($value->salary + $value->total_allowance + $value->total_extra) - ($value->all_discount);
- 
+
+            $net_salary = $net_salary + $value->total;
+            $basic_salary = $basic_salary + $value->salary;
         }
 
 
 
 
-// dd($salaries);
-        return response()->json(['list' => $salaries]);
+        // dd($salaries);
+        return response()->json([
+            'list' => $salaries,
+            'net_salary' => $net_salary,
+            'basic_salary' => $basic_salary,
+            'staff'=>DB::table('staff')->select('staff.name','staff.id','staff.salary')->get(),
+            'credit'=>HrAccount::where('code','salary')->select('account_id','id as hr_account_id','account_second_id')->get(),
+
+        ]);
     }
 }

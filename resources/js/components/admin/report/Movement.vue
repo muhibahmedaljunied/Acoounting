@@ -446,8 +446,8 @@ export default {
   },
   mounted() {
     this.type = 'Movement';
-    this.showtree('product');
-    this.showtree('store');
+    this.showtree('product','tree_product');
+    this.showtree('store','tree_store');
     this.axios.post("/Reposupply").then((response) => {
 
 

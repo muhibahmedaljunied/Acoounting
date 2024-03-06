@@ -41,7 +41,8 @@ class AccountController extends Controller
     public function auditBalance()
     {
 
-
+        $sum_debit = 0;
+        $sum_credit = 0;
         $auditBalances = Account::where('accounts.status_account', '=', 'false')
             ->addSelect([
                 'credit' => DailyDetail::select(DB::Raw('SUM(credit)'))
@@ -53,7 +54,17 @@ class AccountController extends Controller
             ])
             ->get();
 
-        return response()->json(['auditBalances' => $auditBalances]);
+        foreach ($auditBalances as $value) {
+
+            $sum_debit += $value->debit;
+            $sum_credit += $value->credit;
+        }
+
+        return response()->json([
+            'auditBalances' => $auditBalances,
+            'sum_debit' => $sum_debit,
+            'sum_credit' => $sum_credit
+        ]);
     }
 
     public function AccountStatement(Request $request)
