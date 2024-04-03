@@ -10,7 +10,10 @@ use App\Models\AllowanceType;
 use App\Models\HrAccount;
 use App\Models\Staff;
 use App\Services\CoreStaffService;
+use App\Services\Daily\DailySalaryService;
 use App\Services\DailyService;
+use App\Services\PayrollService;
+use App\Services\SalaryService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +21,18 @@ use Illuminate\Support\Facades\DB;
 class SalaryController extends Controller
 {
 
+
+    public $staff;
+
     public function __construct(
         protected CoreStaffService $core,
+        public DailyService $daily,
+        public DailySalaryService $daily_salary,
+        public PayrollService $payroll,
+        public SalaryService $salary,
     ) {
+
+        $this->daily = $daily;
     }
 
     public function index()
@@ -106,18 +118,18 @@ class SalaryController extends Controller
         return response()->json($request->all());
     }
 
-    public function prove_salary(Request $request,DailyService $daily){
+    public function prove_salary(Request $request)
+    {
 
 
         $this->core->setData($request->all());
-
-        // dd($request->all());
         try {
 
             DB::beginTransaction();
-             
-                $daily->daily()->debit()->credit();
-            
+
+            $this->daily->daily()->debit()->credit();
+            $this->payroll->refresh_payroll_status($this->core->data['staff'], 'prove');
+
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([
                 'message' => "Salary proved successfully",
@@ -133,9 +145,9 @@ class SalaryController extends Controller
         }
 
         return response()->json(['message' => $request->all()]);
-
     }
-    public function prove_all_salary(Request $request,DailyService $daily){
+    public function prove_all_salary(Request $request)
+    {
 
 
         $this->core->setData($request->all());
@@ -144,15 +156,16 @@ class SalaryController extends Controller
         try {
 
             DB::beginTransaction();
-             
-            $daily->daily();
-            foreach ($this->core->data['data_staff'] as $key =>$value) {
-          
+
+            $this->daily->daily();
+            foreach ($this->core->data['data_staff'] as $key => $value) {
+                $this->staff = $this->core->data['data_staff'][$this->core->value]['id'];
                 $this->core->setValue($key);
-                $daily->debit()->credit();
+                $this->daily->debit()->credit();
+                $this->payroll->refresh_payroll_status($this->staff, 'prove');
             }
-                
-            
+
+
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([
                 'message' => "Salary proved successfully",
@@ -168,8 +181,75 @@ class SalaryController extends Controller
         }
 
         return response()->json(['message' => $request->all()]);
-
     }
+
+    public function paid_salary(Request $request)
+    {
+
+
+        $this->core->setData($request->all());
+        $this->salary->staff = $this->core->data['staff'];
+
+        try {
+
+            DB::beginTransaction();
+            $this->salary->handle();
+            $this->daily_salary->daily()->debit()->credit();
+            $this->payroll->refresh_payroll_status($this->salary->staff, 'paid');
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "Salary proved successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
+
+        return response()->json(['message' => $request->all()]);
+    }
+    public function paid_all_salary(Request $request)
+    {
+
+
+        $this->core->setData($request->all());
+        try {
+
+            DB::beginTransaction();
+
+            foreach ($this->core->data['data_staff'] as $key => $value) {
+
+
+                $this->core->setValue($key);
+                $this->salary->staff = $this->core->data['data_staff'][$this->core->value]['id'];
+                $this->salary->handle();
+                $this->daily_salary->daily()->debit()->credit();
+                $this->payroll->refresh_payroll_status($this->salary->staff, 'paid');
+            }
+
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "Salary proved successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
+
+        return response()->json(['message' => $request->all()]);
+    }
+
 
 
     public function get_staff_allowance($request)
@@ -371,9 +451,13 @@ class SalaryController extends Controller
             'list' => $salaries,
             'net_salary' => $net_salary,
             'basic_salary' => $basic_salary,
-            'staff'=>DB::table('staff')->select('staff.name','staff.id','staff.salary')->get(),
-            'credit'=>HrAccount::where('code','salary')->select('account_id','id as hr_account_id','account_second_id')->get(),
-
+            'staff' => DB::table('staff')->select('staff.name', 'staff.id', 'staff.salary')->get(),
+            'prove_account' => HrAccount::where('code', 'salary')
+                ->select('account_id', 'id as hr_account_id', 'account_second_id')
+                ->get(),
+            'paid_account' => HrAccount::whereIn('type', ['salary', 'extra', 'allowance'])
+                ->select('account_id', 'id as hr_account_id', 'account_second_id', 'type', 'code')
+                ->get(),
         ]);
     }
 }

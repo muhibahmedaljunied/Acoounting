@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Purchase;
+
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Models\Payment;
 use App\Repository\StoreInventury\StorePurchaseRepository;
@@ -13,6 +14,7 @@ use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\HrAccount;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
@@ -64,14 +66,23 @@ class PurchaseController extends Controller
             ->select('products.*',)
             ->get();
 
+        $stores = DB::table('stores')
+            ->select(
+                'stores.account_id as store_account_id',
+                'stores.text as store_name',
+                'stores.id as store_id'
 
+            )
+            ->get();
 
 
         return response()->json([
             'products' => $products,
-            'suppliers' => $this->suppliers(),
+            // 'suppliers' => $this->suppliers(),
             'statuses' => Status::all(),
-            'treasuries' => $this->treasuries()
+            // 'treasuries' => $this->treasuries(),
+            'stores' => $stores
+
         ]);
     }
 
@@ -205,23 +216,44 @@ class PurchaseController extends Controller
     public function show()
     {
 
-    
+
         $purchases = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
             $morphTo->constrain([
                 Purchase::class => function ($query) {
                     $query->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id');
-                    $query->select('purchases.*','purchases.id as purchase_id');
-                   
+                    $query->select('purchases.*', 'purchases.id as purchase_id');
                 },
             ]);
         }])
-        ->where('paymentable_type','App\\Models\\Purchase')
-        ->paginate();
+            ->where('paymentable_type', 'App\\Models\\Purchase')
+            ->paginate();
 
-       
+
         return response()->json(['purchases' => $purchases]);
     }
 
+    public function get_purchase_account_setting()
+    {
+
+
+
+        $accounts = HrAccount::with(
+            [
+                'account' => function ($query) {
+                    $query->select('*', 'text as first_name');
+                },
+                'account_second' => function ($query) {
+                    $query->select('*', 'text as second_name');
+                }
+            ]
+        )->select('hr_accounts.*', 'hr_accounts.name as account_name')
+            ->get();
+
+        // dd($accounts);
+        $count_account = HrAccount::all()->count();
+
+        return response()->json(['accounts' => $accounts, 'count_account' => $count_account]);
+    }
     public function search(Request $request)
     {
 

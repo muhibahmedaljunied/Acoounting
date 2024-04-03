@@ -2,19 +2,11 @@
 
 namespace App\Providers;
 
-use mysqli;
-use Illuminate\Support\Facades\Artisan;
-use App\Services\core\CoreStaffAttendanceService;
-use App\Repository\Sanction\DelayRepository;
-use App\Repository\Sanction\LeaveRepository;
-use App\Repository\Sanction\AbsenceRepository;
-use App\Repository\Sanction\ExtraRepository;
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Services\CoreStaffService;
-use App\Services\CoreService;
-use Illuminate\Support\Facades\Config;
+
 
 
 

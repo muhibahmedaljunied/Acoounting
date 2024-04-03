@@ -79,6 +79,7 @@
                                     <td>
                                         <div class="optionbox">
                                             <select v-model="status_selected[index]" @change="change_status(
+                                                      index,
                                                 extra.id,
                                                 extra.sanction_date,
                                                 extra.sanctionable.sanction,

@@ -110,9 +110,30 @@ class DailyController extends Controller
      * @param  \App\Daily  $daily
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(Request $request)
     {
-        //
+        
+        $sum_debit = 0;
+        $sum_credit = 0;
+
+        $daily_details =  Account::join('daily_details', 'daily_details.account_id', '=', 'accounts.id')
+        ->where('daily_id',$request->id)
+            ->select('accounts.*', 'daily_details.*')
+            ->paginate(100);
+
+        foreach ($daily_details as $value) {
+
+            $sum_debit += $value->debit;
+            $sum_credit += $value->credit;
+        }
+
+        // dd($daily_details->sum_credit);
+        return response()->json([
+            'daily_details' => $daily_details, 
+            'sum_debit' => $sum_debit,
+            'sum_credit' => $sum_credit
+        ]);
+
     }
 
     /**

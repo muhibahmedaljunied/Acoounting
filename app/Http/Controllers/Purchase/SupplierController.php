@@ -9,9 +9,10 @@ use App\Models\Purchase;
 use App\Models\Account;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
-
+use App\Models\Group;
+use Illuminate\Support\Facades\DB;
 use Storage;
-use DB;
+
 
 class SupplierController extends Controller
 {
@@ -25,16 +26,19 @@ class SupplierController extends Controller
 
 
         $suppliers =  DB::table('suppliers')
-            // ->join('supplier_accounts', 'supplier_accounts.supplier_id', '=', 'suppliers.id')
-            ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
+            ->join('groups', 'groups.id', '=', 'suppliers.group_id')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->where('group_types.code', 'supplier')
             ->select(
                 'suppliers.*',
-                // 'supplier_accounts.account_id',
-                'accounts.text'
+                'groups.name as group_name'
             )
             ->paginate(10);
 
-        return response()->json($suppliers);
+
+
+
+        return response()->json(['suppliers'=>$suppliers]);
     }
 
     public function search(Request $request)
@@ -48,10 +52,47 @@ class SupplierController extends Controller
 
 
 
+    public function get_supplier_account_setting()
+    {
 
 
 
-    public function store(Request $request,SupplierService $supplier_service)
+        $groups =  DB::table('groups')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->where('group_types.code', 'supplier')
+            ->select(
+                'groups.*',
+                'group_types.name as type_name'
+            )
+            ->get();
+        $group_accounts =  DB::table('groups')
+            ->join('accounts', 'accounts.id', '=', 'groups.account_id')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->where('group_types.code', 'supplier')
+            ->select(
+                'groups.id as group_id',
+                'groups.name as group_name',
+                'accounts.id as account_id',
+                'accounts.text as account_name'
+            )
+            ->get();
+        return response()->json(['groups' => $groups, 'group_accounts' => $group_accounts]);
+    }
+
+    public function store_supplier_account_setting(Request $request)
+    {
+
+
+        $group_accounts = Group::find($request['group_id']);
+        $group_accounts->update(['account_id' => $request['account_id']]);
+
+
+        return response()->json(['message' => 'sucess']);
+    }
+
+
+
+    public function store(Request $request, SupplierService $supplier_service)
     {
 
         // $validator = Validator::make($request->all(), [
@@ -72,16 +113,16 @@ class SupplierController extends Controller
 
 
 
-            // -------------------------------------------------------------------------
-            $supplier_service->get_parent();
-            // ---------------------------------------------------------------------------
-            $supplier_service->get_child();
-            // -------------------------------------------------------------------------
-            $supplier_service->add_account();
-            // -------------------------------------------------------------------------
+            // // -------------------------------------------------------------------------
+            // $supplier_service->get_parent();
+            // // ---------------------------------------------------------------------------
+            // $supplier_service->get_child();
+            // // -------------------------------------------------------------------------
+            // $supplier_service->add_account();
+            // // -------------------------------------------------------------------------
             $supplier_service->add_supplier();
 
-         
+
 
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
@@ -100,7 +141,7 @@ class SupplierController extends Controller
     }
 
 
-   
+
 
 
     public function show(Request $request)

@@ -21,7 +21,6 @@ class StaffLeaveSanctionRepository
         $absence->sanctionable()->associate($this->core->specific_sanction);
         $absence->date = $this->core->data['date'][$this->core->value];
         $absence->save();
-
         
     }
 

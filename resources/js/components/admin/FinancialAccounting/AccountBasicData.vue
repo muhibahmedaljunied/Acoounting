@@ -18,13 +18,17 @@
                       <!-- Tabs -->
                       <ul class="nav panel-tabs main-nav-line">
                         <li class="nav-item">
-                          <a href="#tab1" class="nav-link" data-toggle="tab">البنوك</a>
+                          <a href="#tab1" class="nav-link" data-toggle="tab">التصنيفات</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#tab2" class="nav-link" data-toggle="tab">العملات</a>
+                          <a href="#tab2" class="nav-link" data-toggle="tab">البنوك</a>
                         </li>
                         <li class="nav-item">
                           <a href="#tab3" class="nav-link" data-toggle="tab"> الصناديق</a>
+
+                        </li>
+                        <li class="nav-item">
+                          <a href="#tab4" class="nav-link" data-toggle="tab">العملات</a>
                         </li>
 
                         <li class="nav-item">
@@ -47,14 +51,18 @@
                         ">
                     <div class="tab-content">
                       <div class="tab-pane active" id="tab1">
-                        <bank></bank>
+                        <group-bank-treasury></group-bank-treasury>
                       </div>
-                      <div class="tab-pane" id="tab2">
-                        <currency></currency>
+                      <div class="tab-pane active" id="tab2">
+                        <bank></bank>
                       </div>
                       <div class="tab-pane" id="tab3">
                         <treasury></treasury>
                       </div>
+                      <div class="tab-pane" id="tab4">
+                        <currency></currency>
+                      </div>
+                   
 
                       <!-- <div class="tab-pane" id="tab4">
                         <type-expence></type-expence>
@@ -78,6 +86,7 @@
   </div>
 </template>
 <script>
+import GroupBankTreasury from "./BasicData/GroupBankTreasury";
 import Bank from "./BasicData/Bank";
 import Currency from "./BasicData/Currency";
 import Treasury from "./BasicData/Treasury";
@@ -92,7 +101,7 @@ export default {
     Bank,
     Currency,
     Treasury,
-    // TypeExpence,
+    GroupBankTreasury,
     // TypeIncome
 
   },

@@ -11,7 +11,7 @@ use App\Models\Absence;
 use App\Models\Period;
 use App\Models\WorkSystemType;
 use App\Models\WorkType;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class WorkSystemController extends Controller
@@ -94,7 +94,9 @@ class WorkSystemController extends Controller
                     [
                         'work_system_id' => $work_systm->id,
                         'period_time_id' => $request->post('period')[$value],
-                        'day_id' => json_encode($request->post('day')[$value])
+                        'day_id' => json_encode($request->post('day')[$value]),
+                        'sort_period' => $request->post('sort_period')[$value],
+
                     ]
                 );
             }

@@ -22,16 +22,14 @@
                         style="background-color: white" />
                     </div>
                     <div class="col-md-2">
-                      <label for="desde">  اجمالي المدين </label>
-                      <input type="text" class="form-control hasDatepicker" 
-                          onkeypress="return controltag(event)"
-                        readonly/>
+                      <label for="desde"> اجمالي المدين </label>
+                      <input type="text" class="form-control hasDatepicker" onkeypress="return controltag(event)"
+                        readonly />
                     </div>
                     <div class="col-md-2">
                       <label for="desde"> اجمالي الدائن </label>
-                      <input type="text" class="form-control hasDatepicker" 
-                          onkeypress="return controltag(event)"
-                       readonly/>
+                      <input type="text" class="form-control hasDatepicker" onkeypress="return controltag(event)"
+                        readonly />
                     </div>
 
 
@@ -185,16 +183,21 @@
                   <div class="row">
                     <div class="col-md-2">
                       <label for="desde">رقم القيد </label>
-                      <input type="number" class="form-control hasDatepicker" v-model="daily"
+                      <input type="number" class="form-control hasDatepicker" v-model="daily_id"
                         onkeypress="return controltag(event)" style="background-color: white" />
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-4">
                       <label for="desde">تاريخ القيد </label>
                       <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
                         name="modal_reporte_venta_inicio" v-model="daily_date" onkeypress="return controltag(event)"
                         style="background-color: white" />
                     </div>
 
+
+                    <div class="col-sm-6 col-md-3" style="margin-top: auto;">
+                      <a @click="onwaychange()" href="#"><img src="/assets/img/search.png" alt="" style="width: 10%;">
+                      </a>
+                    </div>
 
                   </div>
                 </div>
@@ -238,6 +241,14 @@
 
 
                   </tr>
+                  <tr>
+                    <td colspan="3">الاجمالي</td>
+                    <td> <span style="color:green">{{ sum_debit }}</span></td>
+                    <td> <span style="color:green">{{ sum_credit }}</span></td>
+                    <!-- <td></td> -->
+
+
+                  </tr>
 
                 </tbody>
                 <tbody v-else>
@@ -259,7 +270,7 @@
       <!-- </form> -->
     </div>
   </div>
-</template>
+</div></template>
 <script>
 import tree from '../../../../../js/tree/tree.js';
 
@@ -296,7 +307,8 @@ export default {
       type_of_tree: 1,
       indexselected: '',
       indexselectedaccount: '',
-
+      sum_debit:'',
+      sum_credit:'',
       last_nodes: '',
 
       index: 0,
@@ -309,7 +321,7 @@ export default {
     this.type = 'Daily';
     this.counts[0] = 1;
     this.type_of_tree = 1;
-    this.showtree('account','tree_account');
+    this.showtree('account', 'tree_account');
 
 
 
@@ -323,13 +335,28 @@ export default {
       this.axios
         .post(`/daily`)
         .then(({ data }) => {
-          console.log('daily', data.daily_details.data);
+          // console.log('daily', data.daily_details.data);
           this.value_list = data.daily_details;
         })
         .catch(({ response }) => {
           console.error(response);
         });
     },
+    onwaychange() {
+
+      this.axios
+        .post(`/daily/${this.daily_id}`)
+        .then(({ data }) => {
+          console.log(data.account_details);
+          this.value_list = data.daily_details;
+          this.sum_debit = data.sum_debit;
+          this.sum_credit = data.sum_credit
+        })
+        .catch(({ response }) => {
+          console.error(response);
+        });
+    },
+
     addComponent(index) {
       // alert(index);
       this.count += 1;

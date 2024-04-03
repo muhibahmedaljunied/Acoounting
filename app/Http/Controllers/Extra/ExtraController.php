@@ -9,7 +9,7 @@ use App\Services\CoreStaffService;
 use App\Models\ExtraType;
 use Illuminate\Http\Request;
 use App\Models\Staff;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class ExtraController extends Controller
 {
@@ -88,9 +88,8 @@ class ExtraController extends Controller
             foreach ($request->post('count') as $value) {
 
                 $this->core->setValue($value);
-
+                $this->init_data_store();
                 $this->hr->store();
-
                 $this->extra_sanction->create();
             }
 
@@ -125,5 +124,17 @@ class ExtraController extends Controller
 
 
         return response()->json('successfully deleted');
+    }
+
+    public function init_data_store()
+    {
+
+        $this->hr->staff_id = $this->core->data['staff'][$this->core->value];
+        $this->hr->extra_type_id = $this->core->data['extra_type'][$this->core->value];
+        $this->hr->date = $this->core->data['date'][$this->core->value];
+        $this->hr->start_time = $this->core->data['start_time'][$this->core->value]; 
+        $this->hr->end_time = $this->core->data['end_time'][$this->core->value];
+        $this->hr->number_hours = $this->core->data['duration'][$this->core->value][0];
+
     }
 }

@@ -85,7 +85,9 @@ Route::group(['middleware' => ['auth']], function () {
     require __DIR__ . '\warehouse.php';
     require __DIR__ . '\hr.php';
     require __DIR__ . '\sale.php';
+    require __DIR__ . '\customer.php';
     require __DIR__ . '\purchase.php';
+    require __DIR__ . '\supplier.php';
     require __DIR__ . '\cash.php';
     require __DIR__ . '\supply.php';
 });

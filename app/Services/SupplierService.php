@@ -48,7 +48,8 @@ class SupplierService
         $user->last_name = $this->request->post('last_name');
         $user->email = $this->request->post('email');
         $user->phone = $this->request->post('phone');
-        $user->account_id = $this->id;
+        // $user->account_id = $this->id;
+        $user->group_id = $this->request->post('group');
         $user->address = $this->request->post('address');
         $user->save();
     }

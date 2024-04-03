@@ -8,13 +8,13 @@
                 <div class="card">
 
                     <div class="card-header">
-                    
+
                         <span class="h4"> اضافه بنك</span>
 
                     </div>
                     <div class="card-body">
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-xl-2">
                                 <label for="">الحساب المرتبط </label>
 
@@ -39,7 +39,7 @@
                             </div>
 
                         </div>
-                        <br>
+                        <br> -->
 
                         <div class="row">
 
@@ -52,13 +52,15 @@
                                             <thead>
                                                 <tr>
 
-                                                    <th> البنك </th>
+
+
+
+                                                    <th>البنك </th>
+
+                                                    <th> التصنيف </th>
+
 
                                                     <th> العمله </th>
-
-
-
-                                                    <!-- <th>رقم الحساب </th> -->
 
                                                     <th>اضافه</th>
                                                 </tr>
@@ -72,12 +74,23 @@
 
                                                     </td>
 
+                                                    <td>
+                                                        <select style="background-color:beige"
+                                                            v-model="group_selected[index]" class="form-control "
+                                                            required>
+                                                            <option v-for=" group_type in groups"
+                                                                v-bind:value="group_type.id">
+                                                                {{ group_type.name }}
+                                                            </option>
 
+                                                        </select>
+
+                                                    </td>
 
                                                     <td>
 
-                                                        <input v-model="currency[index]" type="text" class="form-control"
-                                                            name="name" id="name" required />
+                                                        <input v-model="currency[index]" type="text"
+                                                            class="form-control" name="name" id="name" required />
 
 
                                                     </td>
@@ -100,7 +113,8 @@
                                                 <tr>
                                                     <td colspan="2"></td>
                                                     <td>
-                                                        <button type="button" class="btn btn-primary" @click="Add_new()">حفظ
+                                                        <button type="button" class="btn btn-primary"
+                                                            @click="Add_new()">حفظ
                                                         </button>
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Close</button>
@@ -149,7 +163,9 @@
                                     <tr>
                                         <!-- <th class="wd-15p border-bottom-0">الرقم الوظيفي</th> -->
                                         <th class="wd-15p border-bottom-0">اسم البنك</th>
-                                        <th class="wd-15p border-bottom-0"> الحساب</th>
+                                        <th class="wd-15p border-bottom-0"> التصنيف</th>
+
+                                        <!-- <th class="wd-15p border-bottom-0"> الحساب</th> -->
                                         <!-- <th class="wd-15p border-bottom-0"> ملاجظه</th> -->
 
 
@@ -163,7 +179,7 @@
                                             {{ bank.name }}
                                         </td>
                                         <td>
-                                            {{ bank.text }} <span style="color:g;">{{ bank.account_id }}</span>
+                                            {{ bank.group_name }} 
                                         </td>
                                         <td>
                                             <button data-toggle="modal"
@@ -226,11 +242,11 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-import tree from '../../../../../js/tree/tree.js';
+// import tree from '../../../../../js/tree/tree.js';
 import operation from '../../../../../js/operation.js';
 export default {
     mixins: [
-        tree,
+        // tree,
         operation
 
     ],
@@ -244,14 +260,14 @@ export default {
                 type: Object,
                 default: null,
             },
-            account: [],
             bank: [],
             currency: [],
+            group_selected: [],
+            groups: '',
 
             // indexselectedbank: 0,
             type: '',
-            type_of_tree: 0,
-            jsonTreeData: '',
+
         }
 
     },
@@ -259,8 +275,7 @@ export default {
         this.list();
         this.counts[0] = 1;
         this.type = 'Bank';
-        this.type_of_tree == 1
-        this.showtree('account','tree_account');
+
 
 
     },
@@ -276,6 +291,8 @@ export default {
                     type: this.type,
                     name: this.bank,
                     account: this.account,
+                    group_type: this.group_selected,
+
 
                 }
                 )
@@ -298,6 +315,8 @@ export default {
                     console.log(data.banks);
 
                     this.banks = data.banks;
+                    this.groups = data.groups;
+
 
                 })
                 .catch(({ response }) => {
@@ -309,4 +328,3 @@ export default {
     },
 };
 </script>
-

@@ -12,7 +12,7 @@
           </div>
           <div class="card-body">
 
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-xl-2">
                 <label for="">الحساب المرتبط </label>
 
@@ -34,13 +34,13 @@
                   class="form-control" />
               </div>
             </div>
-            <br>
-          
-            <div class="row row-sm">
-         
+            <br> -->
 
-          
-           
+            <div class="row row-sm">
+
+
+
+
               <div class="col-xl-12">
 
 
@@ -52,16 +52,14 @@
                       <thead>
                         <tr>
 
+                      
+
                           <th>الصندوق </th>
 
-                          <!-- <th> الحساب التحليلي </th> -->
-
-                          <th>العمله </th>
+                          <th> التصنيف </th>
 
 
-                          <!-- <th>رقم الحساب </th> -->
-
-
+                          <th> العمله </th>
 
                           <th>اضافه</th>
                         </tr>
@@ -72,9 +70,18 @@
                             <input v-model="treasury[index]" type="text" class="form-control" name="name" id="name"
                               required />
                           </td>
-                   
 
 
+                          <td>
+                            <select style="background-color:beige" v-model="group_selected[index]"
+                              class="form-control " required>
+                              <option v-for=" group_type in groups" v-bind:value="group_type.id">
+                                {{ group_type.name }}
+                              </option>
+
+                            </select>
+
+                          </td>
 
 
                           <td>
@@ -168,7 +175,7 @@
                   <tr>
                     <!-- <th class="wd-15p border-bottom-0">الرقم الوظيفي</th> -->
                     <th class="wd-15p border-bottom-0">اسم الصندوق</th>
-                    <th class="wd-15p border-bottom-0"> الحساب</th>
+                    <th class="wd-15p border-bottom-0"> التصنيف</th>
 
 
 
@@ -181,8 +188,11 @@
                       {{ treasury.name }}
                     </td>
                     <td>
-                      {{ treasury.text }} {{ treasury.account_id }}
+                      {{ treasury.group_name }}
                     </td>
+                    <!-- <td>
+                      {{ treasury.text }} {{ treasury.account_id }}
+                    </td> -->
 
                     <td>
                       <button data-toggle="modal" class="tn btn-danger btn-sm waves-effect btn-agregar">
@@ -220,13 +230,11 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-import tree from '../../../../../js/tree/tree.js';
 import operation from '../../../../../js/operation.js';
 
 
 export default {
   mixins: [
-    tree,
     operation
   ],
   components: {
@@ -241,12 +249,16 @@ export default {
       },
       treasury: [],
       currency: [],
+      group_selected: [],
+      groups: '',
 
-      account: [],
+      currency: [],
+
+
+
       // indexselectedtreasury: 0,
       type: '',
-      type_of_tree: 0,
-      jsonTreeData: '',
+
     }
     // return data;
   },
@@ -255,8 +267,7 @@ export default {
     this.list();
     this.counts[0] = 1;
     this.type = 'Treasury';
-    this.type_of_tree == 1
-    this.showtree('account_treasury','tree_account');
+
 
 
 
@@ -275,6 +286,8 @@ export default {
           type: this.type,
           name: this.treasury,
           account: this.account,
+          group: this.group_selected,
+
 
 
         }
@@ -300,6 +313,8 @@ export default {
 
 
           this.treasuries = data.treasuries;
+          this.groups = data.groups;
+
 
         })
         .catch(({ response }) => {
@@ -311,5 +326,3 @@ export default {
   },
 };
 </script>
-  
-  

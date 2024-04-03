@@ -40,7 +40,7 @@
               </div>
               <!-- = -->
               <!-- <div class="m-t-20 col-md-6 col-xs-6"> -->
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="cliente">رقم الحساب</label>
 
 
@@ -54,11 +54,11 @@
 
 
 
-              </div>
-              <div class="form-group">
+              </div> -->
+              <!-- <div class="form-group">
                 <label for="status">اسم الحساب</label>
                 <input id = "Supplier_account_tree"  type="text" name="status"  class="form-control" />
-              </div>
+              </div> -->
               <!-- = -->
               <div class="form-group">
                 <label for="status">الحاله</label>
@@ -70,7 +70,7 @@
             </form>
           </div>
         </div>
-        <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -88,7 +88,7 @@
 
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!--/div-->
@@ -124,7 +124,7 @@ export default {
   mounted() {
     this.type =  'Supplier';
     this.type_of_tree =1;
-    this.showtree('account','tree_account');
+    // this.showtree('account','tree_account');
    
   },
   methods: {
@@ -140,7 +140,7 @@ export default {
       let formData = new FormData();
 
       formData.append("name", this.name);
-      formData.append("account", this.account);
+      // formData.append("account", this.account);
       formData.append("phone", this.phone);
       formData.append("email", this.email);
       formData.append("address", this.address);

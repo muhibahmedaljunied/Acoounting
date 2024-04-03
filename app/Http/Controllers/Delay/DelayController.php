@@ -86,9 +86,8 @@ class DelayController extends Controller
             foreach ($request->post('count') as $value) {
 
                 $this->core->setValue($value);
-
+                $this->init_data_store();
                 $this->hr->store();
-
                 $this->delay_sanction->create();
             }
 
@@ -106,6 +105,17 @@ class DelayController extends Controller
             ], 400);
         }
         // return response()->json(['message' => $we]);
+    }
+
+
+    public function init_data_store()
+    {
+
+
+        $this->hr->staff_id = $this->core->data['staff'][$this->core->value];
+        $this->hr->delay_type_id = $this->core->data['delay_type'][$this->core->value];
+        $this->hr->part_id = $this->core->data['delay_part'][$this->core->value];
+        $this->hr->date = $this->core->data['date'][$this->core->value];
     }
 
    

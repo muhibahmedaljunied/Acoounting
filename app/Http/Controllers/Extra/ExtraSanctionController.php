@@ -171,7 +171,7 @@ class ExtraSanctionController extends Controller
             DB::beginTransaction();
 
             $staff_sanction->update_sanction();
-            $payroll->payroll();
+            $payroll->payroll('total_extra_sanction');
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([

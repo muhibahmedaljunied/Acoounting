@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Treasury;
 use App\Models\Account;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class TreasuryController extends Controller
 {
@@ -67,11 +67,29 @@ class TreasuryController extends Controller
 
     public function show()
     {
-        $treasuries = DB::table('treasuries')
-            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
-            ->select('treasuries.*', 'accounts.text', 'accounts.id as account_id')
+        // $treasuries = DB::table('treasuries')
+        //     ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
+        //     ->select('treasuries.*', 'accounts.text', 'accounts.id as account_id')
+        //     ->paginate(10);
+
+
+        $treasuries =  DB::table('treasuries')
+            ->join('groups', 'groups.id', '=', 'treasuries.group_id')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->where('group_types.code', 'treasury')
+            ->select(
+                'treasuries.*',
+                'groups.name as group_name'
+            )
             ->paginate(10);
 
-        return response()->json(['treasuries' => $treasuries]);
+        $groups =  DB::table('groups')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->whereIn('group_types.code', ['treasury'])->select(
+                'groups.*'
+            )
+            ->get();
+
+        return response()->json(['treasuries' => $treasuries, 'groups' => $groups]);
     }
 }

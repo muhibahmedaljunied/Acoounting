@@ -161,11 +161,12 @@ export default {
 
         };
     },
-    mounted() {
-        this.type_of_tree = 0;
+    // mounted() {
+    //     this.type_of_tree = 0;
 
-    },
+    // },
     created() {
+        this.type_of_tree = 0;
         localStorage.setItem('id', 0);
         localStorage.setItem('rank', 0);
         localStorage.setItem('table', 'structure');

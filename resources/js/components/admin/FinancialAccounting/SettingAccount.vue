@@ -30,9 +30,15 @@
                         </li>
 
                         <li class="nav-item">
-                          <a href="#tab4" class="nav-link" data-toggle="tab"> المخزون </a>
+                          <a href="#tab4" class="nav-link" data-toggle="tab"> المخازن </a>
                         </li>
+                        <!-- <li class="nav-item">
+                          <a href="#tab5" class="nav-link" data-toggle="tab"> الماليه </a>
+                        </li> -->
 
+                        <li class="nav-item">
+                          <a href="#tab6" class="nav-link" data-toggle="tab"> الصناديق والبنوك </a>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -62,6 +68,13 @@
                       <div class="tab-pane" id="tab4">
                         <setting-warehouse></setting-warehouse>
                       </div>
+                      <!-- <div class="tab-pane" id="tab5">
+                        <setting-accounting></setting-accounting>
+                      </div> -->
+
+                      <div class="tab-pane" id="tab6">
+                        <another></another>
+                      </div>
 
                     </div>
                   </div>
@@ -83,6 +96,10 @@ import SettingHr from "./SettingAccount/SettingHr";
 import SettingSale from "./SettingAccount/SettingSale";
 import SettingPurchase from "./SettingAccount/SettingPurchase";
 import SettingWarehouse from "./SettingAccount/SettingWarehouse";
+// import SettingAccounting from "./SettingAccount/SettingAccounting";
+import Another from "./SettingAccount/Another";
+
+
 
 
 export default {
@@ -91,6 +108,8 @@ export default {
     SettingSale,
     SettingPurchase,
     SettingWarehouse,
+    // SettingAccounting,
+    Another
 
   },
 

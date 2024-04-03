@@ -145,6 +145,21 @@
                       </select>
                     </div>
 
+                    <div class="col-md-3">
+                      <label for="status"> ترتيب الفتره</label>
+
+                      <select  style="background-color:beige" v-model="sort_period"  class="form-control " required>
+                        <option v-bind:value=1>
+                 
+                        </option>
+
+                        <option v-bind:value=2>
+                        
+                        </option>
+
+                      </select>
+                    </div>
+
 
                   </div>
                   <br>
@@ -325,7 +340,7 @@ export default {
       period_selected: [],
       // rest_selected: [],
       period_type_selected:'',
-
+      sort_period:'',
       fieldset1: [],
       fieldset2: [],
       fieldset3: [],
@@ -367,6 +382,8 @@ export default {
           work_system_type: this.work_system_type,
           // period_type: this.period_type_selected,
           period: this.period_selected,
+          sort_period: this.sort_period,
+
           day: this.all_values,
 
         }

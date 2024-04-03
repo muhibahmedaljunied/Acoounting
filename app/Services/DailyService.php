@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Daily;
 use App\Models\DailyDetail;
+use App\Models\GroupAccount;
 use App\Models\HrStaffAccount;
 use DB;
 
@@ -30,6 +31,8 @@ class DailyService
     public function daily()
     {
 
+
+        // dd($this->core->paid);
         $daily = new Daily();
         $daily->daily_date = $this->core->data['date'];
         $daily->total = $this->core->data['grand_total'];
@@ -70,6 +73,17 @@ class DailyService
 
         if ($this->core->data['type_daily']) {
 
+
+            if ($this->core->data['type_daily'] == 'sale') {
+
+                $this->sale_daily($type);
+            }
+
+            if ($this->core->data['type_daily'] == 'purchase') {
+
+                $this->purchase_daily($type);
+            }
+
             if ($this->core->data['type_daily'] == 'hr_allowance') {
 
                 $this->allowance_daily($type);
@@ -79,13 +93,22 @@ class DailyService
 
                 $this->advance_daily($type);
             }
-            if ($this->core->data['type_daily'] == 'hr_salary') {
+            if ($this->core->data['type_daily'] == 'hr_prove_salary') {
 
-                $this->salary_daily($type);
+                $this->prove_salary_daily($type);
             }
-            if ($this->core->data['type_daily'] == 'hr_all_salary') {
+            if ($this->core->data['type_daily'] == 'hr_all_prove_salary') {
 
-                $this->salary_daily_all($type);
+                $this->prove_salary_daily_all($type);
+            }
+
+            if ($this->core->data['type_daily'] == 'hr_paid_salary') {
+
+                $this->paid_salary_daily($type);
+            }
+            if ($this->core->data['type_daily'] == 'hr_all_paid_salary') {
+
+                $this->paid_salary_daily_all($type);
             }
         } else {
 
@@ -116,7 +139,7 @@ class DailyService
     {
 
 
-        
+
         if ($type == 'debit') {
 
             $this->debit = ($i == 0) ? $this->core->data['grand_total'] : $this->core->data[$type]['paid'][$i];
@@ -167,7 +190,7 @@ class DailyService
 
         return $this->data_daily_detail();
     }
-    public function set_daily_data_salary_hr($type)
+    public function set_daily_data_prove_salary_hr($type)
     {
 
 
@@ -188,17 +211,58 @@ class DailyService
 
         return $this->data_daily_detail($type);
     }
-    public function set_daily_data_salary_hr_all($type)
+    public function set_daily_data_prove_salary_hr_all($type)
     {
 
 
 
         if ($type == 'credit') {
 
- 
+
             $this->credit = $this->core->data['data_staff'][$this->core->value]['salary'];
             $this->account_id = $this->core->data[$type]['credit_account_id'][0]['account_id'];
- 
+        }
+
+        if ($type == 'debit') {
+
+            $this->debit = $this->core->data['data_staff'][$this->core->value]['salary'];
+            $this->account_id = $this->core->data[$type]['debit_account_id'][0]['account_second_id'];
+        }
+
+        return $this->data_daily_detail($type);
+    }
+
+    public function set_daily_data_paid_salary_hr($type)
+    {
+
+
+
+
+        if ($type == 'credit') {
+
+            $this->credit = $this->core->data[$type]['paid'];
+            $this->account_id = $this->core->data[$type]['credit_account_id'][0]['account_id'];
+        }
+
+        if ($type == 'debit') {
+
+            // dd($this->core->data[$type]['debit_account_id'][0]['account_second_id']);
+            $this->debit = $this->core->data[$type]['paid'];
+            $this->account_id = $this->core->data[$type]['debit_account_id'][0]['account_second_id'];
+        }
+
+        return $this->data_daily_detail($type);
+    }
+    public function set_daily_data_paid_salary_hr_all($type)
+    {
+
+
+
+        if ($type == 'credit') {
+
+
+            $this->credit = $this->core->data['data_staff'][$this->core->value]['salary'];
+            $this->account_id = $this->core->data[$type]['credit_account_id'][0]['account_id'];
         }
 
         if ($type == 'debit') {
@@ -247,12 +311,12 @@ class DailyService
         }
     }
 
-    public function salary_daily($type)
+    public function prove_salary_daily($type)
     {
 
 
 
-        $debit_data = $this->set_daily_data_salary_hr($type);
+        $debit_data = $this->set_daily_data_prove_salary_hr($type);
 
         $daily_detail = DailyDetail::create($debit_data);
 
@@ -266,25 +330,102 @@ class DailyService
             ]);
         }
     }
-    public function salary_daily_all($type)
+    public function prove_salary_daily_all($type)
     {
 
 
 
-        $debit_data = $this->set_daily_data_salary_hr_all($type);
+        $debit_data = $this->set_daily_data_prove_salary_hr_all($type);
 
         $daily_detail = DailyDetail::create($debit_data);
 
 
         if ($type == 'credit') {
 
-       
+
             HrStaffAccount::create([
                 'daily_detail_id' => $daily_detail->id,
                 'hr_account_id' => $this->core->data[$type]['credit_account_id'][0]['hr_account_id'],
                 'staff_id' => $this->core->data['data_staff'][$this->core->value]['id']
             ]);
         }
+    }
+
+    public function paid_salary_daily($type)
+    {
+
+
+
+        $debit_data = $this->set_daily_data_paid_salary_hr($type);
+
+        $daily_detail = DailyDetail::create($debit_data);
+
+
+        if ($type == 'debit') {
+
+            HrStaffAccount::create([
+                'daily_detail_id' => $daily_detail->id,
+                'hr_account_id' => $this->core->data[$type]['credit_account_id'][0]['hr_account_id'],
+                'staff_id' => $this->core->data[$type]['staff']
+            ]);
+        }
+    }
+    public function paid_salary_daily_all($type)
+    {
+
+
+
+        $debit_data = $this->set_daily_data_paid_salary_hr_all($type);
+
+        $daily_detail = DailyDetail::create($debit_data);
+
+
+        if ($type == 'debit') {
+
+
+            HrStaffAccount::create([
+                'daily_detail_id' => $daily_detail->id,
+                'hr_account_id' => $this->core->data[$type]['credit_account_id'][0]['hr_account_id'],
+                'staff_id' => $this->core->data['data_staff'][$this->core->value]['id']
+            ]);
+        }
+    }
+
+    public function sale_daily($type)
+    {
+
+
+        $data = $this->set_daily_data(0, $type);
+        $daily_detail =  DailyDetail::create($data);
+        // if ($type == 'credit') {
+        //     GroupAccount::create([
+        //         'daily_detail_id' => $daily_detail->id,
+        //     ]);
+
+        // }
+
+    }
+
+    public function purchase_daily($type)
+    {
+
+
+        dd($this->core->data[$type][$type . '_account_id']);
+        for ($i = 1; $i < count($this->core->data[$type][$type . '_account_id']); $i++) {
+
+            $debit_data = $this->set_daily_data($i, $type);
+            $daily_detail = DailyDetail::create($debit_data);
+
+             // if ($type == 'debit') {
+            //     GroupAccount::create([
+            //         'daily_detail_id' => $daily_detail->id,
+            //     ]);
+
+        // }
+
+        }
+
+     
     }
 
 
@@ -295,7 +436,6 @@ class DailyService
         for ($i = 1; $i < count($this->core->data[$type][$type . '_account_id']); $i++) {
 
             $debit_data = $this->set_daily_data($i, $type);
-
             DailyDetail::create($debit_data);
         }
     }

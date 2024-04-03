@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\StoreImport;
 use App\Exports\StoreExport;
 use App\Models\Store;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -99,6 +99,36 @@ class StoreController extends Controller
 
         return response()->json($request);
     }
+
+    public function get_store_account_setting()
+    {
+
+
+
+        $store_accounts =  DB::table('stores')
+            ->join('accounts', 'accounts.id', '=', 'stores.account_id')
+            ->select(
+                'stores.id as store_id',
+                'stores.text as store_name',
+                'accounts.id as account_id',
+                'accounts.text as account_name'
+            )
+            ->get();
+            // dd($store_accounts);
+        return response()->json(['store_accounts' => $store_accounts]);
+    }
+
+    public function store_store_account_setting(Request $request)
+    {
+
+
+        $stores = Store::find($request['store_id']);
+        $stores->update(['account_id' => $request['account_id']]);
+
+
+        return response()->json(['message' => 'sucess']);
+    }
+
     public function add_store($request)
     {
 
@@ -144,7 +174,7 @@ class StoreController extends Controller
             $store = new Store();
             $store->text = $request['text'];
             $store->id = $request->store_id;
-            $store->account_id = $id;
+            // $store->account_id = $id;
             if ($request['parent'] != 0) {
                 $store->parent_id = $request['parent'];
             }

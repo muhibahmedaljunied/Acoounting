@@ -8,4 +8,9 @@ class Customer extends Model
     protected $fillable = [
         'id','account_id','name','email','phone','address','status'
     ];
+
+    public function daily()
+    {
+        return $this->morphMany(GroupAccount::class, 'dailyable');
+    }
 }

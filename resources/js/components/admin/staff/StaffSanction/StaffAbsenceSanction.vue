@@ -325,7 +325,7 @@ export default {
     border: none;
     font-size: 20px;
     box-shadow: 0 5px 18px rgb(93, 15, 9);
-    -webkit-appearance: button;
+    /* -webkit-appearance: button; */
     outline: none;
 }
 </style>

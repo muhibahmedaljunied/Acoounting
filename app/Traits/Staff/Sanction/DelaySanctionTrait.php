@@ -3,7 +3,7 @@
 namespace App\Traits\staff\Sanction;
 
 use App\Models\DelaySanction;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 trait DelaySanctionTrait
 {
@@ -39,7 +39,7 @@ trait DelaySanctionTrait
     public function get()
     {
 
-        $this->core->data_sanction = DB::table('delay_sanctions')
+        $this->attendance_core->data_sanction = DB::table('delay_sanctions')
             ->join('delay_types', 'delay_types.id', '=', 'delay_sanctions.delay_type_id')
             ->join('parts', 'parts.id', '=', 'delay_sanctions.part_id')
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'delay_sanctions.sanction_discount_id')
@@ -52,12 +52,13 @@ trait DelaySanctionTrait
                 'sanction_discounts.*'
             )
             ->get();
+      
     }
 
     public function show($id)
     {
 
 
-        $this->core->specific_sanction = DelaySanction::find($id);
+        $this->attendance_core->specific_sanction = DelaySanction::find($id);
     }
 }

@@ -66,8 +66,17 @@
           </div>
 
 
-          <br>
-          <hr>
+       
+
+
+          <pagination align="center" :data="value_list" @pagination-change-page="list"></pagination>
+        </div>
+      </div>
+      <div class="card">
+    
+        <div class="card-body">
+
+       
           <div class="row">
 
             <div class="col-sm-12">

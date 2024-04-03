@@ -67,9 +67,9 @@ class SupplyController extends Controller
 
         return response()->json([
             'products' => $products,
-            'suppliers' => $this->suppliers(),
+            // 'suppliers' => $this->suppliers(),
             'statuses' => Status::all(),
-            'treasuries' => $this->treasuries()
+            // 'treasuries' => $this->treasuries()
         ]);
     }
 

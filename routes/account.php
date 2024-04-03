@@ -19,6 +19,7 @@ Route::post('/account_store_first_level', 'Account\AccountController@account_sto
 
 Route::post('/account_rename_node/{id}', 'Account\AccountController@account_rename_node');
 Route::post('/daily', 'Account\DailyController@index');
+Route::post('/daily/{id}', 'Account\DailyController@show');
 Route::post('/store_daily', 'Account\DailyController@store');
 // ---------------------------------------------
 Route::post('/get_account_main/{id}', 'Account\AccountController@get_account_main');
@@ -29,6 +30,12 @@ Route::post('/auditBalance', 'Account\AccountController@auditBalance');
 // --------------------------------banks------------------------------------------
 Route::post('/banks', 'Account\BankController@show');
 Route::post('/store_bank', 'Account\BankController@store');
+Route::post('/get_bank_treasury', 'Account\AccountController@get_bank_treasury');
+
+Route::post('/group_bank_treasury', 'Account\AccountController@get_group_bank_treasury');
+
+Route::post('/get_group_accounts_details_details/{id}', 'Account\AccountController@get_group_accounts_details_details');
+
 // --------------------------------Currencies------------------------------------------
 Route::post('/currencies', 'Account\CurrencyController@show');
 // --------------------------------treasuries------------------------------------------
@@ -67,6 +74,9 @@ Route::post('export_account', [AccountController::class, 'export']);
 
 Route::post('/store_account_period', 'Account\PeriodController@store_account_period');
 Route::post('/account_year', 'Account\PeriodController@index');
+
+Route::post('/get_account_account_setting', 'Account\AccountController@get_account_account_setting');
+
 
 
 

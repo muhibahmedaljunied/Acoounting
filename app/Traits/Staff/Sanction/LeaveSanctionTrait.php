@@ -3,7 +3,7 @@
 namespace App\Traits\staff\Sanction;
 
 use App\Models\LeaveSanction;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 trait LeaveSanctionTrait
 {
@@ -35,7 +35,7 @@ trait LeaveSanctionTrait
     public function get()
     {
 
-        $this->core->data_sanction =  DB::table('leave_sanctions')
+        $this->attendance_core->data_sanction =  DB::table('leave_sanctions')
             ->join('leave_types', 'leave_types.id', '=', 'leave_sanctions.leave_type_id')
             ->join('parts', 'parts.id', '=', 'leave_sanctions.part_id')
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'leave_sanctions.sanction_discount_id')
@@ -54,7 +54,7 @@ trait LeaveSanctionTrait
     {
 
 
-        $this->core->specific_sanction = LeaveSanction::find($id);
+        $this->attendance_core->specific_sanction = LeaveSanction::find($id);
       
     }
 

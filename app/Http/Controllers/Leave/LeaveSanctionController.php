@@ -137,13 +137,14 @@ class LeaveSanctionController extends Controller
 
 
 
+        // dd($request->all());
         $this->core->data = $request->all();
         try {
 
             DB::beginTransaction();
 
             $staff_sanction->update_sanction();
-            $payroll->payroll();
+            $payroll->payroll('total_leave_sanction');
       
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB

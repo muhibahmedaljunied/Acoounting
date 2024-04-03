@@ -6,7 +6,10 @@ use App\Models\Delay;
 
 class DelayRepository 
 {
-    
+    public $staff_id;
+    public $delay_type_id;
+    public $part_id;
+    public $date;
     public function __construct(public CoreStaffService $core)
     {
 
@@ -33,10 +36,10 @@ class DelayRepository
     //   dd($this->core->data['delay_part'][$this->core->value]);
         $temporale = Delay::updateOrCreate(
             [
-                'staff_id' => $this->core->data['staff'][$this->core->value],
-                'delay_type_id' => $this->core->data['delay_type'][$this->core->value],
-                'part_id' => $this->core->data['delay_part'][$this->core->value],
-                'date' => $this->core->data['date'][$this->core->value]
+                'staff_id' => $this->staff_id,
+                'delay_type_id' => $this->delay_type_id,
+                'part_id' => $this->part_id,
+                'date' => $this->date
 
             ]
         ); 

@@ -3,7 +3,7 @@
 namespace App\Traits\staff\Sanction;
 
 use App\Models\AbsenceSanction;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 trait AbsenceSanctionTrait
 {
@@ -37,7 +37,7 @@ trait AbsenceSanctionTrait
     public function get()
     {
 
-        $this->core->data_sanction = DB::table('absence_sanctions')
+        $this->attendance_core->data_sanction = DB::table('absence_sanctions')
             ->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id')
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
             ->select(
@@ -55,7 +55,7 @@ trait AbsenceSanctionTrait
     {
 
 
-        $this->core->specific_sanction = AbsenceSanction::find($id);
+        $this->attendance_core->specific_sanction = AbsenceSanction::find($id);
       
     }
 }

@@ -65,8 +65,8 @@ class CashController extends Controller
         return response()->json([
             'products' => $products,
             'units' => $units,
-            'customers' => $this->customers(),
-            'treasuries' => $this->treasuries(),
+            // 'customers' => $this->customers(),
+            // 'treasuries' => $this->treasuries(),
 
         ]);
     }
@@ -107,6 +107,7 @@ class CashController extends Controller
                 'products.*',
                 'products.text as product',
                 'stores.text as store',
+                'stores.account_id as store_account_id',
                 'statuses.name as status',
                 'store_products.quantity as availabe_qty',
                 'store_products.*',
@@ -128,6 +129,7 @@ class CashController extends Controller
                 'products.*',
                 'products.text as product',
                 'stores.text as store',
+                'stores.account_id as store_account_id',
                 'statuses.name as status',
                 'store_products.quantity as availabe_qty',
                 'store_products.*',

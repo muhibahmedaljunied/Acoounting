@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::post('/customer', 'Sale\CustomerController@index');
-Route::post('/customer/customer_account_list/{id}', 'Sale\CustomerController@show');
-Route::post('/store_customer', 'Sale\CustomerController@store');
+
 Route::post('/sale/newsale', 'Sale\SaleController@index');
 Route::post('/sale/newsale/{id}', 'Sale\SaleController@index');
 Route::post('/listsale', 'Sale\SaleController@show');
@@ -30,6 +28,8 @@ Route::post('/receivable_bond/{id}', 'Sale\ReceivableBondController@receivable_b
 Route::post('/receivable_bond_list', 'Sale\ReceivableBondController@receivableBondlist');
 Route::post('/data_for_receivable_bond/{id}', 'Sale\ReceivableBondController@receivable_bond');
 Route::post('/store_ReceivableBond', 'Sale\ReceivableBondController@store_ReceivableBond');
+Route::post('/get_sale_account_setting', 'Sale\SaleController@get_sale_account_setting');
+
 
 
 

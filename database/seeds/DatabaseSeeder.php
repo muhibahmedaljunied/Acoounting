@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\DB;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -205,11 +205,14 @@ class DatabaseSeeder extends Seeder
         DB::table('delay_types')->insert([
             'id'        => 1,
             'name'    => 'يوم السبت',
+            'code'=>'sat',
 
         ]);
         DB::table('delay_types')->insert([
             'id'        => 2,
             'name'    => 'يوم الخميس',
+            'code'=>'tue',
+
 
         ]);
 

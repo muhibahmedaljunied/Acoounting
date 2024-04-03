@@ -9,6 +9,7 @@ use App\Repository\Stock\SaleRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Http\Controllers\Controller;
+use App\Models\HrAccount;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use App\Services\UnitService;
@@ -63,8 +64,6 @@ class SaleController extends Controller
         return response()->json([
             'products' => $products,
             'units' => $units,
-            'customers' => $this->customers(),
-            'treasuries' => $this->treasuries(),
 
         ]);
     }
@@ -105,6 +104,7 @@ class SaleController extends Controller
                 'products.*',
                 'products.text as product',
                 'stores.text as store',
+                'stores.account_id as store_account_id',
                 'statuses.name as status',
                 'store_products.quantity as availabe_qty',
                 'store_products.*',
@@ -124,8 +124,10 @@ class SaleController extends Controller
             ->joinall()
             ->select(
                 'products.*',
+                // 'accounts.id as account_id',
                 'products.text as product',
                 'stores.text as store',
+                'stores.account_id as store_account_id',
                 'statuses.name as status',
                 'store_products.quantity as availabe_qty',
                 'store_products.*',
@@ -149,7 +151,7 @@ class SaleController extends Controller
     ) {
 
 
-        // dd($this->core->data);
+        dd($this->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -234,6 +236,28 @@ class SaleController extends Controller
 
     }
 
+    public function get_sale_account_setting()
+    {
+
+
+
+        $accounts = HrAccount::with(
+            [
+                'account' => function ($query) {
+                    $query->select('*', 'text as first_name');
+                },
+                'account_second' => function ($query) {
+                    $query->select('*', 'text as second_name');
+                }
+            ]
+        )->select('hr_accounts.*', 'hr_accounts.name as account_name')
+            ->get();
+
+        // dd($accounts);
+        $count_account = HrAccount::all()->count();
+
+        return response()->json(['accounts' => $accounts, 'count_account' => $count_account]);
+    }
     public function show()
     {
 

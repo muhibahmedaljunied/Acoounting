@@ -132,16 +132,18 @@ class DelaySanctionController extends Controller
         )
     {
 
-
-        $this->core->data = $request->all();
         // dd($request->all());
+        $this->core->data = $request->all();
+   
         try {
 
             DB::beginTransaction();
 
             $staff_sanction->update_sanction();
-            $payroll->payroll();
+    
+            $payroll->payroll('total_delay_sanction');
   
+    
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([

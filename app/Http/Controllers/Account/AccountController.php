@@ -10,6 +10,12 @@ use App\Models\DailyDetail;
 use Illuminate\Http\Request;
 use App\Exports\AccountExport;
 use App\Imports\AccountImport;
+use App\Models\Bank;
+use App\Models\Customer;
+use App\Models\GroupType;
+use App\Models\HrAccount;
+use App\Models\Supplier;
+use App\Models\Treasury;
 use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
@@ -26,6 +32,51 @@ class AccountController extends Controller
         return response()->json(['accounts' => $accounts]);
     }
 
+    public function get_group_accounts_details_details(Request $request)
+    {
+
+
+        $groups = DB::table('groups')
+            ->where('groups.account_id', $request->id)
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->select('groups.id', 'group_types.code')
+            ->get();
+
+        foreach ($groups as $key => $value) {
+
+            // dd($value->code);
+            if ($value->code == 'customer') {
+
+                $data = Customer::where('customers.group_id',$value->id)
+                    ->select('customers.*')
+                    ->get();
+            }
+
+            if ($value->code == 'supplier') {
+
+                $data = Supplier::where('suppliers.group_id',$value->id)
+                    ->select('suppliers.*')
+                    ->get();
+            }
+
+            if ($value->code == 'treasury') {
+
+                $data = Treasury::where('treasuries.group_id',$value->id)
+                    ->select('treasuries.*')
+                    ->get();
+            }
+
+            if ($value->code == 'bank') {
+
+                $data = Bank::where('banks.group_id',$value->id)
+                    ->select('banks.*')
+                    ->get();
+            }
+        }
+
+
+        return response()->json(['result_data' => $data]);
+    }
     public function get_account(Request $request)
     {
 
@@ -107,7 +158,79 @@ class AccountController extends Controller
     }
 
 
+    // public function get_account_account_setting()
+    // {
 
+
+
+    //     $accounts = HrAccount::with(
+    //         [
+    //             'account' => function ($query) {
+    //                 $query->select('*', 'text as first_name');
+    //             },
+    //             'account_second' => function ($query) {
+    //                 $query->select('*', 'text as second_name');
+    //             }
+    //         ]
+    //     )->select('hr_accounts.*', 'hr_accounts.name as account_name')
+    //         ->get();
+
+    //     // dd($accounts);
+    //     $count_account = HrAccount::all()->count();
+
+    //     return response()->json(['accounts' => $accounts, 'count_account' => $count_account]);
+    // }
+
+
+    public function get_group_bank_treasury()
+    {
+
+
+        $groups =  DB::table('groups')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->whereIn('group_types.code', ['bank', 'treasury'])
+            // ->where('group_types.code','treasury')
+            ->select(
+                'groups.*',
+                'group_types.name as type_name'
+            )
+            ->get();
+
+        $group_types =  DB::table('group_types')->whereIn('group_types.code', ['bank', 'treasury'])->select(
+            'group_types.name as type_name'
+        )
+            ->get();
+        return response()->json(['groups' => $groups, 'group_types' => $group_types]);
+    }
+    public function get_bank_treasury()
+    {
+
+
+        $treasury_groups =  DB::table('groups')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->whereIn('group_types.code', ['treasury'])
+            // ->where('group_types.code','treasury')
+            ->select(
+                'groups.*',
+                'group_types.name as type_name'
+            )
+            ->get();
+
+        $bank_groups =  DB::table('groups')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->whereIn('group_types.code', ['bank'])
+            // ->where('group_types.code','treasury')
+            ->select(
+                'groups.*',
+                'group_types.name as type_name'
+            )
+            ->get();
+
+        return response()->json([
+            'treasury_groups' => $treasury_groups,
+            'bank_groups' => $bank_groups,
+        ]);
+    }
     public function account_details_node($id)
     {
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Models\AdministrativeStructure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AdministrativeStructureController extends Controller

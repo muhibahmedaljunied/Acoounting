@@ -22,7 +22,9 @@
 
                   <input style="background-color: beige;" :id="'Purchase_store_tree'" type="text" readonly
                     class="custom-search-input">
-                  <input :id="'Purchase_store_tree_id'" type="hidden" readonly>
+                  <input :id="'Purchase_store_tree_id'" type="hidden" readonly class="custom-search-input">
+                  <input :id="'select_account_Purchase'" type="hidden" readonly class="custom-search-input">
+
 
                   <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(index)"
                     data-target="#exampleModalStore">
@@ -30,21 +32,20 @@
                 </div>
 
               </div>
+              <div class="col-md-4">
+                <h5 class="card-title"> الحساب</h5>
+                <div class="custom-search">
 
-              <div class="col-md-2">
-                <label for="pagoPrevio">اسم الحساب</label>
-                <select class="form-control" style="background-color: beige;" name="forma_pago"
-                  id="select_account_Purchase">
+                  <input :id="'Purchase_account_tree'" type="text" readonly class="custom-search-input">
+                  <input :id="'Purchase_account_tree_id'" type="hidden" readonly class="custom-search-input">
 
-                </select>
 
+                  <button class="custom-search-botton" type="button" data-toggle="modal"
+                    data-target="#exampleModalAccount">
+                    <i class="fa fa-plus-circle"></i></button>
+                </div>
               </div>
-
-
-
-
-
-
+           
             </div>
 
             <hr>
@@ -62,38 +63,19 @@
                 </select>
               </div>
 
-              
+
+           
+          
+
               <div class="col-md-2">
-                <label for="cliente"> المورد</label>
+                <label for="cliente"> الحساب التفصيلي</label>
 
-                <select class="form-control" style="background-color: beige;" v-model="supplier" id="supplier">
-                  <option v-for="sup in suppliers" v-bind:value="[sup.id, sup.name, sup.account_id]">
-                    {{ sup.name }}
-                  </option>
-                </select>
-              </div>
+                <select class="form-control" style="background-color: beige;" name="forma_pago" 
+                  id="select_account_Purchase_group">
 
-              <div class="col-md-2" v-if="show_treasury == true">
-                <label for="pagoPrevio">الصندوق</label>
-                <select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
-                  <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
-                    {{ tre.name }}
-                  </option>
                 </select>
 
               </div>
-
-              <div class="col-md-2" v-if="show_bank == true">
-                <label for="pagoPrevio">البنك</label>
-                <select class="form-control" style="background-color: beige;" v-model="treasury" id="supplier">
-                  <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
-                    {{ tre.name }}
-                  </option>
-                </select>
-
-              </div>
-
-
 
               <div class="col-md-4">
                 <label for="pagoPrevio">البيان</label>
@@ -178,8 +160,8 @@
                       <td>
                         <div id="factura_producto">
 
-                          <select v-on:change="calculate_price(index)" style="background-color: beige;" v-model="unit[index]" name="type"
-                            :id="'select_unit' + index" class="form-control" required>
+                          <select v-on:change="calculate_price(index)" style="background-color: beige;"
+                            v-model="unit[index]" name="type" :id="'select_unit' + index" class="form-control" required>
 
                           </select>
                         </div>
@@ -187,8 +169,8 @@
 
 
                       <td>
-                        <input v-on:input="calculate_price(index)" style="background-color: beige;" type="number" v-model="price[index]" id="qty"
-                          class="form-control" />
+                        <input v-on:input="calculate_price(index)" style="background-color: beige;" type="number"
+                          v-model="price[index]" id="qty" class="form-control" />
                       </td>
                       <td>
                         <input style="background-color: beige;" @input="calculate_price(index)" type="number"
@@ -403,6 +385,27 @@
         </div>
       </div>
 
+      <div class="modal fade" id="exampleModalAccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="well" id="treeview_json_account"></div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
 
 
     </div>
@@ -469,8 +472,10 @@ export default {
 
     this.type_of_tree = 1;
 
-    this.showtree('store','tree_store');
-    this.showtree('product','tree_product');
+    this.showtree('store', 'tree_store');
+    this.showtree('product', 'tree_product');
+    this.showtree('account', 'tree_account');
+
 
 
 
@@ -644,7 +649,7 @@ export default {
 
     onwaychange(e) {
       this.paid = 0;
-      this.remaining  = 0;
+      this.remaining = 0;
       let input = e.target;
       this.type_payment = input.value;
       if (input.value == 2) {
@@ -667,35 +672,19 @@ export default {
         this.paid = this.grand_total;
       }
     },
-   
+
 
     payment() {
 
 
       if (this.Way_to_pay_selected == 1) { //this is default if user not detect any way
-        
+
         this.paid = this.grand_total;
 
       }
-      var credit_account_id = 0;
-      if (this.Way_to_pay_selected == 1) {
-        
-        credit_account_id = this.treasury[2];
 
-      } 
-      if (this.Way_to_pay_selected == 2) {
-        
-        credit_account_id = this.supplier[2];
 
-      }
 
-      // if (Way_to_pay_selected == 3) {
-        
-      //   credit_account_id = 0;
-
-      // }
-      
-      
       this.To_pay = this.grand_total;
       this.axios
         .post(`/payPurchase`, {
@@ -713,13 +702,17 @@ export default {
           description: this.description,
           type_refresh: this.type_refresh,
           // -------------this for dailies----------------------------------------------
-          debit:{
+          debit: {
             debit_account_id: $(`#select_account_${this.type}`).val(),
           },
-          credit:{
-            credit_account_id: credit_account_id,
+          credit: {
+            
+            credit_account_id: $(`#Purchase_account_tree_id`).val(),
           },
           // -----------------------------------------------------------
+          account_details: $(`#select_account_${this.type}_group`).val(),
+
+          type_daily:'purchase',
           supplier_id: this.supplier[0],
           supplier_name: this.supplier[1],
           date: this.date,
@@ -764,5 +757,3 @@ export default {
   },
 };
 </script>
-
-

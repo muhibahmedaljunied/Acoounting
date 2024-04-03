@@ -35,7 +35,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="status">نظام العمل</label>
                                 <select @change="get_period(work_selected)" v-model="work_selected" name="type"
                                     class="form-control " required>
@@ -55,7 +55,7 @@
                             <span id='select_work_type'></span>
                            
                         </div> -->
-                            <div class="col-md-2">
+                            <div class="col-md-4">
 
 
 
@@ -71,22 +71,17 @@
 
                             </div>
 
-                            <div class="col-md-4">
-                                <label for="status"> التأريخ</label>
-                                <input class="form-control" type="date" name="" id="" v-model="attendance_date">
+                            <div class="col-md-3">
+                                <label> ترتيب الفتره</label>
+
+                                <span id="sort_period">
+                                    <input type="number" class="form-control">
+
+
+                                </span>
 
 
                             </div>
-
-
-
-                        </div>
-
-                        <div class="row">
-
-
-
-
 
                             <div class="col-md-3">
                                 <label> بدايه الفتره</label>
@@ -112,6 +107,24 @@
 
 
                             </div>
+
+
+
+
+                        </div>
+
+                        <div class="row">
+
+
+
+                            <div class="col-md-4">
+                                <label for="status"> التأريخ</label>
+                                <input class="form-control" type="date" name="" id="" v-model="attendance_date">
+
+
+                            </div>
+
+
 
 
 
@@ -164,7 +177,10 @@
                                             <th class="wd-10p border-bottom-0">عدد الساعات</th>
                                             <th class="wd-10p border-bottom-0">مده التأخير</th>
                                             <th class="wd-10p border-bottom-0"> الانصراف قبل الدوام</th>
-                                            <th class="wd-10p border-bottom-0"> الاضافي</th>
+                                            <th class="wd-10p border-bottom-0"> الاضافي قبل الدوام</th>
+
+                                            <th class="wd-10p border-bottom-0"> الاضافي بعد الدوام</th>
+
 
                                             <th>اضافه</th>
 
@@ -178,6 +194,7 @@
                                             <!-- <input v-model="staff_id = staff.id" type="hidden" name="name" id="name"
                                             class="form-control" /> -->
                                             <td>{{ staff.name }}</td>
+
 
 
                                             <template v-if="staff.details">
@@ -200,8 +217,8 @@
                                                     <td>
                                                         <label for="out" style="color:red"> انصراف</label>
                                                         <input v-if="staff.attendance_final == 'complete'" type="time"
-                                                            name="out" v-bind:id='"out" + indexs' 
-                                                            :value="details.check_out" >
+                                                            name="out" v-bind:id='"out" + indexs'
+                                                            :value="details.check_out">
                                                         <input v-else type="time" name="out" v-bind:id='"out" + indexs'>
 
 
@@ -213,8 +230,6 @@
 
 
                                                 </div>
-
-
                                                 <td v-for="details_duration in staff.details">
 
 
@@ -243,9 +258,21 @@
                                                 </td>
                                                 <td v-for="details_extra in staff.details">
 
-                                                    <input v-bind:id='"attendance_extra" + indexs' type="text"
+                                                   <input v-bind:id='"attendance_extra" + indexs' type="text"
                                                         class="form-control" readonly>
                                                     <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
+                                                        class="form-control" readonly :value="details_extra.extra">
+
+
+                                              
+                                                </td>
+
+                                                <td v-for="details_extra in staff.details">
+
+                                                  
+                                                    <input v-bind:id='"attendance_extra_s" + indexs' type="text"
+                                                        class="form-control" readonly>
+                                                    <input v-bind:id='"attendance_extra_s_hidden" + indexs' type="hidden"
                                                         class="form-control" readonly :value="details_extra.extra">
 
                                                 </td>
@@ -310,6 +337,19 @@
                                                     <input v-bind:id='"attendance_extra" + indexs' type="text"
                                                         class="form-control">
                                                     <input v-bind:id='"attendance_extra_hidden" + indexs' type="hidden"
+                                                        class="form-control">
+
+
+
+
+                                                </td>
+
+                                                <td>
+                                                
+
+                                                    <input v-bind:id='"attendance_extra_s" + indexs' type="text"
+                                                        class="form-control">
+                                                    <input v-bind:id='"attendance_extra_s_hidden" + indexs' type="hidden"
                                                         class="form-control">
 
                                                 </td>
@@ -390,6 +430,8 @@ export default {
             delay: [],
             leave: [],
             extra: [],
+            extra_after: [],
+
             check_state: [],
             date: [],
             fieldset1: [],
@@ -429,6 +471,7 @@ export default {
                     staff: this.staff,
                     period: this.period_selected,
                     code: $(`#code`).val(),
+                    sort_period: $(`#sort_period_time`).val(),
                     attendance_date: this.attendance_date,
                     attendance_final: this.attendance_final,
                     work_type: this.work_type_selected,
@@ -439,6 +482,8 @@ export default {
                     delay: this.delay,
                     leave: this.leave,
                     extra: this.extra,
+                    extra_after: this.extra_after,
+
                     type_leave_delay: type,
 
                     attendance_in_out: this.attendance_in_out,
@@ -519,7 +564,9 @@ export default {
             $(`#attendance_duration_hidden${index}`).val(mm + (hh * 60));
             this.calc_delay(index);
             this.calc_leave(index);
-            this.calc_extra(index);
+            this.calc_extra_before(index);
+            this.calc_extra_after(index);
+
 
 
 
@@ -563,7 +610,8 @@ export default {
 
 
 
-            } else {
+            }
+            else {
 
                 [time, mm, hh] = this.get_diff(date1, date2);
 
@@ -576,7 +624,7 @@ export default {
             }
 
         },
-        calc_extra(index) {
+        calc_extra_before(index) {
 
 
             var time, mm, hh;
@@ -594,6 +642,8 @@ export default {
 
 
             var date = this.attendance_date.split("-");
+
+            console.log('almd', date[0], date[1], date[2], split_in[0], split_out[0], split_in[1], split_out[1])
             var date1 = new Date(date[0], date[1], date[2], split_in[0], split_in[1]); // 9:00 AM
             var date2 = new Date(date[0], date[1], date[2], split_out[0], split_out[1]); // 5:00 PM
 
@@ -615,6 +665,60 @@ export default {
                 this.extra[index] = 0;
                 $(`#attendance_extra${index}`).val(`${0}ساعه,${0}دقيقه`);
                 $(`#attendance_extra_hidden${index}`).val(0);
+
+
+
+
+
+            }
+
+        },
+
+        calc_extra_after(index) {
+
+
+            var time, mm, hh;
+            var date1, date2;
+            for (let i = 0; i < this.period_times.length; i++) {
+
+                if (this.period_times[i].period_id == this.period_selected) {
+
+                    var split_in = this.period_times[i].into_time.split(":");
+                    var split_out = this.check_out[index].split(":");
+
+                }
+
+            }
+
+
+            var date = this.attendance_date.split("-");
+
+            console.log('almd', date[0], date[1], date[2], split_in[0], split_out[0], split_in[1], split_out[1])
+            var date1 = new Date(date[0], date[1], date[2], split_in[0], split_in[1]); // 9:00 AM
+            var date2 = new Date(date[0], date[1], date[2], split_out[0], split_out[1]); // 5:00 PM
+
+            // --------------------------------------------------------------------------------------------
+
+            if (date2 > date1) {
+
+                [time, mm, hh] = this.get_diff(date1, date2);
+
+                this.extra_after[index] = time;
+
+
+                $(`#attendance_extra_s${index}`).val(`${hh}ساعه,${mm}دقيقه`);
+                $(`#attendance_extra_s_hidden${index}`).val(time);
+
+
+            } else {
+
+                [time, mm, hh] = this.get_diff(date2, date1);
+
+                this.extra_after[index] = 0;
+
+
+                $(`#attendance_extra_s${index}`).val(`${0}ساعه,${0}دقيقه`);
+                $(`#attendance_extra_s_hidden${index}`).val(0);
 
 
 
@@ -642,34 +746,34 @@ export default {
             var date2 = new Date(date[0], date[1], date[2], split_out[0], split_out[1]); // 5:00 PM
 
 
-            // if (date2 < date1) {
+            if (date2 < date1) {
 
-            //     [time, mm, hh] = this.get_diff(date2, date1);
+                [time, mm, hh] = this.get_diff(date2, date1);
 
-            //     this.leave[index] = time;
-            //     $(`#attendance_leave${index}`).val(`${hh}ساعه,${mm}دقيقه`);
-            //     $(`#attendance_leave_hidden${index}`).val(time);
-
-
-            // } else {
-
-            //     [time, mm, hh] = this.get_diff(date1, date2);
-
-            //     this.leave[index] = 0;
-            //     $(`#attendance_leave${index}`).val(`${0}ساعه,${0}دقيقه`);
-            //     $(`#attendance_leave_hidden${index}`).val(0);
+                this.leave[index] = time;
+                $(`#attendance_leave${index}`).val(`${hh}ساعه,${mm}دقيقه`);
+                $(`#attendance_leave_hidden${index}`).val(time);
 
 
+            } else {
 
-            // }
+                [time, mm, hh] = this.get_diff(date1, date2);
 
-            [time, mm, hh] = this.get_diff(date2, date1);
+                this.leave[index] = 0;
+                $(`#attendance_leave${index}`).val(`${0}ساعه,${0}دقيقه`);
+                $(`#attendance_leave_hidden${index}`).val(0);
 
 
-            this.leave[index] = time;
 
-            $(`#attendance_leave${index}`).val(`${hh}ساعه,${mm}دقيقه`);
-            $(`#attendance_leave_hidden${index}`).val(time);
+            }
+
+            // [time, mm, hh] = this.get_diff(date2, date1);
+
+
+            // this.leave[index] = time;
+
+            // $(`#attendance_leave${index}`).val(`${hh}ساعه,${mm}دقيقه`);
+            // $(`#attendance_leave_hidden${index}`).val(time);
         },
 
         get_date() {
@@ -721,6 +825,7 @@ export default {
 
                     $(`#start_period`).html(`<input id='start_period_time' type='time'  value= ${this.period_times[i].from_time} class='form-control' readonly >`);
                     $(`#end_period`).html(`<input  id ='end_period_time' type='time' value= ${this.period_times[i].into_time} class='form-control'  readonly><input type='hidden' id ='code' value= ${this.period_times[i].code}>`);
+                    $(`#sort_period`).html(`<input  id ='sort_period_time' type='number' value= ${this.period_times[i].sort_period} class='form-control'  readonly>`);
 
                 }
 
@@ -737,111 +842,75 @@ export default {
             }).then( //get_time_for_current_period
                 (response) => {
 
+
                     this.value_list = response.data.periods;
                     console.log(this.value_list);
 
-                    // var arrayLength = response.data.periods.length
-                    // for (var i = 0; i < arrayLength; i++) {
-                    //     console.log('muhib', response.data.periods[i]);
-                    //     if (response.data.periods[i].attendance_status == 0) {
 
-
-                    //         document.getElementById(`absence${i}`).setAttribute('checked', 'checked');
-                    //         document.getElementById(`attend${i}`).removeAttribute('checked');
-                    //         this.show = false;
-
-
-                    //     }
-                    //     else {
-                    //         var arrayLengthdetails = response.data.periods[i].details.length
-                    //         var details = 0;
-                    //         console.log('muhib2', arrayLengthdetails);
-                    //         this.show = true;
-
-                    //         for (var ii = 0; ii < arrayLengthdetails; ii++) {
-
-                    //             details = response.data.periods[i].details[ii];
-                    //             console.log('muhib', response.data.periods[i].details[ii]);
-
-                    //             $(`#in${i}`).val(details.check_in);
-                    //             if (response.data.periods[i].attendance_final == 'complete') {
-                    //                 $(`#out${i}`).val(details.check_out);
-                    //             }
-
-                    //             document.getElementById(`attend${i}`).setAttribute('checked', 'checked');
-                    //             document.getElementById(`absence${i}`).removeAttribute('checked');
-                    //             // -----------------------------------------------
-                    //             this.translate_time(details, i, ii);
-                    //             // -----------------------------------------------
-                    //             $(`#attendance_duration_hidden${i}`).val(details.duration);
-                    //             $(`#attendance_delay_hidden${i}`).val(details.delay);
-                    //             $(`#attendance_leave_hidden${i}`).val(details.leave);
-                    //             $(`#attendance_extra_hidden${i}`).val(details.extra);
-                    //         }
-                    //     }
-
-                    // }
 
 
 
                 });
         },
-        translate_time(response, i) {
+        // translate_time(response, i) {
 
-            var time = [];
+        //     var time = [];
 
-            if (response.duration / 60 >= 1) {
-
-
-                time[0] = Math.floor(response.duration / 60) + 'ساعه';
-            }
-            if (response.duration % 60 >= 1) {
-                time[1] = Math.floor(response.duration % 60) + 'دقيقه';
-            }
-            console.log(`attendance_duration${i}`, time);
-            $(`#attendance_duration${i}`).val(time);
-            time = [0, 0];
-            // ---------------------------------------------------------------
-            if (response.delay / 60 >= 1) {
+        //     if (response.duration / 60 >= 1) {
 
 
-                time[0] = Math.floor(response.delay / 60) + 'ساعه';
-            }
-            if (response.delay % 60 >= 1) {
-                time[1] = Math.floor(response.delay % 60) + 'دقيقه';
-            }
-            console.log(`attendance_delay${i}`, time);
-            $(`#attendance_delay${i}`).val(time);
-            time = [0, 0];
-            // ------------------------------------------------------------------------
-            if (response.leave / 60 >= 1) {
+        //         time[0] = Math.floor(response.duration / 60) + 'ساعه';
+        //     }
+        //     if (response.duration % 60 >= 1) {
+        //         time[1] = Math.floor(response.duration % 60) + 'دقيقه';
+        //     }
+        //     console.log(`attendance_duration${i}`, time);
+        //     $(`#attendance_duration${i}`).val(time);
+        //     time = [0, 0];
+        //     // ---------------------------------------------------------------
+        //     if (response.delay / 60 >= 1) {
 
 
-                time[0] = Math.floor(response.leave / 60) + 'ساعه';
-            }
-            if (response.leave % 60 >= 1) {
-                time[1] = Math.floor(response.leave % 60) + 'دقيقه';
-            }
-            console.log(`attendance_leave${i}`, time);
-            $(`#attendance_leave${i}`).val(time);
-            time = [0, 0];
-            // ----------------------------------------------------------------------------
-            if (response.extra / 60 >= 1) {
+        //         time[0] = Math.floor(response.delay / 60) + 'ساعه';
+        //     }
+        //     if (response.delay % 60 >= 1) {
+        //         time[1] = Math.floor(response.delay % 60) + 'دقيقه';
+        //     }
+        //     console.log(`attendance_delay${i}`, time);
+        //     $(`#attendance_delay${i}`).val(time);
+        //     time = [0, 0];
+        //     // ------------------------------------------------------------------------
+        //     if (response.leave / 60 >= 1) {
 
 
-                time[0] = Math.floor(response.extra / 60) + 'ساعه';
-            }
-            if (response.extra % 60 >= 1) {
+        //         time[0] = Math.floor(response.leave / 60) + 'ساعه';
+        //     }
+        //     if (response.leave % 60 >= 1) {
+        //         time[1] = Math.floor(response.leave % 60) + 'دقيقه';
+        //     }
+        //     console.log(`attendance_leave${i}`, time);
+        //     $(`#attendance_leave${i}`).val(time);
+        //     time = [0, 0];
+        //     // ----------------------------------------------------------------------------
+        //     if (response.extra / 60 >= 1) {
 
-                time[1] = Math.floor(response.extra % 60) + 'دقيقه';
-            }
-            console.log(`attendance_extra${i}`, time);
-            $(`#attendance_extra${i}`).val(time);
-            time = [0, 0];
 
-            // ----------------------
+        //         time[0] = Math.floor(response.extra / 60) + 'ساعه';
+        //     }
+        //     if (response.extra % 60 >= 1) {
 
-        },
+        //         time[1] = Math.floor(response.extra % 60) + 'دقيقه';
+        //     }
+        //     console.log(`attendance_extra${i}`, time);
+        //     $(`#attendance_extra${i}`).val(time);
+        //     time = [0, 0];
+
+
+
+
+        //     // ----------------------
+
+        // },
 
 
 
@@ -850,16 +919,38 @@ export default {
             // console.log(staff_id, attendance_status, index);
 
             this.calc_time(index);
-            if ($(`#in${index}`).val() && $(`#out${index}`).val()) {
+
+
+            // console.log($(`#in${index}`).val() ,$(`#out${index}`).val() , this.attendance_in_out);
+            if ($(`#in${index}`).val() && $(`#out${index}`).val() && this.attendance_in_out == 2) {
 
                 this.attendance_final = 'complete';
 
-            } else {
+            }
+
+            if ($(`#in${index}`).val() && $(`#out${index}`).val() && this.attendance_in_out == 1) {
 
                 this.attendance_final = 'pennding';
 
+            }
+
+            if ($(`#in${index}`).val() && this.attendance_in_out == 1) {
+
+                this.attendance_final = 'pennding';
 
             }
+
+
+            // if ($(`#in${index}`).val() && $(`#out${index}`).val()) {
+
+            //     this.attendance_final = 'complete';
+
+            // } else {
+
+            //     this.attendance_final = 'pennding';
+
+
+            // }
 
 
 
@@ -874,8 +965,10 @@ export default {
                 this.delay[index] = $(`#attendance_delay_hidden${index}`).val();
                 this.leave[index] = $(`#attendance_leave_hidden${index}`).val();
                 this.extra[index] = $(`#attendance_extra_hidden${index}`).val();
+                this.extra_after[index] = $(`#attendance_extra_s_hidden${index}`).val();
                 this.check_in[index] = $(`#in${index}`).val();
                 this.check_out[index] = $(`#out${index}`).val();
+
             }
             else if (this.check_state[index] == false) {
 

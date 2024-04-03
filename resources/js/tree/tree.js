@@ -8,14 +8,10 @@ export default {
 
             let gf = this;
             var id = `treeview_json_${table}`;
-       
+
             this.axios.post(`/${uri}`).then((response) => {
 
-
-
-
                 this.jsonTreeData = response.data.trees;
-
                 if (this.type_of_tree == 0) { // this if tree is in the orignal screen (account,product,store,structure) 
 
                     this.last_nodes = response.data.last_nodes;
@@ -100,7 +96,7 @@ export default {
                 }).on("changed.jstree", function (e, data) {
 
 
-                    console.log(gf.type, table);
+                    // console.log('tree_account', gf.type, table);
 
                     if (gf.indexselected) {
 
@@ -128,12 +124,8 @@ export default {
                     }
 
 
-
-
                     if (table == 'expence' && gf.type == 'Expence') {
-
                         gf.expence[gf.indexselected] = data.node.id;
-
                     }
 
 
@@ -153,7 +145,16 @@ export default {
 
 
 
+                    if (table == 'account') {
 
+
+                        if (gf.type == 'Sale' || gf.type == 'Purchase' || gf.type == 'Supply' || gf.type == 'Cash') {
+
+                            gf.group_accounts_details(gf, data.node.id)
+                        }
+
+
+                    }
                     if (table == 'product') {
 
                         if (gf.type == 'Stock' || gf.type == 'Movement') {
@@ -190,11 +191,13 @@ export default {
                         if (gf.type == 'Sale') {
 
                             gf.get_product_for_sale(gf, data.node.id, table);
+                            gf.get_account_for_store(gf);
 
                         }
                         if (gf.type == 'Cash') {
 
                             gf.get_product_for_cash(gf, data.node.id, table);
+                            gf.get_account_for_store(gf);
 
                         }
                         if (gf.type == 'Transfer') {
@@ -244,7 +247,7 @@ export default {
 
 
 
-                        gf.get_account_for_store(gf);
+                        // gf.get_account_for_store(gf);
 
                     }
                     if (table == 'intostore' && gf.type == 'Transfer') {
@@ -255,41 +258,6 @@ export default {
 
 
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     // if (table == 'store' && gf.type == 'Supply') {
 
@@ -320,23 +288,23 @@ export default {
             axios.post(`/get_account_store/${gf.store}`).then((response) => {
 
                 var arrayLength = response.data.accounts.length
-                var html = '';
-                console.log('muhib', response.data.accounts);
+                // var html = '';
+                // console.log('muhib', response.data.accounts);
                 if (arrayLength == 0) {
 
                     $(`#select_account_${gf.type}`).html('');
                     return;
                 }
-                for (var i = 0; i < arrayLength; i++) {
-                    // console.log('muhib', gf.response.data.accounts);
+                // for (var i = 0; i < arrayLength; i++) {
 
-                    html = html + `<option 
-                                            value=${response.data.accounts[i].id}>${response.data.accounts[i].text}  ${response.data.accounts[i].id}
-                                    </option>`;
+                //     html = html + `<option 
+                //                             value=${response.data.accounts[i].id}>${response.data.accounts[i].text}  ${response.data.accounts[i].id}
+                //                     </option>`;
 
-                }
-                console.log(html);
-                $(`#select_account_${gf.type}`).html(html);
+                // }
+                // console.log(html);
+                // $(`#select_account_${gf.type}`).html(html);
+                $(`#select_account_${gf.type}`).val(response.data.accounts[i].id);
 
 
             });
@@ -402,6 +370,35 @@ export default {
 
             });
         },
+        group_accounts_details(gf, id) {
+
+            axios.post(`/get_group_accounts_details_details/${id}`).then((response) => {
+
+                var arrayLength = response.data.result_data.length
+                var html = '';
+                // console.log('muhib', response.data.result_data);
+                if (arrayLength == 0) {
+
+                    $(`#select_account_${gf.type}`).html('');
+                    return;
+                }
+                for (var i = 0; i < arrayLength; i++) {
+                    // console.log('muhib', gf.response.data.accounts);
+
+                    html = html + `<option 
+                                            value=${response.data.result_data[i].id}>${response.data.result_data[i].name}
+                                    </option>`;
+
+                }
+                // console.log('qw',html);
+                $(`#select_account_${gf.type}_group`).html(html);
+
+
+            });
+
+        },
+
+
         get_product_for_cash(gf, id, table) {
             axios.post(`/cash/newcash/${id}`, { type: table }).then((responce) => {
 
@@ -450,7 +447,7 @@ export default {
             formData.append("text", this.text);
             // formData.append(`${localStorage.getItem('table')}_name_en`, this.store_name_en);
             formData.append("parent", $("#parent").val());
-            formData.append("account", this.account);
+            // formData.append("account", this.account);
             formData.append("rank", $("#rank").val());
             formData.append("status", this.status);
             if (localStorage.getItem('table') == 'product') {

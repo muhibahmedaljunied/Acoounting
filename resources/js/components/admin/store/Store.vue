@@ -94,7 +94,7 @@
 
                         </div>
 
-                        <div v-if="status == false" class="form-group">
+                        <!-- <div v-if="status == false" class="form-group">
                           <label for="cliente">اسم الحساب</label>
 
 
@@ -109,7 +109,7 @@
 
 
 
-                        </div>
+                        </div> -->
 
 
 
@@ -143,7 +143,7 @@
           </div>
         </div>
 
-        <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -161,7 +161,7 @@
 
             </div>
           </div>
-        </div>
+        </div> -->
 
       </div>
     </div>
@@ -208,18 +208,18 @@ export default {
     };
   },
 
-  mounted() {
-    this.type = 'Store';
-    this.showtree('account','tree_account');
+  // mounted() {
+  //   this.type = 'Store';
+  //   this.showtree('account','store');
 
-  },
+  // },
   created() {
 
     this.type_of_tree = 0;
     localStorage.setItem('id', 0);
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'store');
-    this.showtree('store');
+    this.showtree('store','tree_store');
 
   },
   methods: {

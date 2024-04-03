@@ -36,12 +36,12 @@
 
 
                                     <td>{{ delay.name }}</td>
-                                
+
 
 
                                     <td>
 
-                                        تأخير  {{ delay.sanctionable.type_name }}
+                                        تأخير {{ delay.sanctionable.type_name }}
 
                                     </td>
                                     <td>
@@ -53,7 +53,7 @@
                                     </td>
                                     <td>
 
-                                   من     {{ delay.sanctionable.discount_name }}
+                                        من {{ delay.sanctionable.discount_name }}
 
                                     </td>
                                     <td>
@@ -68,13 +68,14 @@
                                         {{ delay.sanctionable.sanction }}
                                     </td>
                                     <td style="color:goldenrod">
-                                        <span v-if="delay.status ==0" class="badge text-bg-warning">غير معتمد</span>
-                                        <span v-if="delay.status ==1" class="badge text-bg-success"> معتمد</span>
+                                        <span v-if="delay.status == 0" class="badge text-bg-warning">غير معتمد</span>
+                                        <span v-if="delay.status == 1" class="badge text-bg-success"> معتمد</span>
 
                                     </td>
                                     <td>
                                         <div class="optionbox">
                                             <select v-model="status_selected[index]" @change="change_status(
+                                                index,
                                                 delay.id,
                                                 delay.sanction_date,
                                                 delay.sanctionable.sanction,
@@ -284,7 +285,7 @@ export default {
                 });
         },
 
-        change_status(
+      change_status(
             index,
             staff,
             date,

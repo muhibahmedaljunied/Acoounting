@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Absence;
+
 use App\Repository\StaffSaction\StaffAbsenceSanctionRepository;
 use App\Repository\HR\AbsenceSanctionRepository;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -121,19 +122,19 @@ class AbsenceSanctionController extends Controller
     public function change_status(
         Request $request,
         StaffAbsenceSanctionRepository $staff_sanction,
-        PayrollService $payroll)
-    {
+        PayrollService $payroll
+    ) {
 
 
         $this->core->data = $request->all();
-        // dd($this->core->data);
+
         try {
 
             DB::beginTransaction();
 
             $staff_sanction->update_sanction();
-        
-            $payroll->payroll();
+
+            $payroll->payroll('total_absence_sanction');
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([

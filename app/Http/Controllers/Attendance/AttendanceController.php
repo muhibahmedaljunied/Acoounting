@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Attendance;
 use App\Services\core\CoreStaffAttendanceService;
 use App\Traits\Details\DetailsTrait;
 use App\Http\Controllers\Controller;
-use App\Services\CoreStaffService;
+// use App\Services\CoreStaffService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Services\AttendanceService;
 use App\Models\Staff;
+use App\Models\StaffSanction;
 use App\Models\WorkSystem;
 use App\Models\WorkType;
 
@@ -22,13 +23,6 @@ class AttendanceController extends Controller
     use DetailsTrait;
 
 
-    public function __construct(
-        protected AttendanceService $service,
-        protected CoreStaffService $core,
-        protected CoreStaffAttendanceService $attendance_core,
-
-    ) {
-    }
 
 
     public function index(Request $request)
@@ -94,6 +88,7 @@ class AttendanceController extends Controller
                 'periods.*',
                 'period_times.id as period_id',
                 'period_times.*',
+                'work_system_details.sort_period',
 
             )
             ->get();
@@ -226,6 +221,8 @@ class AttendanceController extends Controller
             ->select('staff.id as staff_id', 'staff.name', 'attendances.*')
             ->paginate(10);
 
+
+
         foreach ($period as $key => $value) {
 
 
@@ -236,7 +233,16 @@ class AttendanceController extends Controller
                 ->select('attendance_details.*')
                 ->get();
 
-            $value->details = $periods;
+            $value->details = (count($periods) == 0) ? 0 : $periods;
+            //     if (count($periods) == 0) {
+
+
+            //         dd('14', $periods);
+            //     }
+            // // $value->details = 0;
+
+
+            // $value->details = $periods;
             // }
         }
 
@@ -255,29 +261,36 @@ class AttendanceController extends Controller
         return response()->json(['periods' => $period]);
     }
 
-    public function store(Request $request)
-    {
+    public function store(
+        Request $request,
+        CoreStaffAttendanceService $attendance_core,
+        AttendanceService $service,
+    ) {
 
 
 
-        $this->attendance_core->data = $request->all();
+        $attendance_core->data = $request->all();
 
-
+        // dd($attendance_core->data);
         try {
 
             DB::beginTransaction();
             foreach ($request->post('count') as $value) {
 
 
-                $this->attendance_core->setValue($value);
 
-                if ($this->attendance_core->data['attendance_status'] == 1) {
+                $attendance_core->setValue($value);
+
+                // if ($attendance_core->data['attendance_status'] == 1) {
 
 
-                    $this->service->attende();
-                } else {
-                    $this->service->absence();
-                }
+
+                    $service->attende();
+
+             
+                // } else {
+                //     $service->absence();
+                // }
             }
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([

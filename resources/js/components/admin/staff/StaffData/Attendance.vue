@@ -51,6 +51,8 @@
                     <label class="focus-label">السنه</label>
                     <select v-model="year_selected" class="select floating form-control">
                         <option>-</option>
+                        <option v-bind:value="9">2024</option>
+
                         <option v-bind:value="9">2023</option>
                         <option v-bind:value="8">2022</option>
                         <option v-bind:value="7">2021</option>
@@ -317,7 +319,7 @@ export default {
         get_day_name(data) {
 
             var date_obj = new Date();
-            var month = 6
+            var month = 3
             // alert(month);
             var year = date_obj.getFullYear();
 
@@ -358,7 +360,6 @@ export default {
 
                     this.list_data = data.list;
                     this.official_holidays = data.official_holidays;
-
                     this.staffs = data.staffs;
 
                 })

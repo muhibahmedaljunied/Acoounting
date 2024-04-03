@@ -23,6 +23,7 @@
                   <input style="background-color: beige;" :id="'Supply_store_tree'" type="text" readonly
                     class="custom-search-input">
                   <input :id="'Supply_store_tree_id'" type="hidden" readonly>
+                  <input :id="'select_account_Supply'" type="hidden" >
 
                   <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(index)"
                     data-target="#exampleModalStore">
@@ -31,14 +32,31 @@
 
               </div>
 
-              <div class="col-md-2">
-                <label for="pagoPrevio">اسم الحساب</label>
-                <select class="form-control" style="background-color: beige;" name="forma_pago"
-                  id="select_account_Supply">
 
-                </select>
+              <div class="col-md-4">
+                <label for="pagoPrevio">الحساب</label>
+                <div class="custom-search">
+
+                  <input :id="'Supply_account_tree'" type="text" readonly class="custom-search-input">
+                  <input :id="'Supply_account_tree_id'" type="hidden" readonly class="custom-search-input">
+
+
+                  <button class="custom-search-botton" type="button" data-toggle="modal"
+                    data-target="#exampleModalAccount">
+                    <i class="fa fa-plus-circle"></i></button>
+                </div>
 
               </div>
+
+
+              <div class="col-md-2">
+              <label for="cliente"> الحساب التفصيلي</label>
+
+              <select class="form-control" style="background-color: beige;" name="forma_pago"
+                  id="select_account_Supply_group">
+
+                </select>
+            </div>
 
 
 
@@ -51,7 +69,7 @@
             <div class="row">
 
 
-              <div class="col-md-2">
+              <!-- <div class="col-md-2">
                 <label for="FormaPago">طريقه الدفع</label>
                 <select class="form-control" style="background-color: beige;" name="forma_pago" id="forma_pago"
                   v-model="Way_to_pay_selected" v-on:change="onwaychange">
@@ -91,7 +109,7 @@
                   </option>
                 </select>
 
-              </div>
+              </div> -->
 
 
 
@@ -388,6 +406,26 @@
         </div>
       </div>
 
+      <div class="modal fade" id="exampleModalAccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="well" id="treeview_json_account"></div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
 
 
     </div>
@@ -456,6 +494,8 @@ export default {
 
     this.showtree('store','tree_store');
     this.showtree('product','tree_product');
+    this.showtree('account','tree_account');
+
 
 
 
@@ -640,23 +680,7 @@ export default {
         this.paid = this.grand_total;
 
       }
-      var credit_account_id = 0;
-      if (this.Way_to_pay_selected == 1) {
-        
-        credit_account_id = this.treasury[2];
-
-      } 
-      if (this.Way_to_pay_selected == 2) {
-        
-        credit_account_id = this.supplier[2];
-
-      }
-
-      // if (Way_to_pay_selected == 3) {
-        
-      //   credit_account_id = 0;
-
-      // }
+   
       
       
       this.To_pay = this.grand_total;
@@ -680,7 +704,7 @@ export default {
             debit_account_id: $(`#select_account_${this.type}`).val(),
           },
           credit:{
-            credit_account_id: credit_account_id,
+            credit_account_id: $(`#select_account_${this.type}_group`).val(),
           },
           // -----------------------------------------------------------
           supplier_id: this.supplier[0],

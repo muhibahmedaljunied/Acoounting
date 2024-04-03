@@ -9,6 +9,8 @@ import AccountList from './components/admin/FinancialAccounting/accounting/Accou
 import DailyRestrictions from './components/admin/FinancialAccounting/operation/DailyRestrictions'
 import AccountBasicData from './components/admin/FinancialAccounting/AccountBasicData'
 import ClosingYears from './components/admin/FinancialAccounting/ClosingYears'
+import MarkAccount from './components/admin/FinancialAccounting/MarkAccount'
+
 
 
 // ------------------------------------------------------------------staff---------------------------------------------------------------------------
@@ -136,11 +138,15 @@ import ReturnSupplyList from './components/admin/supply/ReturnSupplyList'
 import ReturnSupplyInvoice from './components/admin/supply/ReturnSupplyInvoice'
 // ----------------------------------Purchases---------------------------------------------------------------------------------------------------
 import Supplier from './components/admin/supplier/Supplier'
+import SupplierGroup from './components/admin/supplier/SupplierGroup'
+import SupplierSetting from './components/admin/supplier/SupplierSetting'
 import UpdateSupplier from './components/admin/supplier/UpdateSupplier'
 import AddSupplier from './components/admin/supplier/AddSupplier'
 import SupplierAccountList from './components/admin/supplier/SupplierAccountList'
 // ----------------------------------customer----------------------------------------------------------------------------------------------------------------------
 import Customer from './components/admin/customer/Customer'
+import CustomerGroup from './components/admin/customer/CustomerGroup'
+import CustomerSetting from './components/admin/customer/CustomerSetting'
 import UpdateCustomer from './components/admin/customer/UpdateCustomer'
 import AddCustomer from './components/admin/customer/AddCustomer'
 import CustomerAccountList from './components/admin/customer/CustomerAccountList'
@@ -184,6 +190,7 @@ const routes = [
     path: '/closing_year',
     component: ClosingYears
   },
+
   {
     path: '/account_list',
     component: AccountList
@@ -205,6 +212,10 @@ const routes = [
     path: '/financial_accounting/setting_account',
     component: SettingAccount
 
+  },
+  {
+    path: '/financial_accounting/mark_accounts',
+    component: MarkAccount
   },
     // {
     //   path: '/staff/salary',
@@ -696,6 +707,15 @@ const routes = [
     component: Supplier
   },
   {
+    path: '/supplier_group',
+    component: SupplierGroup
+  },
+  {
+    path: '/supplier_setting',
+    name: 'supplier_setting',
+    component:SupplierSetting
+  },
+  {
     path: '/edit_supplier/:id',
     name: 'edit_supplier',
     component: UpdateSupplier
@@ -712,6 +732,16 @@ const routes = [
     path: '/customer',
     name: 'customer',
     component: Customer
+  },
+  {
+    path: '/customer_group',
+    name: 'customer_group',
+    component: CustomerGroup
+  },
+  {
+    path: '/customer_setting',
+    name: 'customer_setting',
+    component: CustomerSetting
   },
   {
     path: '/customer_account_list',
