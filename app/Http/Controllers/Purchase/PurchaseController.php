@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers\Purchase;
 
+use App\Services\StockService;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Models\Payment;
-use App\Repository\StoreInventury\StorePurchaseRepository;
-use App\Repository\StockInventury\StockPurchaseRepository;
 use Illuminate\Support\Facades\Cache;
-use App\Repository\Stock\PurchaseRepository;
-use App\Services\UnitService;
 use App\Models\StoreProduct;
-use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -21,8 +17,7 @@ use Illuminate\Http\Request;
 use App\Models\status;
 use App\Models\Temporale;
 use App\Models\Purchase;
-use App\Services\CoreService;
-use App\Services\DailyService;
+
 
 
 class PurchaseController extends Controller
@@ -30,20 +25,6 @@ class PurchaseController extends Controller
     use InvoiceTrait,
         GeneralTrait;
 
-
-    public function __construct(
-
-        protected CoreService $core,
-        protected PaymentService $payment,
-        protected UnitService $unit,
-        Request $request,
-
-    ) {
-
-
-        $this->core->setData($request->all());
-        $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
-    }
 
 
     public function details(Request $request, $id)
@@ -78,7 +59,7 @@ class PurchaseController extends Controller
 
         return response()->json([
             'products' => $products,
-            // 'suppliers' => $this->suppliers(),
+            'suppliers' => $this->suppliers(),
             'statuses' => Status::all(),
             // 'treasuries' => $this->treasuries(),
             'stores' => $stores
@@ -92,7 +73,7 @@ class PurchaseController extends Controller
     {
 
         $suppliers =  DB::table('suppliers')
-            ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
+            // ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
             ->select(
                 'suppliers.*',
 
@@ -106,11 +87,11 @@ class PurchaseController extends Controller
     {
 
         $treasuries = DB::table('treasuries')
-            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
+            // ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
                 'treasuries.id',
                 'treasuries.name',
-                'treasuries.account_id'
+                // 'treasuries.account_id'
 
             )
             ->get();
@@ -119,14 +100,13 @@ class PurchaseController extends Controller
     }
 
     public function payment(
-        DailyService $daily,
-        StorePurchaseRepository $store,
-        StockPurchaseRepository $stock,
-        PurchaseRepository $warehouse,
+       
+        StockService $stock,
     ) {
 
 
 
+        dd($stock->core->data);
         // $result  = $this->daily->check_account();
 
         // if ($result == 0) {
@@ -137,33 +117,16 @@ class PurchaseController extends Controller
         //     ], 400);
         // }
 
-        // dd($this->core->data);
+       
 
 
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $warehouse->add(); // this insert data into purchase table
-
-            foreach ($this->core->data['count'] as $value) {
-
-                $this->core->setValue($value);
-
-                $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-
-                $store->store(); // this handle data in store_product table
-
-                $warehouse->init_details(); // this make initial for details table
-
-                $stock->stock(); // this handle data in stock table
-
-            }
-
-            $this->payment->pay();
-            $daily->daily()->debit()->credit();
-            $warehouse->refresh(); //this update purchase table by daily_id
+            $stock->handle();
+       
+            // dd(2);
             Cache::forget('stock');
-            // dd(1);
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
@@ -226,7 +189,7 @@ class PurchaseController extends Controller
             ]);
         }])
             ->where('paymentable_type', 'App\\Models\\Purchase')
-            ->paginate();
+            ->paginate(5);
 
 
         return response()->json(['purchases' => $purchases]);

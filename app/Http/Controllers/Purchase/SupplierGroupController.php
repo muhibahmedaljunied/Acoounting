@@ -26,15 +26,13 @@ class SupplierGroupController extends Controller
 
         $groups =  DB::table('groups')
             ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
-            ->where('group_types.code','supplier')
+            ->where('group_types.code', 'supplier')
             ->select(
                 'groups.*',
                 'group_types.name as type_name'
             )
             ->get();
 
-            return response()->json(['groups' => $groups]);
-        }
-
-   
+        return response()->json(['groups' => $groups]);
+    }
 }

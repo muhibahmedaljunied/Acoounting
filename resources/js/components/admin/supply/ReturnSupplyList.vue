@@ -6,7 +6,7 @@
           <div class="card-header pb-0">
 
             <div class="d-flex justify-content-right">
-              <span class="h2"> مرتجع المشتريات</span>
+              <span class="h2"> مرتجع توريد</span>
             </div>
           </div>
 
@@ -91,8 +91,11 @@
                             الفاء الفاتوره
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/return_supply_invoice_update/', return_supply.supply_id, 3]">
+                            v-bind:value="['/return_supply_invoice_update/', return_supply.supply_id, 4]">
                             تعديل الفاتوره
+                          </option>
+                          <option class="btn btn-success" v-bind:value="['return_supply_daily', return_supply.supply_id, 5]">
+                            عرض القيد المحاسبي
                           </option>
 
 
@@ -273,7 +276,11 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
       }
 
     },

@@ -1,16 +1,9 @@
 <?php
 
-namespace App\Repository\StockReturnInventury;
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\Services\CoreService;
-use App\Models\Stock;
-use Illuminate\Support\Facades\DB;
-class StockSaleReturnRepository implements InventuryStockRepositoryInterface
+namespace App\Repository\StockReturnInventury;;
+class StockSaleReturnRepository extends StockReturnRepository
 {
 
-    public function __construct(protected CoreService $core)
-    {
-    }
 
    public function Stock()
     {
@@ -22,23 +15,23 @@ class StockSaleReturnRepository implements InventuryStockRepositoryInterface
 
 
 
-    function init_stock_table()
-    {
+    // function init_stock_table()
+    // {
 
-        if ($this->core->stock_f != 0) {
-            return 0;
-        }
-        $stocks = new Stock();
-        $stocks->store_product_id = $this->core->id_store_product;
-        $stocks->unit_id = $this->core->unit_value;
-        $stocks->quantity = $this->core->micro_unit_qty;
-        $stocks->date = $this->core->data['date'];
-        $stocks->stockable()->associate($this->core->stockable);
-        $stocks->save();
+    //     if ($this->core->stock_f != 0) {
+    //         return 0;
+    //     }
+    //     $stocks = new Stock();
+    //     $stocks->store_product_id = $this->core->id_store_product;
+    //     $stocks->unit_id = $this->core->unit_value;
+    //     $stocks->quantity = $this->core->micro_unit_qty;
+    //     $stocks->date = $this->core->data['date'];
+    //     $stocks->stockable()->associate($this->core->stockable);
+    //     $stocks->save();
 
 
-        // }
-    }
+    //     // }
+    // }
     
 
 

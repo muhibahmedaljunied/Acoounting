@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class HrAccount extends Model
 {
-    protected $fillable = ['name','account_id','account_second_id'];
+    protected $fillable = ['id','name','code','account_id','account_second_id','type','created_at', 'updated_at'];
 
 
     public function account()

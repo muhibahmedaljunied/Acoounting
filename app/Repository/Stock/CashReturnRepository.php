@@ -1,12 +1,10 @@
 <?php
 
 namespace App\Repository\Stock;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\DetailRefreshRepositoryInterface;
+use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\Traits\Cash\CashReturnTrait;
 use App\Services\CoreService;
-use DB;
-class CashReturnRepository implements DetailRepositoryInterface,DetailRefreshRepositoryInterface
+class CashReturnRepository implements WarehouseRepositoryInterface
 {
 
 use CashReturnTrait;
@@ -40,20 +38,7 @@ use CashReturnTrait;
     }
 
 
-    public function init_details(...$list_data)
-    {
-
-        $this->add_into_cash_return_details_table();
-  
-    }
-
-        function refresh_details()
-    {
-
-        $this->refresh_cash_return_details_table();
-
-
-    }
+ 
 
    
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdministrativeStructure extends Model
 {
-    // protected $fillable = ['structure_name_ar','structure_name_en','structure_main','rank','structure_type','parent_id'];
+    protected $fillable = ['id','text','parent_id','rank','type_branch','status','created_at','updated_at'];
 
     public function children()
     {

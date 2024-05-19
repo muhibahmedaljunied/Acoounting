@@ -290,8 +290,8 @@ export default {
                     count: this.counts,
                     type: this.type,
                     name: this.bank,
-                    account: this.account,
-                    group_type: this.group_selected,
+                    // account: this.account,
+                    group: this.group_selected,
 
 
                 }

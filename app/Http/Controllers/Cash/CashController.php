@@ -2,25 +2,20 @@
 
 namespace App\Http\Controllers\Cash;
 use App\Repository\CheckData\CheckCashReturnRepository;
-use App\Repository\StoreInventury\StoreCashRepository;
-use App\Repository\StockInventury\StockCashRepository;
 use Illuminate\Support\Facades\Cache;
-use App\Repository\Stock\CashRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Services\UnitService;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\StoreProduct;
 use App\Services\CoreService;
-use App\Services\DailyService;
 use App\Services\PaymentService;
 use App\Traits\Unit\UnitsTrait;
 use App\Models\Cash;
-use App\Models\CashDetail;
 use App\Models\Payment;
+use App\Services\StockService;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class CashController extends Controller
@@ -61,11 +56,11 @@ class CashController extends Controller
 
         [$products, $units] = ($request->id) ? $this->get_one($request) : $this->get_all($request);
 
-    
+
         return response()->json([
             'products' => $products,
             'units' => $units,
-            // 'customers' => $this->customers(),
+            'customers' => $this->customers(),
             // 'treasuries' => $this->treasuries(),
 
         ]);
@@ -75,11 +70,11 @@ class CashController extends Controller
     {
 
         $customers = DB::table('customers')
-            ->join('accounts', 'customers.account_id', '=', 'accounts.id')
+            // ->join('accounts', 'customers.account_id', '=', 'accounts.id')
             ->select(
                 'customers.*',
-                'customers.name',
-                'customers.account_id'
+                // 'customers.name',
+                // 'customers.account_id'
             )
             ->get();
 
@@ -111,6 +106,7 @@ class CashController extends Controller
                 'statuses.name as status',
                 'store_products.quantity as availabe_qty',
                 'store_products.*',
+                'store_products.cost as price',
                 'store_products.id as store_product_id'
             )
             ->paginate(100);
@@ -133,6 +129,7 @@ class CashController extends Controller
                 'statuses.name as status',
                 'store_products.quantity as availabe_qty',
                 'store_products.*',
+                'store_products.cost as price',
                 'store_products.id as store_product_id'
             )
             ->paginate(100);
@@ -142,60 +139,26 @@ class CashController extends Controller
 
 
     public function payment(
-        StoreCashRepository $store,
-        StockCashRepository $stock,
-        CashRepository $warehouse,
-        CheckCashReturnRepository $check,
-        UnitService $unit,
-        DailyService $daily,
+        StockService $stock
 
 
     ) {
 
 
-        // dd($this->core->data);
+        // dd($stock->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-  
 
-            $warehouse->add();
+            $stock->handle();
 
-            foreach ($this->core->data['count'] as $value) {
-
-                // -------------------------------------------------------------------------------------
-
-                // $result = $check->check_return($this->core->data['old'][$value]);
-
-                // if ($result['status'] == 0) {
-
-                //  return response(['message' => $result['text'] ,'status' => $result['status']]);
-
-                // }
-                // -------------------------------------------------------------------------------------
-
-
-                $this->core->setValue($value);
-
-                $unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-
-                $store->store(); // this handle data in store_product table
-
-                $warehouse->init_details(); // this make initial for details table
-
-                $stock->stock(); // this handle data in stock table
-            }
-
-            $this->payment->pay();
-            $daily->daily()->debit()->credit();
-            $warehouse->refresh(); //this update cash table by daily_id
             Cache::forget('stock');
 
-            // dd(CashDetail::all());
+            // dd(1);
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
-     
+
             return response([
                 'message' => "cash created successfully",
                 'status' => "success"
@@ -211,50 +174,82 @@ class CashController extends Controller
 
 
 
-    public function cash_daily(Request $request){
+    public function cash_daily(Request $request)
+    {
 
-        
-       
-        $cashs = DB::table('cashs')->where('cashs.id',$request->id)
-        ->join('customers', 'customers.id', '=', 'cashs.customer_id')
-        ->join('dailies', 'dailies.id', '=', 'cashs.daily_id')
-        ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
-        ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
-        ->select(
-            // 'cashs.*',
-            'cashs.id as cash_id',
-            'customers.name',
-            'dailies.*',
-            'daily_details.*',
-            'accounts.text',
-            'accounts.id as account_id',
 
-          
-        )
-        ->get();
 
-        // dd($cashs);
-    return response()->json(['daily_details' => $cashs]);
+        $cashes = DB::table('cashes')->where('cashes.id', $request->id)
+            ->join('customers', 'customers.id', '=', 'cashes.customer_id')
+            ->join('dailies', 'dailies.id', '=', 'cashes.daily_id')
+            ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
+            ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
+            ->select(
+                // 'cashes.*',
+                'cashes.id as cash_id',
+                'customers.name',
+                'dailies.*',
+                'daily_details.*',
+                'accounts.text',
+                'accounts.id as account_id',
 
+
+            )
+            ->get();
+
+        // dd($cashes);
+        return response()->json(['daily_details' => $cashes]);
     }
 
     public function show()
     {
 
-    
+
         $cashes = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
             $morphTo->constrain([
-                Cash::class=> function ($query) {
-                    $query->join('customers', 'customers.id', '=', 'cashes.customer_id');
-                    $query->select('cashes.*','cashes.id as cash_id','customers.name as customer_name');
+                Cash::class => function ($query) {
+                    // $query->join('customers', 'customers.id', '=', 'cashes.customer_id');
+                    $query->join('dailies', 'dailies.id', '=', 'cashes.daily_id');
+                    $query->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id');
+                    $query->join('accounts', 'accounts.id', '=', 'daily_details.account_id');
+                    $query->where('daily_details.debit','!=',0);
+                    $query->select(
+                        'cashes.*',
+                        'cashes.id as cash_id',
+                        'accounts.text',
+                        'accounts.id as account_id',
+                    );
                 },
             ]);
         }])
-        ->where('paymentable_type','App\\Models\\Cash')
+            ->where('paymentable_type', 'App\\Models\\Cash')
+            ->paginate(5);
 
-        ->paginate();
 
-       
+        return response()->json(['cashes' => $cashes]);
+    }
+
+    public function cash_list()
+    {
+
+
+        $cashes = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Cash::class => function ($query) {
+                    $query->join('customers', 'customers.id', '=', 'cashes.customer_id');
+           
+                    $query->select(
+                        'customers.*',
+                        'cashes.id as cash_id',
+               
+                    );
+                },
+            ]);
+        }])
+            ->where('paymentable_type', 'App\\Models\\Cash')
+            ->paginate(5);
+
+
         return response()->json(['cashes' => $cashes]);
     }
 
@@ -266,13 +261,13 @@ class CashController extends Controller
 
         $table = $request->post('table');
 
-        $cashs = Cash::where('cashs.id', $id)
-            ->join('users', 'users.id', '=', 'cashs.customer_id')
-            ->select('cashs.*', 'cashs.id as cash_id', 'users.*')
+        $cashes = Cash::where('cashes.id', $id)
+            ->join('users', 'users.id', '=', 'cashes.customer_id')
+            ->select('cashes.*', 'cashes.id as cash_id', 'users.*')
             ->get();
         $details = $this->invoice($id, $table);
 
         $users = Auth::user();
-        return response()->json([$table => $details, 'cashs' => $cashs, 'users' => $users]);
+        return response()->json([$table => $details, 'cashes' => $cashes, 'users' => $users]);
     }
 }

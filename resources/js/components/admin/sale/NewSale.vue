@@ -15,7 +15,7 @@
                 <input :id="'Sale_product_tree'" type="text" readonly class="custom-search-input">
                 <input :id="'Sale_product_tree_id'" type="hidden" readonly class="custom-search-input">
 
-                <button class="custom-search-botton" type="button" data-toggle="modal"
+                <button @click="detect_index(null)" class="custom-search-botton" type="button" data-toggle="modal"
                   data-target="#exampleModalProduct">
                   <i class="fa fa-plus-circle"></i></button>
               </div>
@@ -29,7 +29,7 @@
                 <input :id="'select_account_Sale'" type="hidden" readonly class="custom-search-input">
 
 
-                <button class="custom-search-botton" type="button" data-toggle="modal" data-target="#exampleModalStore">
+                <button @click="detect_index(null)" class="custom-search-botton" type="button" data-toggle="modal" data-target="#exampleModalStore">
                   <i class="fa fa-plus-circle"></i></button>
               </div>
             </div>
@@ -51,6 +51,39 @@
                 <option v-bind:value="3">بنك</option>
               </select>
             </div>
+
+            <div class="col-md-3" v-if="Way_to_pay_selected != 2">
+              <label for="cliente"> العميل</label>
+
+              <select class="form-control" style="background-color: beige;" v-model="customer" id="customer">
+                <option v-for="cus in customers" v-bind:value="[cus.id, cus.name]">
+                  {{ cus.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-2"> <label for="pagoPrevio">نوع العمله</label>
+              <select name="forma_pago" class="form-control" id="forma_pago">
+                <option v-bind:value="2">ريال يمني </option>
+                <option v-bind:value="1">دولار امريكي</option>
+                <option v-bind:value="2">ريال سعودي </option>
+              </select>
+            </div>
+
+
+
+
+
+
+
+
+          </div>
+          <br />
+          <hr>
+
+          <div class="row">
+
+
             <div class="col-md-4">
               <h5 class="card-title"> الحساب</h5>
               <div class="custom-search">
@@ -60,7 +93,7 @@
                 <!-- <input :id="'Sale_store_tree_id'" type="hidden" readonly class="custom-search-input"> -->
 
 
-                <button class="custom-search-botton" type="button" data-toggle="modal"
+                <button @click="detect_index(null)" class="custom-search-botton" type="button" data-toggle="modal"
                   data-target="#exampleModalAcoount">
                   <i class="fa fa-plus-circle"></i></button>
               </div>
@@ -78,6 +111,14 @@
 
 
 
+            <div class="col-md-4">
+              <label for="pagoPrevio">البيان</label>
+
+
+              <input class="form-control" style="background-color: beige;" type="text" v-model="description">
+
+
+            </div>
 
 
 
@@ -88,41 +129,27 @@
           <div class="row">
 
 
-            <div class="col-md-2"> <label for="pagoPrevio">نوع العمله</label>
-              <select name="forma_pago" class="form-control" id="forma_pago">
-                <option v-bind:value="2">ريال يمني </option>
-                <option v-bind:value="1">دولار امريكي</option>
-                <option v-bind:value="2">ريال سعودي </option>
-              </select>
-            </div>
 
 
 
 
-            <div class="col-md-2">
+
+            <div class="col-md-3">
               <label for="pagoPrevio">الخصم (%)</label>
               <input type="number" @input="take_discount" v-model="discount" :min="0" :max="99" :step="1"
                 oninput="validity.valid||(value='');" class="form-control input_cantidad" onkeypress="return " />
 
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <label for="date">التاريخ</label><br />
 
               <input style="background-color: beige;" name="date" type="date" v-model="date" class="form-control" />
             </div>
 
-            <div class="col-md-2">
-              <label for="pagoPrevio">البيان</label>
 
-
-              <input class="form-control" style="background-color: beige;" type="text" v-model="description">
-
-
-            </div>
-
-            <div class="col-md-2">
+            <div class="col-md-3">
               <label for="pagoPrevio">تاريخ الاستحقاق</label>
-              <input type="date" id="remaining" class="form-control" v-model="remaining" />
+              <input type="date" id="remaining" class="form-control" />
 
             </div>
           </div>
@@ -334,18 +361,19 @@
                 <div class="col-md-12" v-show="show">
                   <label for="pagoPrevio">المتبقي</label>
                   <input type="text" readonly="readonly" id="remaining" class="form-control" v-model="remaining" />
-                  <input type="hidden" id="items_totales" />
-                  <input type="hidden" id="registros_totales" />
+
                 </div>
 
 
 
                 <div class="col-md-12">
-                  <label for="total" class="text-left">TO PAY (USD):</label>
-                  <div class="col-md-12 letra_calculator_total text-center" id="div_total">
+                  <label for="total" class="text-left">المبلغ المستحق</label>
+                  <input type="text" readonly="readonly" class="form-control" v-model="To_pay" />
+
+                  <!-- <div class="col-md-12 letra_calculator_total text-center" id="div_total">
                     {{ To_pay }}
-                  </div>
-                  <input type="hidden" name="total" id="total" v-model="To_pay" />
+                  </div> -->
+                  <!-- <input type="hidden" name="total" id="total" v-model="To_pay" /> -->
                 </div>
 
               </div>
@@ -499,12 +527,8 @@ export default {
       cost: [],
       account: '',
       account_in_list: [],
-      // product: [],
       qty: [],
       unit: [],
-      // desc: [],
-      // store: [],
-      // status: [],
       store_product_id: [],
       counts: {},
       count: 1,
@@ -533,21 +557,15 @@ export default {
       word_search: '',
       total: [],
       customer: [],
-      supplier: [],
-      suppliers: '',
       customers: '',
       seen: false,
       id: '',
-
       index: 0,
       all_products: '',
       jsonTreeData: '',
       type_of_tree: 1,
       indexselected: '',
-
       last_nodes: '',
-
-
       statusselected: 0,
       unitselected: 0,
       unitselectedname: '',
@@ -561,26 +579,14 @@ export default {
       typeselected: [],
       checkselected: '',
       // ------------------------------------------------------------
-
       description: '',
-      treasury: '',
+      treasury: [],
+      bank: [],
       all_products: '',
       temporale: 1,
-      supplier: [],
-      suppliers: '',
-      total_quantity: 0,
-      grand_total: 0,
-      sub_total: 0,
-      To_pay: 0,
       discount: 0,
-      total_tax: 0,
       type_payment: 0,
-      Way_to_pay_selected: 1,
       show: false,
-      show_treasury: true,
-      show_bank: false,
-      paid: 0,
-      remaining: 0,
       return_qty: [],
 
     }
@@ -590,17 +596,22 @@ export default {
   },
   mounted() {
     this.list();
-
     this.type = 'Sale';
     this.type_refresh = 'decrement';
-
     this.type_of_tree = 1;
-
     this.showtree('store', 'tree_store');
     this.showtree('product', 'tree_product');
     this.showtree('account', 'tree_account');
 
 
+  },
+  watch: {
+    Way_to_pay_selected(newVal, oldVal) {
+      $(`#treeview_json_account`).jstree(true).destroy();
+      this.showtree('account', 'tree_account', this.Way_to_pay_selected);
+
+      // console.log(newVal, oldVal);
+    }
   },
 
   methods: {
@@ -612,7 +623,7 @@ export default {
         .then(({ data }) => {
 
           this.products = data.products;
-          // this.customers = data.customers;
+          this.customers = data.customers;
           // this.treasuries = data.treasuries;
 
 
@@ -623,6 +634,8 @@ export default {
         });
     },
 
+
+  
     take_discount() {
 
       this.sub_total *= parseInt(this.discount) / 100;
@@ -663,71 +676,6 @@ export default {
 
 
     },
-
-    calc_grand_total(index) {
-
-
-      this.grand_total = 0;
-
-      for (let i = 0; i <= index; i++) {
-
-
-        if (this.total[i]) {
-
-          this.grand_total = parseInt(this.total[i]) + parseInt(this.grand_total);
-
-        } else {
-
-          this.grand_total = parseInt(0) + parseInt(this.grand_total);
-        }
-
-
-
-      }
-
-    },
-
-    calc_tax(index) {
-
-      this.total_tax = 0;
-
-      for (let i = 0; i <= index; i++) {
-
-
-
-        if (this.tax[i]) {
-
-          this.total_tax = parseInt(this.tax[i]) + parseInt(this.total_tax);
-
-        } else {
-
-          this.total_tax = parseInt(0) + parseInt(this.total_tax);
-        }
-
-        // console.log(total_quantity);
-
-      }
-    },
-    calc_qty(index) {
-
-      this.total_quantity = 0;
-      for (let i = 0; i <= index; i++) {
-
-
-
-        if (this.qty[i]) {
-
-          this.total_quantity = parseInt(this.qty[i]) + parseInt(this.total_quantity);
-
-        } else {
-
-          this.total_quantity = parseInt(0) + parseInt(this.total_quantity);
-        }
-
-
-
-      }
-    },
     onwaychange(e) {
       this.paid = 0;
       this.remaining = 0;
@@ -735,93 +683,48 @@ export default {
       this.type_payment = input.value;
       if (input.value == 2) {
         this.show = true;
-        this.remaining = this.grand_total;
+        // this.remaining = this.grand_total;
 
       } else {
         this.show = false;
       }
 
       if (input.value == 1) {
-        this.show_treasury = true;
-        this.show_bank = false;
+        // this.show_treasury = true;
+        // this.show_bank = false;
         this.paid = this.grand_total;
 
       }
 
       if (input.value == 3) {
-        this.show_bank = true;
-        this.show_treasury = false;
+        // this.show_bank = true;
+        // this.show_treasury = false;
         this.paid = this.grand_total;
 
       }
 
     },
+    set_values(product, index) {
+
+      this.counts[index] = index;
+      this.store_product_id[index] = product.id;
+      this.account_in_list[index] = product.store_account_id;
+      this.store[index] = product.store_id;
+    },
     add_one_sale(product, index) {
 
 
-      // var account = product;
-      // var product = product.product_id;
-      // var desc = product.desc;
 
-      // var store = product.store_id;
-
-      // var status = product.status_id;
-      // var price = product.cost;
-      // var tax = this.tax[index];
-      // var total = this.total;
-
-      if (this.check_state[index] == true) {
-
-        // result = this.check_qty(qty, unit, availabe_qty);
-
-        if (this.check_qty(this.qty[index], this.unit[index], product.availabe_qty) == 0) { return 0; }
-
-        this.calc_grand_total(index);
-        this.calc_tax(index);
-        this.calc_qty(index);
-
-        this.To_pay = this.grand_total;
-        this.sub_total = parseInt(this.grand_total) - parseInt(this.total_tax)
-
-        this.counts[index] = index;
-
-        this.store_product_id[index] = product.id;
-
-        this.account_in_list[index] = product.store_account_id;
-
-
-
-
-
-
+      if (this.check_qty(
+        this.qty[index],
+        this.unit[index],
+        product.availabe_qty
+      ) == 0) {
+        return 0;
       }
-      else if (this.check_state[index] == false) {
 
+      this.handle(product, index);
 
-        if (!this.total[index]) { this.total[index] = 0; }
-        if (!this.tax[index]) { this.tax[index] = 0; }
-        if (!this.qty[index]) { this.qty[index] = 0; }
-
-        this.$delete(this.counts, index);
-        this.grand_total = parseInt(this.grand_total) - parseInt(this.total[index]);
-        this.sub_total = parseInt(this.grand_total) - parseInt(this.tax[index]);
-        this.total_tax = parseInt(this.total_tax) - parseInt(this.tax[index]);
-        this.total_quantity = parseInt(this.total_quantity) - parseInt(this.tax[index]);
-
-        this.total[index] = 0;
-        this.qty[index] = 0;
-        this.tax[index] = 0;
-
-
-
-
-      }
-      // console.log(this.counts, index);
-      // console.log(this.store_product_id, index);
-      // console.log(this.qty, index);
-      // console.log(this.unit, index);
-      // console.log(this.tax, index);
-      // console.log(this.total, index);
     },
     // on_input(qty, availabe_qty) {
     //   if (qty <= availabe_qty) {
@@ -886,14 +789,24 @@ export default {
 
           // -------------this for dailies----------------------------------------------
           debit: {
-            debit_account_id: $(`#select_account_${this.type}_group`).val(),
+            account_id: $(`#Sale_account_tree_id`).val(),
+            value: this.sub_total,
+            account_details: $(`#select_account_${this.type}_group`).val(),
+
           },
           credit: {
             // credit_account_id: $(`#select_account_${this.type}`).val(),
-            credit_account_id: this.account_in_list,
+            account_id: this.account_in_list,
+            value: this.total,
+            account_details: this.store,
+
           },
+
+
           // -----------------------------------------------------------
           type_daily: 'sale',
+          payment_type: this.Way_to_pay_selected,
+
           description: this.description,
           type_refresh: this.type_refresh,
           customer_id: this.customer[0],

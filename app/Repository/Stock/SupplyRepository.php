@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Repository\Stock;
+
+use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\Traits\Supply\SupplyTrait;
 use App\Services\CoreService;
-use App\RepositoryInterface\Daily;
-use DB;
 
-class SupplyRepository
+class SupplyRepository implements WarehouseRepositoryInterface
 {
 
 use SupplyTrait;
@@ -38,12 +38,6 @@ use SupplyTrait;
     }
 
 
-    public function init_details(...$list_data)
-    {
-
-        $this->add_into_supply_details_table();
-  
-    }
 
    
 

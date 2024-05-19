@@ -185,7 +185,7 @@ export default {
         exports_excel() {
 
             axios
-                .post(`export_AdministrativeStructure`)
+                .post(`export_structure`)
                 .then(function (response) {
 
                     // console.log(1);
@@ -197,7 +197,7 @@ export default {
         imports_excel() {
 
             axios
-                .post(`import_AdministrativeStructure`)
+                .post(`import_structure`)
                 .then(function (response) {
 
                     // console.log(1);

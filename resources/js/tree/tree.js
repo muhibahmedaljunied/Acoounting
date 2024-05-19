@@ -1,17 +1,25 @@
-import { defaultsDeep } from "lodash";
-
+import tree_product from './tree_product.js';
+import tree_account from './tree_account.js';
 export default {
 
+    mixins: [tree_account, tree_product],
     methods: {
 
-        showtree(table, uri) {
+        showtree(table, uri, value = null) {
+
 
             let gf = this;
             var id = `treeview_json_${table}`;
 
-            this.axios.post(`/${uri}`).then((response) => {
+
+            this.axios.post(`/${uri}`, {
+                'value': value,
+                'type': this.type
+            }).then((response) => {
 
                 this.jsonTreeData = response.data.trees;
+
+                console.log('almuhib',this.jsonTreeData);
                 if (this.type_of_tree == 0) { // this if tree is in the orignal screen (account,product,store,structure) 
 
                     this.last_nodes = response.data.last_nodes;
@@ -73,39 +81,26 @@ export default {
 
 
                 }).on('rename_node.jstree', function (e, data) {
-                    // let currentObj = this;
-                    // const config = {
-                    //     headers: {
-                    //         "content-type": "multipart/form-data",
-                    //     },
-                    // };
 
-
-                    // let formData = new FormData();
-                    // formData.append("text", data.node.text);
-
-                    // let url = `/${table}_rename_node/${data.node.id}`;
-                    // axios.post(url, formData).then((response) => {
-
-                    //     currentObj.success = response.data.success;
-                    //     currentObj.filename = "";
-
-                    // }).catch(function (error) {
-                    //     currentObj.output = error;
-                    // });
                 }).on("changed.jstree", function (e, data) {
 
 
-                    // console.log('tree_account', gf.type, table);
-
-                    if (gf.indexselected) {
+                    // console.log('alki',gf.indexselected);
+                    // indexselected == 0 when operation is sale or what is same when start index from 0
+                    if (gf.indexselected || gf.indexselected == 0) {
 
                         $(`#${gf.type}_${table}_tree${gf.indexselected}`).val(data.node.id + ' ' + data.node.text);
                         $(`#${gf.type}_${table}_tree_id${gf.indexselected}`).val(data.node.id);
 
+
+
+                        console.log('yamaha',gf.indexselected);
+                        
                         if (uri == 'tree_account') {
 
-                            gf.account[gf.indexselected] = data.node.id;
+
+                                gf.account[gf.indexselected] = data.node.id;
+
 
                         }
 
@@ -148,40 +143,24 @@ export default {
                     if (table == 'account') {
 
 
-                        if (gf.type == 'Sale' || gf.type == 'Purchase' || gf.type == 'Supply' || gf.type == 'Cash') {
+                        gf.check_account(data);
 
-                            gf.group_accounts_details(gf, data.node.id)
-                        }
 
 
                     }
                     if (table == 'product') {
+                        console.log('no _productm',data.node.id);
+                        gf.check_prouct(table, data, gf.counts);
 
-                        if (gf.type == 'Stock' || gf.type == 'Movement') {
 
-                            gf.productselected = data.node.id;
-                            gf.productselectedname = data.node.text;
-                        }
-                        if (gf.type == 'Purchase' || gf.type == 'Supply' || gf.type == 'Opening') {
+                    }
 
-                            gf.product_tree(gf, data, table)  //this for get units of product 
-                        }
+                    if (table == 'productm') {
 
-                        if (gf.type == 'Cash') {
 
-                            gf.get_product_for_cash(gf, data.node.id, table);
-                        }
+                        console.log('yes _productm',data.node.id);
+                        gf.productm_tree(data);
 
-                        if (gf.type == 'Sale') {
-
-                            gf.get_product_for_sale(gf, data.node.id, table);
-                        }
-
-                        if (gf.type == 'Transfer') {
-
-                            gf.product_one = data.node.id;
-                            gf.get_product_for_transfer(gf, 'product', data.node.id);
-                        }
                     }
 
                     if (table == 'store') {
@@ -190,14 +169,27 @@ export default {
 
                         if (gf.type == 'Sale') {
 
-                            gf.get_product_for_sale(gf, data.node.id, table);
-                            gf.get_account_for_store(gf);
+                            gf.get_product_for_sale(data.node.id, table);
+                            gf.get_account_for_store();
 
                         }
+
+
+                        if (gf.type == 'Purchase' || gf.type == 'Supply') {
+
+                            gf.get_account_for_store(gf.counts);
+
+                        }
+                        if (gf.type == 'SaleReturn' || gf.type == 'CashReturn') {
+
+                            gf.get_account_for_store(gf.detail);
+
+                        }
+
                         if (gf.type == 'Cash') {
 
-                            gf.get_product_for_cash(gf, data.node.id, table);
-                            gf.get_account_for_store(gf);
+                            gf.get_product_for_cash(data.node.id, table);
+                            gf.get_account_for_store();
 
                         }
                         if (gf.type == 'Transfer') {
@@ -207,16 +199,12 @@ export default {
                             gf.fromstore = data.node.text;
                             gf.fromstore_id = data.node.id;
 
-                            gf.get_product_for_transfer(gf, 'store', data.node.id);
+                            gf.get_product_for_transfer('store', data.node.id);
 
 
                         }
 
-                        if (gf.type == 'Purchase' || gf.type == 'Supply') {
 
-                            gf.store = data.node.id;
-                            gf.get_account_for_store(gf);
-                        }
 
                         if (gf.type == 'Opening') {
 
@@ -226,7 +214,7 @@ export default {
                         }
 
 
-                        if (gf.type == 'Stock') {
+                        if (gf.type == 'Stock' || gf.type == 'Movement') {
 
 
 
@@ -236,36 +224,33 @@ export default {
 
                         }
 
-                        if (gf.type == 'Movement') {
+                    }
+
+                    if (table == 'storem') {
 
 
-                            gf.storeselected = data.node.id;
-                            gf.storeselectedname = data.node.text;
+                        gf.check_storem(data);
 
+                    }
+
+
+                    if (table == 'intostore') {
+
+
+                        if (gf.type == 'Transfer') {
+
+                            gf.intostore = data.node.text;
+                            gf.intostore_id = data.node.id;
                         }
 
-
-
-
-                        // gf.get_account_for_store(gf);
-
-                    }
-                    if (table == 'intostore' && gf.type == 'Transfer') {
-
-
-                        gf.intostore = data.node.text;
-                        gf.intostore_id = data.node.id;
-
-
                     }
 
-                    // if (table == 'store' && gf.type == 'Supply') {
 
 
-                    //     gf.store[gf.indexselected] = data.node.id;
 
-                    // }
 
+
+              
 
 
 
@@ -273,71 +258,18 @@ export default {
                 });
 
             });
+
+
         },
 
         detect_index(index) {
+
+
 
             this.indexselected = index;
         },
 
 
-
-        get_account_for_store(gf) {
-
-
-            axios.post(`/get_account_store/${gf.store}`).then((response) => {
-
-                var arrayLength = response.data.accounts.length
-                // var html = '';
-                // console.log('muhib', response.data.accounts);
-                if (arrayLength == 0) {
-
-                    $(`#select_account_${gf.type}`).html('');
-                    return;
-                }
-                // for (var i = 0; i < arrayLength; i++) {
-
-                //     html = html + `<option 
-                //                             value=${response.data.accounts[i].id}>${response.data.accounts[i].text}  ${response.data.accounts[i].id}
-                //                     </option>`;
-
-                // }
-                // console.log(html);
-                // $(`#select_account_${gf.type}`).html(html);
-                $(`#select_account_${gf.type}`).val(response.data.accounts[i].id);
-
-
-            });
-
-        },
-        product_tree(gf, data, table) {
-
-            gf.product[gf.indexselected] = data.node.id;
-
-
-            axios.post(`/get_unit/${data.node.id}`).then((response) => {
-
-                // console.log(response.data.units);
-                gf.units = response.data.units;
-
-                var arrayLength = response.data.units.length
-                var html = '';
-
-
-                for (var i = 0; i < arrayLength; i++) {
-                    console.log('muhib', gf.units[i].name);
-
-                    html = html + `<option data-rate-${gf.indexselected} = ${gf.units[i].rate} data-${this.indexselected} = ${gf.units[i].unit_type}  value=[${gf.units[i].id},${gf.units[i].rate},${gf.units[i].unit_type}]>${gf.units[i].name}</option>`;
-
-                }
-                console.log(html);
-                $(`#select_unit${gf.indexselected}`).html(html);
-
-
-            });
-
-
-        },
 
         get_job(id) {
 
@@ -363,71 +295,8 @@ export default {
 
         },
 
-        get_product_for_sale(gf, id, table) {
-            axios.post(`/sale/newsale/${id}`, { type: table }).then((responce) => {
-
-                gf.all_products = responce.data.products.data;
-
-            });
-        },
-        group_accounts_details(gf, id) {
-
-            axios.post(`/get_group_accounts_details_details/${id}`).then((response) => {
-
-                var arrayLength = response.data.result_data.length
-                var html = '';
-                // console.log('muhib', response.data.result_data);
-                if (arrayLength == 0) {
-
-                    $(`#select_account_${gf.type}`).html('');
-                    return;
-                }
-                for (var i = 0; i < arrayLength; i++) {
-                    // console.log('muhib', gf.response.data.accounts);
-
-                    html = html + `<option 
-                                            value=${response.data.result_data[i].id}>${response.data.result_data[i].name}
-                                    </option>`;
-
-                }
-                // console.log('qw',html);
-                $(`#select_account_${gf.type}_group`).html(html);
 
 
-            });
-
-        },
-
-
-        get_product_for_cash(gf, id, table) {
-            axios.post(`/cash/newcash/${id}`, { type: table }).then((responce) => {
-
-                gf.all_products = responce.data.products.data;
-
-            });
-        },
-        // get_store_for_sale(gf, id) {
-        //     axios.post(`/sale/newsale/${id}`, { type: 'store' }).then((responce) => {
-
-        //         gf.all_products = responce.data.products.data;
-
-        //     });
-        // },
-        get_product_for_transfer(gf, type, id) {
-
-
-            let uri = `/get_product`;
-            axios
-                .post(uri, { id: id, type: type })
-                .then((responce) => {
-                    gf.detail = responce.data.products;
-
-                    // this.stores = responce.data.stores;
-                })
-                .catch(({ response }) => {
-                    console.error(response);
-                });
-        },
         addnode() {
 
 

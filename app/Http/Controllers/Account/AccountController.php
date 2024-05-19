@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Account;
 
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use App\Services\TreeService;
 use App\Models\Account;
 use App\Models\DailyDetail;
 use Illuminate\Http\Request;
@@ -12,11 +14,8 @@ use App\Exports\AccountExport;
 use App\Imports\AccountImport;
 use App\Models\Bank;
 use App\Models\Customer;
-use App\Models\GroupType;
-use App\Models\HrAccount;
 use App\Models\Supplier;
 use App\Models\Treasury;
-use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -41,41 +40,49 @@ class AccountController extends Controller
             ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
             ->select('groups.id', 'group_types.code')
             ->get();
+            // dd(123);
 
         foreach ($groups as $key => $value) {
 
             // dd($value->code);
             if ($value->code == 'customer') {
 
-                $data = Customer::where('customers.group_id',$value->id)
+                $data = Customer::where('customers.group_id', $value->id)
                     ->select('customers.*')
                     ->get();
+                $type = $value->code;
             }
 
             if ($value->code == 'supplier') {
 
-                $data = Supplier::where('suppliers.group_id',$value->id)
+                $data = Supplier::where('suppliers.group_id', $value->id)
                     ->select('suppliers.*')
                     ->get();
+                $type = $value->code;
             }
 
             if ($value->code == 'treasury') {
 
-                $data = Treasury::where('treasuries.group_id',$value->id)
+                $data = Treasury::where('treasuries.group_id', $value->id)
                     ->select('treasuries.*')
                     ->get();
+                $type = $value->code;
             }
 
             if ($value->code == 'bank') {
 
-                $data = Bank::where('banks.group_id',$value->id)
+                $data = Bank::where('banks.group_id', $value->id)
                     ->select('banks.*')
                     ->get();
+                $type = $value->code;
             }
         }
 
 
-        return response()->json(['result_data' => $data]);
+        return response()->json([
+            'result_data' => $data,
+            'group_type' => $type
+        ]);
     }
     public function get_account(Request $request)
     {
@@ -158,79 +165,65 @@ class AccountController extends Controller
     }
 
 
-    // public function get_account_account_setting()
-    // {
-
-
-
-    //     $accounts = HrAccount::with(
-    //         [
-    //             'account' => function ($query) {
-    //                 $query->select('*', 'text as first_name');
-    //             },
-    //             'account_second' => function ($query) {
-    //                 $query->select('*', 'text as second_name');
-    //             }
-    //         ]
-    //     )->select('hr_accounts.*', 'hr_accounts.name as account_name')
-    //         ->get();
-
-    //     // dd($accounts);
-    //     $count_account = HrAccount::all()->count();
-
-    //     return response()->json(['accounts' => $accounts, 'count_account' => $count_account]);
-    // }
-
-
-    public function get_group_bank_treasury()
+    public function get_bank_accounts()
     {
 
-
-        $groups =  DB::table('groups')
+        $bank_groups =  DB::table('groups')
             ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
-            ->whereIn('group_types.code', ['bank', 'treasury'])
-            // ->where('group_types.code','treasury')
+            ->where('group_types.code', 'bank')
             ->select(
                 'groups.*',
-                'group_types.name as type_name'
             )
             ->get();
 
-        $group_types =  DB::table('group_types')->whereIn('group_types.code', ['bank', 'treasury'])->select(
-            'group_types.name as type_name'
-        )
+
+        $bank_accounts =  DB::table('groups')
+            ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
+            ->join('accounts', 'accounts.id', '=', 'groups.account_id')
+            ->where('group_types.code', 'bank')
+            ->select(
+                'groups.*',
+                'accounts.*',
+            )
             ->get();
-        return response()->json(['groups' => $groups, 'group_types' => $group_types]);
+
+        return response()->json([
+            'bank_groups' => $bank_groups,
+            'bank_accounts' => $bank_accounts,
+
+        ]);
     }
-    public function get_bank_treasury()
+
+    public function get_treasury_accounts()
     {
 
 
         $treasury_groups =  DB::table('groups')
             ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
-            ->whereIn('group_types.code', ['treasury'])
-            // ->where('group_types.code','treasury')
+            ->where('group_types.code', 'treasury')
             ->select(
                 'groups.*',
-                'group_types.name as type_name'
             )
             ->get();
 
-        $bank_groups =  DB::table('groups')
+        $treasury_accounts =  DB::table('groups')
             ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
-            ->whereIn('group_types.code', ['bank'])
-            // ->where('group_types.code','treasury')
+            ->join('accounts', 'accounts.id', '=', 'groups.account_id')
+            ->where('group_types.code', 'treasury')
             ->select(
                 'groups.*',
-                'group_types.name as type_name'
+                'accounts.*',
             )
             ->get();
+
 
         return response()->json([
             'treasury_groups' => $treasury_groups,
-            'bank_groups' => $bank_groups,
+            'treasury_accounts' => $treasury_accounts,
+
         ]);
     }
+
     public function account_details_node($id)
     {
 
@@ -270,21 +263,97 @@ class AccountController extends Controller
     }
 
 
-
-    public function tree_account()
+    public function tree_account(Request $request, TreeService $tree)
     {
 
-        $accounts = Cache::rememberForever('tree_accounts', function () {
 
-            return Account::where('parent_id', null)->with('children')->get();
-        });
-        $last_nodes = Cache::rememberForever('tree_accounts_node', function () {
 
-            return Account::where('parent_id', null)->select('accounts.*')->max('id');
-        });
+        // dd($request->all());
+        if ($request['value']) {
 
-        return response()->json(['trees' => $accounts, 'last_nodes' => $last_nodes]);
+            $tree->check_tree($request);
+            $tree->tree_part();
+        } else {
+
+
+            $tree->tree();
+        }
+
+        return response()->json([
+            'trees' => $tree->accounts,
+            'last_nodes' => $tree->last_nodes
+        ]);
     }
+
+
+    // public function tree_account(Request $request)
+    // {
+
+
+    //     if ($request['value']) {
+
+    //         if ($request['value'] == 1) {
+
+    //             $account = $this->get_type_tree(2);
+    //         }
+    //         if ($request['value'] == 2) {
+
+    //             $account = $this->get_type_tree(3);
+    //         }
+
+    //         if ($request['value'] == 3) {
+
+    //             $account = $this->get_type_tree(1);
+    //         }
+
+
+
+    //         $accounts =  Account::where('id', $account[0]->account_id)->with('children')->get();
+    //         $last_nodes =  Account::where('id', $account[0]->account_id)
+    //             ->select('accounts.*')
+    //             ->max('id');
+    //     } else {
+
+    //         $accounts = Cache::rememberForever('tree_accounts', function () {
+
+    //             return Account::where('parent_id', null)->with('children')->get();
+    //         });
+    //         $last_nodes = Cache::rememberForever('tree_accounts_node', function () {
+
+    //             return Account::where('parent_id', null)->select('accounts.*')->max('id');
+    //         });
+    //     }
+
+
+
+    //     return response()->json([
+    //         'trees' => $accounts,
+    //         'last_nodes' => $last_nodes
+    //     ]);
+    // }
+
+    // public function get_type_tree($group)
+    // {
+
+
+
+    //     return collect(DB::table('groups')
+    //         ->where('group_type_id', '=', $group)
+    //         ->where('status', '=', 0)
+    //         ->select('account_id')
+    //         ->get())->toArray();
+    // }
+    // public function get_part_tree_account(Request $request)
+    // {
+
+    //     $accounts =  Account::where('id', 221)->with('children')->get();
+
+    //     $last_nodes =  Account::where('id', 221)->select('accounts.*')->max('id');
+
+
+    //     return response()->json(['trees' => $accounts, 'last_nodes' => $last_nodes]);
+    // }
+
 
 
     public function import(Request $request)

@@ -2,19 +2,12 @@
 
 
 namespace App\Repository\StoreInventury;
-
-use App\RepositoryInterface\InventuryStoreRepositoryInterface;
 use App\Traits\Purchase\StoreProductTrait;
-use App\Services\CoreService;
-use Illuminate\Support\Facades\DB;
-class StorePurchaseRepository implements InventuryStoreRepositoryInterface
+class StorePurchaseRepository extends StoreRepository
 {
 
+  
     use StoreProductTrait;
-    public function __construct(protected CoreService $core)
-    {
-    }
-
     public function store()
     {
         $this->get_store_product();

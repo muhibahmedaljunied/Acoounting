@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Sale;
 
 use App\Models\Customer;
 use App\Models\Sale;
-use App\Models\Account;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use Illuminate\Support\Facades\DB;

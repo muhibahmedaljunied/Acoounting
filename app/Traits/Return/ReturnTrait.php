@@ -1,14 +1,7 @@
 <?php
 
 namespace App\Traits\Return;
-
-use App\Models\SupplyReturn;
-use App\Models\CashReturn;
-use App\Models\SaleReturn;
-use App\Models\PurchaseReturn;
-use Illuminate\Http\Request;
-use DB;
-
+use Illuminate\Support\Facades\DB;
 trait ReturnTrait
 {
     

@@ -1,17 +1,9 @@
 <?php
 
 namespace App\Repository\StockReturnInventury;
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\Models\Stock;
-use App\Services\CoreService;
-use App\Models\SupplyDetail;
-use Illuminate\Support\Facades\DB;
-class StockSupplyReturnRepository implements InventuryStockRepositoryInterface
+class StockSupplyReturnRepository extends StockReturnRepository 
 {
 
-    public function __construct(protected CoreService $core)
-    {
-    }
    public function Stock()
     {
 
@@ -21,50 +13,50 @@ class StockSupplyReturnRepository implements InventuryStockRepositoryInterface
     }
 
 
-    function init_stock_table()
-    {
+    // function init_stock_table()
+    // {
 
-        if ($this->core->stock_f != 0) {
-            return 0;
-        }
-        $stocks = new Stock();
-        $stocks->store_product_id = $this->core->id_store_product;
-        $stocks->unit_id = $this->core->unit_value;
-        $stocks->quantity = $this->core->micro_unit_qty;
-        $stocks->date = $this->core->data['date'];
-        $stocks->stockable()->associate($this->core->stockable);
-        $stocks->save();
+    //     if ($this->core->stock_f != 0) {
+    //         return 0;
+    //     }
+    //     $stocks = new Stock();
+    //     $stocks->store_product_id = $this->core->id_store_product;
+    //     $stocks->unit_id = $this->core->unit_value;
+    //     $stocks->quantity = $this->core->micro_unit_qty;
+    //     $stocks->date = $this->core->data['date'];
+    //     $stocks->stockable()->associate($this->core->stockable);
+    //     $stocks->save();
 
 
-        // }
-    }
+    //     // }
+    // }
 
-    function refresh_price()
-    {
+    // function refresh_price()
+    // {
 
-        $qty = 0;
-        $total = 0;
-        $cost = 0;
+    //     $qty = 0;
+    //     $total = 0;
+    //     $cost = 0;
 
-        $data = SupplyDetail::where('supply_details.store_product_id', $this->core->id_store_product)
-            ->select('supply_details.*')
-            ->get();
+    //     $data = SupplyDetail::where('supply_details.store_product_id', $this->core->id_store_product)
+    //         ->select('supply_details.*')
+    //         ->get();
 
-        if (count($data) > 1) {
+    //     if (count($data) > 1) {
 
-            foreach ($data as $key => $value) {
+    //         foreach ($data as $key => $value) {
 
-                $qty += $value->qty;
-                $total += $value->total;
-            }
+    //             $qty += $value->qty;
+    //             $total += $value->total;
+    //         }
 
-            $cost = $total / $qty;
-            // dd($cost);
+    //         $cost = $total / $qty;
+    //         // dd($cost);
 
-            DB::table('store_products')->where('store_products.id', $this->core->id_store_product)
-                ->update(['cost' => $cost]);
-        }
-    }
+    //         DB::table('store_products')->where('store_products.id', $this->core->id_store_product)
+    //             ->update(['cost' => $cost]);
+    //     }
+    // }
 
 
 

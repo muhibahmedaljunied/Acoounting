@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AccountController;
 
 Route::post('/tree_account', 'Account\AccountController@tree_account');
+Route::post('/tree_account/221', 'Account\AccountController@get_part_tree_account');
+
 Route::post('/account/{id}', 'Account\AccountController@edit');
 Route::post('/delete_account/{id}', 'Account\AccountController@destroy');
 Route::post('/store_account', 'Account\AccountController@store');
@@ -30,10 +32,11 @@ Route::post('/auditBalance', 'Account\AccountController@auditBalance');
 // --------------------------------banks------------------------------------------
 Route::post('/banks', 'Account\BankController@show');
 Route::post('/store_bank', 'Account\BankController@store');
-Route::post('/get_bank_treasury', 'Account\AccountController@get_bank_treasury');
+Route::post('/get_treasury_accounts', 'Account\AccountController@get_treasury_accounts');
+Route::post('/get_bank_accounts', 'Account\AccountController@get_bank_accounts');
 
-Route::post('/group_bank_treasury', 'Account\AccountController@get_group_bank_treasury');
-
+Route::post('/groups', 'GroupController@get_groups');
+Route::post('/store_group', 'GroupController@store');
 Route::post('/get_group_accounts_details_details/{id}', 'Account\AccountController@get_group_accounts_details_details');
 
 // --------------------------------Currencies------------------------------------------
@@ -76,6 +79,10 @@ Route::post('/store_account_period', 'Account\PeriodController@store_account_per
 Route::post('/account_year', 'Account\PeriodController@index');
 
 Route::post('/get_account_account_setting', 'Account\AccountController@get_account_account_setting');
+// Route::post('/store_account_account_setting', 'Account\AccountController@store_account_account_setting');
+Route::post('/store_account_account_setting', 'GroupController@store_account_setting');
+
+
 
 
 

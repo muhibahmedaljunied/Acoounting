@@ -1,13 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Supply;
-use App\Repository\StoreInventury\StoreSupplyRepository;
-use App\Repository\StockInventury\StockSupplyRepository;
+
 use Illuminate\Support\Facades\Cache;
-use App\Repository\Stock\SupplyRepository;
-use App\Services\UnitService;
 use App\Models\StoreProduct;
-use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -18,8 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\status;
 use App\Models\Temporale;
 use App\Models\Supply;
-use App\Services\CoreService;
-use App\Services\DailyService;
+use App\Services\StockService;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class SupplyController extends Controller
@@ -28,19 +23,7 @@ class SupplyController extends Controller
         GeneralTrait;
 
 
-    public function __construct(
 
-        protected CoreService $core,
-        protected PaymentService $payment,
-        protected UnitService $unit,
-        Request $request,
-
-    ) {
-
-
-        $this->core->setData($request->all());
-        $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
-    }
 
     public function details(Request $request, $id)
     {
@@ -54,6 +37,8 @@ class SupplyController extends Controller
 
         ]);
     }
+
+
     public function index()
     {
 
@@ -62,16 +47,26 @@ class SupplyController extends Controller
             ->select('products.*',)
             ->get();
 
+        $stores = DB::table('stores')
+            ->select(
+                'stores.account_id as store_account_id',
+                'stores.text as store_name',
+                'stores.id as store_id'
 
+            )
+            ->get();
 
 
         return response()->json([
             'products' => $products,
-            // 'suppliers' => $this->suppliers(),
+            'suppliers' => $this->suppliers(),
             'statuses' => Status::all(),
-            // 'treasuries' => $this->treasuries()
+            // 'treasuries' => $this->treasuries(),
+            'stores' => $stores
+
         ]);
     }
+
 
 
 
@@ -79,7 +74,7 @@ class SupplyController extends Controller
     {
 
         $suppliers =  DB::table('suppliers')
-            ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
+            // ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
             ->select(
                 'suppliers.*',
 
@@ -106,14 +101,11 @@ class SupplyController extends Controller
     }
 
     public function payment(
-        DailyService $daily,
-        StoreSupplyRepository $store,
-        StockSupplyRepository $stock,
-        SupplyRepository $warehouse,
+        StockService $stock
     ) {
 
 
-        // dd($this->core->data);
+        // dd($stock->core->data);
 
         // $result  = $this->daily->check_account();
 
@@ -131,29 +123,8 @@ class SupplyController extends Controller
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $warehouse->add(); // this insert data into supply table
-
-            foreach ($this->core->data['count'] as $value) {
-
-                $this->core->setValue($value);
-      
-                $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-              
-                $store->store(); // this handle data in store_product table
-
-                $warehouse->init_details(); // this make initial for details table
-
-                $stock->stock(); // this handle data in stock table
-
-            }
-
-            $this->payment->pay();
-            $daily->daily()->debit()->credit();
-
-            $warehouse->refresh(); //this update supply table by daily_id
+            $stock->handle();
             Cache::forget('stock');
-            // dd(Supply::all());
-
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
 
@@ -204,21 +175,57 @@ class SupplyController extends Controller
     public function show()
     {
 
-    
+
         $supplies = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
             $morphTo->constrain([
-                Supply::class=> function ($query) {
+                Supply::class => function ($query) {
+                    
                     $query->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id');
-                    $query->select('supplies.*','supplies.id as supply_id');
-                }
-                   
+                    $query->join('dailies', 'dailies.id', '=', 'supplies.daily_id');
+                    $query->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id');
+                    $query->join('accounts', 'accounts.id', '=', 'daily_details.account_id');
+                    $query->where('daily_details.credit', '!=', 0);
+
+
+                    $query->select(
+                        'supplies.*',
+                        'supplies.id as supply_id',
+                        'accounts.text',
+                        'accounts.id as account_id',
+                    );
+                },
             ]);
         }])
-        ->where('paymentable_type','App\\Models\\Supply')
+            ->where('paymentable_type', 'App\\Models\\Supply')
+            ->paginate(5);
 
-        ->paginate();
 
-       
+        return response()->json(['supplies' => $supplies]);
+    }
+
+    public function supply_list()
+    {
+
+
+        $supplies = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Supply::class => function ($query) {
+
+                    $query->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id');
+                    
+
+                    $query->select(
+                        'supplies.*',
+                        'supplies.id as supply_id',
+                     
+                    );
+                },
+            ]);
+        }])
+            ->where('paymentable_type', 'App\\Models\\Supply')
+            ->paginate(5);
+
+
         return response()->json(['supplies' => $supplies]);
     }
 

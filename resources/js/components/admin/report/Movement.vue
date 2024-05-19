@@ -9,154 +9,159 @@
 
           </div>
           <div class="card-body">
-            <div class="card-box">
-              <div class="invoice-box">
-
-                <h4>اختر التقرير</h4>
-
-
-                <div class="row">
-
-
-                  <div class="col-sm-10">
-                    <form>
-                      <div v-for="(typee, index) in types" style="display: inline-flex;">
-                        <input v-model="typeselected[index]" @change='onreportchange()' type="checkbox"
-                          value=''>&nbsp;&nbsp;
-                        <label class="checkbox-inline">{{ types[index] }}</label>
-
-                        <!-- &nbsp;&nbsp;&nbsp;&nbsp; -->
-
-                      </div>
-                    </form>
-                  </div>
-
-                  <div class="col-sm-2">
-                    <a @click="Search()" class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal"
-                      id="agregar_productos" data-target=".bs-example-modal-sm">
-                      <i class="fa fa-search"></i></a>
-                    <a @click="printDiv('printme')" class="tn btn-info btn-sm waves-effect btn-agregar"
-                      data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-sm">
-                      <i class="fa fa-print"></i></a>
-                  </div>
 
 
 
-                </div>
 
-                <hr>
-                <div class="row">
+            <fieldset class="border rounded-3 p-3">
 
 
-                  <div class="col-md-5">
-                    <label for="desde">من <code>X</code> تاريخ</label>
-                    <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
-                      name="modal_reporte_venta_inicio" v-model="from_date" onkeypress="return controltag(event)"
-                      style="background-color: white" />
-                  </div>
-                  <div class="col-md-5">
-                    <label for="hasta">الي <code>X</code> تاريخ</label>
-                    <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_final"
-                      name="modal_reporte_venta_final" v-model="to_date" onkeypress="return controltag(event)"
-                      style="background-color: white" />
-                  </div>
-                  <div class="col-md-2" v-show="showunit">
-                    <label for="status">الوحده</label>
-                    <select v-model="unitselected" name="status" id="status" class="form-control">
+              <div class="row">
 
 
-                      <option v-for="units in unit" v-bind:value="[units.id, units.name]">
-                        {{ units.name }}
-                      </option>
+                <div class="col-sm-10">
+                  <form>
+                    <div v-for="(typee, index) in types">
+                      <input v-model="typeselected[index]" @change='onreportchange()' type="checkbox"
+                        value=''>&nbsp;&nbsp;
+                      <label class="checkbox-inline">{{ types[index] }}</label>
 
-                    </select>
-                  </div>
+                      &nbsp;&nbsp;&nbsp;&nbsp;
 
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-md-2" v-show="showoperation">
-                    <label for="status"> نوع العمليه</label>
-                    <select v-model="moveselected" class="form-control">
-                      <option v-bind:value="1">كل العمليات</option>
-                      <option v-bind:value="2">صرف</option>
-                      <option v-bind:value="3">توريد</option>
-                      <option v-bind:value="4">مرتجع صرف</option>
-                      <option v-bind:value="5">مرتجع توريد</option>
-                      <option v-bind:value="6"> بيع</option>
-                      <option v-bind:value="7">شراء</option>
-                      <option v-bind:value="8">مرتجع بيع</option>
-                      <option v-bind:value="9">مرتجع شراء</option>
-
-                    </select>
-                  </div>
-
-                  <div class="col-md-3" v-show="showstore">
-                    <label for="status">المخزن</label>
-
-
-                    <div class="custom-search">
-                      <input :id="'Movement_store_tree' + index" type="text" readonly class="custom-search-input">
-                      <input :id="'Movement_store_tree_id' + index" type="hidden" readonly class="custom-search-input">
-                      <button @click="detect_index_store(index)" class="custom-search-botton" type="submit"
-                        data-toggle="modal" data-target="#exampleModalStore"> <i class="fa fa-plus-circle"></i></button>
                     </div>
-                  </div>
-
-                  <div class="col-md-3" v-show="showproduct">
-                    <label for="status">المنتج</label>
-
-                    <div class="custom-search">
-
-                      <input :id="'Movement_product_tree' + index" type="text" readonly class="custom-search-input">
-                      <input :id="'Movement_product_tree_id' + index" type="hidden" readonly class="custom-search-input">
-
-                      <button @click="detect_index(index)" class="custom-search-botton" type="submit" data-toggle="modal"
-                        data-target="#exampleModalProduct"> <i class="fa fa-plus-circle"></i></button>
-                    </div>
-                  </div>
-                  <div class="col-md-2" v-show="showstatus">
-                    <label for="status">حاله المنتج</label>
-                    <select v-model="statusselected" name="status" id="status" class="form-control">
-
-
-                      <option v-for="statuses in status" v-bind:value="[statuses.id, statuses.name]">
-                        {{ statuses.name }}
-                      </option>
-
-                    </select>
-                  </div>
-
-                  <div class="col-md-2" v-show="showdesc">
-                    <label for="status">المواصفات والطراز </label>
-                    <input type="text" v-model="descselected" class="form-control input_cantidad"
-                      onkeypress="return valida(event)" />
-                  </div>
-
-
+                  </form>
                 </div>
 
-                <!-- <div class='row'>
-                                          
-                      <div class="col-md-2">
-                        <a @click="Search()" class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal"
-                          id="agregar_productos" data-target=".bs-example-modal-sm">
-                          <i class="fa fa-search"></i></a>
-                        <a @click="printDiv('printme')" class="tn btn-info btn-sm waves-effect btn-agregar"
-                          data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-sm">
-                          <i class="fa fa-print"></i></a>
-
-
-
-
-                      </div>
-                    </div> -->
+                <div class="col-sm-2">
+                  <a @click="Search()" class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal"
+                    id="agregar_productos" data-target=".bs-example-modal-sm">
+                    <i class="fa fa-search"></i></a>
+                  <a @click="printDiv('printme')" class="tn btn-info btn-sm waves-effect btn-agregar"
+                    data-toggle="modal" id="agregar_productos" data-target=".bs-example-modal-sm">
+                    <i class="fa fa-print"></i></a>
+                </div>
 
 
 
               </div>
 
-            </div>
+            </fieldset>
+            <fieldset class="border rounded-3 p-3">
+              <div class="row">
+
+
+                <div class="col-md-5">
+                  <label for="desde">من <code>X</code> تاريخ</label>
+                  <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_inicio"
+                    name="modal_reporte_venta_inicio" v-model="from_date" onkeypress="return controltag(event)"
+                    style="background-color: white" />
+                </div>
+                <div class="col-md-5">
+                  <label for="hasta">الي <code>X</code> تاريخ</label>
+                  <input type="date" class="form-control hasDatepicker" id="modal_reporte_venta_final"
+                    name="modal_reporte_venta_final" v-model="to_date" onkeypress="return controltag(event)"
+                    style="background-color: white" />
+                </div>
+                <div class="col-md-2" v-show="showunit">
+                  <label for="status">الوحده</label>
+                  <select v-model="unitselected" name="status" id="status" class="form-control">
+
+
+                    <option v-for="units in unit" v-bind:value="[units.id, units.name]">
+                      {{ units.name }}
+                    </option>
+
+                  </select>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-2" v-show="showoperation">
+                  <label for="status"> نوع العمليه</label>
+                  <select v-model="moveselected" class="form-control">
+                    <option v-bind:value="1">كل العمليات</option>
+                    <option v-bind:value="2">صرف</option>
+                    <option v-bind:value="3">توريد</option>
+                    <option v-bind:value="4">مرتجع صرف</option>
+                    <option v-bind:value="5">مرتجع توريد</option>
+                    <option v-bind:value="6"> بيع</option>
+                    <option v-bind:value="7">شراء</option>
+                    <option v-bind:value="8">مرتجع بيع</option>
+                    <option v-bind:value="9">مرتجع شراء</option>
+
+                  </select>
+                </div>
+
+                <div class="col-md-3" v-show="showstore">
+                  <label for="status">المخزن</label>
+
+
+                  <div class="custom-search">
+                    <input :id="'Movement_store_tree' + index" type="text" readonly class="custom-search-input">
+                    <input :id="'Movement_store_tree_id' + index" type="hidden" readonly class="custom-search-input">
+                    <button @click="detect_index_store(index)" class="custom-search-botton" type="submit"
+                      data-toggle="modal" data-target="#exampleModalStore"> <i class="fa fa-plus-circle"></i></button>
+                  </div>
+                </div>
+
+                <div class="col-md-3" v-show="showproduct">
+                  <label for="status">المنتج</label>
+
+                  <div class="custom-search">
+
+                    <input :id="'Movement_product_tree' + index" type="text" readonly class="custom-search-input">
+                    <input :id="'Movement_product_tree_id' + index" type="hidden" readonly class="custom-search-input">
+
+                    <button @click="detect_index(index)" class="custom-search-botton" type="submit" data-toggle="modal"
+                      data-target="#exampleModalProduct"> <i class="fa fa-plus-circle"></i></button>
+                  </div>
+                </div>
+                <div class="col-md-2" v-show="showstatus">
+                  <label for="status">حاله المنتج</label>
+                  <select v-model="statusselected" name="status" id="status" class="form-control">
+
+
+                    <option v-for="statuses in status" v-bind:value="[statuses.id, statuses.name]">
+                      {{ statuses.name }}
+                    </option>
+
+                  </select>
+                </div>
+
+                <div class="col-md-2" v-show="showdesc">
+                  <label for="status">المواصفات والطراز </label>
+                  <input type="text" v-model="descselected" class="form-control input_cantidad"
+                    onkeypress="return valida(event)" />
+                </div>
+
+
+              </div>
+            </fieldset>
+
+
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row row-sm">
+      <div class="col-xl-12">
+        <div class="card">
+          <div class="card-header">
+
+            <span style="font-size: x-large"> تقرير حركه الاصناف </span>
+
+          </div>
+          <div class="card-body">
+
+
+
+
+
+
 
             <div class="row" id="printme">
               <div class="col-sm-12">
@@ -164,129 +169,172 @@
 
                   <div class="invoice-box">
                     <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
-                    <table>
-                      <thead>
-                        <tr style="text-indent: 2em">
-                          <td v-if="productselected != 0">
-                            <h5>
-                              المنتج :
-                              <span>{{ productselectedname }}</span>
-                            </h5>
-                          </td>
-                          <td v-if="moveselected != 0">
-                            <h5>
-                              نوع العمليه :
-                              <span>{{ movement_of_type_operation[moveselected] }}</span>
-                            </h5>
-                          </td>
-                          <td v-if="statusselected != 0">
-                            <h5>
-                              الحاله : <span>{{ statusselected[1] }}</span>
-                            </h5>
-                          </td>
-                          <td v-if="storeselected != 0">
-                            <h5>
-                              المخزن :
-                              <span>{{ storeselectedname }} </span>
-                            </h5>
-                          </td>
-                          <td v-if="unitselected != 0">
-                            <h5>
-                              الوحده :
-                              <span>{{ unitselected[1] }} </span>
-                            </h5>
-                          </td>
-                          <td v-if="descselected != 0">
-                            <h5>
-                              المواصفات والطراز :
-                              <span>{{ descselected }} </span>
-                            </h5>
-                          </td>
-                          <td>
-                            <span> من تاريخ {{ from_date }}</span>
-                            <span> الي
-                              تاريخ{{
-                                to_date
-                              }}</span>
-                          </td>
 
-                        </tr>
-
-                      </thead>
-                    </table>
-                    <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
+                    <fieldset class="border rounded-3 p-3">
 
 
+                      <div class="row">
 
-                    <table class="table table-bordered text-right" style="width: 100%; font-size: large">
-                      <thead>
-                        <tr class="heading" style="font-size: 10pt">
-                          <!-- <td>#</td> -->
+                        <div class="col-md-2">
+                          <h5 v-if="productselected != 0">
+                            المنتج :
+                            <span>{{ productselectedname }}</span>
+                          </h5>
+                        </div>
 
-                          <td v-if="productselected == 0">المنتج</td>
-                          <td v-if="moveselected == 0">نوع العمليه</td>
+                        <div class="col-md-2">
+                          <h5 v-if="moveselected != 0">
+                            نوع العمليه :
+                            <span>{{ movement_of_type_operation[moveselected] }}</span>
+                          </h5>
+                        </div>
 
-                          <td v-if="storeselected == 0">المخزن</td>
-                          <td v-if="statusselected == 0">الحاله</td>
-                          <!-- <td v-if="unitselected == 0">الوحده</td> -->
-                          <td v-if="descselected == 0">الطراز والمواصفات</td>
+                        <div class="col-md-2">
 
-                          <td>الكميه</td>
-                          <td>التاريخ</td>
-                        </tr>
-                      </thead>
-                      <tbody v-if="report && report.data.length > 0">
-                        <tr class="item" v-for="datas in report.data">
-                          <!-- <td>{{ datas.id }}</td> -->
-                          <td v-if="productselected == 0">
-                            {{ datas.product }}
-                          </td>
-                          <!-- <td>
+                          <h5 v-if="statusselected != 0">
+                            الحاله : <span>{{ statusselected[1] }}</span>
+                          </h5>
+                        </div>
+
+                        <div class="col-md-2">
+                          <h5 v-if="storeselected != 0">
+                            المخزن :
+                            <span>{{ storeselectedname }} </span>
+                          </h5>
+                        </div>
+
+                        <div class="col-md-2">
+
+                          <h5 v-if="unitselected != 0">
+                            الوحده :
+                            <span>{{ unitselected[1] }} </span>
+                          </h5>
+                        </div>
+
+                        <div class="col-md-2">
+
+                          <h5 v-if="descselected != 0">
+                            المواصفات والطراز :
+                            <span>{{ descselected }} </span>
+                          </h5>
+                        </div>
+
+                      </div>
+
+                      <div class="row">
+
+                        <div class="col-md-6">
+
+                          <h5> من تاريخ :{{ from_date }}
+
+
+                          </h5>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                          <h5>
+                            الي تاريخ:{{
+                      to_date
+                    }}</h5>
+
+                        </div>
+
+                      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </fieldset>
+
+
+                    <fieldset class="border rounded-3 p-3">
+                      <table class="table table-bordered text-right" style="width: 100%; font-size: large">
+                        <thead>
+                          <tr class="heading" style="font-size: 10pt">
+                            <!-- <td>#</td> -->
+
+                            <td v-if="productselected == 0">المنتج</td>
+                            <td v-if="moveselected == 0">نوع العمليه</td>
+
+                            <td v-if="storeselected == 0">المخزن</td>
+                            <td v-if="statusselected == 0">الحاله</td>
+                            <!-- <td v-if="unitselected == 0">الوحده</td> -->
+                            <td v-if="descselected == 0">الطراز والمواصفات</td>
+
+                            <td>الكميه</td>
+                            <td>التاريخ</td>
+                          </tr>
+                        </thead>
+                        <tbody v-if="report && report.data.length > 0">
+                          <tr class="item" v-for="datas in report.data">
+                            <!-- <td>{{ datas.id }}</td> -->
+                            <td v-if="productselected == 0">
+                              {{ datas.product }}
+                            </td>
+                            <!-- <td>
   
 </td> -->
-                          <div v-if="moveselected == 0">
-                            <td v-if="datas.type_operation == 'Supply'">
-                              توريد
-                            </td>
-                            <td v-if="datas.type_operation == 'Purchase'">
-                              شراء
-                            </td>
-                            <td v-if="datas.type_operation == 'Sale'">
-                              بيع
-                            </td>
-                            <td v-if="datas.type_operation == 'Cash'">صرف</td>
-                            <td v-if="datas.type_operation == 'Transfer'">تحويل</td>
-                            <td v-if="datas.type_operation == 'SupplyReturn'">
-                              مرتجع توريد
-                            </td>
-                            <td v-if="datas.type_operation == 'CashReturn'">
-                              مرتجع صرف
-                            </td>
-                            <td v-if="datas.type_operation == 'SaleReturn'">
-                              مرتجع بيع
-                            </td>
-                            <td v-if="datas.type_operation == 'PurchaseReturn'">
-                              مرتجع شراء
-                            </td>
+                            <div v-if="moveselected == 0">
+                              <td v-if="datas.type_operation == 'Supply'">
+                                توريد
+                              </td>
+                              <td v-if="datas.type_operation == 'Purchase'">
+                                شراء
+                              </td>
+                              <td v-if="datas.type_operation == 'Sale'">
+                                بيع
+                              </td>
+                              <td v-if="datas.type_operation == 'Cash'">صرف</td>
+                              <td v-if="datas.type_operation == 'Transfer'">تحويل</td>
+                              <td v-if="datas.type_operation == 'SupplyReturn'">
+                                مرتجع توريد
+                              </td>
+                              <td v-if="datas.type_operation == 'CashReturn'">
+                                مرتجع صرف
+                              </td>
+                              <td v-if="datas.type_operation == 'SaleReturn'">
+                                مرتجع بيع
+                              </td>
+                              <td v-if="datas.type_operation == 'PurchaseReturn'">
+                                مرتجع شراء
+                              </td>
 
 
 
-                          </div>
-                          <td v-if="storeselected == 0">{{ datas.store }}</td>
-                          <td v-if="statusselected == 0">{{ datas.status }}</td>
-                          <!-- <td v-if="unitselected == 0">{{ datas.unit }}</td> -->
-                          <td v-if="descselected == 0">{{ datas.desc }}</td>
+                            </div>
+                            <td v-if="storeselected == 0">{{ datas.store }}</td>
+                            <td v-if="statusselected == 0">{{ datas.status }}</td>
+                            <!-- <td v-if="unitselected == 0">{{ datas.unit }}</td> -->
+                            <td v-if="descselected == 0">{{ datas.desc }}</td>
 
-                          <td>{{ datas.qty_stock }}{{ datas.unit }}</td>
-                          <td>{{ datas.date }}</td>
-                        </tr>
-                      </tbody>
-                      <tbody v-else>
-                        <td align="center" colspan="7">
-                          <h4>لايوجد بيانات بالشروط التي اخترتها</h4>
-                        </td>
-                      </tbody>
-                    </table>
+                            <td>{{ datas.qty_stock }}{{ datas.unit }}</td>
+                            <td>{{ datas.date }}</td>
+                          </tr>
+                        </tbody>
+                        <tbody v-else>
+                          <td align="center" colspan="7">
+                            <h4>لايوجد بيانات بالشروط التي اخترتها</h4>
+                          </td>
+                        </tbody>
+                      </table>
+                    </fieldset>
                     <!-- <div id="intro" style="text-align: left">
 
                       <h3>امين المخازن:{{ user }}</h3>
@@ -297,7 +345,9 @@
                 </div>
               </div>
             </div>
+
           </div>
+
           <div class="card-footer">
             <div id="intro" style="text-align: left">
 
@@ -309,6 +359,7 @@
         </div>
       </div>
     </div>
+
 
     <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
       aria-hidden="true">
@@ -366,7 +417,7 @@ export default {
     return {
 
       all_products: '',
-   
+
       indexselected: '',
       indexselectedproduct: '',
       indexselectedstore: '',
@@ -446,8 +497,8 @@ export default {
   },
   mounted() {
     this.type = 'Movement';
-    this.showtree('product','tree_product');
-    this.showtree('store','tree_store');
+    this.showtree('product', 'tree_product');
+    this.showtree('store', 'tree_store');
     this.axios.post("/Reposupply").then((response) => {
 
 
@@ -518,9 +569,3 @@ export default {
   background-color: #00b9ff;
 }
 </style> -->
-
-
-
-
-
-

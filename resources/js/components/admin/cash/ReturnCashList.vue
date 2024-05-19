@@ -5,7 +5,7 @@
         <div class="card">
           <div class="card-header pb-0">
 
-            <span class="h2"> مرتجع مبيعات</span>
+            <span class="h2"> مرتجع صرف</span>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -81,7 +81,9 @@
                             v-bind:value="['/return_cash_invoice_update/', return_cashs.cash_id, 4]">
                             تعديل الفاتوره
                           </option>
-
+                          <option class="btn btn-success" v-bind:value="['return_cash_daily', return_cashs.return_id, 5]">
+                            عرض القيد المحاسبي
+                          </option>
                         </select>
                       </div>
 
@@ -215,7 +217,12 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
       }
 
     },

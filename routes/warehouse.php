@@ -37,7 +37,6 @@ Route::post('/delete_unit/{id}', 'Warehouse\UnitController@destroy');
 Route::post('/store_store_account_setting', 'Warehouse\StoreController@store_store_account_setting');
 Route::post('/get_store_account_setting', 'Warehouse\StoreController@get_store_account_setting');
 Route::post('/stock', 'Warehouse\StockController@index');
-
 Route::post('/stocksearch', 'Warehouse\StockController@search');
 
 
@@ -86,6 +85,7 @@ Route::post('/StatusImport', 'Warehouse\StatusController@Import');
 
 // ------------------------------------Transfer------------------------------------------------------------------------------------------------------------------------------------
 Route::post('/transfer', 'Warehouse\TransferController@index');
+Route::post('/get_transfer_for_recive/{id}', 'Warehouse\TransferController@get_transfer_for_recive');
 Route::post('/transfer_before', 'Warehouse\TransferController@show');
 Route::post('/create_transfer', 'Warehouse\TransferController@create');
 Route::post('/store_transfer', 'Warehouse\TransferController@store');

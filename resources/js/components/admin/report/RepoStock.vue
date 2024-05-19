@@ -8,19 +8,19 @@
 
           </div>
           <div class="card-body">
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="card-box">
+            <fieldset class="border rounded-3 p-3">
+              <div class="row">
+                <div class="col-sm-12">
 
 
-                  <div class="invoice-box">
-                    <p>اختر التقرير</p>
+
+                  <fieldset class="border rounded-3 p-3">
 
                     <div class="row">
                       <div class="col-sm-10">
                         <form>
                           <label v-for="(typee, index) in types" class="checkbox-inline">
-                            <input v-model="typeselected[index]" @change='onreportchange()' type="checkbox">&nbsp;
+                            <input v-model="typeselected[index]" @change='onreportchange()' type="checkbox">&nbsp;&nbsp;
                             {{ types[index] }}
                           </label>&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -37,9 +37,9 @@
 
                       </div>
                     </div>
+                  </fieldset>
 
-
-                    <hr>
+                  <fieldset class="border rounded-3 p-3">
                     <div class="row">
                       <div class="col-md-3" v-show="showproduct">
                         <label for="status">المنتج</label>
@@ -48,7 +48,8 @@
                         <div class="custom-search">
 
                           <input :id="'Stock_product_tree' + index" type="text" readonly class="custom-search-input">
-                          <input :id="'Stock_product_tree_id' + index" type="hidden" readonly class="custom-search-input">
+                          <input :id="'Stock_product_tree_id' + index" type="hidden" readonly
+                            class="custom-search-input">
 
 
                           <button @click="detect_index(index)" class="custom-search-botton" type="submit"
@@ -101,133 +102,133 @@
 
                     </div>
 
+                  </fieldset>
 
 
 
 
-                  </div>
+
+
 
 
                 </div>
 
               </div>
 
-            </div>
+            </fieldset>
           </div>
 
           <div class="row" id="printme">
             <div class="col-sm-12">
-              <div class="card-box">
-
-                <div class="invoice-box">
-                  <table>
-                    <thead>
-                      <tr style="text-indent: 2em">
-                        <td v-if="productselected != 0">
-                          <h4>
-                            <span> المنتج</span> : {{ productselectedname }}
-                          </h4>
-                        </td>
-                        <td v-if="storeselected != 0">
-                          <h4><span> المخزن</span> : {{ storeselectedname }}</h4>
-                        </td>
-                        <td v-if="statusselected != 0">
-                          <h4>
-                            <span> حاله المنتج</span>:
-                            {{ statusselected[1] }}
-                          </h4>
-                        </td>
-                        <td v-if="descselected != 0">
-                          <h4>
-                            <span> المواصفات والطراز</span>:
-                            {{ descselected }}
-                          </h4>
-                        </td>
-
-                      </tr>
-
-                    </thead>
-                  </table>
-
-                  <table class="table table-bordered text-right" style="width: 100%; font-size: large">
-                    <thead>
-                      <tr class="heading" style="font-size: 10px">
-                        <!-- <td>#</td> -->
-
-                        <td v-if="productselected == 0">المنتج</td>
-                        <!-- <td v-if="moveselected == 1">نوع العمليه</td> -->
-                        <td v-if="storeselected == 0">المخزن</td>
-                        <td v-if="statusselected == 0">الحاله</td>
-                        <td v-if="descselected == 0">الطراز والمواصفات</td>
-                        <td>الكميه</td>
-
-                        <!-- <td>التاريخ</td> -->
-                      </tr>
-                    </thead>
-                    <tbody v-if="report && report.data.length > 0">
-                      <tr class="item" v-for="datas in report.data">
-                        <!-- <td>{{ datas.id }}</td> -->
-                        <td v-if="productselected == 0">
-                          {{ datas.product }}
-                        </td>
-
-                        <td v-if="storeselected == 0">{{ datas.store }}</td>
-                        <td v-if="statusselected == 0">
-                          {{ datas.status }}
-                        </td>
-                        <td v-if="descselected == 0">
-                          {{ datas.desc }}
-                        </td>
-
-                        <td>
-                          <!-- {{ datas.quantity }} {{ datas.unit }} -->
 
 
-                          <div v-for="temx in datas.units">
+              <fieldset class="border rounded-3 p-3">
+
+
+                <h4 v-if="productselected != 0">
+                  <span> المنتج</span> : {{ productselectedname }}
+                </h4>
+
+
+                <h4 v-if="storeselected != 0"><span> المخزن</span> : {{ storeselectedname }}</h4>
+
+
+                <h4 v-if="statusselected != 0">
+                  <span> حاله المنتج</span>:
+                  {{ statusselected[1] }}
+                </h4>
+
+
+                <h4 v-if="descselected != 0">
+                  <span> المواصفات والطراز</span>:
+                  {{ descselected }}
+                </h4>
 
 
 
-                            <span v-if="temx.unit_type == 0">
 
-                              <span v-if="datas.quantity / datas.rate >= 1">
-                                {{ Math.round((datas.quantity / datas.rate)) }}{{
-                                  datas.units[0].name
-                                }}
-                              </span>
+              </fieldset>
+              <fieldset class="border rounded-3 p-3">
+                <table class="table table-bordered text-right" style="width: 100%; font-size: large">
+                  <thead>
+                    <tr class="heading" style="font-size: 10px">
+                      <!-- <td>#</td> -->
 
-                              <span v-if="datas.quantity % datas.rate >= 1">
-                                {{ Math.round((datas.quantity % datas.rate)) }}{{
-                                  datas.units[1].name
-                                }}
-                              </span>
+                      <td v-if="productselected == 0">المنتج</td>
+                      <!-- <td v-if="moveselected == 1">نوع العمليه</td> -->
+                      <td v-if="storeselected == 0">المخزن</td>
+                      <td v-if="statusselected == 0">الحاله</td>
+                      <td v-if="descselected == 0">الطراز والمواصفات</td>
+                      <td>الكميه</td>
+
+                      <!-- <td>التاريخ</td> -->
+                    </tr>
+                  </thead>
+                  <tbody v-if="report && report.data.length > 0">
+                    <tr class="item" v-for="datas in report.data">
+                      <!-- <td>{{ datas.id }}</td> -->
+                      <td v-if="productselected == 0">
+                        {{ datas.product }}
+                      </td>
+
+                      <td v-if="storeselected == 0">{{ datas.store }}</td>
+                      <td v-if="statusselected == 0">
+                        {{ datas.status }}
+                      </td>
+                      <td v-if="descselected == 0">
+                        {{ datas.desc }}
+                      </td>
+
+                      <td>
+                        <!-- {{ datas.quantity }} {{ datas.unit }} -->
+
+
+                        <div v-for="temx in datas.units">
+
+
+
+                          <span v-if="temx.unit_type == 0">
+
+                            <span v-if="datas.quantity / datas.rate >= 1">
+                              {{ Math.round((datas.quantity / datas.rate)) }}{{
+                            datas.units[0].name
+                          }}
                             </span>
 
-                          </div>
+                            <span v-if="datas.quantity % datas.rate >= 1">
+                              {{ Math.round((datas.quantity % datas.rate)) }}{{
+                            datas.units[1].name
+                          }}
+                            </span>
+                          </span>
 
-                        </td>
+                        </div>
 
-
-                        <!-- <td>{{ datas.date }}</td> -->
-                      </tr>
-                    </tbody>
-                    <tbody v-else>
-                      <td align="center" colspan="7">
-                        <h4>لايوجد بيانات بالشروط التي اخترتها</h4>
                       </td>
-                    </tbody>
-                  </table>
-                  <div id="intro" style="text-align: left">
 
-                    <h3>امين المخازن:{{ user }}</h3>
-                    <h5>{{ timestamp }}</h5>
-                  </div>
-                </div>
+
+                      <!-- <td>{{ datas.date }}</td> -->
+                    </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <td align="center" colspan="7">
+                      <h4>لايوجد بيانات بالشروط التي اخترتها</h4>
+                    </td>
+                  </tbody>
+                </table>
+              </fieldset>
+              <div id="intro" style="text-align: left">
+
+                <h3>امين المخازن:{{ user }}</h3>
+                <h5>{{ timestamp }}</h5>
               </div>
+
+
             </div>
           </div>
 
-          <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+          <div class="modal fade" id="exampleModalProduct" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -431,11 +432,3 @@ h2,
   background-color: #00b9ff;
 }
 </style> -->
-
-
-
-
-
-
-
-

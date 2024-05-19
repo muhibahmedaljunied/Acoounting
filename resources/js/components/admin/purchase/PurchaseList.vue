@@ -86,7 +86,7 @@
                             v-bind:value="['/PaymentBond/', purchase.paymentable.purchase_id, 4]">
                             دفع
                           </option> -->
-                          <option class="btn btn-success" v-bind:value="['PaymentBond', purchase.paymentable.purchase_id, 4]">
+                          <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success" v-bind:value="['PaymentBond', purchase.paymentable.purchase_id, 4]">
                             صرف
                           </option>
                           <option class="btn btn-success"

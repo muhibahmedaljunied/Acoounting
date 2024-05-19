@@ -9,15 +9,15 @@
 
 
           <div style="display: flex;float: left; margin: 5px">
-            <router-link to="NewCash" id="agregar_productos"
-              class="tn btn-info btn-sm waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link>
+            <!-- <router-link to="NewCash" id="agregar_productos"
+              class="tn btn-info btn-sm waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link> -->
 
 
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="true" v-model="word_search" @input="get_search()" />
 
 
-
+<!-- 774899393 -->
          
           </div>
         </div>
@@ -27,7 +27,7 @@
                 <thead>
                   <tr>
                     <th class="wd-15p border-bottom-0">رقم الفاتوره</th>
-                    <th class="wd-15p border-bottom-0">العميل</th>
+                    <th class="wd-15p border-bottom-0">جهه الصرف</th>
                     <!-- <th class="wd-15p border-bottom-0">الكميه </th> -->
                     <!-- <th class="wd-15p border-bottom-0">الكميه المرتحعه</th> -->
                     <th class="wd-15p border-bottom-0">تاريخ الصرف</th>
@@ -41,11 +41,13 @@
                 </thead>
                 <tbody v-if="cashes && cashes.data.length > 0">
                   <tr v-for="(cash, index) in cashes.data" :key="index">
-                    <td>{{ cash.paymentable.cash_id }}</td>
-                    <td>{{ cash.paymentable.customer_name }}</td>
+                    <td>{{ cash.paymentable.cash_id }} </td>
+
+                    <td v-if="cash.payment_info == '1' || cash.payment_info == '2'"> {{ cash.paymentable.customer_name }}</td>
+                    <td v-else>{{ cash.paymentable.text }} {{ cash.paymentable.account_id }}</td>
                     <!-- <td>{{ cash.quantity }}</td>
                   <td>{{ cash.qty_return }}</td> -->
-                    <td>{{ cash.paymentable.created_at }}</td>
+                    <td>{{ cash.paymentable.date }}</td>
                     <td>{{ cash.paid }}</td>
                     <td>{{ cash.remaining }}</td>
                     <td>{{ cash.paymentable.grand_total }}</td>

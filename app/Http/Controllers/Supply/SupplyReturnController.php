@@ -1,42 +1,26 @@
 <?php
 
 namespace App\Http\Controllers\Supply;
-
-use App\Repository\StoreReturnInventury\StoreSupplyReturnRepository;
-use App\Repository\StockReturnInventury\StockSupplyReturnRepository;
 use Illuminate\Support\Facades\Cache;
-use App\Repository\CheckData\CheckSupplyReturnRepository;
-use App\Repository\Stock\SupplyReturnRepository;
 use App\Traits\Details\ReturnDetailsTrait;
-use App\Services\UnitService;
-use App\Services\CoreService;
 use App\Traits\GeneralTrait;
 use App\Http\Controllers\Controller;
-use App\Models\DailyDetail;
-use App\Models\SupplyDetail;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\SupplyReturnDetail;
 use App\Models\SupplyReturn;
-use App\Services\DailyService;
-use App\Services\ReturnService;
+use App\Services\StockReturnService;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class SupplyReturnController extends Controller
 {
 
     use GeneralTrait,
         ReturnDetailsTrait;
-    public function __construct(
-
-        protected CoreService $core,
-        Request $request,
-    ) {
-
-
-        $this->core->setData($request->all());
-    }
+ 
 
 
     public function details(Request $request, $id)
@@ -72,11 +56,9 @@ class SupplyReturnController extends Controller
     {
 
         return DB::table('suppliers')
-            ->join('accounts', 'accounts.id', '=', 'suppliers.account_id')
             ->select(
-                'suppliers.id',
-                'suppliers.name',
-                'suppliers.account_id',
+                'suppliers.*',
+
 
             )
             ->get();
@@ -86,11 +68,9 @@ class SupplyReturnController extends Controller
     {
 
         $treasuries = DB::table('treasuries')
-            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
-                'treasuries.id',
-                'treasuries.name',
-                'treasuries.account_id',
+                'treasuries.*',
+
 
             )
             ->get();
@@ -115,11 +95,11 @@ class SupplyReturnController extends Controller
 
 
         return SupplyReturn::where('supply_returns.id', $id)
-            ->join('supplys', 'supplys.id', '=', 'supply_returns.supply_id')
-            ->join('suppliers', 'suppliers.id', '=', 'supplys.supplier_id')
+            ->join('supplies', 'supplies.id', '=', 'supply_returns.supply_id')
+            ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
             ->select(
-                'supplys.*',
-                'supplys.id as supply_id',
+                'supplies.*',
+                'supplies.id as supply_id',
                 'suppliers.*',
                 'supply_returns.*',
                 'supply_returns.id as return_id'
@@ -152,14 +132,29 @@ class SupplyReturnController extends Controller
     {
 
 
+        // $returns = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+        //     $morphTo->constrain([
+        //         SupplyReturn::class => function ($query) {
+        //             // $query->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id');
+        //             $query->select('supplies.*', 'supplies.id as supply_id');
+        //         },
+        //     ]);
+        // }])
+        //     ->where('paymentable_type', 'App\\Models\\SupplyReturn')
+        //     ->paginate(10);
+
+
+        // return response()->json(['returns' => $returns]);
+
+        // -----------------------------------------------------------------------------------------------
         $returns = DB::table('supply_returns')->where('supply_returns.supply_id', $id)
-            ->join('supplys', 'supplys.id', '=', 'supply_returns.supply_id')
+            ->join('supplies', 'supplies.id', '=', 'supply_returns.supply_id')
             ->select(
                 'supply_returns.*',
                 'supply_returns.date as return_date',
                 'supply_returns.quantity as qty_return',
                 'supply_returns.id as return_id',
-                'supplys.*'
+                'supplies.*'
             )
             ->paginate(10);
 
@@ -168,14 +163,8 @@ class SupplyReturnController extends Controller
         return response()->json(['returns' => $returns]);
     }
     public function create(
-        StoreSupplyReturnRepository $store,
-        StockSupplyReturnRepository $stock,
-        SupplyReturnRepository $warehouse,
-        CheckSupplyReturnRepository $check,
-        ReturnService $returnservice,
-        Request $request,
-        UnitService $unit,
-        DailyService $daily,
+
+        StockReturnService $stock
     )   // this create return for supply,cashing,sale,supply
     {
 
@@ -185,30 +174,7 @@ class SupplyReturnController extends Controller
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-
-
-            $warehouse->add();
-
-            foreach ($request->post('count') as $value) {
-
-
-                // -------------------------------------------------------------------------------------
-
-                // $result = $check->check_return($request['old'][$value]);
-
-                // if ($result['status'] == 0) {
-                //     return response(['message' => $result['text'], 'status' => $result['status']]);
-                // }
-                // -------------------------------------------------------------------------------------
-
-                $this->core->setValue($value);
-                $unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-                $store->store();
-                $returnservice->details();
-                $stock->stock();
-            }
-            $daily->daily()->debit()->credit();
-            $warehouse->refresh(); //this update supply_return table by daily_id
+            $stock->handle();
             Cache::forget('stock');
 
             // dd(DailyDetail::all());
@@ -231,20 +197,20 @@ class SupplyReturnController extends Controller
         // return response()->json(['message' => $responce]);
     }
 
-    public function supply_return_daily(Request $request)
+    public function return_supply_daily(Request $request)
     {
 
 
 
-        $supplys = DB::table('supplys')
-            ->where('supplys.id', $request->id)
-            ->join('suppliers', 'suppliers.id', '=', 'supplys.supplier_id')
-            ->join('dailies', 'dailies.id', '=', 'supplys.daily_id')
+        $supplies = DB::table('supplies')
+            ->where('supplies.id', $request->id)
+            ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
+            ->join('dailies', 'dailies.id', '=', 'supplies.daily_id')
             ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
             ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
             ->select(
-                // 'supplys.*',
-                'supplys.id as supply_id',
+                // 'supplies.*',
+                'supplies.id as supply_id',
                 'suppliers.name',
                 'dailies.*',
                 'daily_details.*',
@@ -255,8 +221,7 @@ class SupplyReturnController extends Controller
             )
             ->get();
 
-        // dd($supplys);
-        return response()->json(['daily_details' => $supplys]);
+        // dd($supplies);
+        return response()->json(['daily_details' => $supplies]);
     }
-
 }

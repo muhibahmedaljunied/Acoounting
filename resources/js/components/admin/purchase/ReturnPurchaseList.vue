@@ -91,10 +91,12 @@
                             الفاء الفاتوره
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/return_purchase_invoice_update/', return_purchase.purchase_id, 3]">
+                            v-bind:value="['/return_purchase_invoice_update/', return_purchase.purchase_id, 4]">
                             تعديل الفاتوره
                           </option>
-
+                          <option class="btn btn-success" v-bind:value="['return_purchase_daily', return_purchase.return_id, 5]">
+                            عرض القيد المحاسبي
+                          </option>
 
                         </select>
                       </div>
@@ -273,7 +275,13 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
+
       }
 
     },

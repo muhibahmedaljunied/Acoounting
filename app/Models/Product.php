@@ -5,8 +5,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['name','product_main','rank','parent_id'];
+    protected $fillable = ['id','parent_id','text','rank','purchase_price','status','rate','product_minimum','image','created_at','updated_at'];
 
+
+ 
     public function children(){
 
 

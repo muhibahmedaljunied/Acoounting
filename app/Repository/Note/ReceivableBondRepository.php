@@ -17,9 +17,9 @@ class ReceivableBondRepository
     public function finish(){
 
 
-        
+        // dd($this->core->data);
         $receivab = new ReceivableNote();
-        $receivab->sale_id = $this->core->data['sale_id'];
+        $receivab->sale_id = $this->core->data['id'];
         $receivab->daily_id = $this->core->daily_id;
         $receivab->date = $this->core->data['date'];
         // $receivab->paid = $this->core->data['paid'];

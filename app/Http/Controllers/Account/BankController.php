@@ -42,33 +42,35 @@ class BankController extends Controller
         foreach ($request->post('count') as $value) {
 
             // -------------------------------------------------------------------------
-            $parent =  DB::table('accounts')
-                ->where('accounts.id', $request['account'])
-                ->select(
-                    'accounts.*',
-                )
-                ->first();
+            // $parent =  DB::table('accounts')
+            //     ->where('accounts.id', $request['account'])
+            //     ->select(
+            //         'accounts.*',
+            //     )
+            //     ->first();
 
             // ---------------------------------------------------------------------------
 
-            $childs = Account::where('parent_id', $parent->id)->select('accounts.*')->max('id');
-            $id = ($childs == null) ? $request['account'] * 10 + 1 : $childs + 1;
+            // $childs = Account::where('parent_id', $parent->id)->select('accounts.*')->max('id');
+            // $id = ($childs == null) ? $request['account'] * 10 + 1 : $childs + 1;
 
             // dd($id);
             // -------------------------------------------------------------------------
 
-            $account = new Account();
-            $account->id = $id;
-            $account->text = $request['name'][$value];
-            $account->parent_id = $parent->id;
-            $account->rank = $parent->rank + 1;
-            $account->status_account = false;
-            $account->save();
+            // $account = new Account();
+            // $account->id = $id;
+            // $account->text = $request['name'][$value];
+            // $account->parent_id = $parent->id;
+            // $account->rank = $parent->rank + 1;
+            // $account->status_account = false;
+            // $account->save();
             // -------------------------------------------------------------------------
 
             $bank = new Bank();
-            $bank->account_id =  $id;
+            // $bank->account_id =  $id;
             $bank->name =  $request['name'][$value];
+            $bank->group_id =  $request['group'][$value];
+
             $bank->save();
         }
 
@@ -92,12 +94,18 @@ class BankController extends Controller
                 'groups.name as group_name'
             )
             ->paginate(10);
+
         $groups =  DB::table('groups')
             ->join('group_types', 'group_types.id', '=', 'groups.group_type_id')
-            ->whereIn('group_types.code', ['bank'])->select(
+            ->where('group_types.code', 'bank')
+            ->select(
                 'groups.*'
             )
             ->get();
+
+
+
+            // dd($groups);
         return response()->json(['banks' => $banks, 'groups' => $groups]);
     }
 }

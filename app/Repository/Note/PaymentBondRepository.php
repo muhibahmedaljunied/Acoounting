@@ -16,7 +16,7 @@ class PaymentBondRepository
     public function finish(){
 
         $data = new PayableNote();
-        $data->purchase_id = $this->core->data['purchase_id'];
+        $data->purchase_id = $this->core->data['id'];
         $data->daily_id = $this->core->daily_id;
         $data->date = $this->core->data['date'];
         // $data->paid = $this->core->data['paid'];

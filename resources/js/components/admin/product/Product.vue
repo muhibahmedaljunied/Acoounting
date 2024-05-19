@@ -116,40 +116,23 @@
 
                       </div>
                       <div class='col-md-4'>
-                        <label for="radio-example-one">يوجد وحدات تجزئه </label>
-
-                        <input type="checkbox" name='fieldset2' id="status" v-model="check_state">
+                        <label for="radio-example-one">اضافه وحدات تجزئه </label><br>
 
 
-                      </div>
-                    </div>
-                    <div class="row" v-if="check_state">
-                      <div class="col-md-4">
-                        <label for="Product">وحده التجزئه</label>
-                        <!-- retail_unit -->
-                        <select v-model="retail_unit" class="form-control">
-                          <option v-for="unit in units" v-bind:value="unit.id">
-                            {{ unit.name }}
-                          </option>
-                        </select>
-
-                      </div>
+                        <!-- <input type="checkbox" name='fieldset2' id="status" v-model="check_state"> -->
 
 
-                      <div class="col-md-4">
-                        <label for="purchase_price"> سعر الشراء</label>
-                        <input v-model="purchase_price_for_retail_unit" type="text" name="purchase_price"
-                          id="purchase_price" class="form-control" />
+                        <button class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" data-target="#exampleModalUnit">
+                          <i class="fa fa-plus-circle"></i></button>
 
-                      </div>
-                      <div class='col-md-4'>
-                        <label for="purchase_price">عدد وحدات التجزئه بالوحده الاساسيه</label>
-                        <input v-model="hash_rate" type="text" name="purchase_price" id="purchase_price"
-                          class="form-control" />
+
+
+
 
 
                       </div>
                     </div>
+
                     <div class="form-group">
                       <label for="Product Minimum"> الحد الادني للمنتج</label>
                       <input v-model="product_minimum" type="number" name="Minimum" id="Minimum" class="form-control" />
@@ -177,7 +160,8 @@
 
                   <div class="form-group">
                     <label for="filePhoto">الصوره</label>
-                    <input v-on:change="onFileChange" type="file" name="image" class="form-control-file" id="filePhoto" />
+                    <input v-on:change="onFileChange" type="file" name="image" class="form-control-file"
+                      id="filePhoto" />
                     <img src="" id="previewHolder" width="150px" />
                   </div>
 
@@ -200,6 +184,97 @@
 
     </div>
 
+    <div class="modal fade" id="exampleModalUnit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">وحدات التجزئه</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+
+            <div class="row">
+              <div class="table-responsive">
+                <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
+                  <thead>
+                    <tr>
+                      <!-- <th>Code</th> -->
+                      <th>وحده التجزئه</th>
+                      <th>سعر الشراء</th>
+                      <th>عدد وحدات التجزئه بالوحده الاساسيه</th>
+
+                      <th>اضافه</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="index in count" :key="index">
+
+                      <td>
+                     
+                          <!-- retail_unit -->
+                          <select v-model="retail_unit[index]" class="form-control">
+                            <option v-for="unit in units" v-bind:value="unit.id">
+                              {{ unit.name }}
+                            </option>
+                          </select>
+
+               
+
+
+
+                      </td>
+                      <td>
+
+                      
+                          <input v-model="purchase_price_for_retail_unit[index]" type="text" name="purchase_price"
+                            id="purchase_price" class="form-control" />
+
+                
+
+
+                      </td>
+
+                      <td>
+                     
+
+                          <input v-model="hash_rate[index]" type="text" name="purchase_price" id="purchase_price"
+                            class="form-control" />
+
+                      </td>
+
+
+                      <td v-if="index == 1">
+
+                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
+                          <i class="fa fa-plus-circle"></i></button>
+
+                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
+                          <i class="fa fa-minus-circle"></i></button>
+
+
+
+                      </td>
+                    </tr>
+
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
     <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
       aria-hidden="true">
       <div class="modal-dialog modal-sm">
@@ -216,22 +291,17 @@
 <script>
 
 // import jtree from '../../../../js/jtree.js';
+import operation from '../../../../js/operation.js';
 import tree from '../../../../js/tree/tree.js';
 
 export default {
   // mixins: [jtree],
-  mixins: [tree],
+  mixins: [tree, operation],
 
   // mixins: [tree],
   data() {
     return {
-      // show_retail_unit:false,
-      // product_first_level: '',
-      // last_nodes: '',
-      // rank: 1,
-      // parent: 0,
-      // jsonTreeData: [],
-      // type_of_tree:0,
+
       check_state: '',
       error_text: '',
       error_hash_rate: '',
@@ -269,13 +339,17 @@ export default {
 
 
     });
+
+    this.counts[0] = 1;
+    this.type = 'Product';
+
   },
   created() {
     localStorage.setItem('id', 0);
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'product');
 
-    this.showtree('product','tree_product');
+    this.showtree('product', 'tree_product');
   },
 
   methods: {
@@ -316,7 +390,3 @@ export default {
   },
 };
 </script>
-
-
-
-

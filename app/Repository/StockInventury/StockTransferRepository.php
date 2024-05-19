@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Repository\StockInventury;
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\Services\CoreService;
+
 use App\Models\Stock;
-class StockTransferRepository implements InventuryStockRepositoryInterface
+use App\Services\CoreService;
+
+class StockTransferRepository extends StockRepository
 {
     public function __construct(protected CoreService $core)
     {

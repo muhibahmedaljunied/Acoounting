@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
-    protected $fillable = ['store_name_ar','store_name_en','currency','store_main','rank','store_type','parent_id','account_id'];
+    protected $fillable = ['id','text','parent_id','account_id','rank','status','created_at','updated_at'];
 
     public function children(){
 

@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Services\SupplierService;
 use App\Models\Supplier;
 use App\Models\Purchase;
-use App\Models\Account;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
+use App\Models\Payment;
+use App\Models\Supply;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\DB;
-use Storage;
 
+use function GuzzleHttp\Promise\all;
 
 class SupplierController extends Controller
 {
@@ -38,7 +39,7 @@ class SupplierController extends Controller
 
 
 
-        return response()->json(['suppliers'=>$suppliers]);
+        return response()->json(['suppliers' => $suppliers]);
     }
 
     public function search(Request $request)
@@ -76,25 +77,30 @@ class SupplierController extends Controller
                 'accounts.text as account_name'
             )
             ->get();
-        return response()->json(['groups' => $groups, 'group_accounts' => $group_accounts]);
+        return response()->json([
+            'groups' => $groups,
+            'group_accounts' => $group_accounts
+        ]);
     }
 
-    public function store_supplier_account_setting(Request $request)
-    {
+    // public function store_supplier_account_setting(Request $request)
+    // {
+
+    //     // dd($request['group_id']);
+    //     $group_accounts = Group::find($request['group_id']);
+
+    //     $group_accounts->update(['account_id' => $request['account_id']]);
 
 
-        $group_accounts = Group::find($request['group_id']);
-        $group_accounts->update(['account_id' => $request['account_id']]);
-
-
-        return response()->json(['message' => 'sucess']);
-    }
+    //     return response()->json(['message' => 'sucess']);
+    // }
 
 
 
     public function store(Request $request, SupplierService $supplier_service)
     {
 
+        $supplier_service->request = $request->all();
         // $validator = Validator::make($request->all(), [
         //     'name' => 'required|max:2',
         //     'email' => 'required|email|unique:users',
@@ -148,25 +154,54 @@ class SupplierController extends Controller
     {
 
 
-        $purchases =  Purchase::where('supplier_id', $request->id)
-            ->with([
 
-                'payable_notes' => function ($query) {
+
+        $purchases = Payment::with(['Paymentable' => function (MorphTo $morphTo) use ($request) {
+            $morphTo->constrain([
+                Purchase::class => function ($query) use ($request) {
+                    $query->where('supplier_id', $request->id);
+                    // $query->join('purchase_returns', 'purchases.id', '=', 'purchase_returns.purchase_id');
+                    // $query->join('payable_notes', 'purchases.id', '=', 'payable_notes.purchase_id');
                     $query->select('*');
                 },
+                // Supply::class => function ($query) use ($request) {
+                //     $query->where('supplier_id', $request->id);
+                //     $query->select('*');
+                // },
+            ]);
+        }])
+            ->where('paymentable_type', 'App\\Models\\Purchase')
+            // ->orwhere('paymentable_type', 'App\\Models\\Supply')
 
-                'payments' => function ($query) {
-                    $query->select('*');
-                },
-                'purchase_returns' => function ($query) {
-                    $query->select('*');
-                }
-
-            ])
-            ->paginate(10);
+            ->paginate(100);
 
 
         return response()->json(['purchases' => $purchases]);
+
+
+        // ------------------------------
+        // $purchases =  Purchase::where('supplier_id', $request->id)
+        //     ->with([
+
+        //         'payable_notes' => function ($query) {
+        //             $query->select('*');
+        //         },
+
+        //         'payments' => function ($query) {
+
+        //             $query->where('payment_status', 'pendding');
+        //             $query->select('*');
+        //         },
+        //         'purchase_returns' => function ($query) {
+        //             $query->select('*');
+        //         }
+
+        //     ])
+
+        //     ->paginate(5);
+
+
+        // return response()->json(['purchases' => $purchases]);
     }
 
     /**
@@ -209,4 +244,12 @@ class SupplierController extends Controller
 
         return response()->json('successfully deleted');
     }
+
+
+    // purchases  -> supplier_id
+    // supplies  -> supplier_id
+    // purchase_returns -> purchases -> supplier_id
+    // supplies_returns -> purchases -> supplier_id
+    // payable_notes -> purchases -> supplier_id
+
 }

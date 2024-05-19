@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Exports\HrSettingExport;
 use App\RepositoryInterface\HRRepositoryInterface;
 use App\Services\CoreStaffService;
 use App\Services\Staff\StaffService;
 use Illuminate\Support\Facades\Cache;
 use App\Models\AdministrativeStructure;
 use App\Http\Controllers\Controller;
+use App\Imports\HrSettingImport;
 use App\Models\Account;
 use App\Models\PeriodTime;
 use App\Models\WorkSystem;
@@ -20,6 +22,7 @@ use App\Models\StaffType;
 use App\Models\StaffReligion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StaffController extends Controller
 {
@@ -94,6 +97,25 @@ class StaffController extends Controller
         ]);
     }
 
+    public function import(Request $request)
+    {
+
+        Excel::import(new HrSettingImport, storage_path('hr_setting.xlsx'));
+
+        return response()->json([
+            'status' =>
+            'The file has been excel/csv imported to database in laravel 9'
+        ]);
+    }
+
+
+    public function export()
+    {
+
+        return Excel::download(new HrSettingExport, 'hr_setting.xlsx');
+    }
+
+    
     public function get_job(Request $request)
     {
 

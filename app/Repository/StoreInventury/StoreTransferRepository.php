@@ -1,13 +1,11 @@
 <?php
 
 namespace App\Repository\StoreInventury;
-
-use App\RepositoryInterface\InventuryStoreRepositoryInterface;
 use App\Traits\Transfer\StoreProductTrait;
 use App\Services\CoreService;
 
 
-class StoreTransferRepository implements InventuryStoreRepositoryInterface
+class StoreTransferRepository extends StoreRepository
 {
 
     use StoreProductTrait;
@@ -20,7 +18,7 @@ class StoreTransferRepository implements InventuryStoreRepositoryInterface
     {
 
         $this->get_store_product();
-        $this->refresh_store_product_table();
+        $this->refresh_store_product();
         $this->init_store_product_table();
     }
 
@@ -40,6 +38,7 @@ class StoreTransferRepository implements InventuryStoreRepositoryInterface
             'status_id' => $id_store_product[0]['status_id'],
             'desc' => $id_store_product[0]['desc']
         ];
+        
 
       
 
@@ -48,7 +47,7 @@ class StoreTransferRepository implements InventuryStoreRepositoryInterface
 
 
 
-    public function refresh_store_product_table()
+    public function refresh_store_product()
     {
 
         $this->decrement_store_product_tale();

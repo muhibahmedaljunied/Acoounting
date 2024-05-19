@@ -8,6 +8,7 @@ use App\Repository\Sanction\AbsenceRepository;
 use App\Repository\Sanction\ExtraRepository;
 use App\Repository\Sanction\SanctionRepository;
 use App\Services\core\CoreStaffAttendanceService;
+use App\Services\CoreDailyService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -75,6 +76,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CoreService::class, function () {
 
             return new CoreService();
+        });
+
+        $this->app->singleton(CoreDailyService::class, function () {
+
+            return new CoreDailyService();
         });
 
         $this->app->singleton(CoreStaffService::class, function () {

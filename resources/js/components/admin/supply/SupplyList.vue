@@ -3,34 +3,34 @@
     <div class="row row-sm">
       <div class="col-xl-12">
         <div class="card">
-       
-          <div class="card-header">
-          <span class="h3">اوامر التوريد</span>
+          <div class="card-header pb-0">
+
+            <span class="h3"> اوامرالتوريد</span>
+            <div style="display: flex;float: left; margin: 5px">
+
+              <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
+                aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search"
+                @input="get_search()" />
 
 
-          <div style="display: flex;float: left; margin: 5px">
-            <router-link to="NewSupply" id="agregar_productos"
-              class="tn btn-info btn-sm waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link>
+              <!-- 774899393 -->
 
+            </div>
 
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="true" v-model="word_search" @input="get_search()" />
-
-
-
-         
           </div>
-        </div>
+
+
+
           <div class="card-body">
             <div class="table-responsive">
               <table class="table text-md-nowrap" id="example1">
                 <thead>
                   <tr>
                     <th class="wd-15p border-bottom-0">رقم الفاتوره</th>
-                    <th class="wd-15p border-bottom-0">المورد</th>
-                    <!-- <th class="wd-15p border-bottom-0">الكميه </th>
-                  <th class="wd-15p border-bottom-0">الكميه المرتحعه</th> -->
-                    <th class="wd-15p border-bottom-0">تاريخ التوريد</th>
+                    <!-- <th class="wd-15p border-bottom-0">المورد</th> -->
+                    <th class="wd-15p border-bottom-0">الحساب </th>
+                    <!--<th class="wd-15p border-bottom-0">الكميه المرتحعه</th> -->
+                    <th class="wd-15p border-bottom-0">تاريخ الشراء</th>
 
                     <th class="wd-15p border-bottom-0"> المدفوع</th>
                     <th class="wd-15p border-bottom-0">المتبقي</th>
@@ -42,7 +42,12 @@
                 <tbody v-if="supplies && supplies.data.length > 0">
                   <tr v-for="(supply, index) in supplies.data" :key="index">
                     <td>{{ supply.paymentable.supply_id }}</td>
-                    <td>{{ supply.paymentable.supplier_name }}</td>
+                    <td v-if="supply.payment_info == '1' || supply.payment_info == '2'"> {{ supply.paymentable.supplier_name }}</td>
+                    <td v-else>{{ supply.paymentable.text }} {{ supply.paymentable.account_id }}</td>
+
+                    <!-- <td>{{ supply.paymentable.supplier_name }}</td> -->
+                    <!-- <td>{{ supply.paymentable.text }}</td> -->
+
                     <!-- <td>{{ supply.quantity }}</td>
                   <td>{{ supply.qty_return }}</td> -->
                     <td>{{ supply.paymentable.date }}</td>
@@ -62,40 +67,41 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option :selected="true" class="btn btn-success" v-bind:value="[
-                            '/supply_details/',
-                            supply.supply_id,
-                            0
-                          ]">
+                  '/supply_details/',
+                  supply.paymentable.supply_id,
+                  0
+                ]">
                             تفاصيل
                           </option>
-                          
+
                           <option class="btn btn-success" v-bind:value="[
-                            'return_supply',
-                            supply.paymentable,
-                            1
-                          ]">
+                  'return_supply',
+                  supply.paymentable,
+                  1
+                ]">
                             ارجاع
                           </option>
                           <option class="btn btn-success" v-bind:value="[
-                            'returnsupplylist',
-                            supply.supply_id,
-                            2
-                          ]">
+                  'returnsupplylist',
+                  supply.paymentable.supply_id,
+                  2
+                ]">
                             مرتجعات
                           </option>
 
                           <option class="btn btn-success" v-bind:value="[
-                            '/supply_invoice/',
-                            supply.supply_id,
-                            3
-                          ]">
+                  '/supply_invoice/',
+                  supply.paymentable.supply_id,
+                  3
+                ]">
                             عرض الفاتوره
                           </option>
                           <!-- <option v-if="supply.payment_status != 'paiding'" class="btn btn-success"
                             v-bind:value="['/PaymentBond/', supply.paymentable.supply_id, 4]">
                             دفع
                           </option> -->
-                          <option class="btn btn-success" v-bind:value="['PaymentBond', supply.paymentable.supply_id, 4]">
+                          <option class="btn btn-success"
+                            v-bind:value="['PaymentBond', supply.paymentable.supply_id, 4]">
                             صرف
                           </option>
                           <option class="btn btn-success"
@@ -104,7 +110,8 @@
                           </option>
 
 
-                          <option class="btn btn-success" v-bind:value="['supply_daily', supply.paymentable.supply_id, 6]">
+                          <option class="btn btn-success"
+                            v-bind:value="['supply_daily', supply.paymentable.supply_id, 6]">
                             عرض القيد المحاسبي
                           </option>
                         </select>
@@ -118,7 +125,7 @@
                   <tr>
                     <td align="center" colspan="8">
                       <h3>
-                        لايوجد اي مشتريات
+                        لايوجد اي واردات
                       </h3>
                     </td>
                   </tr>
@@ -134,7 +141,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <span class="h2">تفاصيل التوريد</span>
+            <span class="h2">تفاصيل الوارد</span>
 
 
           </div>
@@ -149,7 +156,7 @@
                     <th>الحاله</th>
                     <th>المخزن</th>
 
-                    <th class="wd-15p border-bottom-0"> كميه التوريد</th>
+                    <th class="wd-15p border-bottom-0"> كميه الشراء</th>
                     <!-- <th>الوحده</th> -->
                     <th class="wd-15p border-bottom-0"> السعر </th>
                     <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
@@ -177,14 +184,14 @@
 
                           <span v-if="supply_details.qty / supply_details.rate >= 1">
                             {{ Math.floor((supply_details.qty / supply_details.rate)) }}{{
-                              supply_details.units[0].name
-                            }}
+                  supply_details.units[0].name
+                }}
                           </span>
 
                           <span v-if="supply_details.qty % supply_details.rate >= 1">
                             {{ Math.floor((supply_details.qty % supply_details.rate)) }}{{
-                              supply_details.units[1].name
-                            }}
+                  supply_details.units[1].name
+                }}
                           </span>
                         </span>
 
@@ -307,6 +314,7 @@ export default {
       this.axios
         .post(`/listsupply?page=${page}`, { type: this.type })
         .then(({ data }) => {
+          console.log(data.supplies);
           this.supplies = data.supplies;
         })
         .catch(({ response }) => {
@@ -331,5 +339,3 @@ export default {
   outline: none;
 }
 </style>
-
-

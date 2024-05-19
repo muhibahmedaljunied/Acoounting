@@ -17,9 +17,7 @@
                     <div class="tabs-menu1">
                       <!-- Tabs -->
                       <ul class="nav panel-tabs main-nav-line">
-                        <li class="nav-item">
-                          <a href="#tab1" class="nav-link" data-toggle="tab">التصنيفات</a>
-                        </li>
+                    
                         <li class="nav-item">
                           <a href="#tab2" class="nav-link" data-toggle="tab">البنوك</a>
                         </li>
@@ -50,9 +48,7 @@
                           border-top-0 border
                         ">
                     <div class="tab-content">
-                      <div class="tab-pane active" id="tab1">
-                        <group-bank-treasury></group-bank-treasury>
-                      </div>
+             
                       <div class="tab-pane active" id="tab2">
                         <bank></bank>
                       </div>
@@ -86,7 +82,7 @@
   </div>
 </template>
 <script>
-import GroupBankTreasury from "./BasicData/GroupBankTreasury";
+
 import Bank from "./BasicData/Bank";
 import Currency from "./BasicData/Currency";
 import Treasury from "./BasicData/Treasury";
@@ -101,7 +97,6 @@ export default {
     Bank,
     Currency,
     Treasury,
-    GroupBankTreasury,
     // TypeIncome
 
   },

@@ -43,12 +43,12 @@ trait SupplyReturnTrait
         $Details->save();
     }
 
-    public function refresh_supply_details_table()
-    {
+    // public function refresh_supply_details_table()
+    // {
 
-        DB::table('supply_details')
-        ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
-        ->increment('qty_return', $this->core->micro_unit_qty);
+    //     DB::table('supply_details')
+    //     ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
+    //     ->increment('qty_return', $this->core->micro_unit_qty);
 
-    }
+    // }
 }

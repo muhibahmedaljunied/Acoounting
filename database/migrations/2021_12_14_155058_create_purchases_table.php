@@ -25,7 +25,7 @@ class CreatePurchasesTable extends Migration
             $table->date('date')->nullable();
             $table->date('due_date')->nullable();
             $table->string('note')->nullable();
-            $table->string('supplier_name');
+            // $table->string('supplier_name');
             $table->string('sub_total')->nullable();
             $table->decimal('discount')->nullable();
             $table->decimal('tax_amount')->nullable();

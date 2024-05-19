@@ -26,9 +26,9 @@ class CreateSuppliesTable extends Migration
             $table->date('due_date')->nullable();
             $table->string('note')->nullable();
             $table->string('supplier_name');
-            $table->string('sub_total')->nullable();
-            $table->decimal('discount')->nullable();
-            $table->decimal('tax_amount')->nullable();
+            // $table->string('sub_total')->nullable();
+            // $table->decimal('discount')->nullable();
+            // $table->decimal('tax_amount')->nullable();
             $table->integer('grand_total');
             $table->string('status')->nullable();
 

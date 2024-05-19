@@ -2,41 +2,25 @@
 
 namespace App\Http\Controllers\Purchase;
 
-use App\Repository\StoreReturnInventury\StorePurchaseReturnRepository;
-use App\Repository\StockReturnInventury\StockPurchaseReturnRepository;
+
 use Illuminate\Support\Facades\Cache;
 use App\Repository\CheckData\CheckPurchaseReturnRepository;
-use App\Repository\Stock\PurchaseReturnRepository;
 use App\Traits\Details\ReturnDetailsTrait;
-use App\Services\UnitService;
-use App\Services\CoreService;
 use App\Traits\GeneralTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturn;
-use App\Services\DailyService;
-use App\Services\ReturnService;
+use App\Services\StockService;
 use Illuminate\Support\Facades\Auth;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseReturnController extends Controller
 {
 
     use GeneralTrait,
         ReturnDetailsTrait;
-    public function __construct(
-
-        protected CoreService $core,
-        Request $request,
-    ) {
-
-
-        $this->core->setData($request->all());
-    }
-
-
     public function details(Request $request, $id)
     {
 
@@ -44,10 +28,24 @@ class PurchaseReturnController extends Controller
 
         $this->units($details);
 
+
+        $purchase =  DB::table('purchases')
+            ->where('purchases.id', $request->id)
+            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+            ->select(
+                'suppliers.id',
+                'suppliers.name',
+                // 'suppliers.account_id',
+                'purchases.grand_total',
+
+
+            )
+            ->get();
+
         return response()->json([
             'details' => $details,
-            // 'suppliers' => $this->suppliers(),
-            'treasuries' => $this->treasuries()
+            'purchase' => $purchase,
+
         ]);
     }
 
@@ -166,56 +164,30 @@ class PurchaseReturnController extends Controller
         return response()->json(['returns' => $returns]);
     }
     public function create(
-        StorePurchaseReturnRepository $store,
-        StockPurchaseReturnRepository $stock,
-        PurchaseReturnRepository $warehouse,
-        CheckPurchaseReturnRepository $check,
-        ReturnService $returnservice,
-        Request $request,
-        UnitService $unit,
-        DailyService $daily,
+        StockService $stock,
     )   // this create return for supply,cashing,sale,purchase
     {
 
-        // dd($request->all());
 
 
+
+        // dd( $stock->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
 
-
-            $warehouse->add();
-
-            foreach ($request->post('count') as $value) {
+            $stock->handle();
 
 
-                // -------------------------------------------------------------------------------------
-
-                // $result = $check->check_return($request['old'][$value]);
-
-                // if ($result['status'] == 0) {
-                //     return response(['message' => $result['text'], 'status' => $result['status']]);
-                // }
-                // -------------------------------------------------------------------------------------
-
-                $this->core->setValue($value);
-                $unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-                $store->store();
-                $returnservice->details();
-                $stock->stock();
-            }
-            $daily->daily()->debit()->credit();
-            $warehouse->refresh(); //this update purchase_return table by daily_id
             Cache::forget('stock');
 
-            // dd(DailyDetail::all());
+            // dd(1);
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
 
             return response([
-                'message' => "purchaseReturn created successfully",
+                'message' => "PurchaseReturn created successfully",
                 'status' => "success"
             ], 200);
         } catch (\Exception $exp) {
@@ -229,21 +201,21 @@ class PurchaseReturnController extends Controller
         // return response()->json(['message' => $responce]);
     }
 
-    public function purchase_return_daily(Request $request)
+    public function return_purchase_daily(Request $request)
     {
 
 
 
-        $purchases = DB::table('purchases')
-            ->where('purchases.id', $request->id)
-            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
-            ->join('dailies', 'dailies.id', '=', 'purchases.daily_id')
+        $purchase_returns = DB::table('purchase_returns')
+            ->where('purchase_returns.id', $request->id)
+            // ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+            ->join('dailies', 'dailies.id', '=', 'purchase_returns.daily_id')
             ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
             ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
             ->select(
                 // 'purchases.*',
-                'purchases.id as purchase_id',
-                'suppliers.name',
+                'purchase_returns.id as purchase_return_id',
+                // 'suppliers.name',
                 'dailies.*',
                 'daily_details.*',
                 'accounts.text',
@@ -254,7 +226,6 @@ class PurchaseReturnController extends Controller
             ->get();
 
         // dd($purchases);
-        return response()->json(['daily_details' => $purchases]);
+        return response()->json(['daily_details' => $purchase_returns]);
     }
-
 }

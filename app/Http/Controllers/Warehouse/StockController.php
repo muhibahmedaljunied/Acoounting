@@ -7,7 +7,6 @@ use App\Models\Stock;
 use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 use App\Traits\Unit\UnitsTrait;
-
 use DB;
 use App\Http\Controllers\Controller;
 

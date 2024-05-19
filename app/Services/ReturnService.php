@@ -7,7 +7,7 @@ use App\Traits\DailyTrait;
 class ReturnService
 {
 
-    use DailyTrait;
+    // use DailyTrait;
     public function __construct(
         protected DetailRepositoryInterface $details,
         protected DetailRefreshRepositoryInterface $refresh,

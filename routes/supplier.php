@@ -18,7 +18,7 @@ Route::post('/SupplierImport', 'Purchase\SupplierController@Import');
 /*--------------------------Supplier---------------------------------------*/
 
 Route::post('/supplier_groups', 'Purchase\SupplierGroupController@index');
-Route::post('/store_supplier_group', 'Purchase\SupplierGroupController@index');
+Route::post('/store_supplier_group', 'Purchase\SupplierGroupController@store');
 Route::post('/get_supplier_account_setting', 'Purchase\SupplierController@get_supplier_account_setting');
-Route::post('/store_supplier_account_setting', 'Purchase\SupplierController@store_supplier_account_setting');
+Route::post('/store_supplier_account_setting', 'GroupController@store_account_setting');
 Route::post('/get_supplier_account/{id}', 'Purchase\SupplierController@get_supplier_account');

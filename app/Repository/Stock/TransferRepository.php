@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Repository\Stock;
-
 use App\Traits\Transfer\TransferTrait;
 use App\Services\CoreService;
-use DB;
 class TransferRepository
 {
 

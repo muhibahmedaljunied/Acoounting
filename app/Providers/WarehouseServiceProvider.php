@@ -2,12 +2,16 @@
 
 namespace App\Providers;
 
+use App\Repository\Stock\CashRepository;
+use App\Repository\Stock\CashReturnRepository;
 use Illuminate\Support\ServiceProvider;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\Repository\Stock\PurchaseReturnRepository;
 use App\Repository\Stock\SaleReturnRepository;
 use App\Repository\Stock\PurchaseRepository;
 use App\Repository\Stock\SaleRepository;
+use App\Repository\Stock\SupplyRepository;
+use App\Repository\Stock\SupplyReturnRepository;
 use App\Repository\Stock\TransferRepository;
 class WarehouseServiceProvider extends ServiceProvider
 {
@@ -39,6 +43,27 @@ class WarehouseServiceProvider extends ServiceProvider
             if ($request->type == 'SaleReturn') {
 
                 return new SaleReturnRepository();
+            }
+
+            if ($request->type == 'Supply') {
+
+                return new SupplyRepository();
+            }
+
+            if ($request->type == 'SupplyReturn') {
+
+                return new SupplyReturnRepository();
+            }
+
+
+            if ($request->type == 'Cash') {
+
+                return new CashRepository();
+            }
+
+            if ($request->type == 'CashReturn') {
+
+                return new CashReturnRepository();
             }
 
 

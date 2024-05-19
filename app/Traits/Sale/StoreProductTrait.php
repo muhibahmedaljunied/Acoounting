@@ -3,7 +3,7 @@
 namespace App\Traits\Sale;
 use App\Models\StoreProduct;
 use App\Models\Stock;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 trait StoreProductTrait
 {

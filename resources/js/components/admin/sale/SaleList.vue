@@ -36,7 +36,7 @@
                     <td>{{ sale.paymentable.customer_name }}</td>
                     <!-- <td>{{ sale.quantity }}</td>
                   <td>{{ sale.qty_return }}</td> -->
-                    <td>{{ sale.paymentable.created_at }}</td>
+                    <td>{{ sale.paymentable.date }}</td>
                     <td>{{ sale.paid }}</td>
                     <td>{{ sale.remaining }}</td>
                     <td>{{ sale.paymentable.grand_total }}</td>
@@ -68,7 +68,7 @@
                           <option class="btn btn-success" v-bind:value="['/sale_invoice/', sale.paymentable.sale_id, 3]">
                             عرض الفاتوره
                           </option>
-                          <option class="btn btn-success" v-bind:value="['ReceivableBond', sale.paymentable.sale_id, 4]">
+                          <option v-if="sale.payment_status != 'paiding'" class="btn btn-success" v-bind:value="['ReceivableBond', sale.paymentable.sale_id, 4]">
                             قبض
                           </option>
                           <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.paymentable.sale_id, 5]">
@@ -182,7 +182,7 @@
                       </div>
                       <!-- {{ sale_details.qty }} {{ sale_details.unit }} -->
                     </td>
-                    <td>{{ sale_details.price }}</td>
+                    <td>{{ sale_details.cost }}</td>
                     <!-- <td>{{ sale_details.total }}</td> -->
                     <!-- <td>{{ sale_details.qty_return }}</td> -->
 

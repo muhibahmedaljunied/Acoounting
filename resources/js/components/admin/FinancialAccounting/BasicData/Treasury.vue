@@ -285,7 +285,7 @@ export default {
           count: this.counts,
           type: this.type,
           name: this.treasury,
-          account: this.account,
+          // account: this.account,
           group: this.group_selected,
 
 

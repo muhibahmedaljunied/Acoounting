@@ -15,7 +15,7 @@ trait PurchaseTrait
         $table_one = Purchase::create(
             [
                 'supplier_id' => $this->core->data['supplier_id'],
-                'supplier_name' => $this->core->data['supplier_name'],
+                // 'supplier_name' => $this->core->data['supplier_name'],
                 'grand_total' => $this->core->data['grand_total'],
                 'sub_total' => $this->core->data['sub_total'],
                 'discount' => $this->core->discount,
@@ -59,5 +59,14 @@ trait PurchaseTrait
         $Details->unit_id = $this->core->unit_value;
         $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
+    }
+
+    public function refresh_purchase_details_table()
+    {
+
+        DB::table('purchase_details')
+        ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
+        ->increment('qty_return', $this->core->micro_unit_qty);
+
     }
 }

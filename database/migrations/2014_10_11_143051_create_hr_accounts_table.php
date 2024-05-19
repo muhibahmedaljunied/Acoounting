@@ -20,10 +20,13 @@ class CreateHrAccountsTable extends Migration
 
 
             $table->Increments('id');
-            
             $table->string('name');
+            $table->string('code')->nullable();
             $table->unsignedInteger('account_id')->nullable();
             $table->foreign('account_id')->references('id')->on('accounts');
+            $table->unsignedInteger('account_second_id')->nullable();
+            $table->foreign('account_second_id')->references('id')->on('accounts');
+
 
             $table->timestamps();
             

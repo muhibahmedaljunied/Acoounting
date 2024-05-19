@@ -15,11 +15,11 @@
                 <input :id="'Cash_product_tree'" type="text" readonly class="custom-search-input">
                 <input :id="'Cash_product_tree_id'" type="hidden" readonly class="custom-search-input">
 
-                <button class="custom-search-botton" type="button" data-toggle="modal" data-target="#exampleModalProduct">
+                <button @click="detect_index(null)" class="custom-search-botton" type="button" data-toggle="modal"
+                  data-target="#exampleModalProduct">
                   <i class="fa fa-plus-circle"></i></button>
               </div>
             </div>
-
             <div class="col-md-4">
               <label for="pagoPrevio">المخزن</label>
               <div class="custom-search">
@@ -29,13 +29,40 @@
                 <input :id="'Supply_store_tree_id'" type="hidden" readonly>
                 <input :id="'select_account_Cash'" type="hidden" readonly>
 
-                <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(index)"
+                <button @click="detect_index(null)" class="custom-search-botton" type="button" data-toggle="modal"
                   data-target="#exampleModalStore">
                   <i class="fa fa-plus-circle"></i></button>
               </div>
 
             </div>
 
+
+
+
+
+
+
+
+
+          </div>
+
+
+          <br />
+          <hr>
+
+          <div class="row">
+
+            <div class="col-md-2">
+              <label for="FormaPago">طريقه الدفع</label>
+              <select style="background-color: beige;" name="forma_pago" class="form-control" id="forma_pago"
+                v-model="Way_to_pay_selected" v-on:change="onwaychange">
+                text
+
+                <option v-bind:value="1">نقد</option>
+                <option v-bind:value="2">أجل</option>
+                <option v-bind:value="3">بنك</option>
+              </select>
+            </div>
             <div class="col-md-4">
               <h5 class="card-title"> الحساب</h5>
               <div class="custom-search">
@@ -43,30 +70,51 @@
                 <input :id="'Cash_account_tree'" type="text" readonly class="custom-search-input">
                 <input :id="'Cash_account_tree_id'" type="hidden" readonly class="custom-search-input">
 
-                <button class="custom-search-botton" type="button" data-toggle="modal" data-target="#exampleModalAccount">
+                <button @click="detect_index(null)" class="custom-search-botton" type="button" data-toggle="modal"
+                  data-target="#exampleModalAccount">
                   <i class="fa fa-plus-circle"></i></button>
               </div>
             </div>
+            <div class="col-md-2" v-if="Way_to_pay_selected == 1">
+              <label for="cliente"> العميل</label>
+
+              <select class="form-control" style="background-color: beige;" v-model="customer" id="customer">
+
+                <option v-for="cus in customers" v-bind:value="[cus.id, cus.name]">
+                  {{ cus.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-2">
+              <label for="cliente"> الحساب التفصيلي</label>
 
 
+              <select class="form-control" style="background-color: beige;" name="forma_pago"
+                id="select_account_Cash_group">
 
+              </select>
+            </div>
+
+
+            <div class="col-md-2">
+              <label for="pagoPrevio">نوع العمله</label>
+              <select name="forma_pago" class="form-control" id="forma_pago">
+                <option v-bind:value="2">ريال يمني </option>
+                <option v-bind:value="1">دولار امريكي</option>
+                <option v-bind:value="2">ريال سعودي </option>
+              </select>
+            </div>
 
 
           </div>
-      
+
 
           <br />
           <hr>
           <div class="row">
 
-            <div class="col-md-3">
-              <label for="cliente"> الحساب التفصيلي</label>
 
-          
-              <select class="form-control" style="background-color: beige;" name="forma_pago" id="select_account_Cash_group">
-
-</select>
-            </div>
             <div class="col-md-2">
               <label for="FormaPago">طريقه تكلفه الصرف</label>
               <select style="background-color: beige;" name="forma_pago" class="form-control" id="forma_pago"
@@ -78,9 +126,9 @@
                 <option v-bind:value="3">سعر التوريد</option>
               </select>
             </div>
-         
 
-            <div class="col-md-3">
+
+            <div class="col-md-4">
               <label for="pagoPrevio">البيان</label>
 
 
@@ -94,7 +142,11 @@
 
               <input style="background-color: beige;" name="date" type="date" v-model="date" class="form-control" />
             </div>
+            <div class="col-md-2">
+              <label for="pagoPrevio">تاريخ الاستحقاق</label>
+              <input type="date" class="form-control" />
 
+            </div>
           </div>
 
           <br />
@@ -127,8 +179,8 @@
                     <td>
                       <div id="factura_producto" class="input_nombre">
                         {{
-                          product.product
-                        }}<input type="hidden" v-model="product.id" id="id" />
+                  product.product
+                }}<input type="hidden" v-model="product.id" id="id" />
                       </div>
                     </td>
 
@@ -137,8 +189,8 @@
                     <td>
                       <div id="factura_producto" class="input_nombre">
                         {{
-                          product.store
-                        }}<input type="hidden" v-model="product.store_id" id="store_temporale" />
+                  product.store
+                }}<input type="hidden" v-model="product.store_id" id="store_temporale" />
                       </div>
                     </td>
 
@@ -167,14 +219,14 @@
 
                             <span v-if="product.quantity / product.rate >= 1">
                               {{ Math.floor((product.quantity / product.rate)) }}{{
-                                product.units[0].name
-                              }}
+                  product.units[0].name
+                }}
                             </span>
 
                             <span v-if="product.quantity % product.rate >= 1">
                               {{ Math.floor((product.quantity % product.rate)) }}{{
-                                product.units[1].name
-                              }}
+                  product.units[1].name
+                }}
                             </span>
                           </span>
 
@@ -225,28 +277,28 @@
                       </div>
                     </td>
                     <td>
-                      <input v-if="check_state[index] == true" readonly type="number" v-model="product.cost" id="price"
+                      <input v-if="check_state[index] == true" readonly type="number" v-model="product.price" id="price"
                         class="form-control input_cantidad" onkeypress="return " />
 
-                      <input v-on:input="calculate_price(index)" v-else type="number" v-model="product.cost" id="price"
+                      <input v-on:input="calculate_price(index)" v-else type="number" v-model="product.price" id="price"
                         class="form-control input_cantidad" onkeypress="return " />
                     </td>
 
                     <!-- <td>
                       <input readonly style="background-color: beige;" type="number"
-                         v-model="cost[index]" id="qty" class="form-control input_cantidad"
+                         v-model="price[index]" id="qty" class="form-control input_cantidad"
                         onkeypress="return " />
 
 
                     </td> -->
                     <td>
-                      <!-- <input style="background-color: beige;" type="number" @input="on_input(qty[index], product.availabe_qty), calculate_price(product.cost, qty[index],
+                      <!-- <input style="background-color: beige;" type="number" @input="on_input(qty[index], product.availabe_qty), calculate_price(product.price, qty[index],
                     index)" v-model="qty[index]" id="qty" class="form-control input_cantidad" onkeypress="return " /> -->
 
 
                       <input v-if="check_state[index] == true" readonly style="background-color: beige;" type="number"
-                        @input="calculate_price(index)" v-model="qty[index]" id="qty" class="form-control input_cantidad"
-                        onkeypress="return " />
+                        @input="calculate_price(index)" v-model="qty[index]" id="qty"
+                        class="form-control input_cantidad" onkeypress="return " />
 
                       <input v-else style="background-color: beige;" type="number" @input="calculate_price(index)"
                         v-model="qty[index]" id="qty" class="form-control input_cantidad" onkeypress="return " />
@@ -307,7 +359,7 @@
                     <td colspan="11">
                       <label for="subTotal">الاجمالي (بدون ضريبه) <small></small></label>
                       <input type="text" readonly id="subtotal_general_si" name="subtotal_general_si" class="form-control"
-                        value="0.00" v-model="sub_total" />
+                        value="0.00" v-model="grand_total" />
 
                     </td>
                   </tr>
@@ -325,13 +377,7 @@
             <div class="col-md-8">
               <div class="row">
 
-                <div class="col-md-12"> <label for="pagoPrevio">نوع العمله</label>
-                  <select name="forma_pago" class="form-control" id="forma_pago">
-                    <option v-bind:value="2">ريال يمني </option>
-                    <option v-bind:value="1">دولار امريكي</option>
-                    <option v-bind:value="2">ريال سعودي </option>
-                  </select>
-                </div>
+
 
 
 
@@ -343,32 +389,29 @@
 
                 </div> -->
 
+
                 <div class="col-md-12" v-show="show">
                   <label for="pagoPrevio">المدفوع</label>
                   <input type="text" id="paid" v-on:input="credit" class="form-control" v-model="paid"
                     style="color: red" />
-                  <input type="hidden" id="items_totales" />
-                  <input type="hidden" id="registros_totales" />
+
                 </div>
                 <div class="col-md-12" v-show="show">
                   <label for="pagoPrevio">المتبقي</label>
-                  <input type="text" readonly="readonly" id="remaining" class="form-control" v-model="remaining" />
-                  <input type="hidden" id="items_totales" />
-                  <input type="hidden" id="registros_totales" />
-                </div>
-
-                <div class="col-md-12">
-                  <label for="pagoPrevio">تاريخ الاستحقاق</label>
-                  <input type="date" id="remaining" class="form-control" v-model="remaining" />
+                  <input type="text" readonly="readonly" class="form-control" v-model="remaining" />
 
                 </div>
 
+
+
                 <div class="col-md-12">
-                  <label for="total" class="text-left">TO PAY (USD):</label>
-                  <div class="col-md-12 letra_calculator_total text-center" id="div_total">
+                  <label for="total" class="text-left">المبلغ المستحق</label>
+                  <input type="text" readonly="readonly" class="form-control" v-model="To_pay" />
+
+                  <!-- <div class="col-md-12 letra_calculator_total text-center" id="div_total">
                     {{ To_pay }}
                   </div>
-                  <input type="hidden" name="total" id="total" v-model="To_pay" />
+                  <input type="hidden" name="total" id="total" v-model="To_pay" /> -->
                 </div>
 
               </div>
@@ -400,7 +443,7 @@
 
                   <label for="subTotal">الاجمالي <small></small></label>
                   <input type="text" readonly id="subtotal_general_si" name="subtotal_general_si" class="form-control"
-                    value="0.00" v-model="sub_total" />
+                    value="0.00" v-model="grand_total" />
 
                 </div>
 
@@ -449,14 +492,14 @@ font-size: 18pt;
                 </div>
                 <div class="col-md-12" v-show="show">
                   <label for="pagoPrevio">المتبقي</label>
-                  <input type="text" readonly="readonly" id="remaining" class="form-control" v-model="remaining" />
+                  <input type="text" readonly="readonly"  class="form-control" v-model="remaining" />
                   <input type="hidden" id="items_totales" />
                   <input type="hidden" id="registros_totales" />
                 </div>
 
                 <div class="col-md-12">
                   <label for="pagoPrevio">تاريخ الاستحقاق</label>
-                  <input type="date" id="remaining" class="form-control" v-model="remaining" />
+                  <input type="date"  class="form-control" v-model="remaining" />
 
                 </div>
 
@@ -597,13 +640,14 @@ export default {
   data() {
     // return data;
     return {
-      cost: [],
+      price: [],
       account: '',
       // product: [],
       qty: [],
       unit: [],
+      account_in_list: [],
       // desc: [],
-      // store: [],
+      store: [],
       // status: [],
       store_product_id: [],
       counts: {},
@@ -623,7 +667,6 @@ export default {
       price: [],
 
       products: '',
-      stores: '',
       statuses: '',
       stores: '',
       statuses: '',
@@ -663,24 +706,24 @@ export default {
       // ------------------------------------------------------------
 
       description: '',
-      treasury: '',
+      treasury: [],
       all_products: '',
       temporale: 1,
       supplier: [],
       suppliers: '',
-      total_quantity: 0,
-      grand_total: 0,
-      sub_total: 0,
-      To_pay: 0,
+      // total_quantity: 0,
+      // grand_total: 0,
+      // grand_total: 0,
+      // To_pay: 0,
       discount: 0,
 
       type_payment: 0,
-      Way_to_pay_selected: 1,
+      // Way_to_pay_selected: 0,
       show: false,
       show_treasury: true,
       show_bank: false,
-      paid: 0,
-      remaining: 0,
+      // paid: 0,
+      // remaining: 0,
       return_qty: [],
       credit: '',
 
@@ -691,18 +734,16 @@ export default {
   },
   mounted() {
     this.list();
-
     this.type = 'Cash';
     this.type_refresh = 'decrement';
-
     this.type_of_tree = 1;
-
     this.showtree('store', 'tree_store');
     this.showtree('product', 'tree_product');
     this.showtree('account', 'tree_account');
 
 
   },
+
 
   methods: {
 
@@ -724,11 +765,12 @@ export default {
         });
     },
 
-    take_discount() {
 
-      this.sub_total *= parseInt(this.discount) / 100;
-      // this.sub_total = this.sub_total/100;
-    },
+    // take_discount() {
+
+    //   this.grand_total *= parseInt(this.discount) / 100;
+    //   // this.grand_total = this.grand_total/100;
+    // },
     calculate_price(index) {
 
       var unit = $(`#select_unit${index}`).val();
@@ -738,13 +780,13 @@ export default {
 
       if (unit[2] == 0) {
 
-        this.total[index] = this.all_products[index].cost * this.qty[index];
+        this.total[index] = this.all_products[index].price * this.qty[index];
 
       }
 
       if (unit[2] == 1) {
 
-        this.total[index] = this.all_products[index].cost * unit[1] * this.qty[index];
+        this.total[index] = this.all_products[index].price * unit[1] * this.qty[index];
 
       }
 
@@ -761,139 +803,105 @@ export default {
 
     },
 
-    calc_grand_total(index) {
-
-
-      this.grand_total = 0;
-
-      for (let i = 0; i <= index; i++) {
-
-
-        if (this.total[i]) {
-
-          this.grand_total = parseInt(this.total[i]) + parseInt(this.grand_total);
-
-        } else {
-
-          this.grand_total = parseInt(0) + parseInt(this.grand_total);
-        }
 
 
 
-      }
 
-    },
-
-
-    calc_qty(index) {
-
-      this.total_quantity = 0;
-      for (let i = 0; i <= index; i++) {
-
-
-
-        if (this.qty[i]) {
-
-          this.total_quantity = parseInt(this.qty[i]) + parseInt(this.total_quantity);
-
-        } else {
-
-          this.total_quantity = parseInt(0) + parseInt(this.total_quantity);
-        }
-
-
-
-      }
-    },
     onwaychange(e) {
-      this.paid = 0;
-      this.remaining = 0;
+
       let input = e.target;
       this.type_payment = input.value;
       if (input.value == 2) {
         this.show = true;
         this.remaining = this.grand_total;
+        this.paid = 0;
 
       } else {
         this.show = false;
       }
 
       if (input.value == 1) {
-        this.show_treasury = true;
-        this.show_bank = false;
+
         this.paid = this.grand_total;
+        this.remaining = 0;
 
       }
 
       if (input.value == 3) {
-        this.show_bank = true;
-        this.show_treasury = false;
+
         this.paid = this.grand_total;
+        this.remaining = 0;
 
       }
+
+    },
+    set_values(product, index) {
+
+      this.store_product_id[index] = product.id;
+      this.account_in_list[index] = product.store_account_id;
+      this.store[index] = product.store_id;
 
     },
     add_one_cash(product, index) {
 
 
-      var store_product_id = product.id;
-      var product = product.product_id;
-      var qty = this.qty[index];
-      var desc = product.desc;
-      var availabe_qty = product.availabe_qty;
-      var unit = this.unit[index];
-      var store = product.store_id;
-      var status = product.status_id;
-
-
-      var total = this.total;
-
-
-      if (this.check_state[index] == true) {
-
-        // result = this.check_qty(qty, unit, availabe_qty);
-
-        if (this.check_qty(qty, unit, availabe_qty) == 0) { return 0; }
-
-        this.calc_grand_total(index);
-
-        this.calc_qty(index);
-
-        this.To_pay = this.grand_total;
-        this.sub_total = parseInt(this.grand_total)
-
-        this.counts[index] = index;
-
-        this.store_product_id[index] = store_product_id;
+      // var total = this.total;
 
 
 
-
+      if (this.check_qty(
+        this.qty[index],
+        this.unit[index],
+        product.availabe_qty
+      ) == 0) {
+        return 0;
       }
-      else if (this.check_state[index] == false) {
+      this.handle(product, index);
+
+      // if (this.check_state[index] == true) {
 
 
-        if (!this.total[index]) { this.total[index] = 0; }
-        if (!this.qty[index]) { this.qty[index] = 0; }
+      // if (this.check_qty(this.qty[index], this.unit[index], product.availabe_qty) == 0) { return 0; }
 
-        this.$delete(this.counts, index);
-        this.grand_total = parseInt(this.grand_total) - parseInt(this.total[index]);
-        this.sub_total = parseInt(this.grand_total);
-        this.total_quantity = parseInt(this.total_quantity);
+      // this.calc_grand_total(index);
 
-        this.total[index] = 0;
-        this.qty[index] = 0;
+      // this.calc_qty(index);
+
+      // this.To_pay = this.grand_total;
+      // this.remaining = this.grand_total;
+
+      // this.grand_total = parseInt(this.grand_total)
+
+      // this.counts[index] = index;
+
+      // this.store_product_id[index] = product.id;
+      // this.account_in_list[index] = product.store_account_id;
+      // this.store[index] = product.store_id;
+
+
+
+
+      // }
+      // else if (this.check_state[index] == false) {
+
+
+      // if (!this.total[index]) { this.total[index] = 0; }
+      // if (!this.qty[index]) { this.qty[index] = 0; }
+
+      // this.$delete(this.counts, index);
+      // this.grand_total = parseInt(this.grand_total) - parseInt(this.total[index]);
+      // this.grand_total = parseInt(this.grand_total);
+      // this.total_quantity = parseInt(this.total_quantity);
+
+      // this.total[index] = 0;
+      // this.qty[index] = 0;
 
 
 
 
 
-      }
-      // console.log(this.counts, index);
-      // console.log(this.store_product_id, index);
-      // console.log(this.qty, index);
-      // console.log(this.unit, index);
-      // console.log(this.total, index);
+      // }
+
     },
     // on_input(qty, availabe_qty) {
     //   if (qty <= availabe_qty) {
@@ -948,20 +956,30 @@ export default {
           count: this.counts,
           unit: this.unit,
           qty: this.qty,
-          price: this.cost,
+          price: this.price,
           total: this.total,
           old: this.all_products,
 
 
           // -------------this for dailies----------------------------------------------
+
           debit: {
-            debit_account_id: $(`#select_account_${this.type}_group`).val(),
+            account_id: $(`#Cash_account_tree_id`).val(),
+            value: this.grand_total,
+            account_details: $(`#select_account_${this.type}_group`).val(),
+
           },
           credit: {
-            credit_account_id: $(`#select_account_${this.type}`).val(),
-          },
-          // -----------------------------------------------------------
+            // credit_account_id: $(`#select_account_${this.type}`).val(),
+            account_id: this.account_in_list,
+            value: this.total,
+            account_details: this.store,
 
+          },
+
+          // -----------------------------------------------------------
+          type_daily: 'cash',
+          payment_type: this.Way_to_pay_selected,
           // store_account: $(`#select_account_${this.type}`).val(),
           description: this.description,
           type_refresh: this.type_refresh,
@@ -973,7 +991,7 @@ export default {
           treasury: this.treasury[0],
           // -------------------
           grand_total: this.grand_total,
-          sub_total: this.sub_total,
+          grand_total: this.grand_total,
           discount: this.discount,
           type_payment: this.type_payment,
           remaining: this.remaining,
@@ -1018,5 +1036,3 @@ export default {
   },
 };
 </script>
-
-

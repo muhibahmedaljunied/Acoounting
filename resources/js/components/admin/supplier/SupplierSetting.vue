@@ -37,9 +37,9 @@
                                 <label for="">الحساب</label>
 
                                 <div class="custom-search">
-                                    <input style="background-color: beige;" :id="'Purchase_supplier_tree'" type="text" readonly
+                                    <input style="background-color: beige;" :id="'Supplier_supplier_tree'" type="text" readonly
                                         class="custom-search-input">
-                                    <input style="background-color: beige;"  :id="'Purchase_supplier_tree_id'" type="hidden" readonly
+                                    <input style="background-color: beige;"  :id="'Supplier_supplier_tree_id'" type="hidden" readonly
                                         class="custom-search-input">
                                     <!-- <input style="background-color: beige;" type="hidden" readonly
                                         class="custom-search-input"> -->
@@ -200,7 +200,7 @@ export default {
 
         this.counts[0] = 1;
         this.type_of_tree = 1;
-        this.type = 'Purchase';
+        this.type = 'Supplier';
         this.list();
         this.showtree('supplier', 'tree_account');
 
@@ -242,7 +242,7 @@ export default {
             let formData = new FormData();
 
             formData.append("group_id", this.group_selected);
-            formData.append("account_id", $(`#Purchase_supplier_tree_id`).val());
+            formData.append("account_id", $(`#Supplier_supplier_tree_id`).val());
             
             this.axios
                 .post("/store_supplier_account_setting", formData, config)

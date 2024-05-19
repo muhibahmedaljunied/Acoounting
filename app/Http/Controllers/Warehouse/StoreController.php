@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Imports\StoreImport;
 use App\Exports\StoreExport;
+use App\Services\FilterService;
 use App\Models\Store;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
+
+
+
 
     public function index()
     {
@@ -114,21 +118,36 @@ class StoreController extends Controller
                 'accounts.text as account_name'
             )
             ->get();
-            // dd($store_accounts);
+        // dd($store_accounts);
         return response()->json(['store_accounts' => $store_accounts]);
     }
 
-    public function store_store_account_setting(Request $request)
+    public function store_store_account_setting(Request $request, FilterService $filter)
     {
 
 
-        $stores = Store::find($request['store_id']);
-        $stores->update(['account_id' => $request['account_id']]);
 
+
+        $filter->store_id =  $request->store_id;
+        // dd($request->store_id,$request['account_id']);
+        $this->update_store($request->store_id,$request['account_id']);
+        $filter->queryfilter();
+
+        foreach ($filter->data as $key => $value) {
+
+         $this->update_store($value,$request['account_id']);
+        }
 
         return response()->json(['message' => 'sucess']);
+
     }
 
+    public function update_store($value,$account_id)
+    {
+        $stores = Store::find($value);
+        $stores->update(['account_id' => $account_id]);
+        // dd($stores);
+    }
     public function add_store($request)
     {
 
@@ -181,7 +200,6 @@ class StoreController extends Controller
             $store->rank = $request['rank'];
             $store->status = $request['status'];
             $store->save();
-         
         }
 
         // dd($store->id);
@@ -230,10 +248,6 @@ class StoreController extends Controller
         $data->save();
 
         return response()->json($data);
-
-
-
-
     }
     public function store_rename_node(Request $request, $id)
     {

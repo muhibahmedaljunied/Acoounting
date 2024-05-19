@@ -2,8 +2,7 @@
 
 namespace App\Traits\Purchase;
 use App\Models\StoreProduct;
-
-use DB;
+use Illuminate\Support\Facades\DB;
 
 trait StoreProductTrait
 {
@@ -13,6 +12,7 @@ trait StoreProductTrait
     {
 
 
+        // dd($this->core->data);
         return StoreProduct::where([
             'product_id' => $this->core->data['product'][$this->core->value],
             'store_id' => $this->core->data['store'],

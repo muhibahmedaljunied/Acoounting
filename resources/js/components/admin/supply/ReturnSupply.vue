@@ -6,7 +6,7 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <span class="h3"> مرتجع شراء</span>
+                <span class="h3"> مرتجع توريد</span>
               </div>
               <div class="text-center">
 
@@ -27,7 +27,7 @@
                   <div class="col-md-2">
                     <label for="pagoPrevio">المورد</label>
 
-                    <div>{{ data.name }}</div>
+                    <div>{{ data.supplier_name }}</div>
 
 
                   </div>
@@ -92,33 +92,46 @@
                   </div>
 
 
+                  <div class="col-md-4">
+                    <h5 class="card-title"> الحساب</h5>
+                    <div class="custom-search">
+
+                      <input :id="'SupplyReturn_account_tree'" type="text" readonly class="custom-search-input">
+                      <input :id="'SupplyReturn_account_tree_id'" type="hidden" readonly class="custom-search-input">
+
+
+                      <button class="custom-search-botton" type="button" data-toggle="modal"
+                        data-target="#exampleModalAccount">
+                        <i class="fa fa-plus-circle"></i></button>
+                    </div>
+                  </div>
 
 
 
-                  <div class="col-md-2" v-if="show_treasury == true">
 
-                    <label for="pagoPrevio">الصندوق</label>
-                    <select class="form-control" style="background-color: beige;" v-model="treasury">
-                      <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
-                        {{ tre.name }}
-                      </option>
+                </div>
+
+                <br>
+                <hr>
+
+                <div class="row">
+
+
+
+                  <div class="col-md-4">
+                    <label for="cliente"> الحساب التفصيلي</label>
+
+                    <select class="form-control" style="background-color: beige;" name="forma_pago"
+                      id="select_account_SupplyReturn_group">
+
                     </select>
-
 
                   </div>
 
 
-                  <div class="col-md-2" v-if="show_bank == true">
-
-                    <label for="pagoPrevio">البنك</label>
-                    <select class="form-control" style="background-color: beige;" v-model="treasury">
-                      <option v-for="tre in treasuries" v-bind:value="[tre.id, tre.name, tre.account_id]">
-                        {{ tre.name }}
-                      </option>
-                    </select>
 
 
-                  </div>
+
 
                   <div class="col-md-4">
                     <label for="pagoPrevio">البيان</label>
@@ -127,6 +140,13 @@
                     <input class="form-control" style="background-color: beige;" type="text" v-model="description">
 
 
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="pagoPrevio">اختيار الكل</label> <br>
+
+                    <input v-model="check_state_all" @change="check_all_return()" type="checkbox"
+                      class="btn btn-info waves-effect">
                   </div>
 
 
@@ -176,7 +196,7 @@
                             </td>
 
                             <td>
-                          
+
 
 
                               <div v-for="temx in supply_details.units">
@@ -187,14 +207,14 @@
 
                                   <span v-if="supply_details.qty / supply_details.rate >= 1">
                                     {{ Math.floor((supply_details.qty / supply_details.rate)) }}{{
-                                      supply_details.units[0].name
-                                    }}
+                      supply_details.units[0].name
+                    }}
                                   </span>
 
                                   <span v-if="supply_details.qty % supply_details.rate >= 1">
                                     {{ Math.floor((supply_details.qty % supply_details.rate)) }}{{
-                                      supply_details.units[1].name
-                                    }}
+                      supply_details.units[1].name
+                    }}
                                   </span>
                                 </span>
 
@@ -215,14 +235,14 @@
 
                                   <span v-if="supply_details.avilable_qty / supply_details.rate >= 1">
                                     {{ Math.floor((supply_details.avilable_qty / supply_details.rate)) }}{{
-                                      supply_details.units[0].name
-                                    }}
+                      supply_details.units[0].name
+                    }}
                                   </span>
 
                                   <span v-if="supply_details.avilable_qty % supply_details.rate >= 1">
                                     {{ Math.floor((supply_details.avilable_qty % supply_details.rate)) }}{{
-                                      supply_details.units[1].name
-                                    }}
+                      supply_details.units[1].name
+                    }}
                                   </span>
                                 </span>
 
@@ -249,14 +269,14 @@
 
                                   <span v-if="supply_details.qty_remain / supply_details.rate >= 1">
                                     {{ Math.floor((supply_details.qty_remain / supply_details.rate)) }}{{
-                                      supply_details.units[0].name
-                                    }}
+                      supply_details.units[0].name
+                    }}
                                   </span>
 
                                   <span v-if="supply_details.qty_remain % supply_details.rate >= 1">
                                     {{ Math.floor((supply_details.qty_remain % supply_details.rate)) }}{{
-                                      supply_details.units[1].name
-                                    }}
+                      supply_details.units[1].name
+                    }}
                                   </span>
                                 </span>
 
@@ -287,8 +307,9 @@
                               </select>
 
 
-                              <select v-on:change="calculate_price(index,supply_details)" v-else style="background-color: beige;" :id="'select_unit' + index"
-                                v-model="unit[index]" name="type" class="form-control" required>
+                              <select v-on:change="calculate_price(index, supply_details)" v-else
+                                style="background-color: beige;" :id="'select_unit' + index" v-model="unit[index]"
+                                name="type" class="form-control" required>
 
                                 <option v-for="unit in supply_details.units"
                                   v-bind:value="[unit.id, unit.rate, unit.unit_type]">
@@ -300,8 +321,9 @@
                             </td>
                             <td>
                               <div class="form-group">
-                                <input @input="calculate_price(index, supply_details)" style="background-color: beige;"
-                                  v-model="qty[index]" type="number" min="1" step="1" class="form-control" />
+                                <input @input="calculate_price(index, supply_details)"
+                                  style="background-color: beige;" v-model="qty[index]" type="number" min="1" step="1"
+                                  class="form-control" />
 
                               </div>
 
@@ -315,20 +337,21 @@
                             <td v-if="supply_details.qty_remain != 0">
                               <input v-model="check_state[index]" @change="
 
-                                add_one_return(supply_details, index)
+                      check_one_return(supply_details, index)
 
-                                " type="checkbox" class="btn btn-info waves-effect">
+                      " type="checkbox" class="btn btn-info waves-effect">
                             </td>
 
                             <td v-else>
                               <input v-model="check_state[index]" @change="
 
-                                add_one_return(supply_details, index)
-                                " type="checkbox" class="btn btn-info waves-effect" disabled>
+                      check_one_return(supply_details, index)
+                      " type="checkbox" class="btn btn-info waves-effect" disabled>
                             </td>
 
 
                           </tr>
+
 
 
 
@@ -479,21 +502,45 @@
               </div>
             </div>
           </div>
+
+          <div class="modal fade" id="exampleModalAccount" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  <div class="well" id="treeview_json_account"></div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </div>
 </template>
 <script>
-import operation from '../../../operation.js';
+
+import operation from '../../../../js/operation.js';
+import tree from '../../../../js/tree/tree.js';
 export default {
-  mixins: [operation],
+  mixins: [operation, tree],
   data() {
     // return data;
 
     return {
       qty: [],
       unit: [],
+      account_in_list: [],
+      store: [],
       counts: {},
       description: '',
       count: 1,
@@ -514,6 +561,7 @@ export default {
       grand_total: 0,
       paid: 0,
       remaining: 0,
+      check_state_all: '',
       // type_payment: 0,
 
 
@@ -543,11 +591,33 @@ export default {
 
 
     });
+
+
+    // ------------------------------------------------
+
+
+
+
+
+    this.type_of_tree = 1;
+
+
+    this.showtree('account', 'tree_account');
+
+  },
+
+  watch: {
+    Way_to_pay_selected(newVal, oldVal) {
+      $(`#treeview_json_account`).jstree(true).destroy();
+      this.showtree('account', 'tree_account', this.Way_to_pay_selected);
+
+      // console.log(newVal, oldVal);
+    }
   },
 
   methods: {
-    // add_one_return(avilable_qty, qty_remain, index, qty, unit) {
-    add_one_return(supply_detail, index) {
+    // check_one_return(avilable_qty, qty_remain, index, qty, unit) {
+    check_one_return(supply_detail, index) {
 
 
 
@@ -568,9 +638,47 @@ export default {
 
         this.counts[index] = index;
 
+        this.account_in_list[index] = supply_detail.store_account;
+        this.store[index] = supply_detail.store_id;
+
       } else if (this.check_state[index] == false) {
         this.$delete(this.counts, index);
       }
+
+      // console.log(this.counts, index);
+      // console.log(this.qty, index);
+      // console.log(this.unit, index);
+
+
+    },
+    check_all_return() {
+
+
+    
+
+      for (let index = 0; index < this.detail.length; index++) {
+
+        if (this.check_state_all == true) {
+
+
+          this.check_state[index] = true;
+
+        } else {
+
+          this.check_state[index] = false;
+        }
+
+        this.detail.forEach(element => {
+
+            this.check_one_return(element,index);
+        });
+
+
+      
+
+
+      }
+
 
       // console.log(this.counts, index);
       // console.log(this.qty, index);
@@ -645,45 +753,40 @@ export default {
 
 
       // if (this.return_qty.length != 0) {
-
+      // var url = this.type.toLowerCase();
       if (this.Way_to_pay_selected == 1) { //this is default if user not detect any way
 
         this.paid = this.grand_total;
 
       }
 
-      var url = this.type.toLowerCase();
-
-      var debit_account_id = 0;
-      if (this.Way_to_pay_selected == 1) {
-
-        debit_account_id = this.treasury[2];
-        this.paid = this.grand_total;
-
-      }
-      if (this.Way_to_pay_selected == 2) {
-
-        debit_account_id = this.data.account_id;
-        this.paid = this.grand_total;
-        this.remaining = this.data.grand_total - this.paid;
-
-      }
 
 
 
 
       this.axios
-        .post(`/${url}`, {
+        .post(`/supplyreturn`, {
 
           count: this.counts,
           unit: this.unit,
           qty: this.qty,
+
           debit: {
-            debit_account_id: debit_account_id,
+            account_id: this.account_in_list,
+            value: this.total,
+            account_details: this.store,
+
           },
           credit: {
-            credit_account_id: $(`#select_account_${this.type}`).val(),
+
+            account_id: $(`#SupplyReturn_account_tree_id`).val(),
+            value: this.total,
+            account_details: $(`#select_account_${this.type}_group`).val(),
+
           },
+          // -----------------------------------------------------------
+
+          type_daily: 'supplyreturn',
 
           description: this.description,
           type_refresh: this.type_refresh,
@@ -772,7 +875,6 @@ export default {
 
 
     },
-
     calc_grand_total() {
 
 
@@ -839,4 +941,3 @@ export default {
 
 };
 </script>
-

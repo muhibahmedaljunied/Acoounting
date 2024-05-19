@@ -18,7 +18,7 @@
 
               <div class="form-group">
                 <label for="name">الاسم</label>
-                <input v-model="name" type="text" name="name" id="name" class="form-control" required />
+                <input style="background-color: beige;" v-model="name" type="text" name="name" id="name" class="form-control" required />
               </div>
               <div class="form-group">
                 <label for="phone">الهاتف</label>
@@ -35,6 +35,20 @@
               <div class="form-group">
                 <label for="address">العنوان</label>
                 <input v-model="address" type="text" name="address" id="address" class="form-control" />
+              </div>
+
+              
+              <div class="form-group">
+                <label for="">التصنيف</label>
+                <select style="background-color: beige;" name="forma_pago" class="form-control" id="forma_pago"
+                  v-model="group">
+
+                   <option value="0">عام</option>
+
+                                    <option v-for="customer_group in customer_groups" v-bind:value="customer_group.id">
+                                        {{ customer_group.name }}</option>
+
+                </select>
               </div>
               <!-- = -->
               <!-- <div class="m-t-20 col-md-6 col-xs-6"> -->
@@ -76,7 +90,7 @@
                 <input v-model="status" type="text" name="status" id="status" class="form-control" />
               </div> -->
               <button @click="addcustomer()" type="submit" class="btn btn-primary btn-lg btn-block">
-                اضافه
+                حفظ
               </button>
    
           </div>
@@ -108,11 +122,11 @@
 </template>
 <script>
 import operation from '../../../../js/operation.js';
-import tree from '../../../../js/tree/tree.js';
+// import tree from '../../../../js/tree/tree.js';
 export default {
   mixins: [
         operation,
-        tree
+        // tree
     ],
   data() {
     
@@ -132,6 +146,8 @@ export default {
       // roleselected: 1,
       type_of_tree:'',
       jsonTreeData:'',
+      group:'',
+      customer_groups:'',
     };
   },
 
@@ -140,9 +156,20 @@ export default {
     this.type = 'Customer';
     // this.type_of_tree=1;
     // this.showtree('account');
+
+    this.axios
+        .post(`/customer_groups`)
+        .then(({ data }) => {
+          this.customer_groups = data.groups;
+        })
+        .catch(({ response }) => {
+          console.error(response);
+        });
+
   },
   methods: {
 
+    
     addcustomer() {
     
       let currentObj = this;
@@ -158,6 +185,8 @@ export default {
       formData.append("phone", this.phone);
       formData.append("email", this.email);
       formData.append("address", this.address);
+      formData.append("group", this.group);
+
       // formData.append("account", this.account);
       // formData.append("password", this.password);
       // formData.append("status", this.status);

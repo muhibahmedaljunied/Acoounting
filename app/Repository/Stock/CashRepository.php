@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Repository\Stock;
+
+use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\Traits\Cash\CashTrait;
 use App\Services\CoreService;
-class CashRepository
+class CashRepository implements WarehouseRepositoryInterface
 {
 
 use CashTrait;
@@ -30,12 +32,6 @@ use CashTrait;
     }
 
 
-    public function init_details(...$list_data)
-    {
-  
-        $this->add_into_cash_details_table();
-        
-    }
 
 
 }

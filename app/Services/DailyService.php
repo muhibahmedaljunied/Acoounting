@@ -31,15 +31,14 @@ class DailyService
     public function daily()
     {
 
-
-        // dd($this->core->paid);
+        // dd($this->core->data);
         $daily = new Daily();
         $daily->daily_date = $this->core->data['date'];
         $daily->total = $this->core->data['grand_total'];
         $daily->save();
-
+ 
         $this->core->daily_id = $daily->id;
-
+ 
         return $this;
     }
 
@@ -71,18 +70,11 @@ class DailyService
     {
 
 
+
         if ($this->core->data['type_daily']) {
 
 
-            if ($this->core->data['type_daily'] == 'sale') {
-
-                $this->sale_daily($type);
-            }
-
-            if ($this->core->data['type_daily'] == 'purchase') {
-
-                $this->purchase_daily($type);
-            }
+       
 
             if ($this->core->data['type_daily'] == 'hr_allowance') {
 
@@ -119,6 +111,7 @@ class DailyService
 
     public function debit()
     {
+
 
         $this->init_debit_credit();
         $this->detect_number_daily('debit');
@@ -391,48 +384,14 @@ class DailyService
         }
     }
 
-    public function sale_daily($type)
-    {
 
-
-        $data = $this->set_daily_data(0, $type);
-        $daily_detail =  DailyDetail::create($data);
-        // if ($type == 'credit') {
-        //     GroupAccount::create([
-        //         'daily_detail_id' => $daily_detail->id,
-        //     ]);
-
-        // }
-
-    }
-
-    public function purchase_daily($type)
-    {
-
-
-        dd($this->core->data[$type][$type . '_account_id']);
-        for ($i = 1; $i < count($this->core->data[$type][$type . '_account_id']); $i++) {
-
-            $debit_data = $this->set_daily_data($i, $type);
-            $daily_detail = DailyDetail::create($debit_data);
-
-             // if ($type == 'debit') {
-            //     GroupAccount::create([
-            //         'daily_detail_id' => $daily_detail->id,
-            //     ]);
-
-        // }
-
-        }
-
-     
-    }
 
 
 
     public function another_daily($type)
     {
 
+  
         for ($i = 1; $i < count($this->core->data[$type][$type . '_account_id']); $i++) {
 
             $debit_data = $this->set_daily_data($i, $type);

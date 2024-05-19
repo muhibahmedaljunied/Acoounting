@@ -24,11 +24,11 @@ class CreateCashesTable extends Migration
             $table->text('customer_name')->nullable();
             $table->date('date')->nullable();
             // $table->text('total');
-            $table->decimal('discount')->nullable();
-            $table->decimal('tax_amount')->nullable();
+            // $table->decimal('discount')->nullable();
+            // $table->decimal('tax_amount')->nullable();
             $table->string('status')->default('pending');
 
-            $table->string('sub_total')->nullable();
+            // $table->string('sub_total')->nullable();
        
             $table->integer('grand_total');
             

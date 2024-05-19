@@ -23,6 +23,8 @@ class CreateGroupsTable extends Migration
             $table->string('name');
             $table->unsignedInteger('group_type_id')->nullable();
             $table->foreign('group_type_id')->references('id')->on('group_types');
+            $table->unsignedInteger('account_id')->nullable();
+            $table->foreign('account_id')->references('id')->on('accounts');
             $table->string('status')->nullable();
             $table->timestamps();
             

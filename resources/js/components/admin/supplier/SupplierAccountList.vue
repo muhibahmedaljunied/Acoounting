@@ -46,11 +46,11 @@
                         </div>
                         <br>
                         <hr />
-                        <div class="row" style="font-size: 10pt">
+                        <div class="row" style="font-size: 20px">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered text-right m-t-30"
-                                        style="width: 100%; font-size: x-small" id="lista_productos_temporal">
+                                    <table class="table table-bordered text-right m-t-30" style="width: 100%"
+                                        id="lista_productos_temporal">
                                         <thead>
                                             <tr>
 
@@ -68,15 +68,16 @@
                                                 <!-- <th style="width: 60px">العمليات</th> -->
                                             </tr>
                                         </thead>
-                                        <tbody>
+
+                                        <tbody v-if="purchases.data && purchases.data.length > 0">
 
 
-                                            <tr v-for="temporales in purchases">
+                                            <tr v-for="temporales in purchases.data">
 
                                                 <td>{{ temporales.date }}</td>
                                                 <td> <span style="color:red">فاتوره شراء رقم </span> {{
-                                                    temporales.id
-                                                }}</td>
+                                    temporales.id
+                                }}</td>
                                                 <td v-for="tes in temporales.payments">{{ tes.paid }}</td>
                                                 <td v-for="tes in temporales.payments">{{ tes.remaining }}
                                                 </td>
@@ -88,17 +89,17 @@
 
                                             </tr>
 
-                                            <template v-for="temporales in purchases">
+                                            <template v-for="temporales in purchases.data">
                                                 <tr v-for="tem in temporales.payable_notes">
                                                     <td>
                                                         {{ tem.date }}
 
                                                     </td>
                                                     <td>
-                                                       
-                                                        <span style="color:red"> سند صرف رقم </span>  {{
-                                                       tem.id
-                                                }}
+
+                                                        <span style="color:red"> سند صرف رقم </span> {{
+                                    tem.id
+                                }}
                                                     </td>
                                                     <td>
                                                         {{ tem.paid }}
@@ -128,15 +129,15 @@
                                                 <td>
 
 
-<span style="color:green;font-size:30px;"></span>
+                                                    <span style="color:green;font-size:30px;">0</span>
 
-</td>
-<td>
+                                                </td>
+                                                <td>
 
 
-<span style="color:green;font-size:30px;"></span>
+                                                    <span style="color:green;font-size:30px;">0</span>
 
-</td>
+                                                </td>
                                                 <td>
 
 
@@ -183,8 +184,20 @@
 
 
                                         </tbody>
+                                        <tbody v-else>
+                                            <tr>
+                                                <td align="center" colspan="8">
+                                                    <h3>
+                                                        لايوجد اي بيانات
+                                                    </h3>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
+                                <pagination align="center" :data="purchases" @pagination-change-page="onwaychange">
+                                </pagination>
+
                             </div>
                         </div>
                     </div>
@@ -206,11 +219,15 @@ export default {
     data() {
         return {
 
+            purchases: {
+                type: Object,
+                default: null,
+            },
             date: '',
             supplier: [],
             suppliers: '',
 
-            purchases: '',
+            // purchases: '',
             xx: '',
 
 
@@ -257,17 +274,17 @@ export default {
 
         },
 
-        onwaychange() {
+        onwaychange(page = 1) {
 
 
-            this.axios.post(`/supplier/supplier_account_list/${this.supplier[0]}`).then(({ data }) => {
-                console.log(data.purchases)
+            this.axios.post(`/supplier/supplier_account_list/${this.supplier[0]}?page=${page}`).then(({ data }) => {
+                // console.log(data.purchases)
 
 
 
 
-                this.purchases = Object.values(data.purchases.data);
-                console.log(this.purchases);
+                this.purchases = data.purchases;
+                // console.log(this.purchases);
 
 
 
@@ -286,5 +303,3 @@ export default {
     },
 };
 </script>
-
-

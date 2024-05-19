@@ -2,7 +2,7 @@
 
 namespace App\Traits\Details;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Traits\Unit\UnitsTrait;
 use Illuminate\Http\Request;
 
@@ -20,7 +20,6 @@ trait DetailsTrait
         $table = $request['table'];
         $output = explode('_', $table);
         $column = $output[0];
-
 
         //-----------------------------------------------------------------------------------------------
         $details =   DB::table($table)->where($table . '.' . $column . '_id', $id)

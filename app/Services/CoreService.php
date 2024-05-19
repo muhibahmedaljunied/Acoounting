@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Services;
-
-class CoreService
+class CoreService extends CoreDailyService
 {
     public $id_store_product;
     public $data_store_product;
@@ -23,6 +22,15 @@ class CoreService
     public $stockable;
     public $value;
     public $discount;
+    public $core_daily;
+
+    
+
+    // public function __construct()
+    // {
+    //     $this->core_daily = app(CoreDailyService::class);
+
+    // }
     public function setValue($value)
     {
 

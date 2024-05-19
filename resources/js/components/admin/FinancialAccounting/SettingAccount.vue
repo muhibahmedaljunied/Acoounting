@@ -37,7 +37,10 @@
                         </li> -->
 
                         <li class="nav-item">
-                          <a href="#tab6" class="nav-link" data-toggle="tab"> الصناديق والبنوك </a>
+                          <a href="#tab6" class="nav-link" data-toggle="tab">  البنوك </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#tab7" class="nav-link" data-toggle="tab"> الصناديق  </a>
                         </li>
                       </ul>
                     </div>
@@ -73,8 +76,12 @@
                       </div> -->
 
                       <div class="tab-pane" id="tab6">
-                        <another></another>
+                        <bank></bank>
                       </div>
+                      <div class="tab-pane" id="tab7">
+                        <treasury></treasury>
+                      </div>
+
 
                     </div>
                   </div>
@@ -97,7 +104,9 @@ import SettingSale from "./SettingAccount/SettingSale";
 import SettingPurchase from "./SettingAccount/SettingPurchase";
 import SettingWarehouse from "./SettingAccount/SettingWarehouse";
 // import SettingAccounting from "./SettingAccount/SettingAccounting";
-import Another from "./SettingAccount/Another";
+import Bank from "./SettingAccount/Bank";
+import Treasury from "./SettingAccount/Treasury";
+
 
 
 
@@ -109,7 +118,8 @@ export default {
     SettingPurchase,
     SettingWarehouse,
     // SettingAccounting,
-    Another
+    Bank,
+    Treasury
 
   },
 

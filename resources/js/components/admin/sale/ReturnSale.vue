@@ -7,7 +7,8 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <span class="h3"> مرتجع بيع</span>
+                <span class="h3"> فاتوره مردود مبيعات</span>
+
               </div>
 
 
@@ -33,7 +34,7 @@
 
 
 
-                    <div>{{ data.name }}</div>
+                    <div>{{ data.customer_name }}</div>
 
                   </div>
                   <div class="col-md-4">
@@ -75,6 +76,9 @@
 
 
                   </div>
+
+
+
                   <div class="col-md-2" v-else>
 
                     <label for="date">طريقه الدفع</label><br />
@@ -93,22 +97,62 @@
 
                   </div>
 
-                  <div class="col-md-2">
-                    <label for="pagoPrevio">المخزن المرتجع البه</label>
+                  <div class="col-md-4">
+                    <h5 class="card-title"> الحساب</h5>
                     <div class="custom-search">
 
-                      <input style="background-color: beige;" :id="'Purchase_store_tree'" type="text" readonly
-                        class="custom-search-input">
-                      <input :id="'Purchase_store_tree_id'" type="hidden" readonly>
+                      <input :id="'SaleReturn_account_tree'" type="text" readonly class="custom-search-input">
+                      <input :id="'SaleReturn_account_tree_id'" type="hidden" readonly class="custom-search-input">
+                      <!-- <input :id="'SaleReturn_store_tree_id'" type="hidden" readonly class="custom-search-input"> -->
 
-                      <button class="custom-search-botton" type="button" data-toggle="modal" @click="detect_index(index)"
+
+                      <button class="custom-search-botton" type="button" data-toggle="modal"
+                        data-target="#exampleModalAcoount">
+                        <i class="fa fa-plus-circle"></i></button>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="cliente"> الحساب التفصيلي</label>
+
+
+                    <select class="form-control" style="background-color: beige;" name="forma_pago"
+                      id="select_account_SaleReturn_group">
+
+                    </select>
+
+                  </div>
+
+
+
+
+
+
+
+                </div>
+                <hr>
+                <br>
+
+                <div class="row">
+
+
+
+                  <div class="col-md-4">
+                    <label for="cliente">المخزن المرتجع البه</label>
+
+                    <div class="custom-search">
+
+                      <input style="background-color: beige;" :id="'SaleReturn_store_tree'" type="text" readonly
+                        class="custom-search-input">
+                      <input :id="'SaleReturn_store_tree_id'" type="hidden" readonly>
+                      <input :id="'select_account_SaleReturn'" type="hidden" readonly class="custom-search-input">
+                      <button class="custom-search-botton" type="button" data-toggle="modal"
                         data-target="#exampleModalStore">
                         <i class="fa fa-plus-circle"></i></button>
                     </div>
 
                   </div>
 
-                  <div class="col-md-2" v-if="show_treasury == true">
+                  <!-- <div class="col-md-2" v-if="show_treasury == true">
 
                     <label for="pagoPrevio">الصندوق</label>
                     <select style="background-color: beige;" v-model="treasury" id="supplier" class="form-control">
@@ -129,7 +173,7 @@
                     </select>
 
 
-                  </div>
+                  </div> -->
 
                   <div class="col-md-4">
                     <label for="pagoPrevio">البيان</label>
@@ -140,11 +184,17 @@
 
                   </div>
 
+                  <div class="col-md-4">
+                    <label for="pagoPrevio">اختيار الكل</label> <br>
 
+                    <input v-model="check_state_all" @change="check_all_return()" type="checkbox"
+                      class="btn btn-info waves-effect">
+                  </div>
 
                 </div>
                 <hr>
                 <br>
+
                 <div class="row">
                   <div class="col-md-12">
                     <div class="table-responsive">
@@ -157,6 +207,7 @@
                             <th> المواصفات والطراز</th>
                             <th>الحاله</th>
                             <th>المخزن</th>
+                            <th>المخزن المرتجع البه</th>
                             <!-- <th>الكميه المتوفره</th> -->
                             <th>الكميه المباعه</th>
                             <!-- <th> السعر </th> -->
@@ -186,7 +237,20 @@
                             <td>{{ sale_details.desc }}</td>
                             <td>{{ sale_details.status }}</td>
                             <td>{{ sale_details.store }}
-                              <input id="select_account_SaleReturn" type="hidden" v-model="sale_details.store_account">
+                              <input :id="'select_account_SaleReturn' + index" type="hidden">
+                            </td>
+
+                            <td>
+                              <div class="custom-search">
+
+                                <input style="background-color: beige;" :id="'SaleReturn_storem_tree' + index"
+                                  type="text" readonly class="custom-search-input">
+                                <input :id="'SaleReturn_storem_tree_id' + index" type="hidden" readonly>
+
+                                <button class="custom-search-botton" type="button" data-toggle="modal"
+                                  @click="detect_index(index)" data-target="#exampleModalStorem">
+                                  <i class="fa fa-plus-circle"></i></button>
+                              </div>
                             </td>
                             <!-- <td>
 
@@ -232,14 +296,14 @@
 
                                     <span v-if="sale_details.qty / sale_details.rate >= 1">
                                       {{ Math.floor((sale_details.qty / sale_details.rate)) }}{{
-                                        sale_details.units[0].name
-                                      }}
+                      sale_details.units[0].name
+                    }}
                                     </span>
 
                                     <span v-if="sale_details.qty % sale_details.rate >= 1">
                                       {{ Math.floor((sale_details.qty % sale_details.rate)) }}{{
-                                        sale_details.units[1].name
-                                      }}
+                      sale_details.units[1].name
+                    }}
                                     </span>
 
                                     <span v-if="sale_details.qty == 0">
@@ -268,14 +332,14 @@
 
                                   <span v-if="sale_details.qty_remain / sale_details.rate >= 1">
                                     {{ Math.floor((sale_details.qty_remain / sale_details.rate)) }}{{
-                                      sale_details.units[0].name
-                                    }}
+                      sale_details.units[0].name
+                    }}
                                   </span>
 
                                   <span v-if="sale_details.qty_remain % sale_details.rate >= 1">
                                     {{ Math.floor((sale_details.qty_remain % sale_details.rate)) }}{{
-                                      sale_details.units[1].name
-                                    }}
+                      sale_details.units[1].name
+                    }}
                                   </span>
 
                                   <span v-if="sale_details.qty_remain == 0">
@@ -289,7 +353,8 @@
                             </td>
                             <td>
 
-                              <select v-on:change="calculate_price(index,sale_details)" style="background-color: beige;" :id="'select_unit' + index" v-model="unit[index]"
+                              <select v-on:change="calculate_price(index, sale_details)"
+                                style="background-color: beige;" :id="'select_unit' + index" v-model="unit[index]"
                                 name="type" class="form-control" required>
 
                                 <option v-for="unit in sale_details.units"
@@ -315,7 +380,7 @@
                             </td>
                             <td v-if="sale_details.qty_remain != 0">
 
-                              <input v-model="check_state[index]" @change="add_one_return_sale(index, sale_details)"
+                              <input v-model="check_state[index]" @change="check_one_return_sale(sale_details, index)"
                                 type="checkbox" class="btn btn-info waves-effect">
 
                             </td>
@@ -324,8 +389,8 @@
                             <td v-else>
 
                               <input v-model="check_state[index]" @change="
-                                add_one_return_sale(index, sale_details)
-                                " type="checkbox" disabled class="btn btn-info waves-effect">
+                      check_one_return_sale(sale_details, index)
+                      " type="checkbox" disabled class="btn btn-info waves-effect">
 
                             </td>
 
@@ -416,11 +481,9 @@
                       </div>
                       <div class="col-md-3">&nbsp;</div>
                       <div class="col-md-12">
-                        <label for="total" class="text-left">TO PAY (USD):</label>
-                        <div class="col-md-12 letra_calculator_total text-center" id="div_total">
-                          {{ grand_total }}
-                        </div>
-                        <input type="hidden" name="total" id="total" v-model="grand_total" />
+                        <label for="total" class="text-left">المبلغ المستحق</label>
+                        <input type="text" readonly="readonly" id="remaining" class="form-control" v-model="To_pay" />
+
                       </div>
 
 
@@ -471,7 +534,8 @@
 
                       <div class="col-md-12" v-show="show">
                         <label for="pagoPrevio">المتبقي</label>
-                        <input type="text" readonly="readonly" id="remaining" class="form-control" v-model="remaining" />
+                        <input type="text" readonly="readonly" id="remaining" class="form-control"
+                          v-model="remaining" />
                         <input type="hidden" id="items_totales" />
                         <input type="hidden" id="registros_totales" />
                       </div>
@@ -499,36 +563,97 @@
         </div>
       </div>
     </section>
+
+    <div class="modal fade" id="exampleModalAcoount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="well" id="treeview_json_account"></div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalStore" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="well" id="treeview_json_store"></div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalStorem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="well" id="treeview_json_storem"></div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import operation from '../../../../js/operation.js';
+import operation from '../../../operation.js';
+import tree from '../../../tree/tree.js';
 export default {
-  mixins: [operation],
+  mixins: [operation, tree],
   data() {
 
 
     return {
 
+
+      check_state_all: '',
       qty: [],
       unit: [],
       counts: {},
       treasury: [],
       count: 1,
-
-
+      account_in_list: [],
+      store: [],
       description: '',
-      paid: 0,
-      remaining: 0,
       customer: [],
       treasury: [],
       customers: '',
-      Way_to_pay_selected: 1,
       show_treasury: true,
       show_bank: false,
       not_qty: true,
       message_check: false,
       text_message: 0,
+
     };
   },
   props: ['data'],
@@ -539,7 +664,7 @@ export default {
     this.type_refresh = 'increment';
 
 
-
+    this.type_of_tree = 1;
     // let uri = `/sale_details/${this.$route.params.id}`;
     let uri = `/sale_details_in_return/${this.data.sale_id}`;
 
@@ -547,13 +672,28 @@ export default {
       console.log(response);
       this.detail = response.data.details;
       // this.customers = response.data.customers;
-      this.treasuries = response.data.treasuries;
+      // this.treasuries = response.data.treasuries;
 
       // this.$root.logo = "CashDetails";
     });
+
+    // -------------------------------
+    this.showtree('store', 'tree_store');
+    this.showtree('storem', 'tree_store');
+    this.showtree('account', 'tree_account');
+
   },
+
+  // watch: {
+  //   Way_to_pay_selected(newVal, oldVal) {
+  //     $(`#treeview_json_account`).jstree(true).destroy();
+  //     this.showtree('account', 'tree_account', this.Way_to_pay_selected);
+
+  //     // console.log(newVal, oldVal);
+  //   }
+  // },
   methods: {
-    check_qty(qty_remain, qty, unit) {
+    check_qty(qty, unit, qty_remain) {
 
       var producter_qty = 0;
 
@@ -584,25 +724,56 @@ export default {
 
       return 1;
     },
-    add_one_return_sale(index, sale_details) {
+    set_values(sale_details, index) {
+
+      this.counts[index] = index;
+      this.storem[index] = sale_details.store_id;
+
+    },
+    check_one_return_sale(sale_details, index) {
+
+
+      if (this.check_qty(
+        this.qty[index],
+        this.unit[index],
+        sale_details.qty_remain
+      ) == 0) {
+
+        return 0;
+      }
+      this.handle(product, index);
+    
+    },
+
+    check_all_return() {
 
 
 
 
-      if (this.check_state[index] == true) {
+      for (let index = 0; index < this.detail.length; index++) {
 
-        if (this.check_qty(sale_details.qty_remain, this.qty[index], this.unit[index]) == 0) { return 0; }
+        if (this.check_state_all == true) {
 
 
-        this.counts[index] = index;
+          this.check_state[index] = true;
 
-      } else {
-        this.$delete(this.counts, index);
+        } else {
+
+          this.check_state[index] = false;
+        }
+
+        this.detail.forEach(element => {
+
+          this.check_one_return_sale(element, index);
+        });
+
+
+
+
+
       }
 
-      // console.log(this.counts, index);
-      // console.log(this.qty, index);
-      // console.log(this.unit, index);
+
 
 
     },
@@ -636,7 +807,7 @@ export default {
 
       // if (this.return_qty.length != 0) {
 
-      var url = this.type.toLowerCase();
+      // var url = this.type.toLowerCase();
 
 
       if (this.Way_to_pay_selected == 1) { //this is default if user not detect any way
@@ -645,43 +816,35 @@ export default {
 
       }
 
-      var credit_account_id = 0;
-      if (this.Way_to_pay_selected == 1) {
 
-        credit_account_id = this.treasury[2];
-
-      }
-      if (this.Way_to_pay_selected == 2) {
-
-        credit_account_id = this.supplier[2];
-
-      }
-      // alert(url);
       this.axios
-        .post(`/${url}`, {
+        .post(`/salereturn`, {
 
 
           type: this.type,
           count: this.counts,
           unit: this.unit,
           qty: this.qty,
-          debit: {
 
-            debit_account_id: $(`#select_account_${this.type}`).val(),
+          debit: {
+            account_id: this.storem_account,
+            value: this.total,
+            account_details: this.storem,
 
           },
           credit: {
+            account_id: $(`#SaleReturn_account_tree_id`).val(),
+            value: this.grand_total,
+            account_details: $(`#select_account_${this.type}_group`).val(),
 
-            credit_account_id: credit_account_id,
           },
+          type_daily: 'salereturn',
+          payment_type: this.Way_to_pay_selected,
 
-          // store_account: $(`#select_account_${this.type}`).val(),
           description: this.description,
           type_refresh: this.type_refresh,
-          // customer_account: this.customer[2],
           customer_id: this.customer[0],
           customer_name: this.customer[1],
-          // treasury_account: this.treasury[2],
           treasury: this.treasury[0],
           type: this.type,
           // type_refresh: this.type_refresh,
@@ -725,7 +888,7 @@ export default {
 
 
 
-      this.grand_total = 0;
+      // this.grand_total = 0;
 
 
       var unit = $(`#select_unit${index}`).val();
@@ -750,7 +913,7 @@ export default {
         this.total[index] = 0;
         // this.tax[index] = 0
       }
-      this.calc_grand_total();
+      // this.calc_grand_total();
 
 
 
@@ -764,33 +927,10 @@ export default {
 
 
     },
-
-    calc_grand_total() {
-
-
-
-      this.grand_total = 0;
-      for (let i = 0; i <= this.count; i++) {
-
-
-        if (this.total[i]) {
-
-          this.grand_total = parseInt(this.total[i]) + parseInt(this.grand_total);
-
-        } else {
-
-          this.grand_total = parseInt(0) + parseInt(this.grand_total);
-        }
-
-
-        // alert(this.grand_total);
-        // this.paid = this.grand_total;
-      }
-    },
+  
 
 
 
   }
 };
 </script>
-

@@ -81,6 +81,9 @@
                             v-bind:value="['/return_sale_invoice_update/', return_sales.sale_id, 4]">
                             تعديل الفاتوره
                           </option>
+                          <option class="btn btn-success" v-bind:value="['return_sale_daily', return_sales.return_id, 5]">
+                            عرض القيد المحاسبي
+                          </option>
 
                         </select>
                       </div>
@@ -215,7 +218,13 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
+
       }
 
     },

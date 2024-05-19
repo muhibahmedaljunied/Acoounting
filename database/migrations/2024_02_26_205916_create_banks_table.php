@@ -16,8 +16,8 @@ class CreateBanksTable extends Migration
         Schema::create('banks', function (Blueprint $table) {
             $table->Increments('id');
             // --------------------------------------------------------------
-            $table->unsignedInteger('account_id');
-            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->unsignedInteger('group_id');
+            $table->foreign('group_id')->references('id')->on('groups');
             // --------------------------------------------------------------
             $table->string('name');
    

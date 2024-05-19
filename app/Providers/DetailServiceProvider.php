@@ -2,19 +2,26 @@
 
 namespace App\Providers;
 
+use App\Repository\Stock\CashDetailRepository;
+use App\Repository\Stock\CashReturnDetailRepository;
+use App\Repository\Stock\CashReturnRefreshDetailRepository;
+use App\Repository\Stock\PurchaseDetailRepository;
+use App\Repository\Stock\PurchaseRefreshDitailRepository;
+use App\Repository\Stock\PurchaseReturnDetailRepository;
+use App\Repository\Stock\PurchaseReturnRefreshDetailRepository;
 use Illuminate\Support\ServiceProvider;
 use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\Repository\Stock\PurchaseReturnRepository;
+use App\Repository\Stock\SaleDetailRepository;
+use App\Repository\Stock\SaleRefreshDetailRepository;
+use App\Repository\Stock\SaleRefreshDitailRepository;
+use App\Repository\Stock\SaleReturnDetailRepository;
+use App\Repository\Stock\SaleReturnRefreshDetailRepository;
 use App\Repository\Stock\SaleReturnRepository;
-// use App\Repository\Stock\PurchaseRepository;
-// use App\Repository\Stock\SaleRepository;
-// use App\Repository\Stock\SupplyRepository;
-// use App\Repository\Stock\CashRepository;
-// use App\Repository\HR\AttendanceRepository;
-// use App\Repository\Stock\TransferRepository;
-// use App\Services\CoreStaffService;
-// use App\Repository\HR\ExtraRepository;
+use App\Repository\Stock\SupplyDetailRepository;
+use App\Repository\Stock\SupplyReturnDetailRepository;
+use App\Repository\Stock\SupplyReturnRefreshDetailRepository;
 
 class DetailServiceProvider extends ServiceProvider
 {
@@ -31,21 +38,55 @@ class DetailServiceProvider extends ServiceProvider
         
         $request = app(\Illuminate\Http\Request::class);
 
-
-      
-
         $this->app->bind(DetailRepositoryInterface::class, function ( ) use($request)  {
             
          
+
+            if ($request->type == 'Purchase') {
+           
+                return new PurchaseDetailRepository();
+
+            } 
+
+            if ($request->type == 'Sale') {
+           
+                return new SaleDetailRepository();
+
+            } 
+
+            if ($request->type == 'Supply') {
+           
+                return new SupplyDetailRepository();
+
+            } 
+
+            if ($request->type == 'Cash') {
+           
+                return new CashDetailRepository();
+
+            } 
+
             if ($request->type == 'PurchaseReturn') {
            
-                return new PurchaseReturnRepository();
+                return new PurchaseReturnDetailRepository();
 
             } 
 
             if ($request->type == 'SaleReturn') {
            
-                return new SaleReturnRepository();
+                return new SaleReturnDetailRepository();
+
+            } 
+
+            if ($request->type == 'SupplyReturn') {
+           
+                return new SupplyReturnDetailRepository();
+
+            } 
+
+            if ($request->type == 'CashReturn') {
+           
+                return new CashReturnDetailRepository();
 
             } 
 
@@ -58,15 +99,50 @@ class DetailServiceProvider extends ServiceProvider
         $this->app->bind(DetailRefreshRepositoryInterface::class, function ( ) use($request)  {
             
          
+            if ($request->type == 'Purchase') {
+           
+                return new PurchaseRefreshDitailRepository();
+
+            } 
+
+            if ($request->type == 'Sale') {
+           
+                return new SaleRefreshDetailRepository();
+
+            } 
+            if ($request->type == 'Supply') {
+           
+                return new SupplyReturnRefreshDetailRepository();
+
+            } 
+
+            if ($request->type == 'Cash') {
+           
+                return new CashReturnRefreshDetailRepository();
+
+            } 
+
+
             if ($request->type == 'PurchaseReturn') {
            
-                return new PurchaseReturnRepository();
+                return new PurchaseReturnRefreshDetailRepository();
 
             } 
 
             if ($request->type == 'SaleReturn') {
            
-                return new SaleReturnRepository();
+                return new SaleReturnRefreshDetailRepository();
+
+            } 
+            if ($request->type == 'SupplyReturn') {
+           
+                return new SupplyReturnRefreshDetailRepository();
+
+            } 
+
+            if ($request->type == 'CashReturn') {
+           
+                return new CashReturnRefreshDetailRepository();
 
             } 
 

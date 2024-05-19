@@ -20,18 +20,12 @@ class CreateAccountsTable extends Migration
 
 
             $table->Increments('id');
-
-
             $table->string('text');
             $table->string('account_name_en')->nullable();
-
             $table->unsignedInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('accounts');
-
             $table->integer('rank')->nullable();
-
             $table->string('account_type')->nullable();
-
             $table->string('currency')->nullable();
             $table->integer('type_branch')->nullable();
             $table->string('status_account');

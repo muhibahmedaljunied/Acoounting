@@ -26,7 +26,12 @@ class CreatePayrollsTable extends Migration
             $table->float('total_advance')->default(0);
             $table->float('total_sanction')->default(0);
 
-            // $table->float('total_hours');
+            $table->float('total_delay_sanction')->default(0);
+            $table->float('total_leave_sanction')->default(0);
+            $table->float('total_absence_sanction')->default(0);
+            $table->float('total_extra_sanction')->default(0);
+
+            $table->string('status');
              $table->string('note')->nullable();
             $table->timestamps();
         });

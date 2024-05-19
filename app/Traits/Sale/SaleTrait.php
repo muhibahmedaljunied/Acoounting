@@ -48,11 +48,22 @@ trait SaleTrait
 
         $Details = new SaleDetail();
         $Details->sale_id = $this->core->sale_id;
-        $Details->price = $this->core->data['old'][$this->core->value]['cost'];
+        $Details->cost = $this->core->data['old'][$this->core->value]['cost'];
         $Details->total = $this->core->data['sub_total'];
         $Details->store_product_id = $this->core->id_store_product;
         $Details->unit_id = $this->core->unit_value;
         $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
+    }
+
+    function refresh_sale_details_table()
+    {
+
+ 
+        DB::table('sale_details')
+            ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
+            ->increment('qty_return', $this->core->micro_unit_qty);
+
+
     }
 }

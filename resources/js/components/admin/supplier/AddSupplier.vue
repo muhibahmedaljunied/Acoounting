@@ -18,7 +18,8 @@
             <form method="post" @submit.prevent="addsupplier">
               <div class="form-group">
                 <label for="name"> الاسم الاول</label>
-                <input v-model="name" type="text" name="name" id="name" class="form-control" /><span style="color:red">{{ error_name[0] }}</span> 
+                <input style="background-color: beige;" v-model="name" type="text" name="name" id="name"
+                  class="form-control" /><span style="color:red">{{ error_name[0] }}</span>
               </div>
               <div class="form-group">
                 <label for="role">الاسم الاخير</label>
@@ -31,13 +32,28 @@
               </div>
               <div class="form-group">
                 <label for="name">البريد الالكتروني</label>
-                <input v-model="email" type="text" name="email" id="email" class="form-control" /><span style="color:red">{{ error_email[0] }}</span> 
+                <input v-model="email" type="text" name="email" id="email" class="form-control" /><span
+                  style="color:red">{{ error_email[0] }}</span>
               </div>
 
               <div class="form-group">
                 <label for="address">العنوان</label>
                 <input v-model="address" type="text" name="address" id="address" class="form-control" />
               </div>
+
+              <div class="form-group">
+                <label for="">التصنيف</label>
+                <select style="background-color: beige;" name="forma_pago" class="form-control" id="forma_pago"
+                  v-model="group">
+
+                  <option value="0">عام</option>
+
+                  <option v-for="supplier_group in supplier_groups" v-bind:value="supplier_group.id">
+                    {{ supplier_group.name }}</option>
+
+                </select>
+              </div>
+
               <!-- = -->
               <!-- <div class="m-t-20 col-md-6 col-xs-6"> -->
               <!-- <div class="form-group">
@@ -60,12 +76,12 @@
                 <input id = "Supplier_account_tree"  type="text" name="status"  class="form-control" />
               </div> -->
               <!-- = -->
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="status">الحاله</label>
                 <input v-model="status" type="text" name="status" id="status" class="form-control" />
-              </div>
+              </div> -->
               <button type="submit" class="btn btn-primary btn-lg btn-block">
-                Add
+          حفظ
               </button>
             </form>
           </div>
@@ -97,35 +113,46 @@
 </template>
 <script>
 import operation from '../../../../js/operation.js';
-import tree from '../../../../js/tree/tree.js';
+// import tree from '../../../../js/tree/tree.js';
 export default {
   mixins: [
-        operation,
-        tree
-    ],
+    operation,
+    // tree
+  ],
   data() {
     return {
-  
+
       // indexselected:0,
-      type:'',
-      error_name:'',
-      error_email:'',
+      type: '',
+      error_name: '',
+      error_email: '',
       name: "",
       phone: "",
       email: "",
       address: "",
       last_name: "",
       status: "",
-      type_of_tree:0,
-      jsonTreeData:'',
+      type_of_tree: 0,
+      jsonTreeData: '',
+      group: '',
+      supplier_groups: '',
     };
   },
- 
+
   mounted() {
-    this.type =  'Supplier';
-    this.type_of_tree =1;
+    this.type = 'Supplier';
+    // this.type_of_tree = 1;
     // this.showtree('account','tree_account');
-   
+
+    this.axios
+      .post(`/supplier_groups`)
+      .then(({ data }) => {
+        this.supplier_groups = data.groups;
+      })
+      .catch(({ response }) => {
+        console.error(response);
+      });
+
   },
   methods: {
     addsupplier(event) {
@@ -146,7 +173,7 @@ export default {
       formData.append("address", this.address);
       formData.append("last_name", this.last_name);
       formData.append("status", this.status);
-
+      formData.append("group", this.group);
       // send upload request
       this.axios
         .post("store_supplier", formData, config)
@@ -158,25 +185,23 @@ export default {
           toastMessage("تم الاضافه بنجاح");
         })
         .catch(error => {
-                       console.error(error)
-                       
-                       this.error_name = error.response.data.error.name
-                       this.error_email = error.response.data.error.email
-                       
-                     });
+          console.error(error)
+
+          this.error_name = error.response.data.error.name
+          this.error_email = error.response.data.error.email
+
+        });
 
       // this.$router.go(-1);
     },
-    
+
   },
 };
 </script>
-  
+
 <style scoped>
 th,
 td {
   text-align: center;
 }
-</style> 
-
-
+</style>

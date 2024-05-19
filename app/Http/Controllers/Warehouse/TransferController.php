@@ -19,7 +19,7 @@ use App\Models\TransferDetail;
 use App\Services\CoreService;
 
 use App\Http\Controllers\Controller;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class TransferController extends Controller
 {
@@ -71,6 +71,26 @@ class TransferController extends Controller
     }
 
 
+    public function get_transfer_for_recive(Request $request)
+    {
+
+        $transfer_details = TransferDetail::where('transfer_details.transfer_id', $request->id)
+        ->jointransfer()
+        ->select(
+            'products.*',
+            'transfer_details.*',
+            'units.name as unit',
+            'products.text as product',
+            'statuses.name as status',
+            'stores.text as store',
+            'store_products.desc',
+        )
+        ->get();
+    $this->units($transfer_details);
+
+
+    return response()->json(['transfer_details' => $transfer_details]);
+    }
     public function get_store_product_with_store($request)
     {
 

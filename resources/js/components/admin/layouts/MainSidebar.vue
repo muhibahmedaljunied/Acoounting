@@ -242,9 +242,18 @@
               <router-link class="slide-item" to="/user">المستخدمين</router-link>
             </li>
 
-            <!-- <li>
-              <router-link class="slide-item" to="/user">الخزن</router-link>
-            </li> -->
+            
+            <li>
+              <router-link class="slide-item" to="/groups">انواع التصنيفات</router-link>
+            </li>
+            <li>
+              <router-link class="slide-item" to="/groups">التصنيفات</router-link>
+            </li>
+
+            <li class="slide">
+              <router-link class="slide-item" to="/financial_accounting/mark_accounts">
+                ترميز الجسابات </router-link>
+            </li>
 
             <li>
               <router-link class="slide-item" to="/company">بيانات الشركه</router-link>
@@ -270,10 +279,7 @@
             <li class="slide">
               <router-link class="slide-item" to="/accounts_basic_data">البيانات الاساسيه </router-link>
             </li>
-            <li class="slide">
-              <router-link class="slide-item" to="/financial_accounting/mark_accounts">
-                ترميز الجسابات </router-link>
-            </li>
+       
 
             <li class="slide">
               <router-link class="slide-item" to="/financial_accounting/setting_account">
@@ -437,21 +443,22 @@
               <router-link class="slide-item" to="/stock">المخزون</router-link>
             </li>
           </ul>
-          <!-- <ul class="slide-menu">
+          <ul class="slide-menu">
           <li>
               <router-link class="slide-item" to="/newcash">امر صرف مخزني</router-link>
             </li>
-          </ul> -->
+          </ul>
           <ul class="slide-menu">
             <li>
               <router-link class="slide-item" to="/listcash">اوامر الصرف</router-link>
             </li>
           </ul>
-          <!-- <ul class="slide-menu">
+          <ul class="slide-menu">
           <li>
               <router-link class="slide-item" to="/newsupply">امر توريد مخزني</router-link>
             </li>
-          </ul> -->
+          </ul>
+   
           <ul class="slide-menu">
             <li>
               <router-link class="slide-item" to="/listsupply">اوامر التوريد</router-link>
@@ -460,9 +467,22 @@
 
           <ul class="slide-menu">
             <li>
-              <router-link class="slide-item" to="/transfer">تحويل مخزني</router-link>
+              <router-link class="slide-item" to="/newtransfer">تحويل مخزني</router-link>
             </li>
           </ul>
+
+          <ul class="slide-menu">
+            <li>
+              <router-link class="slide-item" to="/listtransfer">التحويلات المخزنيه</router-link>
+            </li>
+          </ul>
+
+          <ul class="slide-menu">
+            <li>
+              <router-link class="slide-item" to="/newrecive">استلام تحويل مخزني</router-link>
+            </li>
+          </ul>
+
 
           <ul class="slide-menu">
             <li>
@@ -538,11 +558,15 @@
               <router-link class="slide-item" to="/newpurchase"> فاتوره مشتريات</router-link>
             </li>
             <li>
-              <router-link class="slide-item" to="/listpurchase">المشتريات</router-link>
+              <router-link class="slide-item" to="/newpurchasereturn"> فاتوره مردودات مشتريات</router-link>
             </li>
             <li>
-              <router-link class="slide-item" to="/purchases">مردودات المشتريات </router-link>
+              <router-link class="slide-item" to="/listpurchase">المشتريات</router-link>
             </li>
+    
+            <!-- <li>
+              <router-link class="slide-item" to="/purchases">مردودات المشتريات </router-link>
+            </li> -->
 
             <li>
               <router-link class="slide-item" to="/PaymentBondList">سندات الصرف</router-link>
@@ -559,12 +583,11 @@
                 d="M22 9h-4.79l-4.38-6.56c-.19-.28-.51-.42-.83-.42s-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1zM12 4.8L14.8 9H9.2L12 4.8zM18.5 19l-12.99.01L3.31 11H20.7l-2.2 8zM12 13c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
             </svg><span class="side-menu__label">اداره الموردين </span><i class="angle fe fe-chevron-down"></i></a>
           <ul class="slide-menu">
+        
             <li>
               <router-link class="slide-item" to="/supplier_setting">تجهيز الموردين</router-link>
             </li>
-            <li>
-              <router-link class="slide-item" to="/supplier_group">تصنيفات الموردين</router-link>
-            </li>
+        
             <li>
               <router-link class="slide-item" to="/supplier">الموردين</router-link>
             </li>
@@ -591,16 +614,19 @@
               <router-link class="slide-item" to="/newsale">فاتوره مبيعات</router-link>
             </li>
             <li>
+              <router-link class="slide-item" to="/newsalereturn"> فاتوره مردودات مبيعات</router-link>
+            </li>
+            <li>
               <router-link class="slide-item" to="/listsale"> المبيعات</router-link>
             </li>
-
+<!--           
             <li>
               <router-link class="slide-item" to="/listsale"> مردودات المبيعات</router-link>
-            </li>
+            </li> -->
 
 
             <li>
-              <router-link class="slide-item" to="/ReceivableBondList ">سندات القبض</router-link>
+              <router-link class="slide-item" to="/ReceivableBondList">سندات القبض</router-link>
             </li>
           </ul>
         </li>
@@ -614,13 +640,12 @@
                 d="M22 9h-4.79l-4.38-6.56c-.19-.28-.51-.42-.83-.42s-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1zM12 4.8L14.8 9H9.2L12 4.8zM18.5 19l-12.99.01L3.31 11H20.7l-2.2 8zM12 13c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
             </svg><span class="side-menu__label">اداره العملاء </span><i class="angle fe fe-chevron-down"></i></a>
           <ul class="slide-menu">
+         
 
             <li>
               <router-link class="slide-item" to="/customer_setting">تجهيز العملاء</router-link>
             </li>
-            <li>
-              <router-link class="slide-item" to="/customer_group">تصنيفات العملاء</router-link>
-            </li>
+          
             <li>
               <router-link class="slide-item" to="/customer">العملاء</router-link>
             </li>

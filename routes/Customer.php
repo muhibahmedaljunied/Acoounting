@@ -13,6 +13,6 @@ Route::post('/store_customer_account_setting', 'Sale\CustomerController@store_cu
 
 // ---------------------------------customerGroup------------------
 Route::post('/customer_groups', 'Sale\CustomerGroupController@index');
-Route::post('/store_customer_group', 'Sale\CustomerGroupController@index');
+Route::post('/store_customer_group', 'Sale\CustomerGroupController@store');
 
 

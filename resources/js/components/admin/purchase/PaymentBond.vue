@@ -18,28 +18,43 @@
                 <div class="row">
 
 
-                  <div class="col-md-4">
-                    <h5 class="card-title">رقم الحساب</h5>
-                    <div class="custom-search">
+                  <div class="col-md-2">
 
 
-                      <input :id="'PaymentBond_account_tree_id'" type="text" readonly class="custom-search-input">
+                    <label for="date">رقم الفاتوره</label><br />
 
-                      <button class="custom-search-botton" type="button" data-toggle="modal"
-                        data-target="#exampleModalPaymentBond">
-                        <i class="fa fa-plus-circle"></i></button>
-                    </div>
+
+                    <div>{{ details.data[0].paymentable.purchase_id }}</div>
+
+
                   </div>
+
+
                   <div class="col-md-4">
-                    <h5 class="card-title">اسم الحساب</h5>
+                    <h5 class="card-title"> الحساب</h5>
                     <div class="custom-search">
 
                       <input style="background-color: beige;" :id="'PaymentBond_account_tree'" type="text" readonly
                         class="custom-search-input">
+                        <input :id="'PaymentBond_account_tree_id'" type="hidden" readonly class="custom-search-input">
+
+                        <button class="custom-search-botton" type="button" data-toggle="modal"
+                        data-target="#exampleModalPaymentBond">
+                        <i class="fa fa-plus-circle"></i></button>
+
 
                     </div>
                   </div>
+                  <div class="col-md-2">
+                    <label for="cliente"> الحساب التفصيلي</label>
 
+
+                    <select class="form-control" style="background-color: beige;" name="forma_pago"
+                      id="select_account_PaymentBond_group">
+
+                    </select>
+
+                  </div>
 
                 </div>
 
@@ -61,15 +76,15 @@
 
                   <div class="col-md-3">
                     <label for="pagoPrevio">البيان</label>
-                     <input v-model= "description" type="text" class="form-control"
-                      style="background-color: beige;">
-                    </div>
+                    <input v-model="description" type="text" class="form-control" style="background-color: beige;">
+                  </div>
 
 
 
                   <div class="col-md-2">
                     <label for="pagoPrevio">التاريخ</label>
-                    <input v-model= "date" type="date" class="form-control input_cantidad" onkeypress="return valida(event)" />
+                    <input v-model="date" type="date" class="form-control input_cantidad"
+                      onkeypress="return valida(event)" />
 
                   </div>
                 </div>
@@ -82,25 +97,27 @@
 
                   <div class="col-md-4">
                     <label for="pagoPrevio">المورد</label>
-                    <input v-model="details[0].name" type="text" class="form-control input_cantidad"
-                      onkeypress="return valida(event)" />
-
-                  </div>
-
-
-                  <div class="col-md-2">
-                    <label for="pagoPrevio">المبلغ المتبقي</label>
-                    <input v-model="details[0].remaining" style="background-color: beige;" type="number"
+                    <input v-model="details.data[0].paymentable.supplier_name" type="text"
                       class="form-control input_cantidad" onkeypress="return valida(event)" />
 
                   </div>
+
 
                   <div class="col-md-2">
                     <label for="pagoPrevio">المبلغ المدفوع</label>
-                    <input @input="credit(details[0].paid)" v-model="details[0].paid" style="background-color: beige;" type="number"
+                    <input @input="credit(details.data[0].paid)" v-model="details.data[0].paid"
+                      style="background-color: beige;" type="number" class="form-control input_cantidad"
+                      onkeypress="return valida(event)" />
+
+                  </div>
+                  <div class="col-md-2">
+                    <label for="pagoPrevio">المبلغ المتبقي</label>
+                    <input v-model="details.data[0].remaining" style="background-color: beige;" type="number"
                       class="form-control input_cantidad" onkeypress="return valida(event)" />
 
                   </div>
+
+               
 
                   <div class="col-md-4">
 
@@ -120,10 +137,15 @@
           </div>
         </div>
 
-        <div class="row row-sm">
+
+
+
+      </div>
+    </section>
+    <!-- 
+    <div class="row row-sm">
           <div class="col-xl-12">
             <div class="card">
-              <!-- <form method="post" @submit.prevent="submitForm"> -->
               <form method="post">
                 <div class="card-header pb-0">
                   <div class="d-flex justify-content-between">
@@ -175,9 +197,6 @@
                             {{ transfer_detail.into_store }}
                           </td>
 
-                          <!-- <td style="width: 40px">{{ transfer_detail.status }}</td> -->
-
-                          <!-- <td>{{ transfer_detail.qty }}</td> -->
                           <td>
                             <div v-for="temx in transfer_detail.units">
 
@@ -202,7 +221,7 @@
                                       transfer_detail.qty / transfer_detail.rate >= 1">و
                                   </span>
                                   <span v-if="transfer_detail.qty % transfer_detail.rate >= 1">
-                                    <!-- و -->
+                        
                                     {{ Math.floor((transfer_detail.qty % transfer_detail.rate)) }}{{
                                       transfer_detail.units[1].name
                                     }}
@@ -230,16 +249,11 @@
                   </div>
                 </div>
               </form>
-              <!-- </form> -->
+     
             </div>
           </div>
-          <!--/div-->
-        </div>
-
-
-      </div>
-    </section>
-
+      
+        </div> -->
     <div class="modal fade" id="exampleModalPaymentBond" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
       aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -275,9 +289,11 @@ export default {
       jsonTreeData: '',
       type_of_tree: 1,
       details: '',
-      date:'',
-      description:'',
-      remaining:'',
+      date: '',
+      description: '',
+      remaining: '',
+      treasury: [],
+
 
     };
   },
@@ -287,7 +303,7 @@ export default {
 
     this.type = 'PaymentBond';
     this.type_of_tree = 1;
-    this.showtree('account','tree_account');
+    this.showtree('account', 'tree_account');
 
 
   },
@@ -298,25 +314,26 @@ export default {
       this.axios.post(uri).then((response) => {
 
         this.details = response.data.list_data;
-        this.remaining =this.details[0].remaining;
+        // console.log('wewwe',this.details.data[0]);
+        this.remaining = this.details.data[0].remaining;
 
       });
     },
 
     credit(paid) {
 
-      
-        var remaining = this.remaining - paid;
 
-        if (remaining<0) {
+      var remaining = this.remaining - paid;
 
-          this.details[0].remaining = 0
-        }else{
+      if (remaining < 0) {
 
-          this.details[0].remaining = remaining
+        this.details.data[0].remaining = 0
+      } else {
 
-        }
-      
+        this.details.data[0].remaining = remaining
+
+      }
+
     },
 
     payment() {
@@ -325,20 +342,30 @@ export default {
         .post(`/store_PaymentBond`, {
           type: 'PaymentBond',
           date: this.date,
-          remaining: this.details[0].remaining,
-          purchase_id: this.details[0].purchase_id,
+          remaining: this.details.data[0].remaining,
+          id: this.details.data[0].paymentable.purchase_id,
           description: this.description,
-          paid: this.details[0].paid,
-          grand_total: this.details[0].paid,
+          paid: this.details.data[0].paid,
+          grand_total: this.details.data[0].paid,
 
-          debit:{
-            debit_account_id: this.details[0].account_id,
+          debit: {
+            
+            account_id: this.details.data[0].paymentable.account_id,
+            value: this.details.data[0].paid,
+            account_details: this.details.data[0].paymentable.supplier_id,
+
           },
-          
-          credit:{
-            credit_account_id: $('#PaymentBond_account_tree_id').val(),
+          credit: {
+            account_id: $(`#PaymentBond_account_tree_id`).val(),
+            value: this.details.data[0].paid,
+            account_details: $(`#select_account_${this.type}_group`).val(),
+
           },
-          
+       
+
+          type_daily: 'PaymentBond',
+
+
 
 
         })
@@ -356,4 +383,3 @@ export default {
 
 };
 </script>
-

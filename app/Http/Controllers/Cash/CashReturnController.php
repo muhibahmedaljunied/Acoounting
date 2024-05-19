@@ -1,25 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Cash;
-use App\Repository\StoreReturnInventury\StoreCashReturnRepository;
-use App\Repository\StockReturnInventury\StockCashReturnRepository;
-use App\Repository\CheckData\CheckCashReturnRepository;
 use Illuminate\Support\Facades\Cache;
-use App\Repository\Stock\CashReturnRepository;
 use App\Traits\Return\ReturnTrait;
 use App\Traits\Details\ReturnDetailsTrait;
-use App\Services\UnitService;
 use App\Traits\GeneralTrait;
-use App\Services\CoreService;
-use App\Services\ReturnService;
 use Illuminate\Http\Request;
 use App\Models\CashReturnDetail;
 use App\Http\Controllers\Controller;
-use App\Models\DailyDetail;
-use App\Models\CashDetail;
-use App\Services\DailyService;
 use App\Models\CashReturn;
-use DB;
+use App\Services\StockReturnService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class CashReturnController extends Controller
@@ -30,15 +21,7 @@ class CashReturnController extends Controller
         ReturnTrait;
 
 
-    public function __construct(
 
-        protected CoreService $core,
-        Request $request,
-
-    ) {
-
-        $this->core->setData($request->all());
-    }
 
     public function details(Request $request, $id)
     {
@@ -63,7 +46,7 @@ class CashReturnController extends Controller
         return response()->json([
             'cash_details' => $details,
             'customers' => $this->customers(),
-            'treasuries' => $this->treasuries()
+            // 'treasuries' => $this->treasuries()
         ]);
     }
 
@@ -71,11 +54,11 @@ class CashReturnController extends Controller
     {
 
         return DB::table('customers')
-            ->join('accounts', 'accounts.id', '=', 'customers.account_id')
+            // ->join('accounts', 'accounts.id', '=', 'customers.account_id')
             ->select(
-                'customers.id',
-                'customers.name',
-                'customers.account_id',
+                'customers.*',
+                // 'customers.name',
+                // 'customers.account_id',
 
 
             )
@@ -86,11 +69,11 @@ class CashReturnController extends Controller
     {
 
         return DB::table('treasuries')
-            ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
+            // ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
             ->select(
-                'treasuries.id',
-                'treasuries.name',
-                'treasuries.account_id',
+                'treasuries.*',
+                // 'treasuries.name',
+                // 'treasuries.account_id',
 
             )
             ->get();
@@ -101,13 +84,13 @@ class CashReturnController extends Controller
 
 
         $returns = DB::table('cash_returns')->where('cash_returns.cash_id', $id)
-            ->join('cashs', 'cashs.id', '=', 'cash_returns.cash_id')
+            ->join('cashes', 'cashes.id', '=', 'cash_returns.cash_id')
             ->select(
                 'cash_returns.*',
                 'cash_returns.date as return_date',
                 'cash_returns.id as return_id',
                 'cash_returns.quantity as quantity_return',
-                'cashs.*'
+                'cashes.*'
             )
             ->get();
 
@@ -135,11 +118,11 @@ class CashReturnController extends Controller
 
 
         return CashReturn::where('cash_returns.id', $id)
-            ->join('cashs', 'cashs.id', '=', 'cash_returns.cash_id')
-            ->join('users', 'users.id', '=', 'cashs.customer_id')
+            ->join('cashes', 'cashes.id', '=', 'cash_returns.cash_id')
+            ->join('users', 'users.id', '=', 'cashes.customer_id')
             ->select(
-                'cashs.*',
-                'cashs.id as cash_id',
+                'cashes.*',
+                'cashes.id as cash_id',
                 'users.*',
                 'cash_returns.*',
                 'cash_returns.id as return_id'
@@ -169,50 +152,16 @@ class CashReturnController extends Controller
     }
 
     public function create(
-        StoreCashReturnRepository $store,
-        StockCashReturnRepository $stock,
-        CashReturnRepository $warehouse,
-        ReturnService $returnservice,
-        CheckCashReturnRepository $check,
-        UnitService $unit,
-        DailyService $daily,
-    
+        StockReturnService $stock
+
     )   // this create return for supply,cashing,cash,purchase
     {
 
-        // dd($this->core->data);
+        dd($stock->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $warehouse->add();
-            foreach ($this->core->data['count'] as $value) {
-       
-
-                // -------------------------------------------------------------------------------------
-
-                // $result = $check->check_return($this->core->data['old'][$value]);
-         
-                // if ($result['status'] == 0) {
-                 
-                //  return response(['message' => $result['text'] ,'status' => $result['status']]);
-           
-                // }
-                 // -------------------------------------------------------------------------------------
-
-                $this->core->setValue($value);
-
-                $unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-
-                $store->store();
-        
-                $returnservice->details();
-
-                $stock->stock();
-                
-            }
-            $daily->daily()->debit()->credit();
-
-            $warehouse->refresh();//this update cash_return table by daily_id
+            $stock->handle();
             Cache::forget('stock');
 
             // dd(DailyDetail::all());
@@ -220,7 +169,7 @@ class CashReturnController extends Controller
 
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
-  
+
             return response([
                 'message' => "CashReturn created successfully",
                 'status' => "success"
@@ -237,30 +186,30 @@ class CashReturnController extends Controller
 
     }
 
-    public function cash_return_aily(Request $request){
+    public function return_cash_daily(Request $request)
+    {
 
-        
-       
-        $cashs = DB::table('cashs')->where('cashs.id',$request->id)
-        ->join('customers', 'customers.id', '=', 'cashs.customer_id')
-        ->join('dailies', 'dailies.id', '=', 'cashs.daily_id')
-        ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
-        ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
-        ->select(
-            // 'cashs.*',
-            'cashs.id as cash_id',
-            'customers.name',
-            'dailies.*',
-            'daily_details.*',
-            'accounts.text',
-            'accounts.id as account_id',
 
-          
-        )
-        ->get();
 
-        // dd($cashs);
-    return response()->json(['daily_details' => $cashs]);
+        $cash_returns = DB::table('cash_returns')->where('cash_returns.id', $request->id)
+            // ->join('customers', 'customers.id', '=', 'cashes.customer_id')
+            ->join('dailies', 'dailies.id', '=', 'cash_returns.daily_id')
+            ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
+            ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
+            ->select(
+                // 'cashes.*',
+                'cash_returns.id as cash_id',
+                // 'customers.name',
+                'dailies.*',
+                'daily_details.*',
+                'accounts.text',
+                'accounts.id as account_id',
 
+
+            )
+            ->get();
+
+        // dd($cashes);
+        return response()->json(['daily_details' => $cash_returns]);
     }
 }

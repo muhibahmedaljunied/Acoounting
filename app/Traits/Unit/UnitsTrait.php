@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Traits\Unit;
-use DB;
+use Illuminate\Support\Facades\DB;
 trait UnitsTrait
 {
 

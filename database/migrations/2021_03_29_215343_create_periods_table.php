@@ -16,12 +16,8 @@ class CreatePeriodsTable extends Migration
         Schema::create('periods', function (Blueprint $table) {
             
             $table->Increments('id');
-      
-           
             $table->string('name')->nullable();
-
             $table->string('code')->nullable();
-
             $table->timestamps();
         });
     }
