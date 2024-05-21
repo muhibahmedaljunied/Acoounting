@@ -119,7 +119,7 @@
 
             </div>
 
-            <br/>
+            <br />
             <hr>
             <div class="row">
 
@@ -180,6 +180,7 @@
                       <th>الاجمالي</th>
                       <th>تاريخ الانتهاء</th>
 
+                      <th>اضافه</th>
 
                       <th>اضافه</th>
                     </tr>
@@ -282,11 +283,14 @@
                       </td>
 
 
+                      <td>
+                      <input v-model="check_state[index]" @change="add_one_sale(product, index)" type="checkbox"
+                        class="btn btn-info waves-effect">
+                    </td>
 
+                      <td v-if="index == 1" rowspan="3">
 
-                      <td v-if="index == 1">
-
-                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
+                        <button class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
                           <i class="fa fa-plus-circle"></i></button>
 
                         <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
@@ -558,9 +562,10 @@ export default {
 
       description: '',
       store: '',
-      storem: [],
+      // storem: [],
+      // storem_account: [],
       productm: [],
-      storem_account: [],
+
       treasury: [],
       bank: [],
       text_message: '',
@@ -634,15 +639,25 @@ export default {
       var unit = JSON.parse($(`#select_unit${index}`).val());
 
 
-      if (unit[2] == 0) {
 
-        this.total[index] = this.price[index] * this.qty[index];
-      }
+      if (unit) {
 
-      if (unit[2] == 1) {
+        if (unit[2] == 0) {
 
-        this.total[index] = this.price[index] * unit[1] * this.qty[index];
+          this.total[index] = this.price[index] * this.qty[index];
+        }
 
+        if (unit[2] == 1) {
+
+          this.total[index] = this.price[index] * unit[1] * this.qty[index];
+
+        }
+      } else {
+
+        toastMessage('فشل', "قم بأدخال الوحده", 'error');
+
+        this.row_removed[index] = index;
+        this.total[index] = 0;
       }
       if (this.tax[index]) {
 
@@ -656,13 +671,18 @@ export default {
         this.total[index] = 0;
         this.tax[index] = 0
       }
-   
+
       this.calculate_qty();
       this.calculate_tax();
       this.calculate_grand_total();
+      this.credit();
+      // this.calculate_tax();
+      // this.calculate_qty();
+
+
       this.To_pay = this.grand_total;
       this.remaining = this.grand_total;
-      this.credit();
+   
 
       if (this.qty[index] <= 0 || this.price[index] <= 0) {
 
@@ -718,7 +738,7 @@ export default {
         }
 
         this.sub_total = parseInt(this.grand_total) - parseInt(this.total_tax)
-        console.log('qwsas',this.sub_total);
+        console.log('qwsas', this.sub_total);
 
       }
     },
@@ -830,6 +850,20 @@ export default {
 
 
       this.To_pay = this.grand_total;
+
+      // ----------------------------------------------------
+
+
+      for (let index = 0; index < this.row_removed.length; index++) {
+
+        if (this.row_removed[index]) {
+
+          this.$delete(this.counts, this.row_removed[index] - 1);
+        }
+
+      }
+      // ----------------------------------------------------
+
       this.axios
         .post(`/payPurchase`, {
           type: 'Purchase',
@@ -842,7 +876,8 @@ export default {
           price: this.price,
           total: this.total,
           tax: this.tax,
-          store: $('#Purchase_store_tree_id').val(),
+          // store: $('#Purchase_store_tree_id').val(),
+          store: this.storem,
           description: this.description,
           type_refresh: this.type_refresh,
           // -------------this for dailies----------------------------------------------

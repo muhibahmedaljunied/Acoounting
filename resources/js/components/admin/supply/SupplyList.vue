@@ -42,7 +42,8 @@
                 <tbody v-if="supplies && supplies.data.length > 0">
                   <tr v-for="(supply, index) in supplies.data" :key="index">
                     <td>{{ supply.paymentable.supply_id }}</td>
-                    <td v-if="supply.payment_info == '1' || supply.payment_info == '2'"> {{ supply.paymentable.supplier_name }}</td>
+                    <td v-if="supply.payment_info == '1' || supply.payment_info == '2'"> {{
+                  supply.paymentable.supplier_name }}</td>
                     <td v-else>{{ supply.paymentable.text }} {{ supply.paymentable.account_id }}</td>
 
                     <!-- <td>{{ supply.paymentable.supplier_name }}</td> -->
@@ -100,7 +101,7 @@
                             v-bind:value="['/PaymentBond/', supply.paymentable.supply_id, 4]">
                             دفع
                           </option> -->
-                          <option class="btn btn-success"
+                          <option v-if="supply.payment_status != 'paiding'" class="btn btn-success"
                             v-bind:value="['PaymentBond', supply.paymentable.supply_id, 4]">
                             صرف
                           </option>

@@ -85,12 +85,15 @@ export default {
 
                             element = length[key];
                         }
+
+
                         if (this.type == 'SaleReturn') {
 
                             element = key;
                         }
 
 
+                        console.log('aljunied');
                         this.get_account_for_storem_by_store(element, response.data.accounts);
                     }
                 }
@@ -144,8 +147,8 @@ export default {
 
                     //     resolve(response.data.accounts[0].id);
                     // });
-                    uh = response.data.accounts[0].id;
-                    this.storem_account[this.indexselected] =  uh;
+                    // uh = response.data.accounts[0].id;
+                    this.storem_account[this.indexselected] =  response.data.accounts[0].id;
                     
                 });
 

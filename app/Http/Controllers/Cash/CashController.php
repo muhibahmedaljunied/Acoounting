@@ -25,17 +25,17 @@ class CashController extends Controller
         GeneralTrait;
 
 
-    public function __construct(
-        Request $request,
-        public PaymentService $payment,
-        protected CoreService $core,
+    // public function __construct(
+    //     Request $request,
+    //     public PaymentService $payment,
+    //     protected CoreService $core,
 
 
-    ) {
+    // ) {
 
-        $this->core->setData($request->all());
-        $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
-    }
+    //     $this->core->setData($request->all());
+    //     $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
+    // }
 
 
     public function details(Request $request, $id)
@@ -145,7 +145,7 @@ class CashController extends Controller
     ) {
 
 
-        // dd($stock->core->data);
+        dd($stock->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -239,7 +239,7 @@ class CashController extends Controller
                     $query->join('customers', 'customers.id', '=', 'cashes.customer_id');
            
                     $query->select(
-                        'customers.*',
+                        'cashes.*',
                         'cashes.id as cash_id',
                
                     );

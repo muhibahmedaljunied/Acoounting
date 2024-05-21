@@ -63,6 +63,17 @@
                 <option v-bind:value="3">بنك</option>
               </select>
             </div>
+
+            <div class="col-md-2" v-if="Way_to_pay_selected == 1">
+              <label for="cliente"> العميل</label>
+
+              <select class="form-control" style="background-color: beige;" v-model="customer" id="customer">
+
+                <option v-for="cus in customers" v-bind:value="[cus.id, cus.name]">
+                  {{ cus.name }}
+                </option>
+              </select>
+            </div>
             <div class="col-md-4">
               <h5 class="card-title"> الحساب</h5>
               <div class="custom-search">
@@ -75,16 +86,7 @@
                   <i class="fa fa-plus-circle"></i></button>
               </div>
             </div>
-            <div class="col-md-2" v-if="Way_to_pay_selected == 1">
-              <label for="cliente"> العميل</label>
 
-              <select class="form-control" style="background-color: beige;" v-model="customer" id="customer">
-
-                <option v-for="cus in customers" v-bind:value="[cus.id, cus.name]">
-                  {{ cus.name }}
-                </option>
-              </select>
-            </div>
 
             <div class="col-md-2">
               <label for="cliente"> الحساب التفصيلي</label>
@@ -645,7 +647,7 @@ export default {
       // product: [],
       qty: [],
       unit: [],
-      account_in_list: [],
+      // account_in_list: [],
       // desc: [],
       store: [],
       // status: [],
@@ -837,9 +839,12 @@ export default {
     },
     set_values(product, index) {
 
+      this.counts[index] = index;
       this.store_product_id[index] = product.id;
-      this.account_in_list[index] = product.store_account_id;
-      this.store[index] = product.store_id;
+      this.storem_account[index] = product.store_account_id;
+      // console.log('almuhib',product.store_id,index);
+      this.storem[index] = product.store_id;
+    
 
     },
     add_one_cash(product, index) {
@@ -856,51 +861,12 @@ export default {
       ) == 0) {
         return 0;
       }
+
+      
+      console.log();
       this.handle(product, index);
 
-      // if (this.check_state[index] == true) {
 
-
-      // if (this.check_qty(this.qty[index], this.unit[index], product.availabe_qty) == 0) { return 0; }
-
-      // this.calc_grand_total(index);
-
-      // this.calc_qty(index);
-
-      // this.To_pay = this.grand_total;
-      // this.remaining = this.grand_total;
-
-      // this.grand_total = parseInt(this.grand_total)
-
-      // this.counts[index] = index;
-
-      // this.store_product_id[index] = product.id;
-      // this.account_in_list[index] = product.store_account_id;
-      // this.store[index] = product.store_id;
-
-
-
-
-      // }
-      // else if (this.check_state[index] == false) {
-
-
-      // if (!this.total[index]) { this.total[index] = 0; }
-      // if (!this.qty[index]) { this.qty[index] = 0; }
-
-      // this.$delete(this.counts, index);
-      // this.grand_total = parseInt(this.grand_total) - parseInt(this.total[index]);
-      // this.grand_total = parseInt(this.grand_total);
-      // this.total_quantity = parseInt(this.total_quantity);
-
-      // this.total[index] = 0;
-      // this.qty[index] = 0;
-
-
-
-
-
-      // }
 
     },
     // on_input(qty, availabe_qty) {
@@ -971,9 +937,9 @@ export default {
           },
           credit: {
             // credit_account_id: $(`#select_account_${this.type}`).val(),
-            account_id: this.account_in_list,
+            account_id: this.storem_account,
             value: this.total,
-            account_details: this.store,
+            account_details: this.storem,
 
           },
 

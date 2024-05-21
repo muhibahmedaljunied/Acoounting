@@ -59,7 +59,7 @@
             </div>
 
             <br />
-          <hr>
+            <hr>
 
             <div class="row">
 
@@ -106,7 +106,7 @@
             </div>
 
             <br />
-          <hr>
+            <hr>
             <div class="row">
 
 
@@ -212,8 +212,8 @@
                       <td>
                         <div class="custom-search">
 
-                          <input style="background-color: beige;font-size: 15px;" :id="'Supply_productm_tree' + index" type="text"
-                            readonly class="custom-search-input">
+                          <input style="background-color: beige;font-size: 15px;" :id="'Supply_productm_tree' + index"
+                            type="text" readonly class="custom-search-input">
                           <input :id="'Supply_productm_tree_id' + index" type="hidden" readonly
                             class="custom-search-input">
 
@@ -276,7 +276,7 @@
 
                       <td>
                         <input v-on:input="calculate_price(index)" style="background-color: beige;" type="number"
-                          v-model="price[index]" id="qty" class="form-control" />
+                          v-model="price[index]" id="qty" class="form-control" required/>
                       </td>
                       <td>
                         <input style="background-color: beige;" @input="calculate_price(index)" type="number"
@@ -554,41 +554,29 @@ export default {
   data() {
     return {
 
+   
       description: '',
       store: '',
       productm: [],
-      storem: [],
-      storem_account: [],
       treasury: [],
       text_message: '',
-
       intostore: [],
       intostore_id: [],
       treasuries: '',
-      // total_quantity: 0,
-      // grand_total: 0,
-      // sub_total: 0,
-      // To_pay: 0,
       discount: 0,
-
       customer: [],
-      // supplier: [],
       suppliers: '',
       customers: '',
-      // indexselectedproduct: '',
       temporale: 1,
       type_payment: 0,
       Way_to_pay_selected: 1,
       show: false,
       show_treasury: true,
       show_bank: false,
-      // paid: 0,
-      // remaining: 0,
       return_qty: [],
       note: '',
       not_qty: true,
       seen: false,
-      // detail: '',
       id: '',
 
 
@@ -643,17 +631,28 @@ export default {
       this.total_quantity = 0;
       var unit = JSON.parse($(`#select_unit${index}`).val());
 
+// --------------------------------------------------------------------------------------
+      if (unit) {
 
-      if (unit[2] == 0) {
+        if (unit[2] == 0) {
 
-        this.total[index] = this.price[index] * this.qty[index];
+          this.total[index] = this.price[index] * this.qty[index];
+        }
+
+        if (unit[2] == 1) {
+
+          this.total[index] = this.price[index] * unit[1] * this.qty[index];
+
+        }
+      } else {
+
+        toastMessage('فشل', "قم بأدخال الوحده", 'error');
+
+        this.row_removed[index] = index;
+        this.total[index] = 0;
       }
 
-      if (unit[2] == 1) {
-
-        this.total[index] = this.price[index] * unit[1] * this.qty[index];
-
-      }
+// --------------------------------------------------------------------------------------
 
 
       // console.log(this.count);
@@ -699,6 +698,8 @@ export default {
           this.grand_total = parseInt(0) + parseInt(this.grand_total);
         }
 
+        console.log('calculate_grand_total', i, this.grand_total);
+
       }
     },
 
@@ -714,7 +715,7 @@ export default {
 
           this.total_quantity = parseInt(0) + parseInt(this.total_quantity);
         }
-
+        console.log('calculate_qty', i, this.grand_total);
 
       }
     },
@@ -804,14 +805,14 @@ export default {
         this.show_treasury = true;
         this.show_bank = false;
         this.paid = this.grand_total;
-        this.remaining =0;
+        this.remaining = 0;
       }
 
       if (input.value == 3) {
         this.show_bank = true;
         this.show_treasury = false;
         this.paid = this.grand_total;
-        this.remaining =0;
+        this.remaining = 0;
       }
     },
 
@@ -824,11 +825,21 @@ export default {
         this.paid = this.grand_total;
 
       }
-
-
-
       this.To_pay = this.grand_total;
 
+
+      // ----------------------------------------------------
+
+     
+      for (let index = 0; index < this.row_removed.length; index++) {
+
+      if(this.row_removed[index]){
+
+        this.$delete(this.counts, this.row_removed[index]-1);
+      }
+        
+      }
+      // ----------------------------------------------------
 
       this.axios
         .post(`/paySupply`, {
@@ -843,7 +854,9 @@ export default {
           total: this.total,
 
           payment_type: this.Way_to_pay_selected,
-          store: $('#Supply_store_tree_id').val(),
+          // store: $('#Supply_store_tree_id').val(),
+          store: this.storem,
+
           description: this.description,
           type_refresh: this.type_refresh,
           // -------------this for dailies----------------------------------------------

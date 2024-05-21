@@ -15,7 +15,7 @@ trait StoreProductTrait
         // dd($this->core->data);
         return StoreProduct::where([
             'product_id' => $this->core->data['product'][$this->core->value],
-            'store_id' => $this->core->data['store'],
+            'store_id' => $this->core->data['store'][$this->core->value],
             'status_id' => $this->core->data['status'][$this->core->value],
             'desc' => $this->core->data['desc'][$this->core->value]
         ])
@@ -31,9 +31,10 @@ trait StoreProductTrait
     {
 
 
+        // dd($this->core->data['store']);
         $store_product = new StoreProduct();
         $store_product->product_id = $this->core->data['product'][$this->core->value];
-        $store_product->store_id = $this->core->data['store'];
+        $store_product->store_id = $this->core->data['store'][$this->core->value];
         $store_product->status_id = $this->core->data['status'][$this->core->value];
         $store_product->desc = $this->core->data['desc'][$this->core->value];
         $store_product->quantity = $this->core->micro_unit_qty;

@@ -45,12 +45,14 @@ trait DetailsTrait
             )
             ->get();
 
+          
+
         foreach ($details as $value) {
 
             $value->qty_return_now = 0;
             $value->unit_selected = [];
         }
-
+        // dd($details);
         return $details;
       
 

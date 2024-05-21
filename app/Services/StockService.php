@@ -46,7 +46,7 @@ use App\Services\PaymentService;
 
         $this->warehouse->add();
 
-     
+        // dd($this->core->data);
         foreach ($this->core->data['count'] as $value) {
 
 
@@ -59,7 +59,7 @@ use App\Services\PaymentService;
             // }
 
             // -------------------------------------------------------------------------------------
-
+   
             $this->core->setValue($value);
             $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
             $this->store->store();
@@ -73,5 +73,6 @@ use App\Services\PaymentService;
         $this->daily->daily()->exicute('debit')->exicute('credit');
         // dd(DailyDetail::all());
         $this->warehouse->refresh(); //this update purchase_return table by daily_id
+        
     }
 }

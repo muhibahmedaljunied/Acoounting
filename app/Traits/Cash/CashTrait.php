@@ -44,6 +44,7 @@ trait CashTrait
     public function add_into_cash_details_table()
     {
 
+        
         $Details = new CashDetail();
         $Details->cash_id = $this->core->cash_id;
         $Details->price = $this->core->data['old'][$this->core->value]['price'];

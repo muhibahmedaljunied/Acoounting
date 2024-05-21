@@ -4,6 +4,7 @@ export default {
     // return data;
     return {
 
+      row_removed:[],
       product: [],
       qty: [],
       unit: [],
@@ -11,6 +12,14 @@ export default {
       store: [],
       status: [],
       counts: {},
+      total: [],
+      customer: [],
+      supplier: [],
+      check_state: [],
+      return_qty: [],
+      price: [],
+      tax: [],
+      storem_account: [],
       count: 1,
       date: new Date().toISOString().substr(0, 10),
       dateselected: new Date().toISOString().substr(0, 10),
@@ -20,12 +29,8 @@ export default {
       type_refresh: '',
       note: "",
       detail: '',
-      Total_quantity: 0,
       total_quantity: 0,
-      check_state: [],
-      return_qty: [],
-      price: [],
-      tax: [],
+
       products: '',
       stores: '',
       statuses: '',
@@ -35,9 +40,7 @@ export default {
       opening: '',
       availabe_qty: [],
       word_search: '',
-      total: [],
-      customer: [],
-      supplier: [],
+    
       suppliers: '',
       customers: '',
       seen: false,
@@ -50,7 +53,7 @@ export default {
 
       total_tax:0,
       storem: [],
-      storem_account: [],
+     
 
 
 
@@ -193,6 +196,7 @@ export default {
 
     handle(product,index){
 
+      console.log('handle',product,index);
       this.set_values(product, index);
       this.calc_grand_total(index);
       this.calc_tax(index);
@@ -200,6 +204,7 @@ export default {
 
       if (this.check_state[index] == false) {
 
+        
         this.$delete(this.counts, index);
 
       }

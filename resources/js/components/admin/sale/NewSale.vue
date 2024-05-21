@@ -526,7 +526,9 @@ export default {
     return {
       cost: [],
       account: '',
-      account_in_list: [],
+      // account_in_list: [],
+      // store_in_list:[],
+      // storem:[],
       qty: [],
       unit: [],
       store_product_id: [],
@@ -547,7 +549,6 @@ export default {
       price: [],
       tax: [],
       products: '',
-      stores: '',
       statuses: '',
       stores: '',
       statuses: '',
@@ -708,9 +709,10 @@ export default {
 
       this.counts[index] = index;
       this.store_product_id[index] = product.id;
-      this.account_in_list[index] = product.store_account_id;
-      this.store[index] = product.store_id;
+      this.storem_account[index] = product.store_account_id;
+      this.storem[index] = product.store_id;
     },
+
     add_one_sale(product, index) {
 
 
@@ -796,9 +798,11 @@ export default {
           },
           credit: {
             // credit_account_id: $(`#select_account_${this.type}`).val(),
-            account_id: this.account_in_list,
+            account_id: this.storem_account,
             value: this.total,
-            account_details: this.store,
+            // account_details: this.store,
+            account_details: this.storem,
+
 
           },
 

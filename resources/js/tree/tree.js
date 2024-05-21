@@ -19,7 +19,7 @@ export default {
 
                 this.jsonTreeData = response.data.trees;
 
-                console.log('almuhib',this.jsonTreeData);
+                console.log('almuhib', this.jsonTreeData);
                 if (this.type_of_tree == 0) { // this if tree is in the orignal screen (account,product,store,structure) 
 
                     this.last_nodes = response.data.last_nodes;
@@ -84,8 +84,22 @@ export default {
 
                 }).on("changed.jstree", function (e, data) {
 
+                    if(gf.type == 'Sale' || gf.type == 'Cash' || gf.type == 'SaleReturn' || gf.type == 'CashReturn'){
 
-                    // console.log('alki',gf.indexselected);
+
+                        gf.check_state = [];
+                        gf.unit = [],
+                        gf.counts = {};
+                        gf.grand_total = 0;
+                        gf.remaining = 0;
+                        gf.paid = 0;
+                        gf.sub_total = 0;
+                        gf.total_quantity = 0;
+                        gf.To_pay= 0;
+                    }
+
+
+
                     // indexselected == 0 when operation is sale or what is same when start index from 0
                     if (gf.indexselected || gf.indexselected == 0) {
 
@@ -94,12 +108,12 @@ export default {
 
 
 
-                        console.log('yamaha',gf.indexselected);
-                        
+                        console.log('yamaha', gf.indexselected);
+
                         if (uri == 'tree_account') {
 
 
-                                gf.account[gf.indexselected] = data.node.id;
+                            gf.account[gf.indexselected] = data.node.id;
 
 
                         }
@@ -149,7 +163,7 @@ export default {
 
                     }
                     if (table == 'product') {
-                        console.log('no _productm',data.node.id);
+                        console.log('no _productm', data.node.id);
                         gf.check_prouct(table, data, gf.counts);
 
 
@@ -158,7 +172,7 @@ export default {
                     if (table == 'productm') {
 
 
-                        console.log('yes _productm',data.node.id);
+                        console.log('yes _productm', data.node.id);
                         gf.productm_tree(data);
 
                     }
@@ -177,6 +191,7 @@ export default {
 
                         if (gf.type == 'Purchase' || gf.type == 'Supply') {
 
+                            console.log('aljunied123', gf.counts);
                             gf.get_account_for_store(gf.counts);
 
                         }
@@ -250,7 +265,7 @@ export default {
 
 
 
-              
+
 
 
 

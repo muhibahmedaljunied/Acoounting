@@ -17,9 +17,10 @@ class CashDetailRepository implements DetailRepositoryInterface
         $this->core = app(CoreService::class);
     }
 
-    public function init_details(...$list_data)
+    public function init_details()
     {
 
+   
         $this->add_into_cash_details_table();
     }
 }

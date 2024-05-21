@@ -105,7 +105,7 @@ class SupplyController extends Controller
     ) {
 
 
-        // dd($stock->core->data);
+        dd($stock->core->data);
 
         // $result  = $this->daily->check_account();
 
