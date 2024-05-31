@@ -50,7 +50,7 @@ trait CashTrait
         $Details->price = $this->core->data['old'][$this->core->value]['price'];
         $Details->total = $this->core->data['total'][$this->core->value];
         $Details->store_product_id = $this->core->id_store_product;
-        $Details->unit_id = $this->core->unit_value;
+        $Details->unit_id = $this->core->unit_array[0];
         $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
 

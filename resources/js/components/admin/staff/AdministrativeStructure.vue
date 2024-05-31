@@ -29,11 +29,33 @@
                                                 <img src="/assets/img/import.png" alt="" style="width: 10%;"></a>
                                         </div>
 
-                                        <div class="card-body">
-                                            <!-- <div class="container"> -->
 
-                                            <div class="well" id="treeview_json_structure"></div>
-                                            <!-- </div> -->
+                                        <div class="card-body">
+                                            <!-- <div class="container">
+                          <div class="well" id="treeview_json_product"></div>
+                        </div> -->
+
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="input-group">
+
+                                                            <input type="text" id="ricerca-enti" class="form-control"
+                                                                placeholder="بحث" aria-describedby="search-addon">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12" id="treeview_json_structure">
+
+                                                        <div id="test">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -82,7 +104,7 @@
                                     <label for="Staff">اسم الهيكل</label>
                                     <input style="background-color: beige;" v-model="text" type="text" name="Staff"
                                         id="staff" class="form-control" required /><span style="color:red">{{
-                                            error_text[0] }}</span>
+                                                error_text[0] }}</span>
 
                                 </div>
 
@@ -171,7 +193,7 @@ export default {
         localStorage.setItem('rank', 0);
         localStorage.setItem('table', 'structure');
 
-        this.showtree('structure','tree_structure');
+        this.showtree('structure', 'tree_structure');
     },
 
     methods: {
@@ -211,7 +233,3 @@ export default {
     },
 };
 </script>
-
- 
-
-

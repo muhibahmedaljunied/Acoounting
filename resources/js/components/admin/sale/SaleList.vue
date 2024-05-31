@@ -9,8 +9,8 @@
             </div>
 
             <div class="d-flex justify-content-between"></div>
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
+              aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -61,17 +61,20 @@
                           <option class="btn btn-success" v-bind:value="['return_sale', sale.paymentable, 1]">
                             ارجاع
                           </option>
-                          <option class="btn btn-success" v-bind:value="['returnsalelist', sale.paymentable.sale_id, 2]">
+                          <option class="btn btn-success"
+                            v-bind:value="['returnsalelist', sale.paymentable.sale_id, 2]">
                             مرتجعات
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice/', sale.paymentable.sale_id, 3]">
+                          <option class="btn btn-success" v-bind:value="['sale_invoice', sale.paymentable.sale_id, 3]">
                             عرض الفاتوره
                           </option>
-                          <option v-if="sale.payment_status != 'paiding'" class="btn btn-success" v-bind:value="['ReceivableBond', sale.paymentable.sale_id, 4]">
+                          <option v-if="sale.payment_status != 'paiding'" class="btn btn-success"
+                            v-bind:value="['ReceivableBond', sale.paymentable.sale_id, 4]">
                             قبض
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.paymentable.sale_id, 5]">
+                          <option class="btn btn-success"
+                            v-bind:value="['/sale_invoice_update/', sale.paymentable.sale_id, 5]">
                             تعديل الفاتوره
                           </option>
 
@@ -160,11 +163,26 @@
                     <!-- <td>{{ sale_details.qty }}</td>  -->
                     <td>
 
-                      <div v-for="temx in sale_details.units">
+                      <div v-for="(temx, index) in sale_details.units">
 
 
+                        <span v-if="temx.unit_id == sale_details.unit_id">
 
-                        <span v-if="temx.unit_type == 0">
+                          <!-- <span v-if="sale_details.qty / sale_details.units[0].rate >= 1"> -->
+                          {{ Math.floor((sale_details.qty *
+                sale_details.units[index].rate) / sale_details.units[index].rate) }}{{
+                sale_details.units[index].name
+              }}
+                          <!-- </span> -->
+
+                          <!-- <span v-if="sale_details.qty % sale_details.units[1].rate >= 1">
+  {{ Math.floor((sale_details.qty % sale_details.units[1].rate)) }}{{
+sale_details.units[1].name
+}}
+</span> -->
+                        </span>
+
+                        <!-- <span v-if="temx.unit_type == 0">
 
                           <span v-if="sale_details.qty / sale_details.rate >= 1">
                             {{ Math.floor((sale_details.qty / sale_details.rate)) }}{{
@@ -177,7 +195,7 @@
                               sale_details.units[1].name
                             }}
                           </span>
-                        </span>
+                        </span> -->
 
                       </div>
                       <!-- {{ sale_details.qty }} {{ sale_details.unit }} -->
@@ -315,5 +333,3 @@ export default {
   outline: none;
 }
 </style>
-
-

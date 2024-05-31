@@ -247,7 +247,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <button @click="addTransfer()" type="button" class="tn btn-info btn-lg waves-effect btn-agregar">
+                  <button @click="addTransfer()"  class="tn btn-info btn-lg waves-effect btn-agregar">
                     تحويل
                   </button>
                 </div>

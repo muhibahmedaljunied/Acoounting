@@ -8,7 +8,6 @@ class Product extends Model
     protected $fillable = ['id','parent_id','text','rank','purchase_price','status','rate','product_minimum','image','created_at','updated_at'];
 
 
- 
     public function children(){
 
 

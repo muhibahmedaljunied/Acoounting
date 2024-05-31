@@ -100,8 +100,12 @@ class ProductController extends Controller
 
         // -------------------------------------------------------
 
-       
-       
+        // dd($request->all());
+        // foreach (json_encode($request->post('count')) as $key => $value) {
+          
+        //     dd($value);
+        // }
+        // dd($request->all());
         $this->product->check()->product()->unit();
 
         Cache::forget('tree_product_products');

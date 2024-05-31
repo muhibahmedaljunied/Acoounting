@@ -43,39 +43,51 @@ class ProductService
         $product->id = $this->request->post('product_id');
         $product->rank = $this->request->post('rank');
         $product->product_minimum = $this->request->post('product_minimum');
-        $product->status = $this->request->post('status');
-        $product->rate = $this->request->post('hash_rate');
+        // $product->status = $this->request->post('status');
+        // $product->rate = $this->request->post('hash_rate');
 
         $product->image = $this->file_name;
         $product->save();
+        // dd(1);
         $this->id = $product->id;
         return $this;
     }
     public function unit()
     {
 
-        if ($this->request->post('status') == 'false') {
+
+        // dd($this->request->all());
+        if ($this->request->post('unit')) {
 
             $product_unit = new ProductUnit();
             $product_unit->unit_id = $this->request->post('unit');
+            $product_unit->rate = 1;
             $product_unit->product_id = $this->id;
             $product_unit->purchase_price = $this->request->post('purchase_price');
-            $product_unit->unit_type = 1;
+            // $product_unit->unit_type = 1;
 
             $product_unit->save();
 
+            foreach ($this->request['count'] as $value) {
 
-            if ($this->request->post('retail_unit')) {
+                if (
+                    $this->request->post('retail_unit')[$value] ||
+                    // $this->request->post('purchase_price_for_retail_unit')[$value] ||
+                    $this->request->post('hash_rate')[$value]
+                ) {
 
-                $product_unit = new ProductUnit();
-                $product_unit->unit_id = $this->request->post('retail_unit');
 
-                $product_unit->product_id = $this->id;
-                $product_unit->purchase_price = $this->request->post('purchase_price_for_retail_unit');
-                // $product_unit->rate = $request->post('hash_rate');
-                $product_unit->unit_type = 0;
 
-                $product_unit->save();
+                    $product_unit = new ProductUnit();
+                    $product_unit->unit_id = $this->request->post('retail_unit')[$value];
+                    // $product_unit->rate = $this->request->post('hash_rate');
+                    $product_unit->product_id = $this->id;
+                    $product_unit->purchase_price = $this->request->post('purchase_price_for_retail_unit')[$value];
+                    $product_unit->rate = $this->request->post('hash_rate')[$value];
+                    // $product_unit->unit_type = 0;
+
+                    $product_unit->save();
+                }
 
                 // return response()->json($value);
             }

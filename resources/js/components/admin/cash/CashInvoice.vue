@@ -29,13 +29,13 @@
                           <img :src="`/assets/img/images3.jpg`" height="150px" alt="products image" />
                         </td>
                         <td rowspan="4" style="text-align: center; line-height: 1px">
-                          <h2>رقم السند :{{ cashs[0].cash_id }}</h2>
+                          <h2>رقم السند :{{ cashes[0].cash_id }}</h2>
                           <br />
 
-                          <h2>تاريخ السند : {{ cashs[0].cash_date }}</h2>
+                          <h2>تاريخ السند : {{ cashes[0].cash_date }}</h2>
                           <br />
 
-                          <h2>اسم العميل : {{ cashs[0].name }}</h2>
+                          <h2>اسم العميل : {{ cashes[0].name }}</h2>
                         </td>
                       </tr>
                       <tr></tr>
@@ -58,7 +58,7 @@
                           border-radius: 10px;
                           background-color: red;
                         ">
-                          <h1> فاتوره مبيعات </h1>
+                          <h1> سند صرف </h1>
                         </td>
                         <td></td>
                       </tr>
@@ -69,19 +69,19 @@
                   <thead>
                     <tr>
                       <td colspan="5">
-                        <h3>رقم السند :{{ cashs[0].cash_id }}</h3>
+                        <h3>رقم السند :{{ cashes[0].cash_id }}</h3>
                       </td>
                     </tr>
                     <tr>
                       <td colspan="5">
-                        <h3>تاريخ السند : {{ cashs[0].date }}</h3>
+                        <h3>تاريخ السند : {{ cashes[0].date }}</h3>
                       </td>
                     </tr>
 
                     <tr>
                       <td colspan="5">
                         <h3>
-                          اسم العميل : {{ cashs[0].name }}
+                          اسم العميل : {{ cashes[0].name }}
                      
                         </h3>
                       </td>
@@ -111,7 +111,7 @@
 
 
                         <th>السعر</th>
-                        <th class="wd-15p border-bottom-0">كميه المباعه</th>
+                        <th class="wd-15p border-bottom-0">الكميه المباعه</th>
                         <th>المخزن</th>
                         <!-- <th class="wd-15p border-bottom-0">الكميه المرتحعه</th> -->
 
@@ -119,7 +119,7 @@
                     </thead>
                     <tbody>
                       <tr v-for="cash_details in cash_detail">
-                        <td>{{ cash_details.product_name }}</td>
+                        <td>{{ cash_details.product }}</td>
                         <td>{{ cash_details.desc }}</td>
                         <td>{{ cash_details.status }}</td>
                         <td>{{ cash_details.price }}</td>
@@ -129,32 +129,25 @@
 
                           <div v-for="temx in cash_details.units">
 
-                            <span v-if="temx.name == cash_details.unit">
 
-                              <span v-if="temx.unit_type == 1">
+                            <span v-if="temx.unit_type == 0">
 
-                                {{ cash_details.qty }} {{ temx.name }}
-
+                              <span v-if="cash_details.qty_remain / cash_details.rate >= 1">
+                                {{ Math.floor((cash_details.qty_remain / cash_details.rate)) }}{{
+                            cash_details.units[0].name
+                          }}
                               </span>
 
-                              <span v-if="temx.unit_type == 0">
-
-                                <span v-if="cash_details.qty / cash_details.rate >= 1">
-                                  {{ Math.floor((cash_details.qty / cash_details.rate)) }}{{
-                                    cash_details.units[0].name
-                                  }}
-                                </span>
-
-                                <span v-if="cash_details.qty % cash_details.rate >= 1">
-                                  و
-                                  {{ Math.floor((cash_details.qty % cash_details.rate)) }}{{
-                                    cash_details.units[1].name
-                                  }}
-                                </span>
+                              <span v-if="cash_details.qty_remain % cash_details.rate >= 1">
+                                {{ Math.floor((cash_details.qty_remain % cash_details.rate)) }}{{
+                            cash_details.units[1].name
+                          }}
                               </span>
 
+                              <span v-if="cash_details.qty_remain == 0">
+                                0
+                              </span>
                             </span>
-
 
 
                           </div>
@@ -169,24 +162,24 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th colspan="7"> الاجمالي:{{ cashs[0].sub_total }}</th>
+                        <th colspan="7"> الاجمالي:{{ cashes[0].sub_total }}</th>
 
 
                       </tr>
                       <tr>
-                        <th colspan="7"> اجمالي الضريبه:{{ cashs[0].tax_amount }}</th>
+                        <th colspan="7"> اجمالي الضريبه:{{ cashes[0].tax_amount }}</th>
 
 
                       </tr>
                       <tr>
 
-                        <th colspan="7"> الخصم:{{ cashs[0].discount }}</th>
+                        <th colspan="7"> الخصم:{{ cashes[0].discount }}</th>
 
 
                       </tr>
                       <tr style="background-color: aqua;">
 
-                        <th colspan="7"> الاجمالي الكلي:{{ cashs[0].grand_total }}</th>
+                        <th colspan="7"> الاجمالي الكلي:{{ cashes[0].grand_total }}</th>
 
 
                       </tr>
@@ -211,10 +204,12 @@
 </template>
 
 <script>
+import ReportOperation from '../../../ReportOperation.js';
 export default {
+  mixins: [ReportOperation],
   data() {
     return {
-      cashs: 0,
+      cashes: 0,
       cash_detail: 0,
       timestamp: "",
       user: '',
@@ -224,15 +219,17 @@ export default {
   created() {
     setInterval(this.getNow, 1000);
   },
+  props: ['data'],
+
   mounted() {
-    this.table ='cash_details';
-    let uri = `/invoice_cash/${this.$route.params.id}`;
+    this.table = 'cash_details';
+    let uri = `/invoice_cash/${this.data}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
       console.log(response.data.users.name);
       this.user = response.data.users.name;
 
       this.cash_detail = response.data.cash_details;
-      this.cashs = response.data.cashs;
+      this.cashes = response.data.cashes;
     });
   },
   methods: {
@@ -258,4 +255,3 @@ td h2 {
   line-height: 20px;
 }
 </style>
-

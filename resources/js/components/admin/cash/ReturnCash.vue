@@ -914,6 +914,8 @@ export default {
 
           },
           type_daily: 'cashreturn',
+          payment_type: this.Way_to_pay_selected,
+          daily_index:0,
           description: this.description,
           type_refresh: this.type_refresh,
           customer_id: this.customer[0],

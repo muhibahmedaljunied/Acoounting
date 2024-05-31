@@ -26,18 +26,75 @@ class PurchaseController extends Controller
         GeneralTrait;
 
 
+    public $units;
+    public $value;
+    public $key;
+
+    public $quantity = 0;
+    public $r = array(
+
+        array()
+    );
 
     public function details(Request $request, $id)
     {
 
         $details = $this->get_details($request, $id);
 
-        $this->units($details);
+        foreach ($details as $key => $value) {
+
+            $this->value = $value;
+            $this->units();
+            $this->convert_qty($value->qty);
+        }
 
         return response()->json([
             'details' => $details,
 
         ]);
+    }
+
+    public function convert_qty($qty)
+    {
+
+
+        $this->quantity = $qty;
+
+        foreach ($this->units as $key2 => $value2) {
+
+
+
+            if ($this->quantity / $value2->rate >= 1) {
+
+
+                $this->r["$this->key"]["$key2"] = array(
+
+                    // "$key2" => array(
+                    [intval($this->quantity / $value2->rate), $value2->name]
+                    // )
+                );
+            }
+
+            if ($this->quantity % $value2->rate >= 1) {
+
+                $this->quantity = $this->quantity % $value2->rate;
+            } else {
+
+                break;
+            }
+
+            // $this->divid_one($value2, $key);
+
+
+
+
+        }
+
+        $this->value->qty_after_convert = $this->r;
+        // dd($this->r);
+        $this->r = array(
+            array()
+        );
     }
     public function index()
     {
@@ -100,13 +157,13 @@ class PurchaseController extends Controller
     }
 
     public function payment(
-       
+
         StockService $stock,
     ) {
 
 
 
-        dd($stock->core->data);
+        // dd($stock->core->data);
         // $result  = $this->daily->check_account();
 
         // if ($result == 0) {
@@ -117,14 +174,14 @@ class PurchaseController extends Controller
         //     ], 400);
         // }
 
-       
+
 
 
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
             $stock->handle();
-       
+
             // dd(2);
             Cache::forget('stock');
 

@@ -16,7 +16,7 @@
                         <br />
                         <h2>رياسه هيه الاركات</h2>
                         <br />
-                        <h2>قياده القوات الجويه والدفاع</h2>
+                        <h2>قياده القوه الصاروخيه</h2>
                         <br />
                         <h2>الدراسات والابحاث</h2>
                         <br />
@@ -27,14 +27,14 @@
                         <img :src="`/assets/img/images3.jpg`" height="150px" alt="products image" />
                       </td>
                       <td rowspan="4" style="text-align: center; line-height: 1px">
-                        <h2>رقم السند :{{ supplys[0].supply_id }}</h2>
+                        <h2>رقم السند :{{ supplies[0].supply_id }}</h2>
                         <br />
 
-                        <h2>تاريخ السند : {{ supplys[0].supply_date }}</h2>
+                        <h2>تاريخ السند : {{ supplies[0].supply_date }}</h2>
                         <br />
 
                         <h2>
-                          اسم المورد : {{ supplys[0].supplier_name }}
+                          اسم المورد : {{ supplies[0].supplier_name }}
 
                         </h2>
                         <br />
@@ -60,7 +60,7 @@
                           border-radius: 10px;
                           background-color: red;
                         ">
-                        <h1> فاتوره مشتريات</h1>
+                        <h1> سند  توريد</h1>
                       </td>
                       <td></td>
                     </tr>
@@ -120,41 +120,35 @@
                       <td>{{ supply_details.status }}</td>
                       <td>{{ supply_details.price }}</td>
                       <!-- <td>{{ supply_details.qty }}</td> -->
+                 
                       <td>
 
-                        <div v-for="temx in supply_details.units">
-
-                          <span v-if="temx.name == supply_details.unit">
-
-                            <span v-if="temx.unit_type == 1">
-
-                              {{ supply_details.qty }} {{ temx.name }}
-
-                            </span>
-
-                            <span v-if="temx.unit_type == 0">
-
-                              <span v-if="supply_details.qty / supply_details.rate >= 1">
-                                {{ Math.round((supply_details.qty / supply_details.rate)) }}{{
-                                  supply_details.units[0].name
-                                }}
-                              </span>
-
-                              <span v-if="supply_details.qty % supply_details.rate >= 1">
-                                و
-                                {{ Math.round((supply_details.qty % supply_details.rate)) }}{{
-                                  supply_details.units[1].name
-                                }}
-                              </span>
-                            </span>
-
-                          </span>
+<div v-for="temx in supply_details.units">
 
 
+  <span v-if="temx.unit_type == 0">
 
-                        </div>
+    <span v-if="supply_details.qty_remain / supply_details.rate >= 1">
+      {{ Math.floor((supply_details.qty_remain / supply_details.rate)) }}{{
+  supply_details.units[0].name
+}}
+    </span>
 
-                      </td>
+    <span v-if="supply_details.qty_remain % supply_details.rate >= 1">
+      {{ Math.floor((supply_details.qty_remain % supply_details.rate)) }}{{
+  supply_details.units[1].name
+}}
+    </span>
+
+    <span v-if="supply_details.qty_remain == 0">
+      0
+    </span>
+  </span>
+
+
+</div>
+
+</td>
 
 
 
@@ -166,24 +160,24 @@
                   </tbody>
                   <tfoot>
                     <tr>
-                      <th colspan="7"> الاجمالي:{{ supplys[0].sub_total }}</th>
+                      <th colspan="7"> الاجمالي:{{ supplies[0].sub_total }}</th>
 
 
                     </tr>
                     <tr>
-                      <th colspan="7"> اجمالي الضريبه:{{ supplys[0].tax_amount }}</th>
+                      <th colspan="7"> اجمالي الضريبه:{{ supplies[0].tax_amount }}</th>
 
 
                     </tr>
                     <tr>
 
-                      <th colspan="7"> الخصم:{{ supplys[0].discount }}</th>
+                      <th colspan="7"> الخصم:{{ supplies[0].discount }}</th>
 
 
                     </tr>
                     <tr style="background-color: aqua;">
 
-                      <th colspan="7"> الاجمالي الكلي:{{ supplys[0].grand_total }}</th>
+                      <th colspan="7"> الاجمالي الكلي:{{ supplies[0].grand_total }}</th>
 
 
                     </tr>
@@ -206,7 +200,7 @@
 export default {
   data() {
     return {
-      supplys: 0,
+      supplies: 0,
       supply_detail: 0,
       timestamp: "",
       supplier: "",
@@ -216,15 +210,16 @@ export default {
   created() {
     setInterval(this.getNow, 1000);
   },
+  props: ['data'],
   mounted() {
 
-    let uri = `/invoice_supply/${this.$route.params.id}`;
+    let uri = `/invoice_supply/${this.data}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
 
       console.log(response);
       this.user = response.data.users.name;
       this.supply_detail = response.data.supply_details;
-      this.supplys = response.data.supplys;
+      this.supplies = response.data.supplies;
     });
 
   },

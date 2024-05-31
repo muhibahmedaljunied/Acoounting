@@ -91,7 +91,7 @@
                           </option>
 
                           <option class="btn btn-success" v-bind:value="[
-                  '/supply_invoice/',
+                  'supply_invoice',
                   supply.paymentable.supply_id,
                   3
                 ]">
@@ -157,7 +157,7 @@
                     <th>الحاله</th>
                     <th>المخزن</th>
 
-                    <th class="wd-15p border-bottom-0"> كميه الشراء</th>
+                    <th class="wd-15p border-bottom-0"> الكميه </th>
                     <!-- <th>الوحده</th> -->
                     <th class="wd-15p border-bottom-0"> السعر </th>
                     <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
@@ -168,7 +168,7 @@
                   </tr>
                 </thead>
                 <tbody v-if="supply_detail && supply_detail.length > 0">
-                  <tr v-for="supply_details in supply_detail">
+                  <tr v-for="(supply_details,index) in supply_detail">
                     <!-- <td>{{ supply_details.id }}</td> -->
                     <td>{{ supply_details.product }}</td>
                     <td>{{ supply_details.desc }}</td>
@@ -180,8 +180,23 @@
                       <div v-for="temx in supply_details.units">
 
 
+                        <span v-if="temx.unit_id == supply_details.unit_id">
 
-                        <span v-if="temx.unit_type == 0">
+                          <!-- <span v-if="supply_details.qty / supply_details.units[0].rate >= 1"> -->
+                          {{ Math.floor((supply_details.qty * supply_details.units[index].rate) / supply_details.units[index].rate) }}{{
+                  supply_details.units[index].name
+                }}
+                          <!-- </span> -->
+
+                          <!-- <span v-if="supply_details.qty % supply_details.units[1].rate >= 1">
+  {{ Math.floor((supply_details.qty % supply_details.units[1].rate)) }}{{
+supply_details.units[1].name
+}}
+</span> -->
+                        </span>
+
+
+                        <!-- <span v-if="temx.unit_type == 0">
 
                           <span v-if="supply_details.qty / supply_details.rate >= 1">
                             {{ Math.floor((supply_details.qty / supply_details.rate)) }}{{
@@ -194,7 +209,7 @@
                   supply_details.units[1].name
                 }}
                           </span>
-                        </span>
+                        </span> -->
 
 
                       </div>

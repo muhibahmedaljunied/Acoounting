@@ -105,7 +105,7 @@ class SupplyController extends Controller
     ) {
 
 
-        dd($stock->core->data);
+        // dd($stock->core->data);
 
         // $result  = $this->daily->check_account();
 
@@ -123,6 +123,7 @@ class SupplyController extends Controller
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
+            // $stock->core->data['count'];
             $stock->handle();
             Cache::forget('stock');
             // ------------------------------------------------------------------------------------------------------
@@ -248,23 +249,38 @@ class SupplyController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function invoice_supply($id, $table = 'supply_details')
+    public function invoice_supply(Request $request,$id)
     {
+
+        // $supplies = Supply::where('supplies.id', $id)
+        //     ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
+        //     ->select(
+        //         'supplies.*',
+        //         'supplies.id as supply_id',
+        //         'supplies.*'
+        //     )
+        //     ->get();
+
+        // $details = $this->invoice($id, $table);
+
+        // $users = Auth::user();
+
+        // return response()->json([$table => $details, 'supplies' => $supplies, 'users' => $users]);
+
+
+        $table = $request->post('table');
 
         $supplies = Supply::where('supplies.id', $id)
             ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
-            ->select(
-                'supplies.*',
-                'supplies.id as supply_id',
-                'supplies.*'
-            )
+            ->select('supplies.*', 'supplies.id as cash_id', 'suppliers.*')
             ->get();
-
+            // dd($supplies);
         $details = $this->invoice($id, $table);
 
         $users = Auth::user();
-
         return response()->json([$table => $details, 'supplies' => $supplies, 'users' => $users]);
+
+        
     }
     public function destroy(Request $request)
     {

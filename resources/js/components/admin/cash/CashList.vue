@@ -3,24 +3,24 @@
     <div class="row row-sm">
       <div class="col-xl-12">
         <div class="card">
-       
+
           <div class="card-header">
-          <span class="h3">اوامر الصرف</span>
+            <span class="h3">اوامر الصرف</span>
 
 
-          <div style="display: flex;float: left; margin: 5px">
-            <!-- <router-link to="NewCash" id="agregar_productos"
+            <div style="display: flex;float: left; margin: 5px">
+              <!-- <router-link to="NewCash" id="agregar_productos"
               class="tn btn-info btn-sm waves-effect btn-agregar"><i class="fa fa-plus-circle"></i></router-link> -->
 
 
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="true" v-model="word_search" @input="get_search()" />
+              <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
+                aria-haspopup="true" aria-expanded="true" v-model="word_search" @input="get_search()" />
 
 
-<!-- 774899393 -->
-         
+              <!-- 774899393 -->
+
+            </div>
           </div>
-        </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table text-md-nowrap" id="example1">
@@ -43,7 +43,8 @@
                   <tr v-for="(cash, index) in cashes.data" :key="index">
                     <td>{{ cash.paymentable.cash_id }} </td>
 
-                    <td v-if="cash.payment_info == '1' || cash.payment_info == '2'"> {{ cash.paymentable.customer_name }}</td>
+                    <td v-if="cash.payment_info == '1' || cash.payment_info == '2'"> {{ cash.paymentable.customer_name
+                      }}</td>
                     <td v-else>{{ cash.paymentable.text }} {{ cash.paymentable.account_id }}</td>
                     <!-- <td>{{ cash.quantity }}</td>
                   <td>{{ cash.qty_return }}</td> -->
@@ -72,17 +73,20 @@
                           <option class="btn btn-success" v-bind:value="['return_cash', cash.paymentable, 1]">
                             ارجاع
                           </option>
-                          <option class="btn btn-success" v-bind:value="['returncashlist', cash.paymentable.cash_id, 2]">
+                          <option class="btn btn-success"
+                            v-bind:value="['returncashlist', cash.paymentable.cash_id, 2]">
                             مرتجعات
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['/cash_invoice/', cash.paymentable.cash_id, 3]">
+                          <option class="btn btn-success" v-bind:value="['cash_invoice', cash.paymentable.cash_id, 3]">
                             عرض الفاتوره
                           </option>
-                          <option class="btn btn-success" v-bind:value="['ReceivableBond', cash.paymentable.cash_id, 4]">
+                          <option class="btn btn-success"
+                            v-bind:value="['ReceivableBond', cash.paymentable.cash_id, 4]">
                             قبض
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/cash_invoice_update/', cash.paymentable.cash_id, 5]">
+                          <option class="btn btn-success"
+                            v-bind:value="['/cash_invoice_update/', cash.paymentable.cash_id, 5]">
                             تعديل الفاتوره
                           </option>
 
@@ -152,7 +156,7 @@
                     <th> المواصفات والطراز</th>
                     <th>الحاله</th>
                     <th>المخزن</th>
-                    <th class="wd-15p border-bottom-0"> الكميه المباعه</th>
+                    <th class="wd-15p border-bottom-0"> الكميه </th>
                     <th class="wd-15p border-bottom-0"> السعر </th>
                     <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
                     <!-- <th class="wd-15p border-bottom-0">  الكميه المرتحعه</th> -->
@@ -160,7 +164,7 @@
                   </tr>
                 </thead>
                 <tbody v-if="cash_detail && cash_detail.length > 0">
-                  <tr v-for="cash_details in cash_detail">
+                  <tr v-for="(cash_details,index) in cash_detail">
                     <!-- <td>{{ cash_details.id }}</td> -->
                     <td>{{ cash_details.product }}</td>
 
@@ -174,8 +178,24 @@
                       <div v-for="temx in cash_details.units">
 
 
+                        <span v-if="temx.id == cash_details.unit_id">
 
-                        <span v-if="temx.unit_type == 0">
+                          <!-- <span v-if="cash_details.qty / cash_details.units[0].rate >= 1"> -->
+                          {{ Math.floor((cash_details.qty * cash_details.units[index].rate) /
+                  cash_details.units[index].rate) }}{{
+                  cash_details.units[index].name
+                }}
+                          <!-- </span> -->
+
+                          <!-- <span v-if="cash_details.qty % cash_details.units[1].rate >= 1">
+{{ Math.floor((cash_details.qty % cash_details.units[1].rate)) }}{{
+cash_details.units[1].name
+}}
+</span> -->
+                        </span>
+
+
+                        <!-- <span v-if="temx.unit_type == 0">
 
                           <span v-if="cash_details.qty / cash_details.rate >= 1">
                             {{ Math.floor((cash_details.qty / cash_details.rate)) }}{{
@@ -188,7 +208,7 @@
                               cash_details.units[1].name
                             }}
                           </span>
-                        </span>
+                        </span> -->
 
                       </div>
                       <!-- {{ cash_details.qty }} {{ cash_details.unit }} -->
@@ -301,7 +321,7 @@ export default {
       this.axios
         .post(`/listcash?page=${page}`, { type: this.type })
         .then(({ data }) => {
-           console.log(data.cashes);
+          console.log(data.cashes);
           this.cashes = data.cashes;
         })
         .catch(({ response }) => {
@@ -326,5 +346,3 @@ export default {
   outline: none;
 }
 </style>
-
-

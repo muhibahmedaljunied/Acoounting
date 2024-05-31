@@ -73,7 +73,9 @@ export default {
                             for (var i = 0; i < arrayLength; i++) {
                                 // console.log('muhib', this.units[i].name);
 
-                                html = html + `<option data-rate-${this.indexselected} = ${this.units[i].rate} data-${this.indexselected} = ${this.units[i].unit_type}  value=[${this.units[i].id},${this.units[i].rate},${this.units[i].unit_type}]>${this.units[i].name}</option>`;
+                                html = html + `<option data-rate-${this.indexselected} = ${this.units[i].rate}   value=[${this.units[i].unit_id},${this.units[i].rate}]>${this.units[i].name}</option>`;
+                                // html = html + `<option data-rate-${this.indexselected} = ${this.units[i].rate} data-${this.indexselected} = ${this.units[i].unit_type}  value=[${this.units[i].unit_id},${this.units[i].rate},${this.units[i].unit_type}]>${this.units[i].name}</option>`;
+
 
                             }
                             // console.log(html);
@@ -112,7 +114,9 @@ export default {
                 for (var i = 0; i < arrayLength; i++) {
                     console.log('muhib', this.units[i].name);
 
-                    html = html + `<option data-rate-${ds} = ${this.units[i].rate} data-${ds} = ${this.units[i].unit_type}  value=[${this.units[i].id},${this.units[i].rate},${this.units[i].unit_type}]>${this.units[i].name}</option>`;
+                    html = html + `<option data-rate-${ds} = ${this.units[i].rate} value=[${this.units[i].unit_id},${this.units[i].rate}]>${this.units[i].name}</option>`;
+                    // html = html + `<option data-rate-${ds} = ${this.units[i].rate} data-${ds} = ${this.units[i].unit_type}  value=[${this.units[i].unit_id},${this.units[i].rate},${this.units[i].unit_type}]>${this.units[i].name}</option>`;
+
 
                 }
                 $(`#select_unit${ds}`).html(html);

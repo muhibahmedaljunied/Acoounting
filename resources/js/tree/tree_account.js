@@ -35,7 +35,11 @@ export default {
                 this.type == 'Supply' ||
                 this.type == 'SupplyReturn' ||
                 this.type == 'ReceivableBond' ||
-                this.type == 'PaymentBond'
+                this.type == 'PaymentBond'||
+                this.type == 'Expence'
+
+
+                
             ) {
 
                 this.group_accounts_details(data.node.id)

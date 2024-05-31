@@ -55,6 +55,8 @@ Route::post('/expence/newexpence', 'Account\ExpenceController@index');
 Route::post('/expence/delete', 'Account\ExpenceController@destroy');
 
 Route::post('/store_expence', 'Account\ExpenceController@store');
+Route::post('/store_income', 'Account\ExpenceController@store');
+
 
 Route::post('/payexpence', 'Account\ExpenceController@payment');
 

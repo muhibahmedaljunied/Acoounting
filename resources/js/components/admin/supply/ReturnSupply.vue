@@ -787,7 +787,8 @@ export default {
           // -----------------------------------------------------------
 
           type_daily: 'supplyreturn',
-
+          payment_type: this.Way_to_pay_selected,
+          daily_index:0,
           description: this.description,
           type_refresh: this.type_refresh,
           supplier_id: this.data.id,

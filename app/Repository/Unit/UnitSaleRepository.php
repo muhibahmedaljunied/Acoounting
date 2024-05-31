@@ -18,7 +18,7 @@ class UnitSaleRepository implements UnitRepositoryInterface
 
       
         $this->core->unit_array = $this->core->data['unit'][$this->core->value];
-        $this->core->unit_value = $this->core->unit_array[0];
+        // $this->core->unit_value = $this->core->unit_array[0];
    
         return $this;
 

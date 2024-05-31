@@ -4,7 +4,6 @@ export default {
     // return data;
     return {
 
-      row_removed:[],
       product: [],
       qty: [],
       unit: [],
@@ -149,8 +148,15 @@ export default {
       this.counts[index] = this.count;
     },
     disComponent(index) {
-      this.count -= 1;
-      this.$delete(this.counts, index);
+      
+      if (index != 1 ) {
+        
+        this.count -= 1;
+        this.$delete(this.counts, index-1);
+        console.log('yuuyyusd',index,this.count);
+
+      }
+    
     },
 
     credit() {
@@ -210,8 +216,12 @@ export default {
       }
 
       this.To_pay = this.grand_total;
-      this.remaining = this.grand_total;
-      this.credit();
+
+      this.calc_remaining();
+    
+
+
+      // this.credit();
 
     },
     calculate_price(price, qty, index) {
@@ -326,6 +336,20 @@ export default {
         // this.qty[index] = 0;
       }
 
+    },
+    calc_remaining(){
+
+
+      if (this.Way_to_pay_selected == 2) {
+
+        this.remaining = this.grand_total;
+
+      } else {
+
+        this.remaining = 0;
+
+      }
+      
     }
   }
 };

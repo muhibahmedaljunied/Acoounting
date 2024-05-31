@@ -6,10 +6,12 @@ use App\Services\CoreService;
 use App\Models\Expence;
 use App\Models\ExpenceType;
 use App\Services\DailyService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\DailyStockService;
+
 class ExpenceController extends Controller
 {
     
@@ -42,8 +44,10 @@ class ExpenceController extends Controller
     }
 
     public function store(
-        DailyService $daily,
-        ExpenceRepository $note)
+        // DailyService $daily,
+         DailyStockService $daily,
+        ExpenceRepository $note
+        )
     {
 
 
@@ -64,8 +68,12 @@ class ExpenceController extends Controller
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
 
-            $daily->daily()->debit()->credit();
+            $daily->daily()->exicute('debit')->exicute('credit');
             $note->finish();
+
+
+            // $daily->daily()->debit()->credit();
+            // $note->finish();
          
             // dd(1);
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB

@@ -84,18 +84,18 @@ export default {
 
                 }).on("changed.jstree", function (e, data) {
 
-                    if(gf.type == 'Sale' || gf.type == 'Cash' || gf.type == 'SaleReturn' || gf.type == 'CashReturn'){
+                    if (gf.type == 'Sale' || gf.type == 'Cash' || gf.type == 'SaleReturn' || gf.type == 'CashReturn') {
 
 
                         gf.check_state = [];
                         gf.unit = [],
-                        gf.counts = {};
+                            gf.counts = {};
                         gf.grand_total = 0;
                         gf.remaining = 0;
                         gf.paid = 0;
                         gf.sub_total = 0;
                         gf.total_quantity = 0;
-                        gf.To_pay= 0;
+                        gf.To_pay = 0;
                     }
 
 
@@ -113,10 +113,26 @@ export default {
                         if (uri == 'tree_account') {
 
 
-                            gf.account[gf.indexselected] = data.node.id;
+                            
+
+
+                            if (table == 'accounts') { //this if type expence_income accounts
+
+                                // console.log('accounts',gf.indexselected);
+                                gf.expence_income_account_list[gf.indexselected] = data.node.id;
+                            }else{
+
+                                gf.account[gf.indexselected] = data.node.id;
+                            }
 
 
                         }
+
+                        // if (table == 'accounts') {
+
+                        //     gf.expence_income_account_list[gf.indexselected] = data.node.id;
+                        // }
+
 
 
 
@@ -326,6 +342,7 @@ export default {
             };
             // form data
 
+            console.log('counts', this.counts);
             let formData = new FormData();
             formData.append(`${localStorage.getItem('table')}_id`, $(`#${localStorage.getItem('table')}_number`).val());
             formData.append("text", this.text);
@@ -333,16 +350,60 @@ export default {
             formData.append("parent", $("#parent").val());
             // formData.append("account", this.account);
             formData.append("rank", $("#rank").val());
-            formData.append("status", this.status);
+            formData.append("unit", this.unit);
+            formData.append('purchase_price', this.purchase_price);
+            // formData.append("status", this.status);
             if (localStorage.getItem('table') == 'product') {
-                // formData.append("status", this.status);
-                formData.append("unit", this.unit);
-                formData.append("purchase_price", this.purchase_price);
-                formData.append("product_minimum", this.product_minimum);
 
-                formData.append("purchase_price_for_retail_unit", this.purchase_price_for_retail_unit);
-                formData.append("hash_rate", this.hash_rate);
-                formData.append("retail_unit", this.retail_unit);
+
+                // formData.append("status", this.status);
+                // formData.append("count", this.counts);
+                // formData.append("unit", this.unit);
+                // formData.append('purchase_price', this.purchase_price);
+
+                for (var i = 0; i <= this.counts.length; i++) {
+
+                    if (i != this.counts.length) {
+
+                        formData.append('count[]', this.counts[i]);
+                    }
+
+
+                    if (this.purchase_price_for_retail_unit[i] === undefined) {
+
+                        formData.append('purchase_price_for_retail_unit[]', null);
+                    } else {
+
+                        formData.append('purchase_price_for_retail_unit[]', this.purchase_price_for_retail_unit[i]);
+                    }
+                    if (this.hash_rate[i] === undefined) {
+
+                        formData.append('hash_rate[]', null);
+                    } else {
+
+                        formData.append('hash_rate[]', this.hash_rate[i]);
+                    }
+
+
+                    if (this.retail_unit[i] === undefined) {
+
+                        formData.append('retail_unit[]', null);
+                    } else {
+
+                        formData.append('retail_unit[]', this.retail_unit[i]);
+                    }
+
+                    // formData.append('purchase_price_for_retail_unit[]', this.purchase_price_for_retail_unit[i]);
+                    // formData.append('hash_rate[]', this.hash_rate[i]);
+                    // formData.append('retail_unit[]', this.retail_unit[i]);
+                }
+
+
+                formData.append("product_minimum", this.product_minimum);
+                // formData.append("purchase_price", this.purchase_price);
+                // formData.append("purchase_price_for_retail_unit", this.purchase_price_for_retail_unit);
+                // formData.append("hash_rate", this.hash_rate);
+                // formData.append("retail_unit", this.retail_unit);
             }
             //  else {
             //     formData.append("status", this.status);

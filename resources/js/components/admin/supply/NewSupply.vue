@@ -187,7 +187,7 @@
                 <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
                   <thead>
                     <tr>
-                      <!-- <th>Code</th> -->
+                      <th>الرقم التسلسلي</th>
                       <th>المنتج</th>
                       <th>المخزن</th>
 
@@ -208,7 +208,7 @@
                   </thead>
                   <tbody>
                     <tr v-for="index in count" :key="index">
-
+                      <td>{{ index }}</td>
                       <td>
                         <div class="custom-search">
 
@@ -276,7 +276,7 @@
 
                       <td>
                         <input v-on:input="calculate_price(index)" style="background-color: beige;" type="number"
-                          v-model="price[index]" id="qty" class="form-control" required/>
+                          v-model="price[index]" id="qty" class="form-control" required />
                       </td>
                       <td>
                         <input style="background-color: beige;" @input="calculate_price(index)" type="number"
@@ -554,7 +554,7 @@ export default {
   data() {
     return {
 
-   
+
       description: '',
       store: '',
       productm: [],
@@ -626,13 +626,11 @@ export default {
 
 
 
-      this.grand_total = 0;
-      this.total_tax = 0;
-      this.total_quantity = 0;
+     this.init();
       var unit = JSON.parse($(`#select_unit${index}`).val());
 
-// --------------------------------------------------------------------------------------
-      if (unit) {
+      // --------------------------------------------------------------------------------------
+      if (unit && this.qty[index] && this.price[index]) {
 
         if (unit[2] == 0) {
 
@@ -648,28 +646,22 @@ export default {
 
         toastMessage('فشل', "قم بأدخال الوحده", 'error');
 
-        this.row_removed[index] = index;
         this.total[index] = 0;
       }
 
-// --------------------------------------------------------------------------------------
+      // --------------------------------------------------------------------------------------
 
-
-      // console.log(this.count);
-
-      if (this.qty[index] == 0) {
-        this.total[index] = 0;
-
-      }
 
       this.calculate_qty();
       this.calculate_tax();
       this.calculate_grand_total();
       this.credit();
-      // this.sub_total = parseInt(this.grand_total)
 
       this.To_pay = this.grand_total;
-      this.remaining = this.grand_total;
+
+      this.calc_remaining();
+
+
       if (this.qty[index] <= 0 || this.price[index] <= 0) {
 
         toastMessage('فشل', "تأكد من البيانات المدخله", 'error');
@@ -680,7 +672,26 @@ export default {
 
 
     },
+    init() {
 
+      this.grand_total = 0;
+      this.total_tax = 0;
+      this.total_quantity = 0;
+    },
+    calc_remaining() {
+
+
+      if (this.Way_to_pay_selected == 2) {
+
+        this.remaining = this.grand_total;
+
+      } else {
+
+        this.remaining = 0;
+
+      }
+
+    },
     calculate_grand_total() {
 
 
@@ -707,7 +718,7 @@ export default {
 
       for (let i = 1; i <= this.count; i++) {
 
-        if (this.total[i]) {
+        if (this.qty[i] && this.unit[i] && this.price[i]) {
 
           this.total_quantity = parseInt(this.qty[i]) + parseInt(this.total_quantity);
 
@@ -830,14 +841,22 @@ export default {
 
       // ----------------------------------------------------
 
-     
-      for (let index = 0; index < this.row_removed.length; index++) {
 
-      if(this.row_removed[index]){
+      for (let index = 0; index < this.count; index++) {
 
-        this.$delete(this.counts, this.row_removed[index]-1);
-      }
+
+        if (!this.qty[index + 1] || this.qty[index + 1] == 0 || !this.unit || !this.price[index + 1]) {
+
+
+          if (this.qty[index + 1] == 0 || !this.qty[index + 1]) {
+            
+            toastMessage('فشل', " لايوجد كميه مدخله", 'error');
+          }
+          this.$delete(this.counts, index);
         
+
+        }
+
       }
       // ----------------------------------------------------
 
@@ -873,6 +892,8 @@ export default {
           },
           // -----------------------------------------------------------
           type_daily: 'supply',
+          payment_type: this.Way_to_pay_selected,
+          daily_index:1,
           supplier_id: this.supplier[0],
           supplier_name: this.supplier[1],
           date: this.date,

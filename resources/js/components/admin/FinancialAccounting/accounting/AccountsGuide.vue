@@ -44,19 +44,19 @@
                           <div class="row">
                             <div class="col-xs-12">
                               <div class="input-group">
-                         
-                                <input type="text" id="ricerca-enti" class="form-control"
-                                  placeholder="بحث" aria-describedby="search-addon">
-                           
+
+                                <input type="text" id="ricerca-enti" class="form-control" placeholder="بحث"
+                                  aria-describedby="search-addon">
+
                               </div>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-xs-12" id="treeview_json_account">
-                       
+
                               <div id="test">
 
-</div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -182,7 +182,7 @@ export default {
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'account');
 
-    this.showtree('account','tree_account');
+    this.showtree('account', 'tree_account');
   },
   methods: {
 
@@ -220,5 +220,3 @@ export default {
   },
 };
 </script>
-
-

@@ -31,7 +31,7 @@ trait StoreProductTrait
     {
 
 
-        // dd($this->core->data['store']);
+        // dd($this->core->micro_unit_qty);
         $store_product = new StoreProduct();
         $store_product->product_id = $this->core->data['product'][$this->core->value];
         $store_product->store_id = $this->core->data['store'][$this->core->value];

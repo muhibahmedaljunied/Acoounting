@@ -51,7 +51,7 @@ trait SaleTrait
         $Details->cost = $this->core->data['old'][$this->core->value]['cost'];
         $Details->total = $this->core->data['sub_total'];
         $Details->store_product_id = $this->core->id_store_product;
-        $Details->unit_id = $this->core->unit_value;
+        $Details->unit_id = $this->core->unit_array[0];
         $Details->qty = $this->core->micro_unit_qty;
         $Details->save();
     }

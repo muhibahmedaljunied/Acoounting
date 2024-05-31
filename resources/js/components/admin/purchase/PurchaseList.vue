@@ -9,8 +9,8 @@
             </div>
 
             <div class="d-flex justify-content-between"></div>
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
+              aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -53,40 +53,41 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option :selected="true" class="btn btn-success" v-bind:value="[
-                            '/purchase_details/',
-                            purchase.paymentable.purchase_id,
-                            0
-                          ]">
+                '/purchase_details/',
+                purchase.paymentable.purchase_id,
+                0
+              ]">
                             تفاصيل
                           </option>
-                          
+
                           <option class="btn btn-success" v-bind:value="[
-                            'return_purchase',
-                            purchase.paymentable,
-                            1
-                          ]">
+                'return_purchase',
+                purchase.paymentable,
+                1
+              ]">
                             ارجاع
                           </option>
                           <option class="btn btn-success" v-bind:value="[
-                            'returnpurchaselist',
-                            purchase.paymentable.purchase_id,
-                            2
-                          ]">
+                'returnpurchaselist',
+                purchase.paymentable.purchase_id,
+                2
+              ]">
                             مرتجعات
                           </option>
 
                           <option class="btn btn-success" v-bind:value="[
-                            '/purchase_invoice/',
-                            purchase.paymentable.purchase_id,
-                            3
-                          ]">
+                'purchase_invoice',
+                purchase.paymentable.purchase_id,
+                3
+              ]">
                             عرض الفاتوره
                           </option>
                           <!-- <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
                             v-bind:value="['/PaymentBond/', purchase.paymentable.purchase_id, 4]">
                             دفع
                           </option> -->
-                          <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success" v-bind:value="['PaymentBond', purchase.paymentable.purchase_id, 4]">
+                          <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
+                            v-bind:value="['PaymentBond', purchase.paymentable.purchase_id, 4]">
                             صرف
                           </option>
                           <option class="btn btn-success"
@@ -95,7 +96,8 @@
                           </option>
 
 
-                          <option class="btn btn-success" v-bind:value="['purchase_daily', purchase.paymentable.purchase_id, 6]">
+                          <option class="btn btn-success"
+                            v-bind:value="['purchase_daily', purchase.paymentable.purchase_id, 6]">
                             عرض القيد المحاسبي
                           </option>
                         </select>
@@ -160,28 +162,39 @@
                     <!-- <td>{{ purchase_details.qty }} {{ purchase_details.unit }}</td> -->
                     <td>
 
-                      <div v-for="temx in purchase_details.units">
+
+                      <div v-for="temx in purchase_details.qty_after_convert">
 
 
 
-                        <span v-if="temx.unit_type == 0">
+                        <span v-for="temx2 in temx">
 
-                          <span v-if="purchase_details.qty / purchase_details.rate >= 1">
-                            {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
-                              purchase_details.units[0].name
-                            }}
-                          </span>
 
-                          <span v-if="purchase_details.qty % purchase_details.rate >= 1">
-                            {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
-                              purchase_details.units[1].name
-                            }}
+                          <span v-for="temx3 in temx2">
+
+                            
+
+                            <span >
+                              {{  temx3[0] }}
+                             </span>
+                             <span style="color: red;" >
+                              {{  temx3[1] }}
+                             </span>
+
                           </span>
                         </span>
 
+                        <!-- <span v-if="temx.unit_type == 0">
+
+
+                          <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+                        temx.name }}</span>
+
+
+
+                        </span> -->
 
                       </div>
-
 
 
                     </td>
@@ -323,5 +336,3 @@ export default {
   outline: none;
 }
 </style>
-
-

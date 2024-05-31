@@ -160,7 +160,8 @@
               <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
                 <thead>
                   <tr>
-                    <!-- <th>Code</th> -->
+                    <th>الرقم التسلسلي</th>
+
                     <th>المنتج</th>
 
                     <th>المخزن</th>
@@ -177,7 +178,7 @@
                 <tbody v-if="all_products && all_products.length > 0">
                   <!-- <tr v-for="(products, index) in product"> -->
                   <tr v-for="(product, index) in all_products" :key="index">
-                    <!-- <td><input type="text" value="123" id="codigo0" class="form-control input_codigo" readonly=""></td> -->
+                    <td>{{ index+1 }}</td>
                     <td>
                       <div id="factura_producto" class="input_nombre">
                         {{
@@ -946,6 +947,7 @@ export default {
           // -----------------------------------------------------------
           type_daily: 'cash',
           payment_type: this.Way_to_pay_selected,
+          daily_index:0,
           // store_account: $(`#select_account_${this.type}`).val(),
           description: this.description,
           type_refresh: this.type_refresh,

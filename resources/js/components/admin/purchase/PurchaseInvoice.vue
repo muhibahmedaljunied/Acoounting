@@ -124,32 +124,25 @@
 
                         <div v-for="temx in purchase_details.units">
 
-                          <span v-if="temx.name == purchase_details.unit">
 
-                            <span v-if="temx.unit_type == 1">
+                          <span v-if="temx.unit_type == 0">
 
-                              {{ purchase_details.qty }} {{ temx.name }}
-
+                            <span v-if="purchase_details.qty_remain / purchase_details.rate >= 1">
+                              {{ Math.floor((purchase_details.qty_remain / purchase_details.rate)) }}{{
+                          purchase_details.units[0].name
+                        }}
                             </span>
 
-                            <span v-if="temx.unit_type == 0">
-
-                              <span v-if="purchase_details.qty / purchase_details.rate >= 1">
-                                {{ Math.round((purchase_details.qty / purchase_details.rate)) }}{{
-                                  purchase_details.units[0].name
-                                }}
-                              </span>
-
-                              <span v-if="purchase_details.qty % purchase_details.rate >= 1">
-                                و
-                                {{ Math.round((purchase_details.qty % purchase_details.rate)) }}{{
-                                  purchase_details.units[1].name
-                                }}
-                              </span>
+                            <span v-if="purchase_details.qty_remain % purchase_details.rate >= 1">
+                              {{ Math.floor((purchase_details.qty_remain % purchase_details.rate)) }}{{
+                          purchase_details.units[1].name
+                        }}
                             </span>
 
+                            <span v-if="purchase_details.qty_remain == 0">
+                              0
+                            </span>
                           </span>
-
 
 
                         </div>
@@ -216,9 +209,10 @@ export default {
   created() {
     setInterval(this.getNow, 1000);
   },
+  props: ['data'],
   mounted() {
 
-    let uri = `/invoice_purchase/${this.$route.params.id}`;
+    let uri = `/invoice_purchase/${this.data}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
 
       console.log(response);
@@ -255,4 +249,3 @@ tfoot {
   line-height: x-small;
 }
 </style>
-

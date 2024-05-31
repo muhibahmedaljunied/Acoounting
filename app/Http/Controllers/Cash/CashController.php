@@ -145,7 +145,7 @@ class CashController extends Controller
     ) {
 
 
-        dd($stock->core->data);
+        // dd($stock->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -262,9 +262,10 @@ class CashController extends Controller
         $table = $request->post('table');
 
         $cashes = Cash::where('cashes.id', $id)
-            ->join('users', 'users.id', '=', 'cashes.customer_id')
-            ->select('cashes.*', 'cashes.id as cash_id', 'users.*')
+            ->join('customers', 'customers.id', '=', 'cashes.customer_id')
+            ->select('cashes.*', 'cashes.id as cash_id', 'customers.*')
             ->get();
+            // dd($cashes);
         $details = $this->invoice($id, $table);
 
         $users = Auth::user();

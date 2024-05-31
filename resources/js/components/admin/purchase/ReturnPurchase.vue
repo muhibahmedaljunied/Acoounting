@@ -200,8 +200,42 @@
                             <td>
 
 
+                              <div v-for="temx in purchase_details.qty_after_convert">
 
-                              <div v-for="temx in purchase_details.units">
+
+
+                                <span v-for="temx2 in temx">
+
+
+                                  <span v-for="temx3 in temx2">
+
+
+
+                                    <span>
+                                      {{ temx3[0] }}
+                                    </span>
+                                    <span style="color: red;">
+                                      {{ temx3[1] }}
+                                    </span>
+
+                                  </span>
+                                </span>
+
+                                <!-- <span v-if="temx.unit_type == 0">
+
+
+  <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
+                              </div>
+
+
+
+                              <!-- <div v-for="temx in purchase_details.units">
 
 
 
@@ -221,7 +255,7 @@
                                 </span>
 
 
-                              </div>
+                              </div> -->
                             </td>
 
 
@@ -229,7 +263,41 @@
 
                             <td>
 
-                              <div v-for="temx in purchase_details.units">
+                              <div v-for="temx in purchase_details.qty_after_convert">
+
+
+
+                                <span v-for="temx2 in temx">
+
+
+                                  <span v-for="temx3 in temx2">
+
+
+
+                                    <span>
+                                      {{ temx3[0] }}
+                                    </span>
+                                    <span style="color: red;">
+                                      {{ temx3[1] }}
+                                    </span>
+
+                                  </span>
+                                </span>
+
+                                <!-- <span v-if="temx.unit_type == 0">
+
+
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
+                              </div>
+
+
+                              <!-- <div v-for="temx in purchase_details.units">
 
 
 
@@ -252,7 +320,7 @@
 
 
 
-                              </div>
+                              </div> -->
 
                             </td>
 
@@ -265,7 +333,41 @@
 
                             <td>
 
-                              <div v-for="temx in purchase_details.units">
+                              <div v-for="temx in purchase_details.qty_after_convert">
+
+
+
+                                <span v-for="temx2 in temx">
+
+
+                                  <span v-for="temx3 in temx2">
+
+
+
+                                    <span>
+                                      {{ temx3[0] }}
+                                    </span>
+                                    <span style="color: red;">
+                                      {{ temx3[1] }}
+                                    </span>
+
+                                  </span>
+                                </span>
+
+                                <!-- <span v-if="temx.unit_type == 0">
+
+
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
+                              </div>
+
+
+                              <!-- <div v-for="temx in purchase_details.units">
 
                                 <span v-if="temx.unit_type == 0">
 
@@ -284,7 +386,7 @@
 
 
 
-                              </div>
+                              </div> -->
 
 
 
@@ -558,7 +660,7 @@ export default {
       message_check: false,
       text_message: 0,
       check_state_all: '',
-   
+
 
 
     };
@@ -854,6 +956,7 @@ export default {
 
           type_daily: 'purchasereturn',
           payment_type: this.Way_to_pay_selected,
+          daily_index: 0,
           description: this.description,
           type_refresh: this.type_refresh,
           supplier_id: this.data.id,
@@ -898,7 +1001,7 @@ export default {
     },
 
 
-  
+
   },
 
 

@@ -363,8 +363,14 @@ const routes = [
     component: Sale
   },
   {
+   
+
     path: '/sale_invoice/:id',
+    name: "sale_invoice",
+    props: true,
     component: SaleInvoice
+
+    
   },
 
   {
@@ -416,8 +422,13 @@ const routes = [
     component: ReturnSaleList
   },
   {
+ 
     path: '/return_sale_invoice/:id',
+    name: "return_sale_invoice",
+    props: true,
     component: ReturnSaleInvoice
+
+
   },
   {
     path: '/temporale_sale',
@@ -436,12 +447,13 @@ const routes = [
     path: '/listcash',
     component: CashList
   },
-  // {
-  //   path: '/cashes',
-  //   component: Cash
-  // },
+ 
   {
+   
+
     path: '/cash_invoice/:id',
+    name: "cash_invoice",
+    props: true,
     component: CashInvoice
   },
 
@@ -476,7 +488,10 @@ const routes = [
     component: ReturnCashList
   },
   {
+ 
     path: '/return_cash_invoice/:id',
+    name: "return_cash_invoice",
+    props: true,
     component: ReturnCashInvoice
   },
   {
@@ -521,6 +536,8 @@ const routes = [
   },
   {
     path: '/purchase_invoice/:id',
+    name: "purchase_invoice",
+    props: true,
     component: PurchaseInvoice
   },
   {
@@ -556,8 +573,12 @@ const routes = [
     component: ReturnPurchaseList
   },
   {
+ 
     path: '/return_purchase_invoice/:id',
+    name: "return_purchase_invoice",
+    props: true,
     component: ReturnPurchaseInvoice
+    
   },
   // ----------supply------------------------------------------------------------
   {
@@ -593,8 +614,13 @@ const routes = [
     component: ReturnSupplyDaily
   },
   {
+ 
+
     path: '/supply_invoice/:id',
+    name: "supply_invoice",
+    props: true,
     component: SupplyInvoice
+
   },
   {
     path: '/supply_recive',
@@ -614,8 +640,13 @@ const routes = [
     component: ReturnSupplyList
   },
   {
+
     path: '/return_supply_invoice/:id',
-    component: ReturnPurchaseInvoice
+    name: "return_supply_invoice",
+    props: true,
+    component: ReturnSupplyInvoice
+
+
   },
   {
     path: '/stock',

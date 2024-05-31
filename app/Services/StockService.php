@@ -11,6 +11,7 @@ use App\Repository\StockInventury\StockRepository;
 use App\Repository\StoreInventury\StoreRepository;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
+use App\RepositoryInterface\UnitRepositoryInterface;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\Services\DailyStockService;
 use App\Services\PaymentService;
@@ -29,9 +30,10 @@ use App\Services\PaymentService;
         public DetailRepositoryInterface $detail,
         public StoreRepository $store,
         public StockRepository $stock,
-        public UnitService $unit,
+        // public UnitService $unit,
         public DailyStockService $daily,
         public PaymentService $payment,
+        protected UnitRepositoryInterface $unit
     ) {
 
 
@@ -46,10 +48,10 @@ use App\Services\PaymentService;
 
         $this->warehouse->add();
 
-        // dd($this->core->data);
         foreach ($this->core->data['count'] as $value) {
 
 
+            
             // -------------------------------------------------------------------------------------
 
             // $result = $check->check_return($request['old'][$value]);
@@ -61,18 +63,19 @@ use App\Services\PaymentService;
             // -------------------------------------------------------------------------------------
    
             $this->core->setValue($value);
-            $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
+            $this->unit->decode_unit(); // this make decode for unit 
+            $this->unit->convert_qty(); // this make convert qty into miqro
             $this->store->store();
             $this->detail->init_details();
             $this->stock->stock();
+   
  
         }
 
         $this->payment->pay();
 
-        $this->daily->daily()->exicute('debit')->exicute('credit');
-        // dd(DailyDetail::all());
-        $this->warehouse->refresh(); //this update purchase_return table by daily_id
+        // $this->daily->daily()->exicute('debit')->exicute('credit');
+        // $this->warehouse->refresh(); //this update purchase_return table by daily_id
         
     }
 }

@@ -288,38 +288,31 @@
                         </td> -->
                             <td>
 
+                             
                               <div v-for="temx in sale_details.units">
 
 
-                                <span v-if="sale_details.unit_id == temx.id">
-                                  <span v-if="temx.unit_type == 0">
+<span v-if="temx.unit_type == 0">
 
-                                    <span v-if="sale_details.qty / sale_details.rate >= 1">
-                                      {{ Math.floor((sale_details.qty / sale_details.rate)) }}{{
-                      sale_details.units[0].name
-                    }}
-                                    </span>
+  <span v-if="sale_details.qty_remain / sale_details.rate >= 1">
+    {{ Math.floor((sale_details.qty_remain / sale_details.rate)) }}{{
+sale_details.units[0].name
+}}
+  </span>
 
-                                    <span v-if="sale_details.qty % sale_details.rate >= 1">
-                                      {{ Math.floor((sale_details.qty % sale_details.rate)) }}{{
-                      sale_details.units[1].name
-                    }}
-                                    </span>
+  <span v-if="sale_details.qty_remain % sale_details.rate >= 1">
+    {{ Math.floor((sale_details.qty_remain % sale_details.rate)) }}{{
+sale_details.units[1].name
+}}
+  </span>
 
-                                    <span v-if="sale_details.qty == 0">
-                                      0
-                                    </span>
+  <span v-if="sale_details.qty_remain == 0">
+    0
+  </span>
+</span>
 
 
-
-                                  </span>
-
-                                  <span v-if="temx.unit_type == 1">
-                                    {{ sale_details.qty }} {{ temx.name }}
-                                  </span>
-
-                                </span>
-                              </div>
+</div>
 
                             </td>
 
@@ -840,7 +833,7 @@ export default {
           },
           type_daily: 'salereturn',
           payment_type: this.Way_to_pay_selected,
-
+          daily_index:0,
           description: this.description,
           type_refresh: this.type_refresh,
           customer_id: this.customer[0],

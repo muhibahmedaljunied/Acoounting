@@ -15,8 +15,6 @@ class DailyPaymentStockService
     public function __construct()
     {
         $this->core = app(CoreService::class);
-
-
     }
 
 
@@ -47,9 +45,8 @@ class DailyPaymentStockService
     public function get_store()
     {
 
-       
-        $this->core->account_details = Store::find($this->core->data[$this->core->daily_type]['account_details'][$this->core->row_daily_details]);
 
+        $this->core->account_details = Store::find($this->core->data[$this->core->daily_type]['account_details'][$this->core->row_daily_details]);
     }
 
 
@@ -57,12 +54,13 @@ class DailyPaymentStockService
     {
 
 
-     
-      
+
+ 
         if ($this->core->daily_type == 'debit') {
 
-
+        
             $this->debit();
+            
         }
 
 
@@ -78,12 +76,19 @@ class DailyPaymentStockService
 
 
 
-        if ($this->core->data['type_daily'] == 'purchase' || $this->core->data['type_daily'] == 'supply') {
+        if (
+            $this->core->data['type_daily'] == 'purchase' ||
+            $this->core->data['type_daily'] == 'supply'
+        ) {
 
             $this->get_store();
         }
 
-        if ($this->core->data['type_daily'] == 'sale' || $this->core->data['type_daily'] == 'cash') {
+        if (
+            $this->core->data['type_daily'] == 'sale' ||
+            $this->core->data['type_daily'] == 'cash' ||
+            $this->core->data['type_daily'] == 'income_expence'
+        ) {
 
             $this->choice_account_with_payment();
         }
@@ -95,12 +100,19 @@ class DailyPaymentStockService
     {
 
 
-        if ($this->core->data['type_daily'] == 'purchase' || $this->core->data['type_daily'] == 'supply') {
+        if (
+            $this->core->data['type_daily'] == 'purchase' ||
+            $this->core->data['type_daily'] == 'supply' ||
+            $this->core->data['type_daily'] == 'income_expence'
+        ) {
 
             $this->choice_account_with_payment();
         }
 
-        if ($this->core->data['type_daily'] == 'sale' || $this->core->data['type_daily'] == 'cash') {
+        if (
+            $this->core->data['type_daily'] == 'sale' ||
+            $this->core->data['type_daily'] == 'cash'
+        ) {
 
             $this->get_store();
         }
@@ -109,29 +121,27 @@ class DailyPaymentStockService
     public function choice_account_with_payment()
     {
 
-
-
-        if ($this->core->data['type_payment'] == 1) {
+        // dd(12333);
+        // payment_type
+        if ($this->core->data['payment_type'] == 1) {
 
             $this->get_treasury();
         }
 
-        if ($this->core->data['type_payment'] == 2) {
+        if ($this->core->data['payment_type'] == 2) {
 
             if ($this->core->data['type_daily'] == 'sale' || $this->core->data['type_daily'] == 'cash') {
-              
-                $this->get_customer();
 
+                $this->get_customer();
             }
 
             if ($this->core->data['type_daily'] == 'purchase' || $this->core->data['type_daily'] == 'supply') {
-               
-                $this->get_supplier();
 
+                $this->get_supplier();
             }
         }
 
-        if ($this->core->data['type_payment'] == 3) {
+        if ($this->core->data['payment_type'] == 3) {
 
             $this->get_bank();
         }

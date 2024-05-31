@@ -27,7 +27,6 @@ class DailyStockService
 
 
         $this->core->daily_type = $type;
-        // dd($this->core->data[$this->core->daily_type]);
         $this->core->value = $this->core->data[$this->core->daily_type]['value'];
         $this->core->dailyDetailId_item =  [
             'daily_id' => '',
@@ -56,7 +55,6 @@ class DailyStockService
 
 
 
-
         if (gettype($this->core->value) == 'string' || gettype($this->core->value) == 'integer') {
 
 
@@ -67,7 +65,7 @@ class DailyStockService
         if (gettype($this->core->value) == 'array') {
 
 
-          
+
             $this->multble_daily();
         }
     }
@@ -79,43 +77,29 @@ class DailyStockService
         $this->core->set_row_daily_details(0);
         $this->set_daily_value();
         $this->data_daily_detail();
-        $this->group_account();
+        $this->set_account_details();
     }
     public function multble_daily()
     {
 
-
-
-        if ($this->core->data['type_daily']) {
-
-            // dd(1);
-
-
-            if (
-                $this->core->data['type_daily'] == 'sale' ||
-                $this->core->data['type_daily'] == 'cash' ||
-                $this->core->data['type_daily'] == 'salereturn' ||
-                $this->core->data['type_daily'] == 'purchasereturn'
-            ) {
-
-
-                $this->start_daily(0);
-            }
-
-            if (
-                $this->core->data['type_daily'] == 'purchase' ||
-                $this->core->data['type_daily'] == 'supply'
-            ) {
+        for ($i = $this->core->data['daily_index']; $i < count($this->core->data[$this->core->daily_type]['value']); $i++) {
 
 
 
-                $this->start_daily(1);
+            foreach ($this->core->data['count'] as $value) {
+
+                if ($value == $i) {
+
+
+
+                    $this->core->set_row_daily_details($i);
+                    $this->set_daily_value();
+                    $this->check_daily(); //this check for make refreshing in DailyDetail Table
+
+
+                }
             }
         }
-        // else {
-
-        //     $this->another_daily();
-        // }
     }
 
 
@@ -128,22 +112,9 @@ class DailyStockService
 
         $this->init_items($type);
         $this->detect_number_daily();
+
         return $this;
     }
-
-
-
-
-
-    // public function set_daily_data($i)
-    // {
-
-
-    //     $this->set_daily_value($i);
-    //     $this->check_daily(); //this check for make refreshing in DailyDetail Table
-
-    // }
-
 
 
     public function set_daily_value()
@@ -159,47 +130,6 @@ class DailyStockService
     }
 
 
-    public function start_daily($f)
-    {
-
-
-
-
-        for ($i = $f; $i < count($this->core->data[$this->core->daily_type]['value']); $i++) {
-
-            foreach ($this->core->data['count'] as $value) {
-
-                if ($value == $i ) {
-
-
-                    $this->core->set_row_daily_details($i);
-                    $this->daily_payment->check_payment_type();
-
-                    $this->set_daily_value();
-
-                    $this->check_daily(); //this check for make refreshing in DailyDetail Table
-
-                }
-            }
-
-       
-        }
-    }
-
-
-
-
-    // public function another_daily()
-    // {
-
-
-    //     for ($i = 1; $i < count($this->core->data[$this->core->daily_type]['account_id']); $i++) {
-
-    //         $debit_data = $this->set_daily_data($i);
-    //         DailyDetail::create($debit_data);
-    //     }
-    // }
-
     public function data_daily_detail()
     {
 
@@ -212,18 +142,10 @@ class DailyStockService
         $this->core->dailyDetailId = $dailyDetailId->id;
     }
 
-    public function group_account()
-    {
-
-
-        $this->daily_payment->check_payment_type($this->core->row_daily_details);
-        $this->store_group_account();
-    }
 
     public function store_group_account()
     {
 
-        // dd($this->core->account_details);
         $daily = new GroupAccount();
         $daily->dailyable()->associate($this->core->account_details);
         $daily->daily_details_id = $this->core->dailyDetailId;
@@ -243,14 +165,29 @@ class DailyStockService
 
             $this->data_daily_detail();
 
-            $this->group_account();
+            $this->set_account_details();
+        }
+    }
+    public function set_account_details()
+    {
+
+        if (
+            $this->core->data[$this->core->daily_type]['account_details'] == 'array' &&
+            count($this->core->data[$this->core->daily_type]['account_details']) > 0 ||
+            $this->core->data[$this->core->daily_type]['account_details'] == 'string'
+        ) {
+
+
+            $this->daily_payment->check_payment_type();
+
+            $this->store_group_account();
         }
     }
 
     public function get_daily_detail_id()
     {
 
-        // dd($this->core->dailyDetailId_item);
+
         $this->core->status_daily_detail = collect(
             tap(DailyDetail::where('daily_id', $this->core->daily_id)
                 ->where('account_id', $this->core->account_id))

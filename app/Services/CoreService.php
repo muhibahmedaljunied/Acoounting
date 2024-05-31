@@ -7,7 +7,8 @@ class CoreService extends CoreDailyService
     public $data_store_product;
     public $store_product_f = 0;
     public $micro_unit_qty;
-    public $unit_value;
+
+    // public $unit_value;
     public $unit_array;
     public $daily_id = 0;
     public $stock_f = 0;

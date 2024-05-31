@@ -34,8 +34,31 @@
                       </div>
 
                       <div class="card-body">
+                        <!-- <div class="container">
+                          <div class="well" id="treeview_json_product"></div>
+                        </div> -->
 
-                        <div class="well" id="treeview_json_store"></div>
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="input-group">
+
+                                <input type="text" id="ricerca-enti" class="form-control" placeholder="بحث"
+                                  aria-describedby="search-addon">
+
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12" id="treeview_json_store">
+
+                              <div id="test">
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -78,8 +101,8 @@
                         </div>
                         <div class="form-group">
                           <label for="store">اسم المخزن</label>
-                          <input v-model="text" type="text" name="store" id="store" class="form-control" required /><span
-                            style="color:red">{{ error_text[0] }}</span>
+                          <input v-model="text" type="text" name="store" id="store" class="form-control"
+                            required /><span style="color:red">{{ error_text[0] }}</span>
 
                         </div>
 
@@ -114,7 +137,7 @@
 
 
 
-                      
+
 
                       </div>
                       <div class="card-footer">
@@ -219,7 +242,7 @@ export default {
     localStorage.setItem('id', 0);
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'store');
-    this.showtree('store','tree_store');
+    this.showtree('store', 'tree_store');
 
   },
   methods: {
@@ -283,6 +306,3 @@ export default {
   },
 };
 </script>
-
-
-

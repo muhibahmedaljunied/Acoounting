@@ -241,9 +241,10 @@ class SaleController extends Controller
         $table = $request->post('table');
 
         $sales = Sale::where('sales.id', $id)
-            ->join('users', 'users.id', '=', 'sales.customer_id')
-            ->select('sales.*', 'sales.id as sale_id', 'users.*')
+            ->join('customers', 'customers.id', '=', 'sales.customer_id')
+            ->select('sales.*', 'sales.id as sale_id', 'customers.*')
             ->get();
+         
         $details = $this->invoice($id, $table);
 
         $users = Auth::user();

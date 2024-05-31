@@ -23,8 +23,9 @@
             <div class="card-body">
               <div class="container">
                 <div class="row justify-content-left">
-                  <div class="col-md-6">
+                  <div class="col-md-8">
                     <div class="card">
+
 
                       <div class="card-header">
 
@@ -34,16 +35,39 @@
                         <a @click="imports_excel()">
                           <img src="/assets/img/import.png" alt="" style="width: 10%;"></a>
                       </div>
-                      <div class="card-body">
-                        <!-- <div class="container"> -->
 
-                        <div class="well" id="treeview_json_product"></div>
-                        <!-- </div> -->
+                      <div class="card-body">
+                        <!-- <div class="container">
+                          <div class="well" id="treeview_json_product"></div>
+                        </div> -->
+
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="input-group">
+
+                                <input type="text" id="ricerca-enti" class="form-control" placeholder="بحث"
+                                  aria-describedby="search-addon">
+
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12" id="treeview_json_product">
+
+                              <div id="test">
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -110,11 +134,15 @@
                       </div>
                       <div class='col-md-4'>
                         <label for="purchase_price"> سعر الشراء</label>
-                        <input v-model="purchase_price" type="text" name="purchase_price" id="purchase_price"
+                        <input v-model="purchase_price" type="text" name="purchase_price"
                           class="form-control" /><span style="color:red">{{ error_purchase_price[0] }}</span>
 
-
+                          <!-- <input v-model="rate[0]" type="text" 
+                          class="form-control" /> -->
                       </div>
+
+                  
+
                       <div class='col-md-4'>
                         <label for="radio-example-one">اضافه وحدات تجزئه </label><br>
 
@@ -122,8 +150,8 @@
                         <!-- <input type="checkbox" name='fieldset2' id="status" v-model="check_state"> -->
 
 
-                        <button class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" data-target="#exampleModalUnit">
-                          <i class="fa fa-plus-circle"></i></button>
+                        <button type="button" class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" data-target="#exampleModalUnit">
+                          <i class="fa fa-eye"></i></button>
 
 
 
@@ -188,19 +216,19 @@
       aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <!-- <div class="modal-header">
 
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">وحدات التجزئه</span>
             </button>
-          </div>
+          </div> -->
           <div class="modal-body">
 
 
 
             <div class="row">
               <div class="table-responsive">
-                <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
+                <table class="table table-bordered text-right" style="width: auto; font-size: x-large">
                   <thead>
                     <tr>
                       <!-- <th>Code</th> -->
@@ -213,7 +241,6 @@
                   </thead>
                   <tbody>
                     <tr v-for="index in count" :key="index">
-
                       <td>
                      
                           <!-- retail_unit -->
@@ -232,7 +259,7 @@
 
                       
                           <input v-model="purchase_price_for_retail_unit[index]" type="text" name="purchase_price"
-                            id="purchase_price" class="form-control" />
+                            class="form-control" />
 
                 
 
@@ -242,7 +269,7 @@
                       <td>
                      
 
-                          <input v-model="hash_rate[index]" type="text" name="purchase_price" id="purchase_price"
+                          <input v-model="hash_rate[index]" type="text" name="purchase_price"
                             class="form-control" />
 
                       </td>
@@ -250,10 +277,10 @@
 
                       <td v-if="index == 1">
 
-                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
+                        <button class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
                           <i class="fa fa-plus-circle"></i></button>
 
-                        <button class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
+                        <button class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
                           <i class="fa fa-minus-circle"></i></button>
 
 
@@ -270,6 +297,12 @@
 
           </div>
 
+       <!-- <div class="modal-footer">
+
+        
+            <button class="tn btn-info btn-lg waves-effect btn-agregar" @click="addunit()"> حفظ </button>
+
+          </div>  -->
         </div>
       </div>
     </div>
@@ -308,10 +341,10 @@ export default {
       error_purchase_price: '',
       units: '',
       unit: '',
-      retail_unit: '',
-      hash_rate: '',
+      retail_unit: [],
+      hash_rate: [],
       purchase_price: '',
-      purchase_price_for_retail_unit: '',
+      purchase_price_for_retail_unit: [],
       product_minimum: '',
       period: '',
       file: '',
@@ -322,7 +355,7 @@ export default {
       id: '',
       trees: "",
       errors: "",
-
+counts:[],
       add: 0,
 
 
@@ -332,6 +365,7 @@ export default {
   },
   mounted() {
     // this.list();
+    this.counts[0] = 1;
     this.type_of_tree = 0;
     this.axios.post("/unit").then((response) => {
       // console.log(response);
@@ -340,7 +374,7 @@ export default {
 
     });
 
-    this.counts[0] = 1;
+    
     this.type = 'Product';
 
   },

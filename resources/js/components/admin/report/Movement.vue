@@ -75,6 +75,8 @@
                 </div>
 
               </div>
+            </fieldset>
+            <fieldset class="border rounded-3 p-3">
               <div class="row">
                 <div class="col-md-2" v-show="showoperation">
                   <label for="status"> نوع العمليه</label>
@@ -136,6 +138,7 @@
 
 
               </div>
+       
             </fieldset>
 
 
@@ -221,6 +224,8 @@
 
                       </div>
 
+                      <br>
+                      <br>
                       <div class="row">
 
                         <div class="col-md-6">

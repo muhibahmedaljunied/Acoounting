@@ -21,12 +21,37 @@ class PurchaseReturnController extends Controller
 
     use GeneralTrait,
         ReturnDetailsTrait;
+
+    public $units;
+    public $value;
+    public $key;
+
+    public $quantity = 0;
+    public $r = array(
+
+        array()
+    );
+
+
     public function details(Request $request, $id)
     {
 
         $details = $this->get_details($request, $id);
 
-        $this->units($details);
+        // $this->units($details);
+
+        foreach ($details as $key => $value) {
+
+            $this->value = $value;
+            // dd($value);
+            $this->units();
+            $this->value->qty_after_convert = $this->convert_qty([$value->quantity, $value->avilable_qty, $value->qty_remain]);
+            // $this->value->qty_after_convert = $this->convert_qty($value->qty);
+            // $this->value->qty_after_convert = $this->convert_qty($value->qty);
+
+        }
+
+
 
 
         $purchase =  DB::table('purchases')
@@ -47,6 +72,56 @@ class PurchaseReturnController extends Controller
             'purchase' => $purchase,
 
         ]);
+    }
+
+    public function convert_qty(array $array)
+    {
+
+
+
+        $i =0;
+        foreach ($array as $value0) {
+
+            $this->quantity = $value0;
+
+            foreach ($this->units as $key2 => $value2) {
+
+
+
+                if ($this->quantity / $value2->rate >= 1) {
+
+
+                    $this->r["$this->key"]["$key2"] = array(
+
+                        // "$key2" => array(
+                        [intval($this->quantity / $value2->rate), $value2->name]
+                        // )
+                    );
+                }
+
+                if ($this->quantity % $value2->rate >= 1) {
+
+                    $this->quantity = $this->quantity % $value2->rate;
+                } else {
+
+                    break;
+                }
+
+                // $this->divid_one($value2, $key);
+
+
+
+
+            }
+
+            $this->value->qty_after_convert[$i] = $this->r;
+            // // dd($this->r);
+            $this->r = array(
+                array()
+            );
+
+            $i = $i +1;
+        }
     }
 
     public function index(Request $request, $id)
