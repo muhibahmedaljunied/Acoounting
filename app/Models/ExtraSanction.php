@@ -5,17 +5,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExtraSanction extends Model
 {
-    protected $fillable = ['staff_id','extra_type_id','start_time','end_time'];
+    protected $fillable = ['part_id','sanction_discount_id','extra_type_id','iteration','sanction'];
 
 
-    public function scopeWhereExtraSanction($query, $value)
+    public function scopeWhereExtraSanction($query, $value,$val)
 
     {
+       
         return $query->where([
-            'extra_type_id' => $value['extra'],
-            'iteration' => $value['iteration'],
-            'part_id' => $value['extra_part'], 
-            'sanction_discount_id' => $value['discount_type'],
+            'extra_type_id' => $value['extra'][$val],
+            'iteration' => $value['iteration'][$val],
+            'part_id' => $value['extra_part'][$val], 
+            'sanction_discount_id' => $value['discount_type'][$val],
         ]);
 
                                                         

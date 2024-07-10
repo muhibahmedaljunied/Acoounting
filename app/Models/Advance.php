@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Advance extends Model
 {
 
+    protected $fillable = ['id','staff_id','quantity','date','note'];
     public function staff()
     {
         return $this->belongsTo(Staff::class);

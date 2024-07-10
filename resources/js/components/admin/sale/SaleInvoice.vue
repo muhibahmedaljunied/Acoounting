@@ -119,45 +119,44 @@
                     </thead>
                     <tbody>
                       <tr v-for="sale_details in sale_detail">
-                        <td>{{ sale_details.product_name }}</td>
+                        <td>{{ sale_details.product }}</td>
                         <td>{{ sale_details.desc }}</td>
                         <td>{{ sale_details.status }}</td>
-                        <td>{{ sale_details.price }}</td>
+                        <td>{{ sale_details.cost }}</td>
                         <!-- <td>{{ sale_details.qty }}</td> -->
 
                         <td>
 
-                          <div v-for="temx in sale_details.units">
-
-                            <span v-if="temx.name == sale_details.unit">
-
-                              <span v-if="temx.unit_type == 1">
-
-                                {{ sale_details.qty }} {{ temx.name }}
-
-                              </span>
-
-                              <span v-if="temx.unit_type == 0">
-
-                                <span v-if="sale_details.qty / sale_details.rate >= 1">
-                                  {{ Math.floor((sale_details.qty / sale_details.rate)) }}{{
-                                    sale_details.units[0].name
-                                  }}
-                                </span>
-
-                                <span v-if="sale_details.qty % sale_details.rate >= 1">
-                                  و
-                                  {{ Math.floor((sale_details.qty % sale_details.rate)) }}{{
-                                    sale_details.units[1].name
-                                  }}
-                                </span>
-                              </span>
-
-                            </span>
+                          <div v-for="temx in sale_details.qty_after_convert['qty']">
 
 
 
-                          </div>
+<span v-for="temx2 in temx">
+
+
+  <span style="float: right;">
+    {{ temx2[0] }}
+    <span style="color: red;">
+      {{ temx2[1] }}
+    </span>
+
+  </span>
+
+
+
+</span>
+
+<!-- <span v-if="temx.unit_type == 0">
+
+
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
+</div>
 
                         </td>
 
@@ -224,9 +223,10 @@ export default {
   created() {
     setInterval(this.getNow, 1000);
   },
+  props: ['data'],
   mounted() {
-    this.table ='sale_details';
-    let uri = `/invoice_sale/${this.$route.params.id}`;
+    this.table = 'sale_details';
+    let uri = `/sale_invoice/${this.data}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
       console.log(response.data.users.name);
       this.user = response.data.users.name;
@@ -258,4 +258,3 @@ td h2 {
   line-height: 20px;
 }
 </style>
-

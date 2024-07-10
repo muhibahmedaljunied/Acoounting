@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\RepositoryInterface\InventuryStoreRepositoryInterface;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\Traits\StoreProduct\StoreProductTrait;
-use App\Services\UnitService;
+
+use App\Repository\StoreInventury\StoreTransferRepository;
+use App\Repository\StockInventury\StockTransferRepository;
+use App\Repository\CheckData\CheckTransferRepository;
+use App\Traits\Transfer\StoreProductTrait;
+use App\Repository\Stock\TransferRepository;
 use App\Traits\Details\DetailsTrait;
-use App\Services\InventureService;
 use App\Traits\GeneralTrait;
 use App\Models\Product;
 use App\Models\StoreProduct;
@@ -18,7 +17,9 @@ use App\Models\TransferDetail;
 use App\Services\CoreService;
 
 use App\Http\Controllers\Controller;
-use DB;
+use App\Repository\Qty\QtyStockRepository;
+use App\RepositoryInterface\UnitRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class TransferController extends Controller
 {
@@ -29,19 +30,18 @@ class TransferController extends Controller
 
     public function __construct(
         Request $request,
-        protected InventuryStoreRepositoryInterface $store,
-        protected InventuryStockRepositoryInterface $stock,
-        protected WarehouseRepositoryInterface $warehouse,
-        protected DetailRepositoryInterface $details,
-        protected InventureService $inventure,
-        protected CoreService $core,
-        protected UnitService $unit,
-
+        public QtyStockRepository $qty,
+        public CoreService $core,
 
     ) {
 
+        // dd($request->all());
+        $this->qty = $qty;
         $this->core->setData($request->all());
     }
+
+
+
 
     public function index()
     {
@@ -60,24 +60,49 @@ class TransferController extends Controller
         return $transfer->id;
     }
 
-    public function get_product(Request $request)
+    public function get_product(Request $request, QtyStockRepository $qty)
     {
 
 
 
 
-        $products = ($request->post('type') == 'store') ? $this->get_store_product_with_store($request) : $this->get_store_product_with_product($request);
+        $qty->compare_array = ['quantity'];
+        $qty->details = ($request->post('type_search') == 'store') ?
+            $this->get_store_product_with_store($request) :
+            $this->get_store_product_with_product($request);
+        $qty->handle_qty();
 
-        $this->units($products);
-        return response()->json(['products' => $products]);
+
+        // $this->units($products);
+        return response()->json(['products' => $qty->details]);
     }
 
 
+    public function get_transfer_for_recive(Request $request)
+    {
+
+        $transfer_details = TransferDetail::where('transfer_details.transfer_id', $request->id)
+            ->jointransfer()
+            ->select(
+                'products.*',
+                'transfer_details.*',
+                'units.name as unit',
+                'products.text as product',
+                'statuses.name as status',
+                'stores.text as store',
+                'store_products.desc',
+            )
+            ->get();
+        $this->units($transfer_details);
+
+
+        return response()->json(['transfer_details' => $transfer_details]);
+    }
     public function get_store_product_with_store($request)
     {
 
 
-        $products = StoreProduct::where('store_products.quantity', '!=', 0)
+        return StoreProduct::where('store_products.quantity', '!=', 0)
             ->where('product_units.unit_type', '==', 0)
             ->where('store_products.store_id', $request['id'])
             ->join('products', 'products.id', '=', 'store_products.product_id')
@@ -92,20 +117,18 @@ class TransferController extends Controller
                 'units.name as unit',
                 'products.id',
                 'products.text as product',
-                'products.rate',
+                'product_units.rate',
                 'statuses.name as status',
                 'stores.text as store'
             )
             ->get();
-
-        return $products;
     }
 
     public function get_store_product_with_product($request)
     {
 
 
-        $products = StoreProduct::where('store_products.quantity', '!=', 0)
+        return  StoreProduct::where('store_products.quantity', '!=', 0)
             ->where('product_units.unit_type', '==', 0)
             ->where('store_products.product_id', $request['id'])
             ->join('products', 'products.id', '=', 'store_products.product_id')
@@ -119,13 +142,11 @@ class TransferController extends Controller
                 'units.name as unit',
                 'products.id',
                 'products.text as product',
-                'products.rate',
+                'product_units.rate',
                 'statuses.name as status',
                 'stores.text as store'
             )
             ->get();
-
-        return $products;
     }
 
 
@@ -142,33 +163,55 @@ class TransferController extends Controller
 
 
 
-    public function store(Request $request)
-    {
+    public function store(
+
+        StoreTransferRepository $store,
+        StockTransferRepository $stock,
+        TransferRepository $warehouse,
+        UnitRepositoryInterface $unit,
+        CheckTransferRepository $check,
+    ) {
 
 
 
-        // $this->core->setData($request->all());
+        // dd($this->core->data);
         try {
 
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $this->warehouse->add();
+            $warehouse->add(); // this handle data in transfer table
 
-            foreach ($request->post('count') as $value) {
-                $this->core->setValue($value);
+            // dd($this->core->data);
+            foreach ($this->core->data['count'] as $value) {
 
-                $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
+                // -------------------------------------------------------------------------------------
 
-                $this->store->store();
+                // $result = $check->check_return($this->core->data['old'][$value]);
 
-                $this->details->init_details(); // this make initial for details tables
+                // if ($result['status'] == 0) {
 
-                $this->stock->stock();
+                //     return response(['message' => $result['text'], 'status' => $result['status']]);
+                // }
+                // -------------------------------------------------------------------------------------
+                // dd(90);
+                $this->core->setValue($value);  //this set index of data
+
+                $unit->handle_unit(); // this make decode for unit and convert qty into miqro
+                $unit->convert_unit(); // this make decode for unit and convert qty into miqro
+                // dd(12);
+                $store->store(); // this handle data in store table
+
+                $warehouse->init_details(); // this make initial for details table
+
+                $stock->stock(); // this handle data in stock table
+
+                // dd(176);
+
             }
 
-            // dd('f');
 
-            // ---------------------------------------------------------------------------------------
+
+            // dd('sdsdsd');
 
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
             return response([
@@ -219,21 +262,38 @@ class TransferController extends Controller
     public function details_transfer($id)
     {
 
-        $transfer_details = TransferDetail::where('transfer_details.transfer_id', $id)
+        $this->qty->compare_array = ['qty'];
+
+        $this->get_details($id);
+
+        $this->qty->handle_qty();
+
+
+        return response()->json(['transfer_details' => $this->qty->details]);
+    }
+
+    public function  get_details($id)
+    {
+
+
+
+
+        $this->qty->details = TransferDetail::where('transfer_details.transfer_id', $id)
             ->jointransfer()
             ->select(
                 'products.*',
+                'products.id as product_id',
                 'transfer_details.*',
-                'units.name as unit',
                 'products.text as product',
                 'statuses.name as status',
-                'stores.text as store',
                 'store_products.desc',
             )
             ->get();
-        $this->units($transfer_details);
 
+        foreach ($this->qty->details as $value) {
 
-        return response()->json(['transfer_details' => $transfer_details]);
+            $value->qty_return_now = 0;
+            $value->unit_selected = [];
+        }
     }
 }

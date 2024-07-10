@@ -67,6 +67,7 @@ export default {
     });
   },
   methods: {
+    
     // supply_details(id){
     //     this.axios.post(`supply_details/${id}`).then(response => {
     // 		toast.fire({

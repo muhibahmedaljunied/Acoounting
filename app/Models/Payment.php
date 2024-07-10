@@ -5,12 +5,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    protected $fillable = ['order_id','payment_info','payment_status'];
+    protected $fillable = ['paymentable_id','paymentable_type','payment_status','payment_info','paid','remaining'];
 
 
       public function paymentable()
     {
-        return $this->morphTo('App\Purchase','App\Sale');
+        return $this->morphTo();
     }
 
     

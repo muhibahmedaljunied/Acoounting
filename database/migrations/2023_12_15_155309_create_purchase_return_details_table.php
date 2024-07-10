@@ -38,8 +38,8 @@ class CreatePurchaseReturnDetailsTable extends Migration
             // $table->string('desc')->nullable();
 
 
-            $table->unsignedInteger('unit_id')->unsigned();
-            $table->foreign('unit_id')->references('id')->on('units');
+            // $table->unsignedInteger('unit_id')->unsigned();
+            // $table->foreign('unit_id')->references('id')->on('units');
 
         
             $table->integer('qty')->nullable();

@@ -37,17 +37,27 @@ trait ExtraSanctionTrait
     public function get()
     {
 
-        return DB::table('extra_sanctions')
+        $this->attendance_core->data_sanction =  DB::table('extra_sanctions')
             ->join('extra_types', 'extra_types.id', '=', 'extra_sanctions.extra_type_id')
             ->join('parts', 'parts.id', '=', 'extra_sanctions.part_id')
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'extra_sanctions.sanction_discount_id')
             ->select(
                 'extra_sanctions.*',
+                'extra_sanctions.id as sanction_id',
                 'extra_sanctions.id as extra_sanction_id',
                 'parts.duration',
                 'extra_types.*',
                 'sanction_discounts.*'
             )
             ->get();
+    }
+
+    
+    public function show($id)
+    {
+
+
+        $this->attendance_core->specific_sanction = ExtraSanction::find($id);
+      
     }
 }

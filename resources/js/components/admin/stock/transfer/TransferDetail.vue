@@ -7,7 +7,7 @@
         <form method="post" @submit.prevent="addTransfer">
           <div class="card-header pb-0">
             <div class="d-flex justify-content-between">
-              <span class="h2"> تفاصيل التحويل المخزني </span>
+              <span class="h3"> تفاصيل التحويل المخزني </span>
             </div>
           </div>
           <div class="card-body" id="printme">
@@ -48,7 +48,7 @@
                       {{ transfer_detail.desc }}
                     </td>
                     <td style="width: 40px">
-                      {{ transfer_detail.store }}
+                      {{ transfer_detail.from_store }}
                     </td>
 
                     <td style="width: 40px">
@@ -131,7 +131,7 @@ export default {
       this.transfer_details = response.data.transfer_details;
     });
   },
-  methods: {},
+
 };
 </script>
 

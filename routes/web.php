@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
+use App\Http\Controllers\ExcelCSVController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +19,39 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-use App\Http\Controllers\ExcelCSVController;
- 
+
+
+Route::get('/change_database', function () {
+
+
+    $database = Config::get("database.connections.mysql.database");
+    // Create connection
+    $conn = new mysqli(
+        Config::get("database.connections.mysql.host"), 
+        Config::get("database.connections.mysql.username"), 
+        Config::get("database.connections.mysql.password")
+    );
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Create database
+    $sql = "CREATE DATABASE ".$database;
+    if ($conn->query($sql) === TRUE) {
+        echo "Database created successfully";
+    } else {
+        echo "Error creating database: " . $conn->error;
+    }
+
+    $conn->close();
+    Artisan::call('migrate');
+});
+
 // Route::get('/excel-csv-file', [ExcelCSVController::class, 'index']);
 
 // --------------------------------------
 
-// Route::get('/test-event', 'AbsenceController@test');
 Route::get('/images/{image}', 'AbsenceController@test');
 
 Route::get('/test-event', 'AbsenceSanctionController@index');
@@ -55,5 +85,9 @@ Route::group(['middleware' => ['auth']], function () {
     require __DIR__ . '\warehouse.php';
     require __DIR__ . '\hr.php';
     require __DIR__ . '\sale.php';
+    require __DIR__ . '\customer.php';
     require __DIR__ . '\purchase.php';
+    require __DIR__ . '\supplier.php';
+    require __DIR__ . '\cash.php';
+    require __DIR__ . '\supply.php';
 });

@@ -2,243 +2,380 @@
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
-        <div class="modal-body" v-if="payable_note_one">
-          <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
-            <thead>
-              <tr>
-                <th>رقم الفاتوره</th>
-                <th> طريقه الدفع</th>
-                <th>الصندوق</th>
-                <th>البنك</th>
-                <th>رقم الشيك</th>
+        <div class="row row-sm">
+          <div class="col-xl-12">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex justify-content-between">
+                  <span class="h2"> سند صرف</span>
+                </div>
 
-                <th>تاريخ السند</th>
-                <th>الحساب</th>
-                <th>المبلغ المطلوب</th>
-                <th>المدفوع</th>
-                <th>المتبقي</th>
 
-                <th>اضافه</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="payable_note_ones in payable_note_one">
-                <td>
-                  <!-- <select
-                    class="form-control selectpicker"
-                    id="select-country"
-                    data-live-search="true"
-                  >
-                    <option data-tokens="china">China</option>
-                    <option data-tokens="malayasia">Malayasia</option>
-                    <option data-tokens="singapore">Singapore</option>
-                  </select> -->
-                  <input type="text" class="form-control input_cantidad" onkeypress="return valida(event)"
-                    :value="payable_note_ones.id" readonly />
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value="">نقدا</option>
-                    <option value="">شيك</option>
-                  </select>
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
 
-                <td>
-                  <input type="date" class="form-control input_cantidad" v-model="date"
-                    onkeypress="return valida(event)" />
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <td>
-                  <input type="number" id="price" class="form-control input_cantidad"
-                    :value="payable_note_ones.remaining" onkeypress="return valida(event)" readonly />
-                </td>
-                <td>
-                  <input type="number" id="price" class="form-control input_cantidad" v-model="paid"
-                    onkeypress="return valida(event)" @input="get_total_remaining(payable_note_ones.remaining)" />
-                </td>
-                <td>
-                  <input type="number" id="price" class="form-control input_cantidad" onkeypress="return valida(event)"
-                    v-model="total_remaining" />
-                </td>
-                <td>
-                  <input type="checkbox" class="btn btn-info waves-effect" />
-                </td>
-                <a href="javascript:void" @click="payment(payable_note_ones.remaining,payable_note_ones.id)" class="btn btn-success"><span>تاكيد العمليه</span></a>
+              </div>
+              <div class="card-body">
 
-              </tr>
-              <!-- 
-                  <a @click="$router.go(0)" class="btn btn-success"
-                    ><span> تراجع</span></a
-                  > -->
-            </tbody>
-          </table>
+                <div class="row">
+
+
+                  <div class="col-md-2">
+
+
+                    <label for="date">رقم الفاتوره</label><br />
+
+
+                    <div>{{ details.data[0].paymentable.purchase_id }}</div>
+
+
+                  </div>
+
+
+                  <div class="col-md-4">
+                    <h5 class="card-title"> الحساب</h5>
+                    <div class="custom-search">
+
+                      <input style="background-color: beige;" :id="'PaymentBond_account_tree'" type="text" readonly
+                        class="custom-search-input">
+                        <input :id="'PaymentBond_account_tree_id'" type="hidden" readonly class="custom-search-input">
+
+                        <button class="custom-search-botton" type="button" data-toggle="modal"
+                        data-target="#exampleModalPaymentBond">
+                        <i class="fa fa-plus-circle"></i></button>
+
+
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="cliente"> الحساب التفصيلي</label>
+
+
+                    <select class="form-control" style="background-color: beige;" name="forma_pago"
+                      id="select_account_PaymentBond_group">
+
+                    </select>
+
+                  </div>
+
+                </div>
+
+                <br>
+                <hr>
+                <div class="row">
+
+
+                  <div class="col-md-4">
+                    <h5 class="card-title">العمله</h5>
+                    <div class="custom-search">
+
+                      <select class="form-control" style="background-color: beige;" name="forma_pago">
+
+                      </select>
+
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label for="pagoPrevio">البيان</label>
+                    <input v-model="description" type="text" class="form-control" style="background-color: beige;">
+                  </div>
+
+
+
+                  <div class="col-md-2">
+                    <label for="pagoPrevio">التاريخ</label>
+                    <input v-model="date" type="date" class="form-control input_cantidad"
+                      onkeypress="return valida(event)" />
+
+                  </div>
+                </div>
+
+                <br>
+                <hr>
+
+
+                <div class="row">
+
+                  <div class="col-md-4">
+                    <label for="pagoPrevio">المورد</label>
+                    <input v-model="details.data[0].paymentable.supplier_name" type="text"
+                      class="form-control input_cantidad" onkeypress="return valida(event)" />
+
+                  </div>
+
+
+                  <div class="col-md-2">
+                    <label for="pagoPrevio">المبلغ المدفوع</label>
+                    <input @input="credit(details.data[0].paid)" v-model="details.data[0].paid"
+                      style="background-color: beige;" type="number" class="form-control input_cantidad"
+                      onkeypress="return valida(event)" />
+
+                  </div>
+                  <div class="col-md-2">
+                    <label for="pagoPrevio">المبلغ المتبقي</label>
+                    <input v-model="details.data[0].remaining" style="background-color: beige;" type="number"
+                      class="form-control input_cantidad" onkeypress="return valida(event)" />
+
+                  </div>
+
+               
+
+                  <div class="col-md-4">
+
+                    <button @click="payment()" class="btn btn-info">تاكيد
+                      العمليه</button>
+
+
+                  </div>
+                </div>
+                <br>
+                <hr>
+
+
+
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="modal-body" v-if="payable_notes">
-          <table class="table table-bordered text-right" style="width: 100%; font-size: x-large">
-            <thead>
-              <tr>
-                <th>رقم السند</th>
-                <th>رقم الفاتوره</th>
-                <th>اسم المورد</th>
-                <th> طريقه الدفع</th>
-                <th>الصندوق</th>
-                <th>البنك</th>
-                <th>رقم الشيك</th>
-                <th>تاريخ السند</th>
-                <th>الحساب</th>
-                <!-- <th>المبلغ المطلوب</th> -->
-                <th>المدفوع</th>
-                <!-- <th>المتبقي</th> -->
 
-                <th>العمليات</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="payable_note in payable_notes">
-                <td>
-             
-                  {{payable_note.id}}
-                </td>
-                <td>
-                 
-                 {{payable_note.purchase_id}}
-                </td>
-                <td>
-                 
-                 {{payable_note.supplier_name}}
-               </td>
-                <td>
-                  <select name="" id="">
-                    <option value="">نقدا</option>
-                    <option value="">شيك</option>
-                  </select>
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
 
-                <td>
-{{payable_note.date  }}                
-</td>
-                <td>
-                  <select name="" id="">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <!-- <td>
-                  <input type="number" id="price" class="form-control input_cantidad"
-                    :value="payable_note.remaining" onkeypress="return valida(event)" readonly />
-                </td> -->
-                <td>
-                  {{payable_note.paid}}
-                </td>
-                <!-- <td>
-                  <input type="number" id="price" class="form-control input_cantidad" onkeypress="return valida(event)"
-                    v-model="total_remaining" />
-                </td> -->
-                <td>
-                  <!-- <input type="checkbox" class="btn btn-info waves-effect" /> -->
-                  <a href="javascript:void" class="btn btn-success"><span> </span></a>
 
-                </td>
 
-              </tr>
-              <!-- 
-                  <a @click="$router.go(0)" class="btn btn-success"
-                    ><span> تراجع</span></a
-                  > -->
-            </tbody>
-          </table>
-        </div>
       </div>
     </section>
+    <!-- 
+    <div class="row row-sm">
+          <div class="col-xl-12">
+            <div class="card">
+              <form method="post">
+                <div class="card-header pb-0">
+                  <div class="d-flex justify-content-between">
+                    <span class="h2"> سندات الصرف </span>
+                  </div>
+                </div>
+                <div class="card-body" id="printme">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <div class="row"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th class="wd-15p border-bottom-0" rowspan="1">
+                            اسم المنتج
+                          </th>
+                          <th class="wd-15p border-bottom-0" rowspan="1">الحاله</th>
+                          <th class="wd-15p border-bottom-0" rowspan="1">الطراز</th>
+                          <th class="wd-15p border-bottom-0" colspan="1"> محول من</th>
+
+                          <th class="wd-15p border-bottom-0" colspan="1">محول الي</th>
+                          <th class="wd-15p border-bottom-0" rowspan="1">الكميه المحوله</th>
+                        </tr>
+                      </thead>
+                      <tbody v-if="transfer_details && transfer_details.length > 0">
+                        <tr v-for="(transfer_detail, index) in transfer_details" :key="index">
+                          <td>{{ index + 1 }}</td>
+                          <td style="width: 40px">
+                            {{ transfer_detail.product }}
+                          </td>
+                          <td style="width: 40px">
+                            {{ transfer_detail.status }}
+                          </td>
+                          <td style="width: 40px">
+                            {{ transfer_detail.desc }}
+                          </td>
+                          <td style="width: 40px">
+                            {{ transfer_detail.from_store }}
+                          </td>
+
+                          <td style="width: 40px">
+                            {{ transfer_detail.into_store }}
+                          </td>
+
+                          <td>
+                            <div v-for="temx in transfer_detail.units">
+
+                              <span v-if="temx.name == transfer_detail.unit">
+
+                                <span v-if="temx.unit_type == 1">
+
+                                  {{ transfer_detail.qty }} {{ temx.name }}
+
+                                </span>
+
+                                <span v-if="temx.unit_type == 0">
+
+                                  <span v-if="transfer_detail.qty / transfer_detail.rate >= 1">
+                                    {{ Math.floor((transfer_detail.qty / transfer_detail.rate)) }}{{
+                                      transfer_detail.units[0].name
+                                    }}
+                                  </span>
+
+                                  <span v-if="transfer_detail.qty % transfer_detail.rate >= 1
+                                      &&
+                                      transfer_detail.qty / transfer_detail.rate >= 1">و
+                                  </span>
+                                  <span v-if="transfer_detail.qty % transfer_detail.rate >= 1">
+                        
+                                    {{ Math.floor((transfer_detail.qty % transfer_detail.rate)) }}{{
+                                      transfer_detail.units[1].name
+                                    }}
+                                  </span>
+
+
+                                </span>
+
+                              </span>
+
+
+
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody v-else>
+                        <tr>
+                          <td align="center" colspan="7">
+                            <h3> لايوجد بيانات </h3>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </form>
+     
+            </div>
+          </div>
+      
+        </div> -->
+    <div class="modal fade" id="exampleModalPaymentBond" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="well" id="treeview_json_account"></div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </template>
 <script>
-// $(function() {
-//   $('.selectpicker').selectpicker();
-// });
+
+import tree from '../../../../js/tree/tree.js';
 
 export default {
+  mixins: [tree],
   data() {
     return {
-      payable_note_one: '',
-      payable_notes:'',
-      total_remaining: 0,
-      paid: 0,
-      date: new Date().toISOString().substr(0, 10),
+
+      jsonTreeData: '',
+      type_of_tree: 1,
+      details: '',
+      date: '',
+      description: '',
+      remaining: '',
+      treasury: [],
+
+
     };
   },
+  props: ['data'],
   mounted() {
-    // console.log(this.$route.params.id);
-    if(this.$route.params.id){
-      let uri = `/payment_bond/${this.$route.params.id}`;
-      this.axios.post(uri).then((response) => {
-      this.payable_note_one = response.data.payable_note;
+    this.list();
 
-    });
-    }else{
-      let uri = `/payment_bond`;
-      this.axios.post(uri).then((response) => {
-      this.payable_notes = response.data.payable_notes;
+    this.type = 'PaymentBond';
+    this.type_of_tree = 1;
+    this.showtree('account', 'tree_account');
 
-    });
-    }
-    
-    
+
   },
   methods: {
-    get_total_remaining(remaining) {
 
-      this.total_remaining = remaining - this.paid;
+    list(page = 1) {
+      let uri = `/data_for_payment_bond/${this.data}`;
+      this.axios.post(uri).then((response) => {
 
-    },
-    payment(remaining,purchase) {
-      
-      let uri = `/payment_bond_store/${this.$route.params.id}`;
-
-      this.axios.post(uri,{
-                            total_remaining: this.total_remaining,
-                            remaining:remaining,
-                            paid:this.paid ,
-                            purchase:purchase,
-                            date:this.date,
-                          }
-                          ).then((response) => {
-                            console.log(response);
+        this.details = response.data.list_data;
+        // console.log('wewwe',this.details.data[0]);
+        this.remaining = this.details.data[0].remaining;
 
       });
+    },
+
+    credit(paid) {
+
+
+      var remaining = this.remaining - paid;
+
+      if (remaining < 0) {
+
+        this.details.data[0].remaining = 0
+      } else {
+
+        this.details.data[0].remaining = remaining
+
+      }
+
+    },
+
+    payment() {
+
+      this.axios
+        .post(`/store_PaymentBond`, {
+          type: 'PaymentBond',
+          date: this.date,
+          remaining: this.details.data[0].remaining,
+          id: this.details.data[0].paymentable.purchase_id,
+          description: this.description,
+          paid: this.details.data[0].paid,
+          grand_total: this.details.data[0].paid,
+
+          debit: {
+            
+            account_id: this.details.data[0].paymentable.account_id,
+            value: this.details.data[0].paid,
+            account_details: this.details.data[0].paymentable.supplier_id,
+
+          },
+          credit: {
+            account_id: $(`#PaymentBond_account_tree_id`).val(),
+            value: this.details.data[0].paid,
+            account_details: $(`#select_account_${this.type}_group`).val(),
+
+          },
+       
+
+          type_daily: 'PaymentBond',
+
+
+
+
+        })
+        .then((response) => {
+
+
+
+
+          // this.$router.go(0);
+        });
 
     },
 
@@ -246,4 +383,3 @@ export default {
 
 };
 </script>
-

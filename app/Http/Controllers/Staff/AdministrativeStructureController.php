@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Exports\AdministrativeStructureExport;
 use App\Http\Controllers\Controller;
+use App\Imports\AdministrativeStructureImport;
 use App\Models\AdministrativeStructure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use DB;
-
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdministrativeStructureController extends Controller
 {
@@ -49,6 +51,25 @@ class AdministrativeStructureController extends Controller
             
 
     }
+
+    public function import(Request $request)
+    {
+
+        Excel::import(new AdministrativeStructureImport, storage_path('structure.xlsx'));
+
+        return response()->json([
+            'status' =>
+            'The file has been excel/csv imported to database in laravel 9'
+        ]);
+    }
+
+
+    public function export()
+    {
+
+        return Excel::download(new AdministrativeStructureExport, 'structure.xlsx');
+    }
+    
 
     public function structure_details_node($id)
     {

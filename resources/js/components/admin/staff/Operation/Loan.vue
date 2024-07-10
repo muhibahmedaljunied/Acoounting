@@ -10,7 +10,7 @@
 
           <div style="display: flex;float: left; margin: 5px" >
      
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addLoan">
               <i class="fa fa-plus-circle"></i></a>
 
@@ -188,11 +188,11 @@
                                   <td>
 
                                     <div v-if="index == 1">
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                         v-on:click="addComponent(count)">
                                         <i class="fa fa-plus-circle"></i></a>
 
-                                      <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      <a class="btn btn-info btn-sm waves-effect btn-agregar"
                                         v-on:click="disComponent(count)">
                                         <i class="fa fa-minus-circle"></i></a>
 

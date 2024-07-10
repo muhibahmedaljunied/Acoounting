@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Repository\Unit;
+
+use App\RepositoryInterface\UnitRepositoryInterface;
 use App\Services\CoreService;
-class UnitReturnRepository 
+class UnitReturnRepository  implements UnitRepositoryInterface
 {
 
     public $core;
@@ -11,28 +13,42 @@ class UnitReturnRepository
         $this->core = app(CoreService::class);
     }
 
-    public function decode_unit()
+    public function handle_unit(){
+
+        $this->encoed_unit();
+        $this->convert_unit();
+    }
+
+
+    public function encoed_unit()
     {
 
+        // dd($this->core->value);
         $this->core->unit_array = $this->core->data['unit'][$this->core->value];
-        $this->core->unit_value = $this->core->unit_array[0];
         return $this;
 
     }
 
-    function convert_qty()
+    function convert_unit()
     {
 
+        // dd($this->core->unit_array);
+        // dd($this->core->unit_array);
+        foreach ($this->core->data['old'][$this->core->value]['units'] as  $value) {
 
-        if ($this->core->unit_array[2] == 1) {  //this means unit_type
+            // dd($value['unit_id'],$this->core->unit_array);
+            if ($value['unit_id'] == $this->core->unit_array[0]) {  //this means unit_type
 
-            $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'] * $this->core->unit_array[1];
-        } else {
-            $this->core->micro_unit_qty = $this->core->data['old'][$this->core->value]['qty_return_now'];
+                $this->core->micro_unit_qty = ($this->core->data['qty'][$this->core->value] * $value['rate']);
+
+            }
+    
         }
+
+
+
         return $this;
     }
-
 
 
 

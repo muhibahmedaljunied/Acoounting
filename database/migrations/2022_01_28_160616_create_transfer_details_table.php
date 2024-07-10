@@ -35,16 +35,17 @@ class CreateTransferDetailsTable extends Migration
 
             // $table->string('desc')->nullable();
 
-            $table->unsignedInteger('unit_id')->unsigned()->nullable();
-            $table->foreign('unit_id')->references('id')->on('units');
+            // $table->unsignedInteger('unit_id')->unsigned()->nullable();
+            // $table->foreign('unit_id')->references('id')->on('units');
 
 
        
-            $table->string('status')->nullable();
+            // $table->string('status')->nullable();
 
-            $table->string('product_name')->nullable();
+            // $table->string('product_name')->nullable();
 
             $table->text('into_store')->nullable();
+            $table->text('from_store')->nullable();
             // $table->text('into_shelve')->nullable();
 
             $table->integer('qty');

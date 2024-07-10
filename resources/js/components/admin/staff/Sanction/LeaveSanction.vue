@@ -7,7 +7,7 @@
 
           <span class="h2">  الانصراف المبكر</span>
           <div style="display: flex;float: left; margin: 5px">
-            <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+            <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
               data-target="#addSLA">
               <i class="fa fa-plus-circle"></i></a>
 
@@ -49,7 +49,14 @@
               <!-- <td>{{ leave_sanction.staff_name }}</td> -->
               <td>{{ leave_sanction.leave }}</td>
               <td>{{ leave_sanction.duration }}</td>
-              <td>{{ leave_sanction.iteration }}</td>
+             
+              <td v-if="leave_sanction.iteration == 1"> مره واحده</td>
+              <td v-if="leave_sanction.iteration == 2">  مرتين</td>
+              <td v-if="leave_sanction.iteration == 3">ثلاث مرات</td>
+              <td v-if="leave_sanction.iteration == 4">اربع مرات</td>
+              <td v-if="leave_sanction.iteration == 5"> خمس مرات او اكثر</td>
+              <td v-if="leave_sanction.iteration == 6"> اي مره</td>
+
               <td>{{ leave_sanction.discount_name }}</td>
               <td v-if="leave_sanction.discount == 1">قيمه</td>
               <td v-if="leave_sanction.discount == 2">نسبه</td>
@@ -57,11 +64,11 @@
        
 
               <td>
-                <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="tn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
+                <!-- <a data-toggle="modal" data-target="#modal_vaciar" class="btn btn-danger btn-lg waves-effect btn-agregar"><i class="fa fa-trash"></i></a> -->
                 <button type="button" @click="delete_item(leave_sanction.id)" class="btn btn-danger btn-sm waves-effect">
                   <i class="fa fa-trash"></i>
                 </button>
-                <a class="tn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSLA" data-toggle="modal"
+                <a class="btn btn-info btn-sm waves-effect btn-agregar" data-target="#updateSLA" data-toggle="modal"
                   id="agregar_productos">
                   <i class="fa fa-edit"></i></a>
 
@@ -173,6 +180,10 @@
                                     <option v-bind:value="5">
                                       خمس مرات او اكثر
                                     </option>
+                                    <option v-bind:value="6">
+
+اي مره 
+</option>
                                   </select>
                                 </td>
                                 <td>
@@ -201,10 +212,10 @@
 
                                 </td>
                                 <td v-if="index == 1">
-                                  <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
+                                  <a class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="addComponent(count)">
                                     <i class="fa fa-plus-circle"></i></a>
 
-                                  <a class="tn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
+                                  <a class="btn btn-info btn-sm waves-effect btn-agregar" v-on:click="disComponent(count)">
                                     <i class="fa fa-minus-circle"></i></a>
                                 </td>
 

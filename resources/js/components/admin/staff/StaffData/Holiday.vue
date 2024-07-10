@@ -1,5 +1,6 @@
 <template>
   <!-- row opened -->
+<iv class="container-fluid">
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
@@ -33,7 +34,21 @@
               <a href="#" @click="report()"><img src="/assets/img/search.png" alt="" style="width: 10%;"> </a>
             </div>
           </div>
-          <div class="table-responsive">
+     
+        </div>
+
+      </div>
+    </div>
+    <!--/div-->
+  </div>
+  <div class="row row-sm">
+    <div class="col-xl-12">
+      <div class="card">
+
+       
+        <div class="card-body" id="printme">
+          <div class="row">
+            <div class="table-responsive">
             <table class="table table-bordered text-center">
               <thead>
                 <tr>
@@ -117,12 +132,15 @@
             </table>
           </div>
           <pagination align="center" :data="list_data" @pagination-change-page="list"></pagination>
+          </div>
+
         </div>
 
       </div>
     </div>
     <!--/div-->
   </div>
+</iv>
   <!-- /row -->
 </template>
 

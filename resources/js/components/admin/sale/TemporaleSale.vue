@@ -289,7 +289,7 @@
     </div>
 </template>
 <script>
-import operation from '../../../../js/operation.js';
+import operation from '../../../operation1.js';
 import tree from '../../../../js/tree/tree.js';
 export default {
     mixins: [
@@ -372,9 +372,9 @@ export default {
         this.type = 'Sale';
         this.type_refresh = 'increment';
         this.list();
-        this.showtree('product');
-        this.showtree('store');
-        this.showtree('account');
+        this.showtree('product','tree_product');
+        this.showtree('store','tree_store');
+        this.showtree('account','tree_account');
       
         // this.$Progress.start();
         // this.$store.dispatch("getAllnewsale");

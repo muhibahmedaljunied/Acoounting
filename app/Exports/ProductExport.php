@@ -23,7 +23,7 @@ class ProductExport implements FromCollection,WithMapping, WithHeadings
 
         return [
 
-            
+        
             $registration->id,
 
             $registration->parent_id,
@@ -38,9 +38,10 @@ class ProductExport implements FromCollection,WithMapping, WithHeadings
 
             $registration->rate,
 
+            $registration->product_minimum,
+
             $registration->image,
 
-            $registration->product_minimum,
 
             Carbon::parse($registration->created_at)->toFormattedDateString(),
 
@@ -72,9 +73,10 @@ class ProductExport implements FromCollection,WithMapping, WithHeadings
 
             'rate',
 
+            'product_minimum',
+
             'image',
 
-            'product_minimum',
 
             'created_at',
  

@@ -13,46 +13,25 @@
                 <thead>
                   <tr>
                     <th class="wd-15p border-bottom-0">رقم السند</th>
-                    <th class="wd-15p border-bottom-0">العميل</th>
-                    <th class="wd-15p border-bottom-0">الكميه</th>
+                    <!-- <th class="wd-15p border-bottom-0">العميل</th> -->
+                    <!-- <th class="wd-15p border-bottom-0">الكميه</th> -->
                     <th class="wd-15p border-bottom-0">تاريخ المرتجع</th>
                     <th class="wd-15p border-bottom-0">سبب الارجاع </th>
                     <th class="wd-15p border-bottom-0">العمليات</th>
                   </tr>
                 </thead>
-                <tbody v-if="return_sale && return_sale.length > 0">
-                  <tr v-for="return_sales in return_sale">
-                    <td>{{ return_sales.return_id }}</td>
-                    <td>{{ return_sales.customer_name }}</td>
+                <tbody v-if="return_sale && return_sale.data.length > 0">
+                  <tr v-for="(return_sales,index) in return_sale.data">
+                    <td>{{ return_sales.paymentable.return_id }}</td>
+                    <!-- <td>{{ return_sales.customer_name }}</td> -->
 
-                    <td>{{ return_sales.quantity_return }}</td>
+                    <!-- <td>{{ return_sales.quantity_return }}</td> -->
 
 
-                    <td>{{ return_sales.return_date }}</td>
-                    <td>{{ return_sales.note }}</td>
+                    <td>{{ return_sales.paymentable.date }}</td>
+                    <td>{{ return_sales.paymentable.note }}</td>
                     <td>
-                      <!-- <button
-
-                    @click="supply_details(supplies.id)"
-                      type="button"
-    
-                      class="btn btn-danger"
-                    >
-                      <i class="mdi mdi-account-minus"></i>
-                    </button> -->
-
-                      <!-- <router-link
-                      :to="`/return_sale_details/${return_sales.return_id}`"
-                      class="btn btn-success"
-                    >
-                      <span><i class="fa fa-search-plus"></i></span>
-                    </router-link>
-                           <router-link
-                    :to="`/return_sale_invoice/${return_sales.return_id}`"
-                        class="btn btn-success">
                     
-                      <span>فاتوره</span>
-                    </router-link> -->
 
 
 
@@ -60,26 +39,29 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option class="btn btn-success"
-                            v-bind:value="['/returnsale_details/', return_sales.return_id, 0]">
+                            v-bind:value="['/returnsale_details/', return_sales.paymentable.return_id, 0]">
                             تفاصيل
                           </option>
 
 
                           <option class="btn btn-success"
-                            v-bind:value="['/return_sale_invoice/', return_sales.return_id, 1]">
+                            v-bind:value="['return_sale_invoice', return_sales.paymentable.return_id, 1]">
                             سند مرتجع مبيعات
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/return_sale_recive/', return_sales.return_id, 2]">
+                            v-bind:value="['/return_sale_recive/', return_sales.paymentable.return_id, 2]">
                             سند استلام مرتجع مبيعات
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/return_sale_invoice_cancel/', return_sales.sale_id, 3]">
+                            v-bind:value="['/return_sale_invoice_cancel/', return_sales.paymentable.sale_id, 3]">
                             الفاء الفاتوره
                           </option>
-                          <option class="btn btn-success"
+                          <!-- <option class="btn btn-success"
                             v-bind:value="['/return_sale_invoice_update/', return_sales.sale_id, 4]">
                             تعديل الفاتوره
+                          </option> -->
+                          <option class="btn btn-success" v-bind:value="['return_sale_daily', return_sales.paymentable.return_id, 5]">
+                            عرض القيد المحاسبي
                           </option>
 
                         </select>
@@ -127,29 +109,42 @@
                     <td>{{ return_details.desc }}</td>
                     <!-- <td>{{ return_details.qty_return }}</td> -->
                     <td>
-                      <div v-for="temx in return_details.units">
+                
+                      
+                      <div v-for="temx in return_details.qty_after_convert['qty']">
 
-                        <span v-if="temx.unit_type == 1">
-                          {{ parseInt(return_details.qty_return / return_details.rate) }} {{ temx.name }}
-                        </span>
-                        <span v-if="temx.unit_type == 0">
-                          <span
-                            v-if="Math.floor(((return_details.qty_return / return_details.rate) - parseInt(return_details.qty_return / return_details.rate)) * return_details.rate) != 0">
-                            و
-                            {{
-                              Math.floor(((return_details.qty_return / return_details.rate) -
-                                parseInt(return_details.qty_return / return_details.rate)) * return_details.rate)
-                            }}{{
-  temx.name
-}}
-                          </span>
 
-                        </span>
-                      </div>
+
+<span v-for="temx2 in temx">
+
+
+  <span style="float: right;">
+    {{ temx2[0] }}
+    <span style="color: red;">
+      {{ temx2[1] }}
+    </span>
+
+  </span>
+
+
+
+</span>
+
+<!-- <span v-if="temx.unit_type == 0">
+
+
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
+</div>
 
                     </td>
 
-                    <td>{{ return_details.code }}</td>
+                    <td>{{ return_details.text }}</td>
 
 
 
@@ -173,8 +168,6 @@
       </div>
     </div>
   </div>
-
-
 </template>
 <script>
 export default {
@@ -183,16 +176,18 @@ export default {
       return_sale: "yes",
       return_detail: '',
       operationselected: [],
-      type:'',
-      index:'',
+      type: '',
+      index: '',
     };
   },
+  props: ['data'],
+
   mounted() {
 
     this.table = 'sale';
 
-    this.axios.post(`/listreturn_sale/${this.$route.params.id}`).then((response) => {
-      this.return_sale = response.data.returns;
+    this.axios.post(`/listreturn_sale/${this.data}`).then(({ data }) => {
+      this.return_sale = data.returns;
 
     });
   },
@@ -203,7 +198,8 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1],{ table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table,            operation:'OperationQty'
+ })
           .then((response) => {
 
             this.return_detail = response.data.return_details;
@@ -215,11 +211,17 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
+
       }
 
     },
-   
+
   },
 };
 </script>

@@ -9,6 +9,8 @@ class Discount extends Model
 
 
 
+    protected $fillable = ['staff_id','discount_type_id','quantity','date','note'];
+
     public function scopeWhereDiscount($query, $value)
 
     {

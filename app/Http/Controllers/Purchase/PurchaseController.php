@@ -1,52 +1,44 @@
 <?php
 
 namespace App\Http\Controllers\Purchase;
-use App\RepositoryInterface\InventuryStockRepositoryInterface;
-use App\RepositoryInterface\InventuryStoreRepositoryInterface;
-use App\RepositoryInterface\WarehouseRepositoryInterface;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Services\UnitService;
-use App\Models\PaymentPurchase;
+
+use App\Services\StockService;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Models\Payment;
+use Illuminate\Support\Facades\Cache;
 use App\Models\StoreProduct;
-use App\Services\PurchaseService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\HrAccount;
 use App\Traits\Invoice\InvoiceTrait;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\status;
 use App\Models\Temporale;
 use App\Models\Purchase;
-use App\Services\CoreService;
-use App\Services\DailyService;
-
-
+use App\Repository\Qty\QtyStockRepository;
 class PurchaseController extends Controller
 {
     use InvoiceTrait,
         GeneralTrait;
 
+    public $qty;
+    public function __construct(QtyStockRepository $qty)
+    {
 
-    public function __construct(
-        protected InventuryStockRepositoryInterface $stock,
-        protected InventuryStoreRepositoryInterface $store,
-        protected WarehouseRepositoryInterface $wahehouse,
-        protected DetailRepositoryInterface $details,
-        protected PurchaseService $purchase,
-        protected DailyService $daily,
-        protected CoreService $core,
-        protected UnitService $unit,
-        Request $request,
-
-    ) {
-
-        $this->core->setData($request->all());
-        $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
-
-        // Returns::store();
-
+        $this->qty = $qty;
     }
+    public function details(Request $request, $id)
+    {
+
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
+        return response()->json(['details' => $this->qty->details]);
+    }
+
+
     public function index()
     {
 
@@ -55,52 +47,68 @@ class PurchaseController extends Controller
             ->select('products.*',)
             ->get();
 
-        
-
 
         return response()->json([
             'products' => $products,
             'suppliers' => $this->suppliers(),
             'statuses' => Status::all(),
-            'treasuries' => $this->treasuries()
+            'stores' => $this->get_store()
+
         ]);
     }
 
-    public function suppliers(){
 
-        $suppliers =  DB::table('suppliers')
-        ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
-        ->select(
-            'suppliers.*',
-            // 'suppliers.name',
-            // 'supplier_accounts.account_id',
-        )
-        ->get();
-       
-        return $suppliers;
-
-    }
-
-    public function treasuries(){
-        
-        $treasuries = DB::table('treasuries')
-        ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
-        ->select(
-            'treasuries.id',
-            'treasuries.name',
-            // 'treasury_accounts.account_id'
-        )
-        ->get();
-
-        return $treasuries;
-
-    }
-
-    public function payment(Request $request)
+    public function get_store()
     {
 
 
+        return  DB::table('stores')
+            ->select(
+                'stores.account_id as store_account_id',
+                'stores.text as store_name',
+                'stores.id as store_id'
 
+            )
+            ->get();
+    }
+    public function suppliers()
+    {
+
+        $suppliers =  DB::table('suppliers')
+            // ->join('accounts', 'suppliers.account_id', '=', 'accounts.id')
+            ->select(
+                'suppliers.*',
+
+            )
+            ->get();
+
+        return $suppliers;
+    }
+
+    public function treasuries()
+    {
+
+        $treasuries = DB::table('treasuries')
+            // ->join('accounts', 'accounts.id', '=', 'treasuries.account_id')
+            ->select(
+                'treasuries.id',
+                'treasuries.name',
+                // 'treasuries.account_id'
+
+            )
+            ->get();
+
+        return $treasuries;
+    }
+
+    public function payment(
+
+        StockService $stock,
+    ) {
+
+
+
+        // dd($stock->core->data);
         // $result  = $this->daily->check_account();
 
         // if ($result == 0) {
@@ -113,30 +121,19 @@ class PurchaseController extends Controller
 
 
 
+
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
-            $this->wahehouse->add(); // this insert data into purchase table
+            $stock->handle();
+            
 
-            foreach ($request->post('count') as $value) {
+            // dd(2);
+            Cache::forget('stock');
 
-                $this->core->setValue($value+1);
-
-                $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-
-                $this->store->store(); // this handle data in store_product table
-
-                $this->details->init_details(); // this make initial for details table
-
-                $this->stock->stock(); // this handle data in stock table
-            }
-
-            $this->purchase->pay();
-            $this->daily->daily();
-
-        
             // ------------------------------------------------------------------------------------------------------
             DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
 
             return response([
                 'message' => "purchase created successfully",
@@ -153,60 +150,76 @@ class PurchaseController extends Controller
             ], 400);
         }
     }
-
-
-
-
-   
-
-    
-
-    public function payment_bond(Request $request)
-    {
-
-        $payable_note = DB::table('purchases')
-            ->where('purchases.id', $request->id)
-            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
-            ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
-            ->select(
-                'purchases.*',
-                'purchases.id as purchases_id',
-                'suppliers.*',
-                'payment_purchases.*'
-            )
-            ->get();
-        return response()->json(['payable_note' => $payable_note]);
-    }
-    public function payment_bond_store(Request $request)
+    public function purchase_daily(Request $request)
     {
 
 
-        $payment = PaymentPurchase::find($request->id);
-        if ($request->post('total_remaining') == 0) {
-            $array_data = ['payment_status' => 'paiding', 'paid' => 1212, 'remaining' => 1212];
-        }
-        if ($request->post('total_remaining') > 0) {
-            $array_data = ['payment_status', 'Partialy'];
-        }
-
-        $payment->update($array_data);
-    }
-    public function show(Request $request)
-    {
 
         $purchases = DB::table('purchases')
-            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
-            ->join('payment_purchases', 'payment_purchases.purchase_id', '=', 'purchases.id')
+            ->where('purchases.id', $request->id)
+            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+            ->join('dailies', 'dailies.id', '=', 'purchases.daily_id')
+            ->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id')
+            ->join('accounts', 'accounts.id', '=', 'daily_details.account_id')
             ->select(
-                'purchases.*',
-                'purchases.id as purchases_id',
-                'suppliers.*',
-                'payment_purchases.*'
+                // 'purchases.*',
+                'purchases.id as purchase_id',
+                'suppliers.name',
+                'dailies.*',
+                'daily_details.*',
+                'accounts.text',
+                'accounts.id as account_id',
+
+
             )
-            ->paginate(10);
+            ->get();
+
+        // dd($purchases);
+        return response()->json(['daily_details' => $purchases]);
+    }
+
+
+    public function show()
+    {
+
+
+        $purchases = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Purchase::class => function ($query) {
+                    $query->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id');
+                    $query->select('purchases.*', 'purchases.id as purchase_id','suppliers.name as supplier_name');
+                },
+            ]);
+        }])
+            ->where('paymentable_type', 'App\\Models\\Purchase')
+            ->paginate(5);
+
+
         return response()->json(['purchases' => $purchases]);
     }
 
+    public function get_purchase_account_setting()
+    {
+
+
+
+        $accounts = HrAccount::with(
+            [
+                'account' => function ($query) {
+                    $query->select('*', 'text as first_name');
+                },
+                'account_second' => function ($query) {
+                    $query->select('*', 'text as second_name');
+                }
+            ]
+        )->select('hr_accounts.*', 'hr_accounts.name as account_name')
+            ->get();
+
+        // dd($accounts);
+        $count_account = HrAccount::all()->count();
+
+        return response()->json(['accounts' => $accounts, 'count_account' => $count_account]);
+    }
     public function search(Request $request)
     {
 
@@ -226,10 +239,27 @@ class PurchaseController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function invoice_purchase($id, $table = 'purchase_details')
+    public function invoice_purchase(Request $request, $id)
     {
 
-        $purchases = Purchase::where('purchases.id', $id)
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
+
+        return response()->json([
+            'purchase_details' => $this->qty->details,
+            'purchases' => $this->get_purchase($id),
+            'users' => Auth::user()
+        ]);
+    }
+
+    public function get_purchase($id)
+    {
+
+
+
+
+        return Purchase::where('purchases.id', $id)
             ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
             ->select(
                 'purchases.*',
@@ -237,13 +267,8 @@ class PurchaseController extends Controller
                 'purchases.*'
             )
             ->get();
-
-        $details = $this->invoice($id, $table);
-
-        $users = Auth::user();
-
-        return response()->json([$table => $details, 'purchases' => $purchases, 'users' => $users]);
     }
+
     public function destroy(Request $request)
     {
         if ($request->id) {

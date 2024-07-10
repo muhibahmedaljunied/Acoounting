@@ -17,6 +17,10 @@ class CreateSalesTable extends Migration
             $table->Increments('id');
             $table->unsignedInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+
+            $table->unsignedInteger('daily_id')->nullable();
+            $table->foreign('daily_id')->references('id')->on('dailies')->onDelete('cascade');
+
             $table->text('customer_name')->nullable();
             $table->date('date')->nullable();
             // $table->text('total');
@@ -29,7 +33,7 @@ class CreateSalesTable extends Migration
             $table->integer('grand_total');
             
             // $table->integer('quantity')->nullable();
-            $table->integer('qty_return')->default(0);
+            // $table->integer('qty_return')->default(0);
             $table->timestamps();
         });
     }

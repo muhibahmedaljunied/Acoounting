@@ -8,6 +8,7 @@ use App\Models\StaffWorkSystem;
 use Illuminate\Http\Request;
 use App\Models\Staff;
 use App\Models\WorkSystem;
+use App\Models\WorkSystemType;
 use DB;
 
 class StaffWorkController extends Controller
@@ -21,15 +22,25 @@ class StaffWorkController extends Controller
         // });
 
         $staff_work = DB::table('staff_work_systems')
-        ->join('staff', 'staff.id', '=', 'staff_work_systems.staff_id')
-        ->join('work_systems', 'work_systems.id', '=', 'staff_work_systems.work_system_id')
-        ->select('staff.name as staff_name','work_systems.name as work_system')
-        ->paginate(10);
+            ->join('staff', 'staff.id', '=', 'staff_work_systems.staff_id')
+            ->join('work_systems', 'work_systems.id', '=', 'staff_work_systems.work_system_id')
+            ->join('work_system_types', 'work_system_types.id', '=', 'work_systems.work_system_type_id')
+            ->select(
+                'staff.name as staff_name',
+                'work_system_types.name as work_system'
+            )
+            ->paginate(6);
 
 
         // $work_systems = Cache::rememberForever('work_system_staff', function () {
 
-        $work_systems = WorkSystem::all();
+        $work_systems = DB::table('work_systems')
+            ->join('work_system_types', 'work_system_types.id', '=', 'work_systems.work_system_type_id')
+            ->select('work_systems.id', 'work_system_types.name')
+            ->get();
+
+
+        // $work_systems = WorkSystemType::all();
 
         // });
 

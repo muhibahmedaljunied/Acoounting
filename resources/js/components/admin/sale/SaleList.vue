@@ -7,9 +7,7 @@
             <div class="d-flex justify-content-between">
               <span class="h2"> المبيعات</span>
             </div>
-            <p class="tx-12 tx-gray-500 mb-2">
-              Example of Valex Simple Table. <a href="">Learn more</a>
-            </p>
+
             <div class="d-flex justify-content-between"></div>
             <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
               aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
@@ -34,20 +32,20 @@
                 </thead>
                 <tbody v-if="sales && sales.data.length > 0">
                   <tr v-for="(sale, index) in sales.data" :key="index">
-                    <td>{{ sale.sale_id }}</td>
-                    <td>{{ sale.customer_name }}</td>
+                    <td>{{ sale.paymentable.sale_id }}</td>
+                    <td>{{ sale.paymentable.customer_name }}</td>
                     <!-- <td>{{ sale.quantity }}</td>
                   <td>{{ sale.qty_return }}</td> -->
-                    <td>{{ sale.sale_date }}</td>
+                    <td>{{ sale.paymentable.date }}</td>
                     <td>{{ sale.paid }}</td>
                     <td>{{ sale.remaining }}</td>
-                    <td>{{ sale.grand_total }}</td>
+                    <td>{{ sale.paymentable.grand_total }}</td>
                     <!-- <td>{{ sale.sale_status }}</td> -->
                     <td>
 
-                      <span class="badge bg-warning" v-if="sale.payment_status == 'pendding'">معلقه</span>
+                      <span class="badge bg-warning" v-if="sale.payment_status == 'pendding'">غير مدفوعه</span>
                       <span class="badge bg-success" v-if="sale.payment_status == 'paiding'">مدفوعه</span>
-                      <span class="badge bg-info" v-if="sale.payment_status == 'Partially'">مدفوعه جزئيا</span>
+                      <span class="badge bg-info" v-if="sale.payment_status == 'partialy'">مدفوعه جزئيا</span>
 
                     </td>
 
@@ -57,27 +55,30 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option :selected="true" class="btn btn-success"
-                            v-bind:value="['/sale_details/', sale.sale_id, 0]">
+                            v-bind:value="['/sale_details/', sale.paymentable.sale_id, 0]">
                             تفاصيل
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/return_sale/', sale.sale_id, 1]">
+                          <option class="btn btn-success" v-bind:value="['return_sale', sale.paymentable, 1]">
                             ارجاع
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/returnsalelist/', sale.sale_id, 2]">
+                          <option class="btn btn-success"
+                            v-bind:value="['returnsalelist', sale.paymentable.sale_id, 2]">
                             مرتجعات
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice/', sale.sale_id, 3]">
+                          <option class="btn btn-success" v-bind:value="['sale_invoice', sale.paymentable.sale_id, 3]">
                             عرض الفاتوره
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/ReceivableBond/', sale.sale_id, 4]">
-                            دفع
+                          <option v-if="sale.payment_status != 'paiding'" class="btn btn-success"
+                            v-bind:value="['ReceivableBond', sale.paymentable.sale_id, 4]">
+                            قبض
                           </option>
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.sale_id, 5]">
+                          <option class="btn btn-success"
+                            v-bind:value="['/sale_invoice_update/', sale.paymentable.sale_id, 5]">
                             تعديل الفاتوره
                           </option>
 
-                          <option class="btn btn-success" v-bind:value="['/sale_invoice_update/', sale.sale_id, 6]">
+                          <option class="btn btn-success" v-bind:value="['sale_daily', sale.paymentable.sale_id, 6]">
                             عرض القيد المحاسبي
                           </option>
 
@@ -86,26 +87,35 @@
 
 
                       <!-- <router-link
-                      :to="`/sale_details/${sale.sale_id}`"
+                      :to="`/sale_details/${sale.paymentable.sale_id}`"
                       class="btn btn-success"
                     >
                       <span><i class="fa fa-search-plus"></i></span>
                     </router-link>
 
                     <router-link
-                      :to="`/return_sale/${sale.sale_id}`"
+                      :to="`/return_sale/${sale.paymentable.sale_id}`"
                       class="btn btn-success"
                     >
                       <span> ارجاع</span>
                     </router-link>
                      <router-link
-                    :to="`/sale_invoice/${sale.sale_id}`"
+                    :to="`/sale_invoice/${sale.paymentable.sale_id}`"
                         class="btn btn-success">
                     
                       <span>فاتوره</span>
                     </router-link> -->
 
 
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مبيعات
+                      </h3>
                     </td>
                   </tr>
                 </tbody>
@@ -136,12 +146,12 @@
                     <th>المخزن</th>
                     <th class="wd-15p border-bottom-0"> الكميه المباعه</th>
                     <th class="wd-15p border-bottom-0"> السعر </th>
-                    <th class="wd-15p border-bottom-0"> الاجمالي </th>
+                    <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
                     <!-- <th class="wd-15p border-bottom-0">  الكميه المرتحعه</th> -->
 
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="sale_detail && sale_detail.length > 0">
                   <tr v-for="sale_details in sale_detail">
                     <!-- <td>{{ sale_details.id }}</td> -->
                     <td>{{ sale_details.product }}</td>
@@ -151,24 +161,67 @@
                     <td>{{ sale_details.store }}</td>
 
                     <!-- <td>{{ sale_details.qty }}</td>  -->
-                    <td>{{ sale_details.qty }} {{ sale_details.unit }}</td>
+                    <td>
+
+
+                      <div v-for="temx in sale_details.qty_after_convert['qty']">
+
+
+
+                        <span v-for="temx2 in temx">
+
+
+                          <span style="float: right;">
+                            {{ temx2[0] }}
+                            <span style="color: red;">
+                              {{ temx2[1] }}
+                            </span>
+
+                          </span>
+
+
+
+                        </span>
+
+                        <!-- <span v-if="temx.unit_type == 0">
+
+
+  <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
+                      </div>
+
+                      <!-- {{ sale_details.qty }} {{ sale_details.unit }} -->
+                    </td>
                     <td>{{ sale_details.price }}</td>
-                    <td>{{ sale_details.total }}</td>
+                    <!-- <td>{{ sale_details.total }}</td> -->
                     <!-- <td>{{ sale_details.qty_return }}</td> -->
 
                   </tr>
 
-                  <tr>
+                  <!-- <tr>
                     <td colspan="7" style="text-align:center;color:red;font-size:large">الاجمالي</td>
                     <td>{{ total }}</td>
-                  </tr>
+                  </tr> -->
                   <!-- <a 
                       @click="$router.go(-1)"
                       class="btn btn-success"
                       ><span> تراجع</span></a
                     > -->
                 </tbody>
-
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مبيعات
+                      </h3>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -177,7 +230,6 @@
     </div>
 
   </div>
-
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
@@ -196,11 +248,11 @@ export default {
       total: 0,
       word_search: "",
       table: '',
-      type:'',
+      type: '',
     };
   },
   mounted() {
-    this.type = 'Purchase';
+    this.type = 'sale';
     this.table = 'sale_details';
     this.list();
 
@@ -212,11 +264,14 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table,
+            type: this.type,
+            operation:'OperationQty'
+           })
           .then((response) => {
 
             console.log(response.data);
-            this.sale_detail = response.data.sale_details;
+            this.sale_detail = response.data.details;
             this.sale_detail.forEach((item) => {
               this.total = parseInt(item.total) + parseInt(this.total);
             });
@@ -228,7 +283,13 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
+
+
       }
 
     },
@@ -245,7 +306,7 @@ export default {
     },
     list(page = 1) {
       this.axios
-        .post(`/listsale?page=${page}`,{ type: this.type })
+        .post(`/listsale?page=${page}`, { type: this.type })
         .then(({ data }) => {
           //  console.log(data.sales);
           this.sales = data.sales;
@@ -272,5 +333,3 @@ export default {
   outline: none;
 }
 </style>
-
-

@@ -7,12 +7,10 @@
             <div class="d-flex justify-content-between">
               <span class="h2"> المشتريات</span>
             </div>
-            <p class="tx-12 tx-gray-500 mb-2">
-              Example of Valex Simple Table. <a href="">Learn more</a>
-            </p>
+
             <div class="d-flex justify-content-between"></div>
-            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
+            <input type="search" autocomplete="on" name="search" data-toggle="dropdown" role="button"
+              aria-haspopup="true" aria-expanded="true" placeholder="بحث" v-model="word_search" @input="get_search()" />
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -34,19 +32,19 @@
                 </thead>
                 <tbody v-if="purchases && purchases.data.length > 0">
                   <tr v-for="(purchase, index) in purchases.data" :key="index">
-                    <td>{{ purchase.purchases_id }}</td>
-                    <td>{{ purchase.supplier_name }}</td>
+                    <td>{{ purchase.paymentable.purchase_id }}</td>
+                    <td>{{ purchase.paymentable.supplier_name }}</td>
                     <!-- <td>{{ purchase.quantity }}</td>
                   <td>{{ purchase.qty_return }}</td> -->
-                    <td>{{ purchase.date }}</td>
+                    <td>{{ purchase.paymentable.date }}</td>
                     <td>{{ purchase.paid }}</td>
                     <td>{{ purchase.remaining }}</td>
-                    <td>{{ purchase.grand_total }}</td>
+                    <td>{{ purchase.paymentable.grand_total }}</td>
                     <td>
 
-                      <span class="badge bg-warning" v-if="purchase.payment_status == 'pendding'">معلقه</span>
+                      <span class="badge bg-warning" v-if="purchase.payment_status == 'pendding'">غير مدفوعه</span>
                       <span class="badge bg-success" v-if="purchase.payment_status == 'paiding'">مدفوعه</span>
-                      <span class="badge bg-info" v-if="purchase.payment_status == 'Partially'">مدفوعه جزئيا</span>
+                      <span class="badge bg-info" v-if="purchase.payment_status == 'partialy'">مدفوعه جزئيا</span>
 
                     </td>
 
@@ -55,52 +53,66 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option :selected="true" class="btn btn-success" v-bind:value="[
-                            '/purchase_details/',
-                            purchase.purchases_id,
-                            0
-                          ]">
+                '/purchase_details/',
+                purchase.paymentable.purchase_id,
+                0
+              ]">
                             تفاصيل
                           </option>
+
                           <option class="btn btn-success" v-bind:value="[
-                            '/return_purchase/',
-                            purchase.purchases_id,
-                            1
-                          ]">
+                'return_purchase',
+                purchase.paymentable,
+                1
+              ]">
                             ارجاع
                           </option>
                           <option class="btn btn-success" v-bind:value="[
-                            '/returnpurchaselist/',
-                            purchase.purchases_id,
-                            2
-                          ]">
+                'returnpurchaselist',
+                purchase.paymentable.purchase_id,
+                2
+              ]">
                             مرتجعات
                           </option>
 
                           <option class="btn btn-success" v-bind:value="[
-                            '/purchase_invoice/',
-                            purchase.purchases_id,
-                            3
-                          ]">
+                'purchase_invoice',
+                purchase.paymentable.purchase_id,
+                3
+              ]">
                             عرض الفاتوره
                           </option>
-                          <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
-                            v-bind:value="['/PaymentBond/', purchase.purchase_id, 4]">
+                          <!-- <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
+                            v-bind:value="['/PaymentBond/', purchase.paymentable.purchase_id, 4]">
                             دفع
+                          </option> -->
+                          <option v-if="purchase.payment_status != 'paiding'" class="btn btn-success"
+                            v-bind:value="['PaymentBond', purchase.paymentable.purchase_id, 4]">
+                            صرف
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/purchase_invoice_update/', purchase.purchase_id, 5]">
+                            v-bind:value="['/purchase_invoice_update/', purchase.paymentable.purchase_id, 5]">
                             تعديل الفاتوره
                           </option>
 
 
                           <option class="btn btn-success"
-                            v-bind:value="['/purchase_invoice_update/', purchase.purchase_id, 6]">
+                            v-bind:value="['purchase_daily', purchase.paymentable.purchase_id, 6]">
                             عرض القيد المحاسبي
                           </option>
                         </select>
                       </div>
 
 
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مشتريات
+                      </h3>
                     </td>
                   </tr>
                 </tbody>
@@ -133,14 +145,14 @@
                     <th class="wd-15p border-bottom-0"> كميه الشراء</th>
                     <!-- <th>الوحده</th> -->
                     <th class="wd-15p border-bottom-0"> السعر </th>
-                    <th class="wd-15p border-bottom-0"> الاجمالي </th>
+                    <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
 
                     <!-- <th class="wd-15p border-bottom-0">  الكميه المرتحعه</th> -->
 
 
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="purchase_detail && purchase_detail.length > 0">
                   <tr v-for="purchase_details in purchase_detail">
                     <!-- <td>{{ purchase_details.id }}</td> -->
                     <td>{{ purchase_details.product }}</td>
@@ -150,49 +162,64 @@
                     <!-- <td>{{ purchase_details.qty }} {{ purchase_details.unit }}</td> -->
                     <td>
 
-                      <div v-for="temx in purchase_details.units">
+
+                      <div v-for="temx in purchase_details.qty_after_convert['qty']">
 
 
-                        <span v-if="purchase_details.unit_id == temx.id">
-                          <span v-if="temx.unit_type == 0">
 
-                            <span v-if="purchase_details.qty / purchase_details.rate >= 1">
-                              {{ Math.floor((purchase_details.qty / purchase_details.rate)) }}{{
-                                purchase_details.units[0].name
-                              }}
+                        <span v-for="temx2 in temx">
+
+
+                          <span style="float: right;">
+                            {{ temx2[0] }}
+                            <span style="color: red;">
+                              {{ temx2[1] }}
                             </span>
 
-                            <span v-if="purchase_details.qty % purchase_details.rate >= 1">
-                              {{ Math.floor((purchase_details.qty % purchase_details.rate)) }}{{
-                                purchase_details.units[1].name
-                              }}
-                            </span>
                           </span>
 
-                          <span v-if="temx.unit_type == 1">
-                            {{ purchase_details.qty }} {{ temx.name }}
-                          </span>
+
+
                         </span>
-                      </div>
 
+                        <!-- <span v-if="temx.unit_type == 0">
+
+
+                          <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+                        temx.name }}</span>
+
+
+
+                        </span> -->
+
+                      </div>
 
 
                     </td>
 
                     <!-- <td>{{ purchase_details.unit }}</td> -->
                     <td>{{ purchase_details.price }}</td>
-                    <td>{{ purchase_details.total }}</td>
+                    <!-- <td>{{ purchase_details.total }}</td> -->
                     <!-- <td>{{ purchase_details.qty_return }}</td> -->
 
 
 
                   </tr>
-                  <tr>
+                  <!-- <tr>
 
                     <td colspan="7" style="text-align:center;color:red;font-size:large">الاجمالي</td>
                     <td>{{ total }}</td>
-                  </tr>
+                  </tr> -->
 
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td align="center" colspan="8">
+                      <h3>
+                        لايوجد اي مشتريات
+                      </h3>
+                    </td>
+                  </tr>
                 </tbody>
 
               </table>
@@ -221,7 +248,7 @@ export default {
       total: 0,
       word_search: "",
       table: 'purchase_details',
-      type:'',
+      type: '',
     };
   },
   mounted() {
@@ -239,11 +266,15 @@ export default {
 
       if (this.operationselected[index][2] == 0) {
 
+
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table,
+            type: this.type,
+            operation:'OperationQty'
+           })
           .then((response) => {
             console.log(response);
-            this.purchase_detail = response.data.purchase_details;
+            this.purchase_detail = response.data.details;
 
             this.purchase_detail.forEach((item) => {
               this.total = parseInt(item.total) + parseInt(this.total);
@@ -256,7 +287,13 @@ export default {
 
       } else {
 
-        this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        // console.log(this.operationselected[index][0]);
+        // this.$router.push(this.operationselected[index][0] + this.operationselected[index][1]);
+        this.$router.push({
+          name: this.operationselected[index][0],
+          params: { data: this.operationselected[index][1] },
+        });
+
       }
 
     },
@@ -268,14 +305,14 @@ export default {
           this.purchases = data.purchases;
         });
     },
-    list(page = 1) 
-    {
+    list(page = 1) {
 
       // alert('dddddddddddddddddddddddddd');
 
       this.axios
-        .post(`/listpurchase?page=${page}`,{ type: this.type })
+        .post(`/listpurchase?page=${page}`, { type: this.type })
         .then(({ data }) => {
+          console.log(data.purchases);
           this.purchases = data.purchases;
         })
         .catch(({ response }) => {
@@ -300,5 +337,3 @@ export default {
   outline: none;
 }
 </style>
-
-

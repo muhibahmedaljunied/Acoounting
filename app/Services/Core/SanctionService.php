@@ -7,11 +7,11 @@ use App\Services\CoreStaffService;
 
 class SanctionService
 {
-  
+
     protected HRRepositoryInterface $hr;
     protected CoreStaffService $core;
 
-  
+
     public function refresh()
     {
 
@@ -30,5 +30,4 @@ class SanctionService
             $this->hr->add();
         }
     }
-
 }

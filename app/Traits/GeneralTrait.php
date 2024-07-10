@@ -3,86 +3,16 @@
 namespace App\Traits;
 
 use App\Traits\ConditionTrait;
-
 use App\Traits\Stock\StockTrait;
-use App\Traits\StoreProduct\StoreProductTrait;
 use App\Traits\Details\DetailsTrait;
 use App\Traits\Return\ReturnTrait;
-use App\Models\Purchase;
-use App\Models\Sale;
 use App\Models\PaymentPurchase;
-use App\Models\PaymentSale;
-use App\Models\Supply;
-use App\Models\Cash;
-use App\Models\Transfer;
-
-
 
 trait GeneralTrait
 {
-    use StockTrait, StoreProductTrait, ConditionTrait, DetailsTrait, ReturnTrait;
+    use StockTrait, ConditionTrait, DetailsTrait, ReturnTrait;
 
 
-    public function add($data,$discount=null)
-    {
-
-
-        switch ($data['type']) {
-
-            case 'Supply':
-
-                $table_one = Supply::create(
-                    [
-                        'supplier_id' => $data['supplier_id'],
-                        'supplier_name' => $data['supplier_name']
-                    ]
-                );
-                break;
-            case 'Cash':
-                $table_one = new Cash();
-                $table_one->customer_id =  $data['customer_id'];
-                $table_one->customer_name =  $data['customer_name'];
-                break;
-
-            case 'Purchase':
-
-                $table_one = Purchase::create(
-                    [
-                        'supplier_id' => $data['supplier_id'],
-                        'supplier_name' => $data['supplier_name'],
-                        'grand_total' => $data['grand_total'],
-                        'sub_total' => $data['sub_total'],
-                        'discount' => $discount,
-                        'tax_amount' => $data['total_tax'],
-                        'status' => 'pendding',
-
-                    ]
-                );
-
-
-                break;
-
-            case 'Sale':
-                $table_one = new Sale();
-                $table_one->customer_id =  $data['customer_id'];
-                $table_one->customer_name =  $data['customer_name'];
-                $table_one->grand_total  = $data['grand_total'];
-                $table_one->sub_total  = $data['sub_total'];
-                $table_one->discount = $discount;
-                $table_one->tax_amount  = $data['total_tax'];
-                $table_one->status = 'pendding';
-                break;
-            case 'Transfer':
-                $table_one = new Transfer();
-                break;    
-
-        }
-
- 
-        $table_one->date =  $data['date'];
-        $table_one->save();
-        return $table_one->id;
-    }
 
     public function pay($data, $id)
     {

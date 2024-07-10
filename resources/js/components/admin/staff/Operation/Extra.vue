@@ -1,5 +1,6 @@
 <template>
   <!-- row opened -->
+<div class="container-fluid">
   <div class="row row-sm">
     <div class="col-xl-12">
       <div class="card">
@@ -106,7 +107,7 @@
                     </button>
 
 
-                    <a class="tn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
+                    <a class="btn btn-info btn-sm waves-effect btn-agregar" data-toggle="modal" id="agregar_productos"
                       data-target="#updateExtra">
                       <i class="fa fa-edit"></i></a>
                   </td>
@@ -170,15 +171,15 @@
                                 <tbody>
                                   <tr v-for="index in count" :key="index">
                                     <td>
-                                      <select v-model="staffselected[index]" name="type" id="type" class="form-control "
+                                      <select style="background-color: beige;" v-model="staffselected[index]" name="type" id="type" class="form-control "
                                         required>
-                                        <option v-for="staff in staffs" v-bind:value="staff.id">
+                                        <option style="background-color: beige;" v-for="staff in staffs" v-bind:value="staff.id">
                                           {{ staff.name }}
                                         </option>
                                       </select>
                                     </td>
                                     <td>
-                                      <select v-model="typeselected[index]" name="type" id="type" class="form-control"
+                                      <select style="background-color: beige;" v-model="typeselected[index]" name="type" id="type" class="form-control"
                                         required>
                                         <option v-for="extra_type in extra_types" v-bind:value="extra_type.id">
                                           {{ extra_type.name }}
@@ -187,20 +188,20 @@
                                     </td>
 
                                     <td>
-                                      <input v-model="date[index]" type="date" class="form-control" name="name" id="name"
+                                      <input   style="background-color: beige;" v-model="date[index]" type="date" class="form-control" name="name" id="name"
                                         required />
                                     </td>
                                     <td>
-                                      <input v-model="start_time[index]" type="time" class="form-control" name="name"
+                                      <input style="background-color: beige;" v-model="start_time[index]" type="time" class="form-control" name="name"
                                         id="name" />
                                     </td>
                                     <td>
-                                      <input v-model="end_time[index]" type="time" class="form-control" name="name"
+                                      <input  style="background-color: beige;" v-model="end_time[index]" type="time" class="form-control" name="name"
                                         id="name" />
                                     </td>
 
                                     <td>
-                                      <input @keypress="calc_duration(index)" type="text" class="form-control" name="name"
+                                      <input readonly @keypress="calc_duration(index)" type="text" class="form-control" name="name"
                                         id="duration" />
                                       <input v-model="duration[index]" type="hidden" class="form-control" name="name">
                                     </td>
@@ -402,6 +403,7 @@
     </div>
     <!--/div-->
   </div>
+</div>
   <!-- /row -->
 </template>
 

@@ -218,7 +218,7 @@
   <script>
   
   
-  import operation from '../../../../../js/operation.js';
+  import operation from '../../../../operation1.js';
   import tree from '../../../../../js/tree/tree.js';
   export default {
     mixins: [
@@ -266,8 +266,8 @@
     mounted() {
       this.type_of_tree=1;
       this.type = 'Transfer';
-      this.showtree('product');
-      this.showtree('store');
+      this.showtree('product','tree_product');
+      this.showtree('store','tree_store');
       this.get_transfer();
       // this.axios
       //   .post(`/data_for_transfer`)

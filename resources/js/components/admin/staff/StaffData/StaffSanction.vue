@@ -1,6 +1,8 @@
 <template>
     <!-- row opened -->
-    <div class="row row-sm">
+ 
+    <div class="container-fluid">
+        <div class="row row-sm">
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
@@ -55,7 +57,20 @@
                                     style="width: 10%;"> </a>
                         </div>
                     </div>
-                    <div class="table-responsive">
+          
+                </div>
+               -->
+            </div>
+        </div>
+        <!--/div-->
+    </div>
+    <div class="row row-sm">
+        <div class="col-xl-12">
+            <div class="card">
+               
+                <div class="card-body" id="printme">
+                    <div class="row">
+                        <div class="table-responsive">
                         <table class="table table-bordered text-center">
                             <thead>
                                 <tr>
@@ -254,11 +269,14 @@
                         </table>
                     </div>
                     <pagination align="center" :data="advances" @pagination-change-page="list"></pagination>
+                    </div>
+              
                 </div>
                -->
             </div>
         </div>
         <!--/div-->
+    </div>
     </div>
     <!-- /row -->
 </template>

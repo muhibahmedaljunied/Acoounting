@@ -36,6 +36,7 @@ class CreateAttendanceDetailsTable extends Migration
             $table->integer('leave')->nullable()->default(0);
 
             $table->integer('extra')->nullable()->default(0);
+            $table->integer('extra_after')->nullable()->default(0);
 
 
             $table->timestamps();

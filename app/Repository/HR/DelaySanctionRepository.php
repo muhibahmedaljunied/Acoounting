@@ -1,19 +1,21 @@
 <?php
 
 namespace App\Repository\HR;
-use App\RepositoryInterface\HRRepositoryInterface;
+
 use App\Services\CoreStaffService;
 use App\Models\DelaySanction;
-use DB;
 
-class DelaySanctionRepository implements HRRepositoryInterface
+class DelaySanctionRepository
 {
 
     public function __construct(public CoreStaffService $core)
     {
-
-
-        
+    }
+    public function handle()
+    {
+       
+        $this->update();
+        $this->store();
     }
 
     function Sum($data)
@@ -28,30 +30,41 @@ class DelaySanctionRepository implements HRRepositoryInterface
             }
         }
     }
-    function add(...$list_data)
+    function store()
     {
 
-    
-    
-        $temporale = new DelaySanction();
-        $temporale->delay_type_id = $this->core->data['delay'][$this->core->value];
-        $temporale->part_id = $this->core->data['delay_part'][$this->core->value];
-        $temporale->sanction_discount_id = $this->core->data['discount_type'][$this->core->value];
-        $temporale->discount = $this->core->data['discount'][$this->core->value];
-        $temporale->iteration = $this->core->data['iteration'][$this->core->value];
-        $temporale->sanction = $this->core->data['sanction'][$this->core->value];
-        $temporale->save();
-        $this->core->id = $temporale->id;
+       
+        if (empty($this->core->temporale_f)) {
+
+
+
+            // dd($this->core->data['sanction'][$this->core->value]);
+            $temporale = DelaySanction::updateOrCreate(
+                [
+                    'delay_type_id' => $this->core->data['delay'][$this->core->value],
+                    'part_id' => $this->core->data['delay_part'][$this->core->value],
+                    'sanction_discount_id' => $this->core->data['discount_type'][$this->core->value],
+                    'discount' => $this->core->data['discount'][$this->core->value],
+                    'iteration' => $this->core->data['iteration'][$this->core->value],
+                    'sanction' => $this->core->data['sanction'][$this->core->value]
+
+
+                ]
+            );
+            $this->core->id = $temporale->id;
+        }
     }
-  
+
 
     public function update()
     {
- 
-        $temporale_f = tap(DelaySanction::whereDelaySanction($this->core->data))
-        ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
-        ->get('id');
 
-        return $temporale_f;
+       
+        $this->core->temporale_f = collect(tap(DelaySanction::whereDelaySanction($this->core->data,$this->core->value))
+            ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
+            ->get('id'))
+            ->toArray();
     }
+
+ 
 }

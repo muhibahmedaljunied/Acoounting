@@ -1,24 +1,37 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
+
+use App\Exports\HrSettingExport;
 use App\RepositoryInterface\HRRepositoryInterface;
+use App\Services\CoreStaffService;
+use App\Services\Staff\StaffService;
 use Illuminate\Support\Facades\Cache;
 use App\Models\AdministrativeStructure;
 use App\Http\Controllers\Controller;
+use App\Imports\HrSettingImport;
+use App\Models\Account;
 use App\Models\PeriodTime;
 use App\Models\WorkSystem;
 use App\Models\Qualification;
 use App\Models\Branch;
+use App\Models\HrAccount;
 use App\Models\Staff;
 use App\Models\Nationality;
 use App\Models\StaffType;
 use App\Models\StaffReligion;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StaffController extends Controller
 {
- 
+
+    public function __construct(
+        protected CoreStaffService $core,
+
+    ) {
+    }
     public function index()
     {
 
@@ -59,16 +72,16 @@ class StaffController extends Controller
         // dd($staff_list);
 
         $period_times = PeriodTime::join('periods', 'periods.id', '=', 'period_times.period_id')
-        ->select(
-            'periods.*',
-            'periods.id as period_id',
-            'period_times.*',
-            'period_times.id as period_time_id',
-        )
-        ->get();
+            ->select(
+                'periods.*',
+                'periods.id as period_id',
+                'period_times.*',
+                'period_times.id as period_time_id',
+            )
+            ->get();
 
 
-   
+
         return response()->json([
 
             'qualifications' => Qualification::all(),
@@ -78,12 +91,31 @@ class StaffController extends Controller
             'list' => $staff_list,
             'branches' => Branch::all(),
             'staffs' => $this->get_staff(),
-            'work_systems' =>WorkSystem::all(),
-            'period_times'=>$period_times
-            
+            'work_systems' => WorkSystem::all(),
+            'period_times' => $period_times
+
         ]);
     }
 
+    public function import(Request $request)
+    {
+
+        Excel::import(new HrSettingImport, storage_path('hr_setting.xlsx'));
+
+        return response()->json([
+            'status' =>
+            'The file has been excel/csv imported to database in laravel 9'
+        ]);
+    }
+
+
+    public function export()
+    {
+
+        return Excel::download(new HrSettingExport, 'hr_setting.xlsx');
+    }
+
+    
     public function get_job(Request $request)
     {
 
@@ -116,54 +148,34 @@ class StaffController extends Controller
         return response()->json(['list' => $staffs]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    public function store(Request $request)
-    {
 
+    public function store(Request $request, StaffService $staff_service)
+    {
 
         // return response()->json($request->all());
-        $staff = new Staff();
-        $staff->name = $request->post('name');
-        $staff->personal_card = $request->post('card');
-        $staff->job_id = $request->post('job');
-        $staff->branch_id = $request->post('branch');
-        $staff->department_id = $request->post('department');
-        $staff->phone = $request->post('phone');
-        // $staff->work_type_id = $request->post('work');
-        $staff->date = $request->post('date');
-        $staff->staff_status = $request->post('staff_status');
-        $staff->qualification_id = $request->post('qualification');
-        $staff->nationality_id = $request->post('nationality');
-        $staff->gender = $request->post('gender');
-        $staff->staff_type_id = $request->post('staff_type');
-        $staff->barth_date = $request->post('barth_date');
-        $staff->religion_id = $request->post('religion');
-        $staff->social_status = $request->post('social_status');
-        $staff->email = $request->post('email');
-        // $staff->salary = $request->post('salary');
-        $staff->save();
-
-        //----------------------------------------------------------------------------------------------- 
-        // $payroll = new Payroll();
-        // $payroll->staff_id = $staff->id;
-        // $payroll->net_salary = $request->post('salary');
-        // $payroll->save();
-
-        Cache::forget('staff');
-        Cache::forget('staff_eager_load_e');
+        $this->core->setData($request->all());
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
 
+            $staff_service->add_staff();
+            // $staff_service->add_account();
+            $staff_service->refresh_payroll();
 
-        return response()->json($request->all());
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
+            return response([
+                'message' => "staff created successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
     }
 
 
@@ -195,7 +207,7 @@ class StaffController extends Controller
                 $delay = DB::table('delay_sanctions')->where('delay_sanctions.id', $value->sanctionable_id)
                     ->join('delay_types', 'delay_types.id', '=', 'delay_sanctions.delay_type_id')
                     ->join('parts', 'parts.id', '=', 'delay_sanctions.part_id')
-                    ->select('delay_sanctions.*', 'delay_types.*','parts.name as parts_name')
+                    ->select('delay_sanctions.*', 'delay_types.*', 'parts.name as parts_name')
                     ->get();
 
 
@@ -233,8 +245,8 @@ class StaffController extends Controller
                 $leave = DB::table('leave_sanctions')->where('leave_sanctions.id', $value->sanctionable_id)
                     ->join('leave_types', 'leave_types.id', '=', 'leave_sanctions.leave_type_id')
                     ->join('parts', 'parts.id', '=', 'leave_sanctions.part_id')
-                    ->select('leave_sanctions.*', 'leave_types.*','parts.name as parts_name')
-                    ->get();;
+                    ->select('leave_sanctions.*', 'leave_types.*', 'parts.name as parts_name')
+                    ->get();
 
                 $value->LeaveSanction = $leave;
                 $value->type = 'انصراف مبكر';
@@ -267,20 +279,155 @@ class StaffController extends Controller
         return $staffs;
     }
 
-
-    public function show(Request $request)
+    public function store_account_setting(Request $request)
     {
+
+
+
+        foreach ($request->post('count') as $value) {
+
+            // dd($request['name']);
+            $staff = new HrAccount();
+            $staff->name = $request['name'][$value];
+            $staff->code = $request['code'][$value];
+            $staff->type = $request['type_account'][$value];
+            $staff->save();
+        }
+
+
+
+
+        return response()->json('successfully created');
     }
 
-    public function edit(Staff $staff)
+    public function store_staff_account_setting(Request $request)
     {
-        //
+
+
+        // dd($request->all());
+        $this->core->setData($request->all());
+        $array_data =  HrAccount::all();
+
+        try {
+            DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
+
+
+            foreach ($array_data as $value) {
+
+
+                $this->Account_right($value);
+
+                // $this->Account_left($value);
+
+            }
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+
+            return response(
+                [
+                    'message' => "successfully created",
+                    'status' => "success"
+                ],
+                200
+            );
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
     }
 
-    public function update(Request $request, Staff $staff)
+    public function Account_right($value)
     {
-        //
+
+
+        // $re = $this->core->data['staff_' . $value->code . '' . $value->type . '_second_account_id'];
+        // $xe =  $this->core->data['staff_' . $value->code . '_account_id'];
+        // if ($this->core->data['staff_' . $value->code . '_account_hraccount_id'] == null) {
+
+            if ($this->core->data['staff_' . $value->code . '_account_id']) {
+
+                DB::table('hr_accounts')
+                    ->where(['id' => $this->core->data['staff_' . $value->code . '_account_hraccount_id']])
+                    ->update(
+                        [
+                            'account_id' => intval($this->core->data['staff_' . $value->code . '_account_id']),
+                            'account_second_id' => intval($this->core->data['staff_' . $value->code . '' . $value->type . '_second_account_id'])
+                        ]
+                    );
+            }
+        // }
+        //  else {
+
+
+        //     DB::table('hr_accounts')
+        //         ->where(['id' => $this->core->data['staff_' . $value->code . '_account_hraccount_id']])
+        //         ->update([
+        //             'account_id' => intval($xe),
+        //             'account_second_id' => $re
+        //         ]);
+        // }
     }
+
+    // public function Account_left($value){
+
+
+    //     if ($this->core->data['staff_' . $value->code+$value->type . '_account_hraccount_id'] == null) {
+
+
+    //         if ($this->core->data['staff_' . $value->code+$value->type . '_account_id']) {
+
+    //             // $student = HrAccount::find($this->core->data['staff_' . $value->code+$value->type . '_account_id']);
+    //             // $student->name = $this->core->data['staff_' . $value->code+$value->type . '_account_name'];
+    //             // $student->code = $value->code;
+    //             // $student->account_id = $this->core->data['staff_' . $value->code+$value->type . '_account_id'];
+    //             $student->account_second_id = $this->core->data['staff_' . $value->code+$value->type . 'second_account_id'];
+    //             // $student->update();
+    //         }
+    //     } else {
+
+    //         $trimmed = str_replace(
+    //             $this->core->data['staff_' . $value->code+$value->type . '_account_id'],
+    //             '',
+    //             $this->core->data['staff_' . $value->code+$value->type . '_account_name']
+    //         );
+
+    //         // dd($request->post('staff_' . $value->code . '_account_name'));
+    //         // $student = HrAccount::find($this->core->data['staff_' . $value->code+$value->type . '_account_hraccount_id']);
+    //         // $student->name = $trimmed;
+    //         // $student->code = $value->code;
+    //         // $student->account_id = $this->core->data['staff_' . $value->code+$value->type . '_account_id'];
+    //         $student->account_second_id = $this->core->data['staff_' . $value->code+$value->type . 'second_account_id'];
+    //         // $student->update();
+
+    //     }
+
+    // }
+    public function get_staff_account_setting()
+    {
+
+
+
+        $accounts = HrAccount::with(
+            [
+                'account' => function ($query) {
+                    $query->select('*', 'text as first_name');
+                },
+                'account_second' => function ($query) {
+                    $query->select('*', 'text as second_name');
+                }
+            ]
+        )->select('hr_accounts.*', 'hr_accounts.name as account_name')
+            ->get();
+
+        // dd($accounts);
+        $count_account = HrAccount::all()->count();
+
+        return response()->json(['accounts' => $accounts, 'count_account' => $count_account]);
+    }
+
+
 
     public function destroy($id)
     {

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Traits\staff\Sanction;
+
 use App\Models\LeaveSanction;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 trait LeaveSanctionTrait
 {
@@ -34,13 +35,27 @@ trait LeaveSanctionTrait
     public function get()
     {
 
-        $leave = DB::table('leave_sanctions')
+        $this->attendance_core->data_sanction =  DB::table('leave_sanctions')
             ->join('leave_types', 'leave_types.id', '=', 'leave_sanctions.leave_type_id')
             ->join('parts', 'parts.id', '=', 'leave_sanctions.part_id')
             ->join('sanction_discounts', 'sanction_discounts.id', '=', 'leave_sanctions.sanction_discount_id')
-            ->select('leave_sanctions.*', 'leave_sanctions.id as leave_sanction_id', 'parts.duration', 'leave_types.*', 'sanction_discounts.*')
+            ->select(
+                'leave_sanctions.*',
+                'leave_sanctions.id as sanction_id',
+                'leave_sanctions.id as leave_sanction_id',
+                'parts.duration',
+                'leave_types.*',
+                'sanction_discounts.*'
+            )
             ->get();
-        return $leave;
     }
-  
+
+    public function show($id)
+    {
+
+
+        $this->attendance_core->specific_sanction = LeaveSanction::find($id);
+      
+    }
+
 }

@@ -4,7 +4,7 @@
         <div class="col-lg-12 col-md-12">
           <div class="card" id="basic-alert">
             <div class="card-header">
-              لوائح الجزاءات والعقوبات  والحوافز
+              لوائح الحضور والغياب
             </div>
             <div class="card-body">
               <!-- <div>

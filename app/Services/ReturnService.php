@@ -1,31 +1,21 @@
 <?php
 
 namespace App\Services;
-
-use App\RepositoryInterface\DetailRepositoryInterface;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
+use App\RepositoryInterface\DetailRepositoryInterface;
 use App\Traits\DailyTrait;
-use App\Services\InventureService;
-use App\Services\CoreService;
 class ReturnService
 {
 
-    use DailyTrait;
-    public $return_id;
-    
-    public $core;
+    // use DailyTrait;
     public function __construct(
         protected DetailRepositoryInterface $details,
         protected DetailRefreshRepositoryInterface $refresh,
-        protected InventureService $inventure,
  
 
 
     ) {
 
-        $this->core = app(CoreService::class);
-        $this->core->store_product_f = 0;
-        $this->core->stock_f = 0;
     }
 
 
@@ -33,13 +23,12 @@ class ReturnService
     public function details()
     {
 
-  
+
         $this->details->init_details(); // this make initial for details tables
       
 
-        $this->refresh->refresh_details();
+        $this->refresh->refresh_details();  //this hadle data in details table
    
-        return $this;
     }
 
    

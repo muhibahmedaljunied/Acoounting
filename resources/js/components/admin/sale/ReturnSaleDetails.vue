@@ -3,8 +3,8 @@
     <div class="col-xl-12">
       <div class="card">
         <div class="card-header pb-0">
-         
-                <span class="h2">تفاصيل مرتجع المبيعات</span>
+
+          <span class="h2">تفاصيل مرتجع المبيعات</span>
         </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -13,32 +13,32 @@
                 <tr>
                   <!-- <th class="wd-15p border-bottom-0">رقم المرتجع</th> -->
                   <th class="wd-15p border-bottom-0">المنتج</th>
-                 
-                          <th> المواصفات والطراز</th>
- <th>الحاله</th>
-   <th>المخزن</th>
-                          <th>الرف</th>
-                                     
-                  <th class="wd-15p border-bottom-0">الكميه</th>
-                         <th class="wd-15p border-bottom-0">المخزن</th>
-                                                       <th class="wd-15p border-bottom-0"> الرف</th>
 
-             
+                  <th> المواصفات والطراز</th>
+                  <th>الحاله</th>
+                  <th>المخزن</th>
+                  <th>الرف</th>
+
+                  <th class="wd-15p border-bottom-0">الكميه</th>
+                  <th class="wd-15p border-bottom-0">المخزن</th>
+                  <th class="wd-15p border-bottom-0"> الرف</th>
+
+
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="sales in sale">
                   <!-- <td>{{ sales.sale_return_id }}</td> -->
                   <td>{{ sales.product_name }}</td>
-                    <td>{{ sales.desc }}</td>
-                      <td>{{ sales.status }}</td>
-                             <td>{{ sales.store }}</td>
-                      <td>{{ sales.qty_return }}</td>
-  <td>{{ sales.store }}</td>
+                  <td>{{ sales.desc }}</td>
+                  <td>{{ sales.status }}</td>
+                  <td>{{ sales.store }}</td>
+                  <td>{{ sales.qty_return }}</td>
+                  <td>{{ sales.store }}</td>
 
-                  
+
                 </tr>
-                 <!-- <a 
+                <!-- <a 
                       @click="$router.go(-1)"
                       class="btn btn-success"
                       ><span> تراجع</span></a
@@ -67,7 +67,7 @@ export default {
     });
   },
   methods: {
-   
+
   },
 };
 </script>

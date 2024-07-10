@@ -229,7 +229,7 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-import operation from '../../../../js/operation.js';
+import operation from '../../../operation1.js';
 import tree from '../../../../js/tree/tree.js';
 export default {
 
@@ -301,8 +301,8 @@ export default {
     mounted() {
         this.list();
         this.type_of_tree = 1;
-        this.showtree('product');
-        this.showtree('store');
+        this.showtree('product','tree_product');
+        this.showtree('store','tree_store');
         this.counts[0] = 1;
         this.type = 'Purchase';
         this.type_refresh = 'increment';

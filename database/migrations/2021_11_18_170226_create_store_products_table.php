@@ -19,10 +19,7 @@ class CreateStoreProductsTable extends Migration
 
             $table->unsignedInteger('product_id')->unsigned()->nullable();
             $table->foreign('product_id')->references('id')->on('products');
- 
 
- 
-            
             $table->unsignedInteger('store_id')->unsigned()->nullable();
             $table->foreign('store_id')->references('id')->on('stores');
 
@@ -35,7 +32,7 @@ class CreateStoreProductsTable extends Migration
             $table->string('desc')->nullable();
             $table->integer('quantity')->default(0);
             $table->float('cost')->default(0);
-
+            $table->float('total')->default(0);
             $table->string('description')->nullable();
 
 

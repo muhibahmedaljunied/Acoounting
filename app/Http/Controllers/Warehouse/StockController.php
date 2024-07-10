@@ -7,22 +7,25 @@ use App\Models\Stock;
 use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 use App\Traits\Unit\UnitsTrait;
-
-use DB;
 use App\Http\Controllers\Controller;
+use App\Repository\Qty\QtyStockRepository;
+use App\RepositoryInterface\QtyRepositoryInterface;
+
 
 class StockController extends Controller
 {
 
     use UnitsTrait;
-    public function index()
+    
+
+    public function index(QtyStockRepository $qty)
     {
 
+        $qty->compare_array = ['quantity'];
+        $qty->details = Cache::rememberForever('stock', function () {
 
-        $stocks = Cache::rememberForever('stock', function () {
-
-            return StoreProduct::where('store_products.quantity', '!=', 0)->where('product_units.unit_type', '==', 0)
-
+            return StoreProduct::where('store_products.quantity', '!=', 0)
+            ->where('product_units.unit_type', '==', 0)
                 ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
                 ->join('stores', 'store_products.store_id', '=', 'stores.id')
                 ->join('products', 'store_products.product_id', '=', 'products.id')
@@ -32,31 +35,24 @@ class StockController extends Controller
                  'store_products.*', 
                  'products.id', 
                  'products.text as product', 
-                 'products.rate', 
-                 'statuses.name as status', 
+                //  'products.rate', 
+                 'product_units.rate', 
+                 'statuses.name as status',
                  'stores.text as store', 
                  'units.name as unit')
-                ->paginate(10);
+                ->paginate(100);
 
 
         });
         
-        $this->units($stocks);
-        // foreach ($stocks as $value) {
-
-        //     $units = DB::table('product_units')
-        //         ->join('units', 'units.id', '=', 'product_units.unit_id')
-        //         ->join('products', 'products.id', '=', 'product_units.product_id')
-        //         ->where('product_units.product_id', $value->product_id)
-        //         ->select('units.*', 'products.rate', 'product_units.unit_type')
-        //         ->get();
-
-        //     $value->units = $units;
-        // }
+        $qty->handle_qty();
 
 
-        return response()->json($stocks);
+
+        return response()->json(['stocks' => $qty->details]);
     }
+
+
 
     public function search(Request $request)
     {

@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\Staff;
-use App\RepositoryInterface\HRRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use App\Services\CoreStaffService;
-use App\Services\Core\HrService;
+use App\Repository\HR\VacationRepository;
 use App\Models\VacationType;
 use Illuminate\Http\Request;
 use App\Models\Staff;
@@ -18,9 +17,8 @@ class VacationController extends Controller
 
 
     public function __construct(
-        protected HRRepositoryInterface $hrRepo,        
         protected CoreStaffService $core,
-        protected HrService $hr,
+        protected VacationRepository $hr,
     ) {
     }
 
@@ -28,7 +26,7 @@ class VacationController extends Controller
     {
 
         $vacations = staff::with(['vacation', 'vacation.vacation_type'])->paginate(10);
-        $this->hrRepo->Sum($vacations, 'vaction');
+        $this->hr->Sum($vacations, 'vaction');
 
         // ------------------------------------------------------------------------------------------------
         $staffs = Cache::rememberForever('staff', function () {
@@ -59,7 +57,7 @@ class VacationController extends Controller
         ->select('*')
         ->paginate(10);
         // dd($advances);
-        $this->hrRepo->Sum($vacations);
+        $this->hr->Sum($vacations);
 
         // dd($advances);
         return response()->json(['list' => $vacations]);
@@ -86,7 +84,7 @@ class VacationController extends Controller
 
             foreach ($request->post('count') as $value) {
                 $this->core->setValue($value);
-                $this->hr->store();
+                $this->hr->handle();
                 // $this->payroll->refresh($request->all(), $value);
 
             }

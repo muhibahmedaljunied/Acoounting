@@ -17,6 +17,10 @@ class CreateAllowanceTypesTable extends Migration
             $table->Increments('id');
             $table->string('name');
 
+            
+            $table->unsignedInteger('account_id');
+            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->string('code')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });

@@ -5,4 +5,6 @@ interface WarehouseRepositoryInterface
 
     public function add();
 
+    public function refresh();
+
 }

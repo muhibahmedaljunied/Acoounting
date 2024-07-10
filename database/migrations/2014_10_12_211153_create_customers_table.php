@@ -15,11 +15,11 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
-          $table->unsignedInteger('account_id')->nullable();
-          $table->foreign('account_id')->references('id')->on('accounts');
+            $table->unsignedInteger('group_id')->nullable();
+            $table->foreign('group_id')->references('id')->on('groups');
             $table->string('name');
             $table->string('phone')->default('776165784')->nullable();
-            $table->string('email')->unique()->nullable();   
+            $table->string('email')->unique()->nullable();
             $table->string('address')->default('taiz')->nullable();
             $table->string('status')->default('1')->nullable();
 
@@ -37,7 +37,7 @@ class CreateCustomersTable extends Migration
             // $table->string('password');
 
             // $table->string('status')->default('1')->nullable();
-            
+
             // $table->rememberToken();
             $table->timestamps();
         });

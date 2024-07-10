@@ -1,63 +1,71 @@
 <?php
 
 namespace App\Providers;
-use App\RepositoryInterface\UnitRepositoryInterface;
-use App\Repository\Unit\UnitTransferRepository;
+
+use App\Repository\Unit\UnitDecodeRepository;
+use App\Repository\Unit\UnitEncodeRepository;
 use App\Repository\Unit\UnitReturnRepository;
-use App\Repository\Unit\UnitRepository;
+use App\Repository\Unit\UnitTransferRepository;
 use Illuminate\Support\ServiceProvider;
+use App\RepositoryInterface\UnitRepositoryInterface;
+use App\Services\CoreService;
 
 class UnitServiceProvider extends ServiceProvider
 {
+
+
     /**
-     * Register services.
+     * Register any application services.
      *
      * @return void
      */
     public function register()
     {
 
-        $this->app->bind(UnitRepositoryInterface::class, function () {
+
+        $core = app(CoreService::class);
+        // $request = app(\Illuminate\Http\Request::class);
+
+        $this->app->bind(UnitRepositoryInterface::class, function () use ($core) {
 
             $request = app(\Illuminate\Http\Request::class);
 
+            // dd($request->all());
 
-            if ($request->type == 'Purchase' || $request->type == 'Sale') {
+            if ($request->type == 'Purchase' || $request->type == 'Supply') {
 
-                return new UnitRepository();
+                return new UnitDecodeRepository($core);
             }
 
-        
+            if ($request->type == 'Sale' || $request->type == 'Cash') {
 
-            if ($request->type == 'PurchaseReturn' || $request->type == 'SaleReturn') {
-
-                return new UnitReturnRepository();
+                return new UnitEncodeRepository($core);
             }
 
 
             if ($request->type == 'Transfer') {
 
-                return new UnitTransferRepository();
+                return new UnitTransferRepository($core);
             }
-            return new UnitTransferRepository();
-          
 
+            if (
+                $request->type == 'SaleReturn' ||
+                $request->type == 'PurchaseReturn' ||
+                $request->type == 'CashReturn' ||
+                $request->type == 'SupplyReturn'
+            ) {
 
-
-
+                return new UnitReturnRepository($core);
+            }
         });
-
-     
-
     }
 
     /**
-     * Bootstrap services.
+     * Bootstrap any application services.
      *
      * @return void
      */
     public function boot()
     {
-        //
     }
 }

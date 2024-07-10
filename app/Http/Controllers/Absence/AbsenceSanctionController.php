@@ -1,22 +1,27 @@
 <?php
 
 namespace App\Http\Controllers\Absence;
+
+use App\Repository\StaffSaction\StaffAbsenceSanctionRepository;
+use App\Repository\HR\AbsenceSanctionRepository;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Services\PayrollService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use App\Models\AbsenceSanction;
 use App\Services\CoreStaffService;
-use App\Services\Core\HrService;
 use App\Models\SanctionDiscount;
 use Illuminate\Http\Request;
 use App\Models\AbsenceType;
-use App\Models\Part;
-use DB;
+use App\Models\StaffSanction;
 
 
 class AbsenceSanctionController extends Controller
 {
 
     public function __construct(
-        protected HrService $hr,
+        protected AbsenceSanctionRepository $hr,
         protected CoreStaffService $core,
     ) {
     }
@@ -33,7 +38,6 @@ class AbsenceSanctionController extends Controller
         return response()->json([
             'list' => $this->get_absence_sanction(),
             'absence_types' => AbsenceType::all(),
-            'absence_parts' => Part::all(),
             'staffs' => $staffs,
             'discount_types' => SanctionDiscount::all()
         ]);
@@ -62,38 +66,30 @@ class AbsenceSanctionController extends Controller
     public function get_staff_absence_sanction(Request $request)
     {
 
-        $staff = DB::table('staff_sanctions')
+        $staff = StaffSanction::with(['Sanctionable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                AbsenceSanction::class => function ($query) {
+                    $query->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id');
+                    $query->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id');
+                    $query->select(
+                        'absence_sanctions.*',
+                        'absence_types.name as type_name',
+                        'sanction_discounts.name as discount_name'
+                    );
+                },
+            ]);
+        }])
             ->join('staff', 'staff.id', '=', 'staff_sanctions.staff_id')
+            ->where('sanctionable_type', 'App\\Models\\AbsenceSanction')
             ->select(
                 'staff_sanctions.date as sanction_date',
                 'staff_sanctions.sanctionable_type',
                 'staff_sanctions.sanctionable_id',
                 'staff.name',
-                'staff.id'
+                'staff.id',
+                'staff_sanctions.status'
             )
-            ->paginate(100);
-
-
-        foreach ($staff as $value) {
-
-
-            if ($value->sanctionable_type == 'App\\Models\\AbsenceSanction') {
-
-                $absence = DB::table('absence_sanctions')->where('absence_sanctions.id', $value->sanctionable_id)
-                    ->join('sanction_discounts', 'sanction_discounts.id', '=', 'absence_sanctions.sanction_discount_id')
-                    ->join('absence_types', 'absence_types.id', '=', 'absence_sanctions.absence_type_id')
-                    ->join('parts', 'parts.id', '=', 'absence_sanctions.part_id')
-                    ->select(
-                        'absence_sanctions.*',
-                        'absence_types.name as type_name',
-                        'parts.name as parts_name',
-                        'sanction_discounts.name as discount_name'
-                    )
-                    ->get();
-
-                $value->AbsenceSanction = $absence;
-            }
-        }
+            ->paginate();
 
         return response()->json(['list' => $staff]);
     }
@@ -106,13 +102,14 @@ class AbsenceSanctionController extends Controller
     {
 
 
+        // dd($request->all());
         $this->core->data = $request->all();
 
         foreach ($request->post('count') as $value) {
 
             $this->core->value = $value;
 
-            $this->hr->store();
+            $this->hr->handle();
 
             // }
         }
@@ -122,4 +119,47 @@ class AbsenceSanctionController extends Controller
     }
 
 
+    public function change_status(
+        Request $request,
+        StaffAbsenceSanctionRepository $staff_sanction,
+        PayrollService $payroll
+    ) {
+
+
+        $this->core->data = $request->all();
+
+        try {
+
+            DB::beginTransaction();
+
+            $staff_sanction->update_sanction();
+
+            $payroll->payroll('total_absence_sanction');
+
+            DB::commit(); // Tell Laravel this transacion's all good and it can persist to DB
+            return response([
+                'message' => "Absence Created Successfully",
+                'status' => "success"
+            ], 200);
+        } catch (\Exception $exp) {
+
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            return response([
+                'message' => $exp->getMessage(),
+                'status' => 'failed'
+            ], 400);
+        }
+    }
 }
+
+
+    // tap(StaffSanction::where([
+            //     'staff_id' => $request->staff,
+            //     'sanctionable_id' => $request->sanctionable_id,
+            //     'sanctionable_type' => $request->sanctionable_type,
+            //     'date' => $request->date
+
+
+            // ]))
+            //     ->update(['status' => $request->status])
+            //     ->get('id');

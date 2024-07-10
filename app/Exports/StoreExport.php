@@ -30,6 +30,8 @@ class StoreExport implements FromCollection,WithMapping, WithHeadings
 
             $row->parent_id,
 
+            $row->account_id,
+
             $row->rank,
 
             $row->status,
@@ -51,17 +53,12 @@ class StoreExport implements FromCollection,WithMapping, WithHeadings
         return [
 
             'id',
- 
             'text',
- 
             'parent_id',
- 
+            'account_id',
             'rank',
- 
             'status',
- 
             'created_at',
- 
             'updated_at'
  
  

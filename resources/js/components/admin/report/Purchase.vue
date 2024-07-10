@@ -90,13 +90,23 @@
 
                         </select>
                       </div>
+
                       <div class="col-md-2" v-show="showdesc">
                         <label for="status">المواصفات والطراز </label>
                         <input type="text" v-model="descselected" class="form-control input_cantidad"
                           onkeypress="return valida(event)" />
                       </div>
 
+                      <!--  this manner did not added even now -->
+                      <div class="col-md-2" >
+                        <label for="status"> طريقه الدفع</label>
+                        <select  name="status"  class="form-control">
 
+
+                     
+
+                        </select>
+                      </div>
                     </div>
 
                     <div class='row'>

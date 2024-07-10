@@ -1,17 +1,23 @@
 <?php
 
 namespace App\Repository\HR;
-use App\RepositoryInterface\HRRepositoryInterface;
+
 use App\Services\CoreStaffService;
 use App\Models\AbsenceSanction;
-use DB;
+use App\Models\StaffSanction;
 
-class AbsenceSanctionRepository implements HRRepositoryInterface
+class AbsenceSanctionRepository
 {
 
     public function __construct(public CoreStaffService $core)
     {
-        
+    }
+
+    public function handle()
+    {
+
+        $this->update();
+        $this->store();
     }
 
     function Sum($data)
@@ -26,29 +32,45 @@ class AbsenceSanctionRepository implements HRRepositoryInterface
             }
         }
     }
-    function add(...$list_data)
+    function store()
     {
 
-    
-    
-    
-        $temporale = new AbsenceSanction();
-        $temporale->absence_type_id = $this->core->data['absence'][$this->core->value];
-        $temporale->sanction_discount_id = $this->core->data['discount_type'][$this->core->value];
-        $temporale->discount = $this->core->data['discount'][$this->core->value];
-        $temporale->iteration = $this->core->data['iteration'][$this->core->value];
-        $temporale->sanction = $this->core->data['sanction'][$this->core->value];
-        $temporale->save();
-        $this->core->id = $temporale->id;
+        if (empty($this->core->temporale_f)) {
+
+            $temporale = AbsenceSanction::updateOrCreate(
+                [
+                    'absence_type_id' => $this->core->data['absence'][$this->core->value],
+                    'sanction_discount_id' => $this->core->data['discount_type'][$this->core->value],
+                    'discount' => $this->core->data['discount'][$this->core->value],
+                    'iteration' => $this->core->data['iteration'][$this->core->value],
+                    'sanction' => $this->core->data['sanction'][$this->core->value],
+
+                ]
+            );
+            $this->core->id = $temporale->id;
+        }
     }
-  
 
     public function update()
     {
-        $temporale_f = tap(AbsenceSanction::whereAbsenceSanction($this->core->data))
-        ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
-        ->get('id');
-
-        return $temporale_f;
+        $this->core->temporale_f = collect(tap(AbsenceSanction::whereAbsenceSanction($this->core->data,$this->core->value))
+            ->update(['sanction' => $this->core->data['sanction'][$this->core->value]])
+            ->get('id'))
+            ->toArray();
     }
+    // public function sanction()
+    // {
+
+
+        
+    //     $absence = new StaffSanction();
+    //     $absence->staff_id = $this->core->data['staff'][$this->core->value];
+    //     $absence->sanctionable()->associate($this->core->specific_sanction);
+    //     $absence->date = $this->core->data['date'][$this->core->value];
+    //     $absence->save();
+
+        
+    // }
+
+   
 }

@@ -1,42 +1,55 @@
 <?php
 
 namespace App\Repository\HR;
-
-use App\Models\Advance;
-use App\Models\Attendance;
-use App\Models\AttendanceDetail;
-use App\RepositoryInterface\DetailRepositoryInterface;
-use App\RepositoryInterface\AttendanceRepositoryInterface;
-use App\RepositoryInterface\HRRepositoryInterface;
-use DB;
-
-class AbsenceRepository implements AttendanceRepositoryInterface
+use App\Services\CoreStaffService;
+use App\Models\Absence;
+class AbsenceRepository 
 {
-
-    public function handle($request, $value)
+    
+    public function __construct(public CoreStaffService $core)
     {
 
 
-        $attendance_id = $this->get($request['attendance_date'], $request['staff'][$value]);
-
-        if ($attendance_id == 0) {
-
-            $attendance_id = $this->create($request, $value);
-            $this->sanction($attendance_id, $request, $value);
-        }
+        
     }
 
+    function Sum($data)
+    {
 
 
-    // public function add(...$list_data){
+        foreach ($data as $sub) {
 
-    //     $request = $list_data['request'];
-    //     $value = $list_data['value'];
+            $sub->sum_number_hours = 0;
+            foreach ($sub->absence as $key => $value) {
 
-    //     $attendance = new Attendance();
-    //     $attendance->staff_id =  $request['staff'][$value];
-    //     $attendance->attendance_date = $request['attendance_date'][$value];
-    //     $attendance->attendance_status = $request['attendance_status'][$value];
-    //     $attendance->save();
+                $sub->sum_number_hours += $value->number_hours;
+            }
+        }
+    }
+    function store()
+    {
+
+      
+        $temporale = Absence::updateOrCreate(
+            [
+                'staff_id' => $this->core->data['staff'][$this->core->value],
+                'absence_type_id' => $this->core->data['absence_type'][$this->core->value],
+                'date' => $this->core->data['date'][$this->core->value],
+
+            ]
+        );
+        $this->core->id = $temporale->id;
+
+    }
+
+   
+
+
+    // public function refresh($id,$value)
+    // {
+        
+    //     // dd($value->sanction);
+    //   tap(Payroll::where('staff_id',$id))->increment('total_absence',$value->sanction)->get(); 
+
     // }
 }

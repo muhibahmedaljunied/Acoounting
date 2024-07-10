@@ -15,15 +15,15 @@ class CreateSuppliersTable extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->Increments('id');
          
-            $table->unsignedInteger('account_id')->nullable();
-            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->unsignedInteger('group_id')->nullable();
+            $table->foreign('group_id')->references('id')->on('groups');
          
             $table->string('name',30);
             $table->string('last_name',30);
             $table->string('code',50)->nullable();
             $table->string('company',10)->nullable();
             $table->string('email',50)->unique()->nullable();
-            $table->string('phone',20)->nullable();        
+            $table->string('phone',20)->nullable();
             $table->longtext('address')->nullable();
             $table->char('status', 1)->default('1')->nullable();    
             $table->timestamps();

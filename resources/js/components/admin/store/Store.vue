@@ -34,8 +34,31 @@
                       </div>
 
                       <div class="card-body">
+                        <!-- <div class="container">
+                          <div class="well" id="treeview_json_product"></div>
+                        </div> -->
 
-                        <div class="well" id="treeview_json_store"></div>
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <div class="input-group">
+
+                                <input type="text" id="ricerca-enti" class="form-control" placeholder="بحث"
+                                  aria-describedby="search-addon">
+
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-xs-12" id="treeview_json_store">
+
+                              <div id="test">
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -61,29 +84,29 @@
                     </div>
 
                     <div class="card-body">
-                      <div class="form">
+                      <div class="row">
 
-                        <div class="form-group">
-                          <ul>
-                            <div v-for="error in errors">
-                              <li>{{ error[0] }}</li>
-                            </div>
-                          </ul>
-                        </div>
 
-                        <div class="form-group">
+                        <div class="col-md-4">
                           <label for="store">رقم المخزن</label>
                           <input id='store_number' type="text" class="form-control" required readonly />
 
                         </div>
-                        <div class="form-group">
+                        <div class="col-md-4">
                           <label for="store">اسم المخزن</label>
-                          <input v-model="text" type="text" name="store" id="store" class="form-control" required /><span
-                            style="color:red">{{ error_text[0] }}</span>
+                          <input v-model="text" type="text" name="store" id="store" class="form-control"
+                            required /><span style="color:red">{{ error_text[0] }}</span>
 
                         </div>
 
-                        <div class="form-group">
+
+
+                      </div>
+
+                      <br>
+                      <div class="row">
+
+                        <div class="col-md-12">
                           <label for="radio-example-one">متفرع </label>
 
                           <input type="checkbox" name='fieldset2' v-model="status" id="status">
@@ -94,32 +117,33 @@
 
                         </div>
 
-                        <div v-if="status == false" class="form-group">
-                          <label for="cliente">اسم الحساب</label>
+
+                      </div>
 
 
-                          <div class="custom-search">
 
-                            <input :id="'Store_account_tree'" type="text" class="custom-search-input">
-                            <input :id="'Store_account_tree_id'" type="hidden" readonly class="custom-search-input">
-                            <button class="custom-search-botton" type="button" data-toggle="modal"
-                              data-target="#exampleModalaccount"> <i class="fa fa-plus-circle"></i></button>
+                      <br>
+                      <div class="row">
 
-                          </div>
-
-
+                        <div class="col-md-12">
+                          <button type="button" class="btn btn-primary btn-lg btn-inline" @click="addnode()"> حفظ
+                          </button>
 
                         </div>
 
 
 
 
-                      
+
 
                       </div>
-                      <div class="card-footer">
+
+
+
+
+                      <!-- <div class="card-footer">
                         <button type="button" class="btn btn-primary btn-lg btn-block" @click="addnode()"> حفظ </button>
-                      </div>
+                      </div> -->
                     </div>
                   </form>
 
@@ -143,7 +167,7 @@
           </div>
         </div>
 
-        <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- <div class="modal fade" id="exampleModalaccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -161,9 +185,118 @@
 
             </div>
           </div>
-        </div>
+        </div> -->
 
       </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <span class="h2">تفاصيل المنتجات</span>
+
+
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <!-- <th>  رقم الفاتوره </th> -->
+                      <th>اسم المنتج</th>
+                      <th> المواصفات والطراز</th>
+                      <th>الحاله</th>
+                      <th>المخزن</th>
+
+                      <th class="wd-15p border-bottom-0"> كميه الشراء</th>
+                      <!-- <th>الوحده</th> -->
+                      <th class="wd-15p border-bottom-0"> السعر </th>
+                      <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
+
+                      <!-- <th class="wd-15p border-bottom-0">  الكميه المرتحعه</th> -->
+
+
+                    </tr>
+                  </thead>
+                  <tbody v-if="purchase_detail && purchase_detail.length > 0">
+                    <tr v-for="purchase_details in purchase_detail">
+                      <!-- <td>{{ purchase_details.id }}</td> -->
+                      <td>{{ purchase_details.product }}</td>
+                      <td>{{ purchase_details.desc }}</td>
+                      <td>{{ purchase_details.status }}</td>
+                      <td>{{ purchase_details.store }}</td>
+                      <!-- <td>{{ purchase_details.qty }} {{ purchase_details.unit }}</td> -->
+                      <td>
+
+
+                        <div v-for="temx in purchase_details.qty_after_convert['qty']">
+
+
+
+                          <span v-for="temx2 in temx">
+
+
+                            <span style="float: right;">
+                              {{ temx2[0] }}
+                              <span style="color: red;">
+                                {{ temx2[1] }}
+                              </span>
+
+                            </span>
+
+
+
+                          </span>
+
+                          <!-- <span v-if="temx.unit_type == 0">
+
+
+                          <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+                        temx.name }}</span>
+
+
+
+                        </span> -->
+
+                        </div>
+
+
+                      </td>
+
+                      <!-- <td>{{ purchase_details.unit }}</td> -->
+                      <td>{{ purchase_details.price }}</td>
+                      <!-- <td>{{ purchase_details.total }}</td> -->
+                      <!-- <td>{{ purchase_details.qty_return }}</td> -->
+
+
+
+                    </tr>
+                    <!-- <tr>
+
+                    <td colspan="7" style="text-align:center;color:red;font-size:large">الاجمالي</td>
+                    <td>{{ total }}</td>
+                  </tr> -->
+
+                  </tbody>
+                  <tbody v-else>
+                    <tr>
+                      <td align="center" colspan="8">
+                        <h3>
+                          لايوجد اي مشتريات
+                        </h3>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
     </div>
   </div>
 </template>
@@ -193,9 +326,9 @@ export default {
       status_product: false,
       // store_first_level: '',
 
-      tree: {
-        child: [],
-      },
+      // tree: {
+      //   child: [],
+      // },
 
       account: '',
       store_main: '',
@@ -208,18 +341,18 @@ export default {
     };
   },
 
-  mounted() {
-    this.type = 'Store';
-    this.showtree('account');
+  // mounted() {
+  //   this.type = 'Store';
+  //   this.showtree('account','store');
 
-  },
+  // },
   created() {
 
     this.type_of_tree = 0;
     localStorage.setItem('id', 0);
     localStorage.setItem('rank', 0);
     localStorage.setItem('table', 'store');
-    this.showtree('store');
+    this.showtree('store', 'tree_store');
 
   },
   methods: {
@@ -283,6 +416,3 @@ export default {
   },
 };
 </script>
-
-
-

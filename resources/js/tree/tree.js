@@ -1,49 +1,37 @@
-
+import tree_product from './tree_product.js';
+import tree_account from './tree_account.js';
 export default {
 
+    mixins: [tree_account, tree_product],
     methods: {
 
-        showtree(table) {
+        showtree(table, uri, value = null) {
 
-            var uri = `/tree_${table}`;
-            if(table == 'intostore'){
 
-                uri = `/tree_store`;
-            }
             let gf = this;
+            var id = `treeview_json_${table}`;
 
 
-           
-            this.axios.post(uri).then((response) => {
-                //   this.trees = response.data.trees;
+            this.axios.post(`/${uri}`, {
+                'value': value,
+                'type': this.type
+            }).then((response) => {
 
-                if (this.type_of_tree == 1) {
+                this.jsonTreeData = response.data.trees;
 
-                    this.jsonTreeData = response.data.trees;
-
-                }
-
-                if (this.type_of_tree == 0 && table == 'account' && gf.type == 'Store') {
-
-                    this.jsonTreeData = response.data.trees;
-
-                }
-
-
+                console.log('almuhib', this.jsonTreeData);
                 if (this.type_of_tree == 0) { // this if tree is in the orignal screen (account,product,store,structure) 
 
-                    this.jsonTreeData = response.data.trees;
                     this.last_nodes = response.data.last_nodes;
                     $(`#${table}_number`).val(response.data.last_nodes + 1);
-                } 
+                }
 
 
 
 
 
 
-
-                $(`#treeview_json_${table}`).jstree({
+                $(`#${id}`).jstree({
                     core: {
                         themes: {
                             responsive: false,
@@ -93,59 +81,77 @@ export default {
 
 
                 }).on('rename_node.jstree', function (e, data) {
-                    // let currentObj = this;
-                    // const config = {
-                    //     headers: {
-                    //         "content-type": "multipart/form-data",
-                    //     },
-                    // };
 
-
-                    // let formData = new FormData();
-                    // formData.append("text", data.node.text);
-
-                    // let url = `/${table}_rename_node/${data.node.id}`;
-                    // axios.post(url, formData).then((response) => {
-
-                    //     currentObj.success = response.data.success;
-                    //     currentObj.filename = "";
-
-                    // }).catch(function (error) {
-                    //     currentObj.output = error;
-                    // });
                 }).on("changed.jstree", function (e, data) {
 
+                    if (gf.type == 'Sale' || gf.type == 'Cash' || gf.type == 'SaleReturn' || gf.type == 'CashReturn') {
 
-                    console.log(gf.type,table);
 
-                    if (gf.indexselected) {
+                        gf.check_state = [];
+                        gf.unit = [],
+                            gf.counts = {};
+                        gf.grand_total = 0;
+                        gf.remaining = 0;
+                        gf.paid = 0;
+                        gf.sub_total = 0;
+                        gf.total_quantity = 0;
+                        gf.To_pay = 0;
+                    }
 
-                        $(`#${gf.type}_${table}_tree${gf.indexselected}`).val(data.node.id+' '+data.node.text);
+
+
+                    // indexselected == 0 when operation is sale or what is same when start index from 0
+                    if (gf.indexselected || gf.indexselected == 0) {
+
+                        $(`#${gf.type}_${table}_tree${gf.indexselected}`).val(data.node.id + ' ' + data.node.text);
                         $(`#${gf.type}_${table}_tree_id${gf.indexselected}`).val(data.node.id);
 
-                 
-                        if (table == 'account') {
 
-                            gf.account[gf.indexselected] = data.node.id;
+
+                        console.log('yamaha', gf.indexselected);
+
+                        if (uri == 'tree_account') {
+
+
+                            
+
+
+                            if (table == 'accounts') { //this if type expence_income accounts
+
+                                // console.log('accounts',gf.indexselected);
+                                gf.expence_income_account_list[gf.indexselected] = data.node.id;
+                            }else{
+
+                                gf.account[gf.indexselected] = data.node.id;
+                            }
+
 
                         }
+
+                        // if (table == 'accounts') {
+
+                        //     gf.expence_income_account_list[gf.indexselected] = data.node.id;
+                        // }
+
 
 
 
 
                     } else {
-                       
+
                         $(`#${gf.type}_${table}_tree`).val(data.node.text);
                         $(`#${gf.type}_${table}_tree_id`).val(data.node.id);
 
                         if (table == 'account') {
-                    
+
                             gf.account = data.node.id;
                         }
                     }
 
 
-
+                    if (table == 'expence' && gf.type == 'Expence') {
+                        gf.expence[gf.indexselected] = data.node.id;
+                    }
 
 
                     if (table == 'structure' && gf.type == 'Structure') {
@@ -158,135 +164,123 @@ export default {
 
                     }
 
+
+
                     // ----------------------------------------product-----------------------------------------------------------
 
-                    if (table == 'product' && gf.type == 'Stock') {
 
-                        gf.productselected = data.node.id;
-                        gf.productselectedname = data.node.text;
-                    }
 
-                    if (table == 'product' && gf.type == 'Movement') {
+                    if (table == 'account') {
 
-                        gf.productselected = data.node.id;
-                        gf.productselectedname = data.node.text;
+
+                        gf.check_account(data);
+
+
 
                     }
-
-
-                    if (table == 'product' && gf.type == 'Purchase') {
-
-
-                        gf.product_tree(gf, data, table)  //this for get units of product
-
-                    }
-                    if (table == 'product' && gf.type == 'Opening') {
-
-                        gf.product_tree(gf, data, table) //this for get units of product
-
-                    }
-
-
-                    if (table == 'product' && gf.type == 'Supply') {
-
-                        gf.product_tree(gf, data, table) //this for get units of product
-
-                    }
-
-
-                    if (table == 'product' && gf.type == 'Sale') {
-
-                        gf.get_product_for_sale(gf, data.node.id,table);
-
-                    }
-
-
-                 
-
-
-
-
-                    if (table == 'product' && gf.type == 'Transfer') {
-
-                        gf.product_one = data.node.id;
-                        gf.get_product_for_transfer(gf, 'product',data.node.id);
-                    }
-
-
-
-
-                    // ----------------------------------------store-----------------------------------------------------------
-                    if (table == 'store' && gf.type == 'Transfer') {
-
-
-                        gf.store_one = data.node.id;
-                        gf.get_product_for_transfer(gf, 'store',data.node.id);
+                    if (table == 'product') {
+                        console.log('no _productm', data.node.id);
+                        gf.check_prouct(table, data, gf.counts);
 
 
                     }
 
-                    if (table == 'store' && gf.type == 'Sale') {
+                    if (table == 'productm') {
 
+
+                        console.log('yes _productm', data.node.id);
+                        gf.productm_tree(data);
+
+                    }
+
+                    if (table == 'store') {
 
                         gf.store = data.node.id;
-                        gf.get_product_for_sale(gf, data.node.id,table);
-                        gf.get_account_for_store(gf);
+
+                        if (gf.type == 'Sale') {
+
+                            gf.get_product_for_sale(data.node.id, table);
+                            gf.get_account_for_store();
+
+                        }
+
+
+                        if (gf.type == 'Purchase' || gf.type == 'Supply') {
+
+                            console.log('aljunied123', gf.counts);
+                            gf.get_account_for_store(gf.counts);
+
+                        }
+                        if (gf.type == 'SaleReturn' || gf.type == 'CashReturn') {
+
+                            gf.get_account_for_store(gf.detail);
+
+                        }
+
+                        if (gf.type == 'Cash') {
+
+                            gf.get_product_for_cash(data.node.id, table);
+                            gf.get_account_for_store();
+
+                        }
+                        if (gf.type == 'Transfer') {
+
+
+                            gf.store_one = data.node.id;
+                            gf.fromstore = data.node.text;
+                            gf.fromstore_id = data.node.id;
+
+                            gf.get_product_for_transfer('store', data.node.id);
+
+
+                        }
+
+
+
+                        if (gf.type == 'Opening') {
+
+
+                            gf.store[gf.indexselected] = data.node.id;
+
+                        }
+
+
+                        if (gf.type == 'Stock' || gf.type == 'Movement') {
+
+
+
+                            gf.storeselected = data.node.id;
+                            gf.storeselectedname = data.node.text;
+
+
+                        }
+
                     }
 
-                    if (table == 'intostore' && gf.type == 'Transfer') {
+                    if (table == 'storem') {
 
 
-                        gf.intostore = data.node.text;
-                        gf.intostore_id = data.node.id;
+                        gf.check_storem(data);
 
+                    }
+
+
+                    if (table == 'intostore') {
+
+
+                        if (gf.type == 'Transfer') {
+
+                            gf.intostore = data.node.text;
+                            gf.intostore_id = data.node.id;
+                        }
 
                     }
 
 
 
-                    if (table == 'store' && gf.type == 'Movement') {
-
-
-                        gf.storeselected = data.node.id;
-                        gf.storeselectedname = data.node.text;
-
-                    }
-
-
-                    if (table == 'store' && gf.type == 'Purchase') {
-
-
-                        gf.store = data.node.id;
-                        gf.get_account_for_store(gf);
-
-
-                    }
-
-
-                    if (table == 'store' && gf.type == 'Opening') {
-
-
-                        gf.store[gf.indexselected] = data.node.id;
-
-                    }
-
-
-                    if (table == 'store' && gf.type == 'Stock') {
 
 
 
-                        gf.storeselected = data.node.id;
-                        gf.storeselectedname = data.node.text;
-
-
-                    }
-
-                    if (table == 'store' && gf.type == 'Supply') {
-
-
-                        gf.store[gf.indexselected] = data.node.id;
-
-                    }
 
 
 
@@ -295,91 +289,18 @@ export default {
                 });
 
             });
+
+
         },
 
         detect_index(index) {
 
-            // alert(index);
+
+
             this.indexselected = index;
         },
-        // detect_index_product(index) {
-
-        //     // alert(index);
-        //     this.indexselected = index;
-        // },
-        // detect_index_bank(index) {
-
-        //     // alert(index);
-        //     this.indexselectedbank = index;
-        // },
-        // detect_index_treasury(index) {
-
-        //     // alert(index);
-        //     this.indexselectedtreasury = index;
-        // },
-
-        // detect_index_store(index) {
-
-        //     this.indexselected = index;
-        // },
-    
-
-        get_account_for_store(gf) {
 
 
-            axios.post(`/get_account_store/${gf.store}`).then((response) => {
-
-                var arrayLength = response.data.accounts.length
-                var html = '';
-                console.log('muhib', response.data.accounts);
-                if (arrayLength == 0) {
-
-                    $(`#select_account_${gf.type}`).html('');
-                    return;
-                }
-                for (var i = 0; i < arrayLength; i++) {
-                    // console.log('muhib', gf.response.data.accounts);
-
-                    html = html + `<option 
-                                            value=${response.data.accounts[i].id}>${response.data.accounts[i].text}  ${response.data.accounts[i].id}
-                                    </option>`;
-
-                }
-                console.log(html);
-                $(`#select_account_${gf.type}`).html(html);
-
-
-            });
-
-        },
-        product_tree(gf, data, table) {
-
-            gf.product[gf.indexselected] = data.node.id;
-
-
-            axios.post(`/get_unit/${data.node.id}`).then((response) => {
-
-                // console.log(response.data.units);
-                gf.units = response.data.units;
-
-                var arrayLength = response.data.units.length
-                var html = '';
-
-
-                for (var i = 0; i < arrayLength; i++) {
-                    console.log('muhib', gf.units[i].name);
-
-                    html = html + `<option data-rate-${gf.indexselected} = ${gf.units[i].rate} data-${this.indexselected} = ${gf.units[i].unit_type}  value=[${gf.units[i].id},${gf.units[i].rate},${gf.units[i].unit_type}]>${gf.units[i].name}</option>`;
-
-                }
-                console.log(html);
-                $(`#select_unit${gf.indexselected}`).html(html);
-
-
-            });
-
-
-        },
 
         get_job(id) {
 
@@ -405,35 +326,8 @@ export default {
 
         },
 
-        get_product_for_sale(gf, id,table) {
-            axios.post(`/sale/newsale/${id}`, { type: table }).then((responce) => {
 
-                gf.all_products = responce.data.products.data;
 
-            });
-        },
-        // get_store_for_sale(gf, id) {
-        //     axios.post(`/sale/newsale/${id}`, { type: 'store' }).then((responce) => {
-
-        //         gf.all_products = responce.data.products.data;
-
-        //     });
-        // },
-        get_product_for_transfer(gf, type,id) {
-
-          
-            let uri = `/get_product`;
-            axios
-                .post(uri, { id: id, type: type })
-                .then((responce) => {
-                    gf.detail = responce.data.products;
-
-                    // this.stores = responce.data.stores;
-                })
-                .catch(({ response }) => {
-                    console.error(response);
-                });
-        },
         addnode() {
 
 
@@ -448,23 +342,68 @@ export default {
             };
             // form data
 
+            console.log('counts', this.counts);
             let formData = new FormData();
             formData.append(`${localStorage.getItem('table')}_id`, $(`#${localStorage.getItem('table')}_number`).val());
             formData.append("text", this.text);
             // formData.append(`${localStorage.getItem('table')}_name_en`, this.store_name_en);
             formData.append("parent", $("#parent").val());
-            formData.append("account", this.account);
+            // formData.append("account", this.account);
             formData.append("rank", $("#rank").val());
-            formData.append("status", this.status);
+            formData.append("unit", this.unit);
+            formData.append('purchase_price', this.purchase_price);
+            // formData.append("status", this.status);
             if (localStorage.getItem('table') == 'product') {
-                // formData.append("status", this.status);
-                formData.append("unit", this.unit);
-                formData.append("purchase_price", this.purchase_price);
-                formData.append("product_minimum", this.product_minimum);
 
-                formData.append("purchase_price_for_retail_unit", this.purchase_price_for_retail_unit);
-                formData.append("hash_rate", this.hash_rate);
-                formData.append("retail_unit", this.retail_unit);
+
+                // formData.append("status", this.status);
+                // formData.append("count", this.counts);
+                // formData.append("unit", this.unit);
+                // formData.append('purchase_price', this.purchase_price);
+
+                for (var i = 0; i <= this.counts.length; i++) {
+
+                    if (i != this.counts.length) {
+
+                        formData.append('count[]', this.counts[i]);
+                    }
+
+
+                    if (this.purchase_price_for_retail_unit[i] === undefined) {
+
+                        formData.append('purchase_price_for_retail_unit[]', null);
+                    } else {
+
+                        formData.append('purchase_price_for_retail_unit[]', this.purchase_price_for_retail_unit[i]);
+                    }
+                    if (this.hash_rate[i] === undefined) {
+
+                        formData.append('hash_rate[]', null);
+                    } else {
+
+                        formData.append('hash_rate[]', this.hash_rate[i]);
+                    }
+
+
+                    if (this.retail_unit[i] === undefined) {
+
+                        formData.append('retail_unit[]', null);
+                    } else {
+
+                        formData.append('retail_unit[]', this.retail_unit[i]);
+                    }
+
+                    // formData.append('purchase_price_for_retail_unit[]', this.purchase_price_for_retail_unit[i]);
+                    // formData.append('hash_rate[]', this.hash_rate[i]);
+                    // formData.append('retail_unit[]', this.retail_unit[i]);
+                }
+
+
+                formData.append("product_minimum", this.product_minimum);
+                // formData.append("purchase_price", this.purchase_price);
+                // formData.append("purchase_price_for_retail_unit", this.purchase_price_for_retail_unit);
+                // formData.append("hash_rate", this.hash_rate);
+                // formData.append("retail_unit", this.retail_unit);
             }
             //  else {
             //     formData.append("status", this.status);

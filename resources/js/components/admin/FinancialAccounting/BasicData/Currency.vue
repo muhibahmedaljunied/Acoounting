@@ -5,6 +5,215 @@
       <div class="card">
         <div class="card-header">
 
+          <span class="h4"> اضافه عملات</span>
+
+
+          <div style="display: flex;float: left; margin: 5px">
+
+            
+          </div>
+        </div>
+        <div class="card-body" >
+      
+         
+                <div class="row row-sm">
+                  <div class="col-xl-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+
+                          <div class="table-responsive">
+                            <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
+                              <thead>
+                                <tr>
+
+                                  <th>الاسم </th>
+
+                                  <th>رمز العمله </th>
+
+
+                                  <th>معدل التحويل </th>
+
+                                  <th>اضافه</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="index in count" :key="index">
+                                  <td>
+                                    <input v-model="currency[index]" type="text" class="form-control" name="name"
+                                      id="name" required />
+                                  </td>
+                                  <td>
+
+
+
+                                    <input v-model="symbole_currency[index]" type="text" class="form-control">
+
+
+                                  </td>
+                                  <td>
+
+                                    <input v-model="rate[index]" type="text" class="form-control" />
+                                  </td>
+
+
+
+
+
+
+                                  <td v-if="index == 1">
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="addComponent(count)">
+                                      <i class="fa fa-plus-circle"></i></a>
+
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="disComponent(count)">
+                                      <i class="fa fa-minus-circle"></i></a>
+                                  </td>
+
+
+
+                                </tr>
+                                <tr>
+                          <td colspan="3"></td>
+                          <td>
+
+                            <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+
+                          </td>
+                        </tr>
+
+                              </tbody>
+                            </table>
+                          </div>
+                        </form>
+
+                      </div>
+
+                      <div class="modal-footer">
+                     
+                      </div>
+
+                    </div>
+                  </div>
+                  <!--/div-->
+                </div>
+             
+      
+      
+        </div>
+        <!-- <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+          aria-hidden="true" style="display: none" id="currency">
+          <div class="modal-dialog modal-lg" style="width: 100%">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  x
+                </button>
+                <div class="col-md-8">
+                  <h4 class="modal-title" id="myLargeModalLabel">العملات</h4>
+                </div>
+                <div class="col-md-4">
+                  <div class="col-sm-12">
+                    <input type="text" placeholder="بحث" class="form-control" name="buscar_producto"
+                      id="buscar_producto" />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-body">
+                <div class="row row-sm">
+                  <div class="col-xl-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+
+                          <div class="table-responsive">
+                            <table class="table table-bordered text-right m-t-30" style="width: 100%; font-size: x-small">
+                              <thead>
+                                <tr>
+
+                                  <th>الاسم </th>
+
+                                  <th>رمز العمله </th>
+
+
+                                  <th>معدل التحويل </th>
+
+
+
+                                  <th>اضافه</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="index in count" :key="index">
+                                  <td>
+                                    <input v-model="currency[index]" type="text" class="form-control" name="name"
+                                      id="name" required />
+                                  </td>
+                                  <td>
+
+
+
+                                    <input v-model="symbole_currency[index]" type="text" class="form-control">
+
+
+                                  </td>
+                                  <td>
+
+                                    <input v-model="rate[index]" type="text" class="form-control" />
+                                  </td>
+
+
+
+
+
+
+                                  <td v-if="index == 1">
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="addComponent(count)">
+                                      <i class="fa fa-plus-circle"></i></a>
+
+                                    <a class="tn btn-info btn-sm waves-effect btn-agregar"
+                                      v-on:click="disComponent(count)">
+                                      <i class="fa fa-minus-circle"></i></a>
+                                  </td>
+
+
+
+                                </tr>
+
+
+                              </tbody>
+                            </table>
+                          </div>
+                        </form>
+
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="Add_new()">حفظ </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div> -->
+      </div>
+    </div>
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-header">
+
           <span class="h2"> العملات</span>
 
 
@@ -70,6 +279,13 @@
                     <router-link to="/temporale_supply" class="tn btn-info btn-sm waves-effect btn-agregar"
                       data-toggle="tooltip" title="تعديل">
                       <i class="fa fa-edit"></i></router-link>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody v-else>
+                <tr>
+                  <td align="center" colspan="3">
+                    <h3> لايوجد بيانات </h3>
                   </td>
                 </tr>
               </tbody>
@@ -192,7 +408,7 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-import operation from '../../../../../js/operation.js';
+import operation from '../../../../operation1.js';
 
 export default {
   mixins: [
