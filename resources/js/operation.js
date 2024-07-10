@@ -1,355 +1,417 @@
 export default {
-  data() {
-
-    // return data;
-    return {
-
-      product: [],
-      qty: [],
-      unit: [],
-      desc: [],
-      store: [],
-      status: [],
-      counts: {},
-      total: [],
-      customer: [],
-      supplier: [],
-      check_state: [],
-      return_qty: [],
-      price: [],
-      tax: [],
-      storem_account: [],
-      count: 1,
-      date: new Date().toISOString().substr(0, 10),
-      dateselected: new Date().toISOString().substr(0, 10),
-      expiry_date: new Date().toISOString().substr(0, 10),
-      table: '',
-      type: '',
-      type_refresh: '',
-      note: "",
-      detail: '',
-      total_quantity: 0,
-
-      products: '',
-      stores: '',
-      statuses: '',
-      stores: '',
-      statuses: '',
-      units: '',
-      opening: '',
-      availabe_qty: [],
-      word_search: '',
-    
-      suppliers: '',
-      customers: '',
-      seen: false,
-      id: '',
-
-
-      grand_total: 0,
-      sub_total: 0,
-      To_pay: 0,
-
-      total_tax:0,
-      storem: [],
-     
-
-
-
-      paid: 0,
-      remaining: 0,
-      Way_to_pay_selected: 1,
-
-
-
-
-
-    };
-  },
-  watch: {
-    Way_to_pay_selected(newVal, oldVal) {
-      $(`#treeview_json_account`).jstree(true).destroy();
-      this.showtree('account', 'tree_account', this.Way_to_pay_selected);
-
-      console.log('alkhm',newVal, oldVal);
-    }
-  },
-  methods: {
-
-
-
-    // Add_return() {
-
-
-    //   // if (this.return_qty.length != 0) {
-
-    //   var url = this.type.toLowerCase();
-    //   // alert(url);
-    //   this.axios
-    //     .post(`/${url}`, {
-
-    //       count: this.counts,
-    //       unit_id: this.unit,
-    //       type: this.type,
-    //       type_refresh: this.type_refresh,
-    //       old: this.detail,
-    //       date: this.dateselected,
-    //       note: this.note,
-    //       id: this.id,
-
-
-
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-
-    //       if (response.data.message != 0) {
-
-    //         // console.log(response)
-
-    //         this.seen = false;
-    //         toastMessage("تم الارجاع بنجاح");
-    //         // this.$router.go(-1);
-
-    //       } else {
-
-    //         toastMessage("فشل", response.data.text);
-
-
-
-
-    //       }
-
-
-    //     });
-    //   // }
-
-
-    // },
-    // delete_temporale() {
-    //   this.axios.post(`/${this.type}/delete`).then((response) => {
-    //     toastMessage("تم الحذف بنجاح");
-
-    //     this.$router.go(0);
-    //   });
-    // },
-    // delete_one_temporale() {
-
-    //   var id = $("#vaciar1").val();
-    //   this.axios.post(`/${this.type}/delete/${id}`).then((response) => {
-    //     toastMessage("تم الحذف بنجاح");
-
-    //     this.$router.go(0);
-    //   });
-    // },
-    addComponent(index) {
-      // alert(index);
-      this.count += 1;
-      this.counts[index] = this.count;
+    data() {
+      return {
+  
+        date: new Date().toISOString().substr(0, 10),
+        dateselected: new Date().toISOString().substr(0, 10),
+        expiry_date: new Date().toISOString().substr(0, 10),
+        purchase_id: [],
+        discount: [],
+        store_product_id: [],
+        cost: [],
+        bank: [],
+        product: [],
+        typeselected: [],
+        qty: [],
+        unit: [],
+        desc: [],
+        store: [],
+        status: [],
+        counts: {},
+        total: [],
+        customer: [],
+        supplier: [],
+        check_state: [],
+        return_qty: [],
+        price: [],
+        tax: [],
+        treasury: [],
+        storem_account: [],
+        productm: [],
+        intostore: [],
+        intostore_id: [],
+        account_in_list: [],
+        count: 1,
+        row_counter: '',
+        first_row: '',
+        table: '',
+        type: '',
+        type_refresh: '',
+        note: "",
+        detail: '',
+        total_quantity: 0,
+        treasuries: '',
+        banks: '',
+        products: '',
+        stores: '',
+        statuses: '',
+        stores: '',
+        statuses: '',
+        units: '',
+        opening: '',
+        availabe_qty: [],
+        word_search: '',
+  
+        suppliers: '',
+        customers: '',
+        seen: false,
+        id: '',
+  
+        operation_status: 1,
+        grand_total: 0,
+        sub_total: 0,
+        To_pay: 0,
+        total_tax: 0,
+        storem: [],
+        paid: 0,
+        remaining: 0,
+        Way_to_pay_selected: 1,
+  
+  
+  
+  
+  
+      };
     },
-    disComponent(index) {
-      
-      if (index != 1 ) {
-        
-        this.count -= 1;
-        this.$delete(this.counts, index-1);
-        console.log('yuuyyusd',index,this.count);
-
+    watch: {
+      Way_to_pay_selected(newVal, oldVal) {
+        $(`#treeview_json_account`).jstree(true).destroy();
+        this.showtree('account', 'tree_account', this.Way_to_pay_selected);
+  
+        console.log('alkhm', newVal, oldVal);
       }
-    
     },
-
-    credit() {
-
-      console.log('we');
-      if (this.paid == '') {
-
+    methods: {
+  
+  
+  
+  
+      addComponent(index) {
+        this.count += 1;
+        this.counts[index] = this.count;
+        // this.calculate();
+      },
+      disComponent(index) {
+  
+        if (index != 1) {
+  
+          this.count -= 1;
+          this.$delete(this.counts, index - 1);
+  
+        }
+        // this.calculate();
+      },
+  
+      init() {
+  
+        this.grand_total = 0;
+        this.sub_total = 0;
+        this.total_tax = 0;
+        this.total_quantity = 0;
+        this.remaining = 0;
         this.paid = 0;
-      }
-      this.remaining = parseInt(this.grand_total) - parseInt(this.paid);
-    },
-
-
-    // Add_new() {
-
-
-
-    //   this.axios
-    //     .post(`/add_${this.type}`, {
-    //       type: this.type,
-    //       count: this.counts,
-    //       product: this.product,
-    //       store: this.store,
-    //       unit: this.unit,
-    //       desc: this.desc,
-    //       qty: this.qty,
-    //       status: this.status,
-    //       price: this.price,
-    //       total: this.total,
-    //       tax: this.tax,
-    //     })
-    //     .then((response) => {
-    //       // ---------------------------------------------------------------
-    //       console.log(response);
-
-    //       toastMessage("تم الاضافه بنجاح");
-    //       // this.$router.go(0);
-    //     });
-
-    //   // }
-    // },
-
-
-    handle(product,index){
-
-      console.log('handle',product,index);
-      this.set_values(product, index);
-      this.calc_grand_total(index);
-      this.calc_tax(index);
-      this.calc_qty(index);
-
-      if (this.check_state[index] == false) {
-
-        
-        this.$delete(this.counts, index);
-
-      }
-
-      this.To_pay = this.grand_total;
-
-      this.calc_remaining();
-    
-
-
-      // this.credit();
-
-    },
-    calculate_price(price, qty, index) {
-      // console.log(this.unit[index][2]);
-
-      if (this.unit[index][2] == 0) {
-
-        this.total[index] = price * qty;
-
-      }
-
-      if (this.unit[index][2] == 1) {
-
-        this.total[index] = price * this.unit[index][1] * qty;
-
-      }
-
-    },
-
-    calc_grand_total(index) {
-
-
-
-
-      if (this.check_state[index] == true) {
-
-        if (this.total[index]) {
-
-          this.grand_total = parseInt(this.total[index]) + parseInt(this.grand_total);
-
-        } else {
-
-          this.grand_total = parseInt(0) + parseInt(this.grand_total);
+        this.To_pay = 0;
+  
+      },
+  
+  
+      take_discount() {
+  
+        if (this.discounts != 0) {
+  
+          this.sub_total = (parseInt(this.discounts) * this.sub_total) / 100;
         }
-
-      }
-
-
-      if (this.check_state[index] == false) {
-
-        if (!this.total[index]) { this.total[index] = 0; }
-        this.grand_total = parseInt(this.grand_total) - parseInt(this.total[index]);
-        // this.total[index] = 0;
-
-
-      }
-
-
-
-    },
-
-    calc_tax(index) {
-
-
-
-      if (this.check_state[index] == true) {
-
-        if (this.tax[index]) {
-
-          this.total_tax = parseInt(this.tax[index]) + parseInt(this.total_tax);
-
-        } else {
-
-          this.total_tax = parseInt(0) + parseInt(this.total_tax);
+  
+  
+      },
+  
+      credit() {
+  
+        if (this.paid == '') {
+  
+          this.paid = 0;
         }
-
-        this.sub_total = parseInt(this.grand_total) - parseInt(this.total_tax)
-
-      }
-
-      if (this.check_state[index] == false) {
-
-
-
-        if (!this.tax[index]) { this.tax[index] = 0; }
-
-        this.total_tax = parseInt(this.total_tax) - parseInt(this.tax[index]);
-        this.sub_total = parseInt(this.grand_total) - parseInt(this.tax[index]);
-
-        // this.tax[index] = 0;
-
-
-      }
-
-
-    },
-    calc_qty(index) {
-
-
-
-      // this.qty[index] = 0;
-      if (this.check_state[index] == true) {
-
-        if (this.qty[index]) {
-
-          this.total_quantity = parseInt(this.qty[index]) + parseInt(this.total_quantity);
-
+        this.remaining = parseInt(this.grand_total) - parseInt(this.paid);
+      },
+  
+  
+      check_all_return() {
+  
+  
+  
+  
+        for (let index = 0; index < this.detail.length; index++) {
+  
+          if (this.check_state_all == true) {
+  
+  
+            this.check_state[index] = true;
+  
+          } else {
+  
+            this.check_state[index] = false;
+          }
+  
+          this.detail.forEach(element => {
+  
+            this.check_one(element, index);
+          });
+  
+  
+  
+  
+  
+        }
+  
+  
+      },
+  
+  
+      calculate_qty() {
+  
+  
+  
+        if (this.qty[this.row_counter]) {
+  
+          this.total_quantity = parseInt(this.qty[this.row_counter]) + parseInt(this.total_quantity);
+  
         } else {
-
+  
           this.total_quantity = parseInt(0) + parseInt(this.total_quantity);
         }
+  
+  
+      },
+  
+  
+  
+      calculate_remaining() {
+  
+  
+        if (this.Way_to_pay_selected == 2) {
+  
+          this.remaining = this.grand_total;
+  
+        } else {
+  
+          this.remaining = 0;
+  
+        }
+  
+      },
+  
+  
+      // -------------------------------------------------------------------------------------------
+  
+  
+      handle_top() {
+  
+        // if (!this.check_qty()) {return 0;}
+
+        if (this.type != 'Purchase') {
+  
+          this.set_values();
+        }
 
 
-      }
+        this.set_price();
+        this.calculate_total_with_check();
+  
+      },
+      handle_down() {
+  
+  
+  
+        this.calculate_qty();
+        this.calculate_tax();
+        this.calculate_grand_total();
+        this.credit();
+        this.calculate_remaining();
+  
+      },
+      calculate() {
+  
+  
+  
+        if (this.type == 'Purchase') {
+  
+          var count = this.count;
+        }else{
 
+          var count = this.detail.length;
+        }
 
-      if (this.check_state[index] == false) {
+       
+        this.init();
+  
+        for (let index = this.first_row; index <= count; index++) {
+  
+          this.row_counter = index;
+          if (this.type == 'Purchase') {
+  
+            this.check_state[this.row_counter] = true;
+          }
+  
+          if (this.check_state[index] == true) {
+  
+  
+            this.handle_top();
+  
+            if (this.operation_status == 0) {
+  
+              toastMessage('فشل', `${index}تأكد من البيانات المدخله`, 'error');
+              this.operation_status = 1;
+         
+             
+  
+            }else{
 
-        if (!this.qty[index]) { this.qty[index] = 0; }
+              this.handle_down();
 
-        this.total_quantity = parseInt(this.total_quantity) - parseInt(this.qty[index]);
-        // this.qty[index] = 0;
-      }
-
-    },
-    calc_remaining(){
-
-
-      if (this.Way_to_pay_selected == 2) {
-
-        this.remaining = this.grand_total;
-
-      } else {
-
-        this.remaining = 0;
-
-      }
+            }
+  
+  
+          }
+  
+        }
+  
+  
+      },
+  
+  
       
+  
+      set_price() {
+  
+        if (!this.price[this.row_counter]) {
+  
+            this.price[this.row_counter] = this.detail[this.row_counter].price;
+  
+        }
+  
+      },
+      calculate_total_with_check() {
+  
+  
+  
+  
+        if (this.unit[this.row_counter] && this.qty[this.row_counter] && this.price[this.row_counter]) {
+  
+          if (this.qty[this.row_counter] <= 0 || this.price[this.row_counter] <= 0) {
+  
+            this.total[this.row_counter] = 0;
+            this.operation_status = 0;
+  
+  
+          } else {
+  
+  
+            this.operation_status = 1;
+            this.total[this.row_counter] = this.price[this.row_counter] * this.qty[this.row_counter] * this.unit[this.row_counter][1];
+  
+  
+          }
+  
+  
+  
+        } else {
+  
+          this.total[this.row_counter] = 0;
+          this.operation_status = 0;
+        }
+  
+        // console.log('yes', this.unit[this.row_counter][1], this.qty[this.row_counter], this.price[this.row_counter], this.operation_status);
+  
+  
+  
+  
+  
+  
+      },
+      calculate_total(i, price=null) {
+  
+  
+  
+  
+        if (this.check_state[i] != true) {
+  
+          if (!price) {
+  
+            price = this.price[i];
+  
+          }
+  
+  
+          console.log('almuhib', price);
+          if (this.unit[i] && this.qty[i] && price) {
+  
+            if (this.qty[i] <= 0 || price <= 0) {
+  
+              this.total[i] = 0;
+              // this.operation_status = 0;
+            }
+  
+  
+            this.total[i] = price * this.qty[i] * this.unit[i][1];
+  
+          } else {
+  
+            // this.operation_status = 0;
+            this.total[i] = 0;
+          }
+  
+  
+  
+        }
+  
+  
+      },
+  
+  
+  
+  
+  
+  
+      calculate_grand_total() {
+  
+  
+  
+  
+        if (this.total[this.row_counter]) {
+  
+          this.grand_total = parseInt(this.total[this.row_counter]) + parseInt(this.grand_total);
+  
+        } else {
+  
+          this.grand_total = parseInt(0) + parseInt(this.grand_total);
+        }
+  
+        this.sub_total = parseInt(this.grand_total) - parseInt(this.total_tax)
+  
+  
+  
+        this.To_pay = this.grand_total;
+  
+  
+      },
+  
+  
+      calculate_tax() {
+  
+  
+  
+        if (this.tax[this.row_counter]) {
+  
+          this.total_tax = parseInt(this.tax[this.row_counter]) + parseInt(this.total_tax);
+  
+        } else {
+  
+          this.total_tax = parseInt(0) + parseInt(this.total_tax);
+        }
+  
+  
+      },
+  
     }
-  }
-};
+  };
+  

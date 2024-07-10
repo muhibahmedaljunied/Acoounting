@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Cash;
+
 use App\Repository\CheckData\CheckCashReturnRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
@@ -10,11 +11,10 @@ use Illuminate\Support\Facades\DB;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\StoreProduct;
-use App\Services\CoreService;
-use App\Services\PaymentService;
 use App\Traits\Unit\UnitsTrait;
 use App\Models\Cash;
 use App\Models\Payment;
+use App\Repository\Qty\QtyStockRepository;
 use App\Services\StockService;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -25,28 +25,23 @@ class CashController extends Controller
         GeneralTrait;
 
 
-    // public function __construct(
-    //     Request $request,
-    //     public PaymentService $payment,
-    //     protected CoreService $core,
+    public $qty;
+    public $details;
 
-
-    // ) {
-
-    //     $this->core->setData($request->all());
-    //     $this->core->setDiscount($request['discount'] * $request['grand_total'] / 100);
-    // }
-
+    public function  __construct(QtyStockRepository $qty)
+    {
+        $this->qty = $qty;
+    }
 
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
-
-        $this->units($details);
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
 
         return response()->json([
-            'details' => $details,
+            'details' => $this->qty->details,
 
         ]);
     }
@@ -54,17 +49,68 @@ class CashController extends Controller
     public function index(Request $request)
     {
 
-        [$products, $units] = ($request->id) ? $this->get_one($request) : $this->get_all($request);
-
+        $this->qty->compare_array = ['quantity'];
+        $this->qty->details = ($request->id) ? $this->get_one($request) : $this->get_all($request);
+        $this->qty->handle_qty();
 
         return response()->json([
-            'products' => $products,
-            'units' => $units,
+            'products' => $this->qty->details,
+            // 'units' => $this->qty->units,
             'customers' => $this->customers(),
             // 'treasuries' => $this->treasuries(),
 
         ]);
     }
+
+    // public function handle_qty($details){
+
+    //     foreach ($details as $key => $value) {
+
+    //         $this->value = $value;
+    //         $this->qtys();
+    //         $this->convert_qty($value->availabe_qty);
+    //     }
+
+
+    // }
+
+    // public function convert_qty($qty)
+    // {
+
+
+    //     $this->quantity = $qty;
+    //     $this->r = array();
+    //     foreach ($this->qtys as $key2 => $value2) {
+
+
+
+    //         if ($this->quantity / $value2->rate >= 1) {
+
+
+    //             $this->r["$key2"] = array(
+
+    //                 [intval($this->quantity / $value2->rate), 
+
+    //                 $value2->name]
+
+
+    //             );
+
+    //         }
+
+    //         if ($this->quantity % $value2->rate >= 1) {
+
+    //             $this->quantity = $this->quantity % $value2->rate;
+    //         } else {
+
+    //             break;
+    //         }
+
+    //     }
+
+    //     $this->value->qty_after_convert = $this->r;
+
+    // }
 
     public function customers()
     {
@@ -96,7 +142,7 @@ class CashController extends Controller
     public function get_all()
     {
 
-        $products = StoreProduct::where('store_products.quantity', '!=', '0')
+        return  StoreProduct::where('store_products.quantity', '!=', '0')
             ->joinall()
             ->select(
                 'products.*',
@@ -110,15 +156,14 @@ class CashController extends Controller
                 'store_products.id as store_product_id'
             )
             ->paginate(100);
-        $units = $this->units($products);
+        // $units = $this->qtys($products);
 
-        return [$products, $units];
     }
     public function get_one($request)
     {
 
         $retVal = ($request->type == 'product') ? 'store_products.product_id' : 'store_products.store_id';
-        $products = StoreProduct::where($retVal, $request->id)
+        return StoreProduct::where($retVal, $request->id)
             ->where('store_products.quantity', '!=', '0')
             ->joinall()
             ->select(
@@ -133,8 +178,6 @@ class CashController extends Controller
                 'store_products.id as store_product_id'
             )
             ->paginate(100);
-        $units = $this->units($products);
-        return [$products, $units];
     }
 
 
@@ -212,7 +255,7 @@ class CashController extends Controller
                     $query->join('dailies', 'dailies.id', '=', 'cashes.daily_id');
                     $query->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id');
                     $query->join('accounts', 'accounts.id', '=', 'daily_details.account_id');
-                    $query->where('daily_details.debit','!=',0);
+                    $query->where('daily_details.debit', '!=', 0);
                     $query->select(
                         'cashes.*',
                         'cashes.id as cash_id',
@@ -237,11 +280,11 @@ class CashController extends Controller
             $morphTo->constrain([
                 Cash::class => function ($query) {
                     $query->join('customers', 'customers.id', '=', 'cashes.customer_id');
-           
+
                     $query->select(
                         'cashes.*',
                         'cashes.id as cash_id',
-               
+
                     );
                 },
             ]);
@@ -259,16 +302,25 @@ class CashController extends Controller
     function invoice_cash(Request $request, $id)
     {
 
-        $table = $request->post('table');
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
 
-        $cashes = Cash::where('cashes.id', $id)
+        return response()->json([
+            'cash_details' => $this->qty->details,
+            'cashes' => $this->get_cash($id),
+            'users' => Auth::user()
+        ]);
+    }
+
+
+    public function get_cash($id)
+    {
+
+
+        return Cash::where('cashes.id', $id)
             ->join('customers', 'customers.id', '=', 'cashes.customer_id')
             ->select('cashes.*', 'cashes.id as cash_id', 'customers.*')
             ->get();
-            // dd($cashes);
-        $details = $this->invoice($id, $table);
-
-        $users = Auth::user();
-        return response()->json([$table => $details, 'cashes' => $cashes, 'users' => $users]);
     }
 }

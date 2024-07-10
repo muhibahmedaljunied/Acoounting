@@ -23,8 +23,8 @@ class CreateCashDetailsTable extends Migration
             $table->unsignedInteger('store_product_id');
             $table->foreign('store_product_id')->references('id')->on('store_products');
 
-            $table->unsignedInteger('unit_id')->unsigned()->nullable();
-            $table->foreign('unit_id')->references('id')->on('units');
+            // $table->unsignedInteger('unit_id')->unsigned()->nullable();
+            // $table->foreign('unit_id')->references('id')->on('units');
     
             $table->integer('qty');
             $table->float('price');

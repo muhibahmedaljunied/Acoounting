@@ -9,7 +9,9 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\SupplyReturnDetail;
 use App\Models\SupplyReturn;
+use App\Repository\Qty\QtyStockRepository;
 use App\Services\StockReturnService;
+use App\Services\StockService;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,24 +20,44 @@ use Illuminate\Support\Facades\DB;
 class SupplyReturnController extends Controller
 {
 
-    use GeneralTrait,
-        ReturnDetailsTrait;
+    use GeneralTrait;
  
+
+
+    // public function details(Request $request, $id)
+    // {
+
+    //     $details = $this->get_details($request, $id);
+
+    //     $this->units($details);
+
+    //     return response()->json([
+    //         'details' => $details,
+    //         // 'suppliers' => $this->suppliers(),
+    //         'treasuries' => $this->treasuries()
+    //     ]);
+    // }
+
+    public function  __construct(public QtyStockRepository $qty)
+    {
+        $this->qty = $qty;
+    }
 
 
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
-
-        $this->units($details);
-
+        $this->qty->compare_array = ['qty','quantity','qty_remain'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
         return response()->json([
-            'details' => $details,
-            // 'suppliers' => $this->suppliers(),
-            'treasuries' => $this->treasuries()
+            'details' => $this->qty->details,
+            // 'purchase' => $this->get_purchase($request->id),
+
         ]);
     }
+
+
 
     public function index(Request $request, $id)
     {
@@ -164,7 +186,7 @@ class SupplyReturnController extends Controller
     }
     public function create(
 
-        StockReturnService $stock
+        StockService $stock
     )   // this create return for supply,cashing,sale,supply
     {
 

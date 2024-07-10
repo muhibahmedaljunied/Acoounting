@@ -127,30 +127,36 @@
 
                         <td>
 
-                          <div v-for="temx in sale_details.units">
+                          <div v-for="temx in sale_details.qty_after_convert['qty']">
 
 
-                            <span v-if="temx.unit_type == 0">
 
-                              <span v-if="sale_details.qty_remain / sale_details.rate >= 1">
-                                {{ Math.floor((sale_details.qty_remain / sale_details.rate)) }}{{
-                            sale_details.units[0].name
-                          }}
-                              </span>
-
-                              <span v-if="sale_details.qty_remain % sale_details.rate >= 1">
-                                {{ Math.floor((sale_details.qty_remain % sale_details.rate)) }}{{
-                            sale_details.units[1].name
-                          }}
-                              </span>
-
-                              <span v-if="sale_details.qty_remain == 0">
-                                0
-                              </span>
-                            </span>
+<span v-for="temx2 in temx">
 
 
-                          </div>
+  <span style="float: right;">
+    {{ temx2[0] }}
+    <span style="color: red;">
+      {{ temx2[1] }}
+    </span>
+
+  </span>
+
+
+
+</span>
+
+<!-- <span v-if="temx.unit_type == 0">
+
+
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
+</div>
 
                         </td>
 
@@ -220,7 +226,7 @@ export default {
   props: ['data'],
   mounted() {
     this.table = 'sale_details';
-    let uri = `/invoice_sale/${this.data}`;
+    let uri = `/sale_invoice/${this.data}`;
     this.axios.post(uri, { table: this.table }).then((response) => {
       console.log(response.data.users.name);
       this.user = response.data.users.name;

@@ -27,8 +27,7 @@ class TransferRepository
     {
 
 
-        $unit_id = (isset($list_data['unit'])) ? $list_data['unit'] 
-        : $this->core->data['unit'][$this->core->value];
+        $unit_id = (isset($list_data['unit'])) ? $list_data['unit']: $this->core->data['unit'][$this->core->value];
 
         $this->add_into_transfer_details_table($unit_id);
 

@@ -25,11 +25,11 @@ class CreateSaleDetailsTable extends Migration
             $table->foreign('store_product_id')->references('id')->on('store_products');
 
 
-            $table->unsignedInteger('unit_id')->unsigned()->nullable();
-            $table->foreign('unit_id')->references('id')->on('units');
+            // $table->unsignedInteger('unit_id')->unsigned()->nullable();
+            // $table->foreign('unit_id')->references('id')->on('units');
 
             $table->integer('qty');
-            $table->float('cost');
+            $table->float('price');
             $table->float('total');
             $table->integer('qty_return')->default(0);
             $table->timestamps();

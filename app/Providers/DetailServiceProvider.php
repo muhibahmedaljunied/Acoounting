@@ -96,61 +96,61 @@ class DetailServiceProvider extends ServiceProvider
           
         });
 
-        $this->app->bind(DetailRefreshRepositoryInterface::class, function ( ) use($request)  {
+        // $this->app->bind(DetailRefreshRepositoryInterface::class, function ( ) use($request)  {
             
          
-            if ($request->type == 'Purchase') {
+        //     if ($request->type == 'Purchase') {
            
-                return new PurchaseRefreshDitailRepository();
+        //         return new PurchaseRefreshDitailRepository();
 
-            } 
+        //     } 
 
-            if ($request->type == 'Sale') {
+        //     if ($request->type == 'Sale') {
            
-                return new SaleRefreshDetailRepository();
+        //         return new SaleRefreshDetailRepository();
 
-            } 
-            if ($request->type == 'Supply') {
+        //     } 
+        //     if ($request->type == 'Supply') {
            
-                return new SupplyReturnRefreshDetailRepository();
+        //         return new SupplyReturnRefreshDetailRepository();
 
-            } 
+        //     } 
 
-            if ($request->type == 'Cash') {
+        //     if ($request->type == 'Cash') {
            
-                return new CashReturnRefreshDetailRepository();
+        //         return new CashReturnRefreshDetailRepository();
 
-            } 
+        //     } 
 
 
-            if ($request->type == 'PurchaseReturn') {
+        //     if ($request->type == 'PurchaseReturn') {
            
-                return new PurchaseReturnRefreshDetailRepository();
+        //         return new PurchaseReturnRefreshDetailRepository();
 
-            } 
+        //     } 
 
-            if ($request->type == 'SaleReturn') {
+        //     if ($request->type == 'SaleReturn') {
            
-                return new SaleReturnRefreshDetailRepository();
+        //         return new SaleReturnRefreshDetailRepository();
 
-            } 
-            if ($request->type == 'SupplyReturn') {
+        //     } 
+        //     if ($request->type == 'SupplyReturn') {
            
-                return new SupplyReturnRefreshDetailRepository();
+        //         return new SupplyReturnRefreshDetailRepository();
 
-            } 
+        //     } 
 
-            if ($request->type == 'CashReturn') {
+        //     if ($request->type == 'CashReturn') {
            
-                return new CashReturnRefreshDetailRepository();
+        //         return new CashReturnRefreshDetailRepository();
 
-            } 
+        //     } 
 
            
 
 
           
-        });
+        // });
 
 
         // $this->app->bind(DetailRepositoryInterface::class, function ( ) use($request)  {

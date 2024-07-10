@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\status;
 use App\Models\Temporale;
 use App\Models\Supply;
+use App\Repository\Qty\QtyStockRepository;
 use App\Services\StockService;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -21,19 +22,21 @@ class SupplyController extends Controller
 {
     use InvoiceTrait,
         GeneralTrait;
+    public $qty;
 
+    public function __construct(QtyStockRepository $qty)
+    {
 
-
-
+        $this->qty = $qty;
+    }
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
-
-        $this->units($details);
-
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
         return response()->json([
-            'details' => $details,
+            'details' => $this->qty->details,
 
         ]);
     }
@@ -47,7 +50,22 @@ class SupplyController extends Controller
             ->select('products.*',)
             ->get();
 
-        $stores = DB::table('stores')
+
+        return response()->json([
+            'products' => $products,
+            'suppliers' => $this->suppliers(),
+            'statuses' => Status::all(),
+            'stores' => $this->get_store()
+
+        ]);
+    }
+
+
+
+    public function get_store()
+    {
+
+        return DB::table('stores')
             ->select(
                 'stores.account_id as store_account_id',
                 'stores.text as store_name',
@@ -55,20 +73,7 @@ class SupplyController extends Controller
 
             )
             ->get();
-
-
-        return response()->json([
-            'products' => $products,
-            'suppliers' => $this->suppliers(),
-            'statuses' => Status::all(),
-            // 'treasuries' => $this->treasuries(),
-            'stores' => $stores
-
-        ]);
     }
-
-
-
 
     public function suppliers()
     {
@@ -180,7 +185,7 @@ class SupplyController extends Controller
         $supplies = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
             $morphTo->constrain([
                 Supply::class => function ($query) {
-                    
+
                     $query->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id');
                     $query->join('dailies', 'dailies.id', '=', 'supplies.daily_id');
                     $query->join('daily_details', 'dailies.id', '=', 'daily_details.daily_id');
@@ -213,12 +218,12 @@ class SupplyController extends Controller
                 Supply::class => function ($query) {
 
                     $query->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id');
-                    
+
 
                     $query->select(
                         'supplies.*',
                         'supplies.id as supply_id',
-                     
+
                     );
                 },
             ]);
@@ -249,38 +254,27 @@ class SupplyController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function invoice_supply(Request $request,$id)
+    public function invoice_supply(Request $request, $id)
     {
 
-        // $supplies = Supply::where('supplies.id', $id)
-        //     ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
-        //     ->select(
-        //         'supplies.*',
-        //         'supplies.id as supply_id',
-        //         'supplies.*'
-        //     )
-        //     ->get();
-
-        // $details = $this->invoice($id, $table);
-
-        // $users = Auth::user();
-
-        // return response()->json([$table => $details, 'supplies' => $supplies, 'users' => $users]);
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
+        return response()->json([
+            'supply_details' => $this->qty->details,
+            'supplies' => $this->get_supply($id),
+            'users' => Auth::user()
+        ]);
+    }
 
 
-        $table = $request->post('table');
+    public function get_supply($id)
+    {
 
-        $supplies = Supply::where('supplies.id', $id)
+        return Supply::where('supplies.id', $id)
             ->join('suppliers', 'suppliers.id', '=', 'supplies.supplier_id')
             ->select('supplies.*', 'supplies.id as cash_id', 'suppliers.*')
             ->get();
-            // dd($supplies);
-        $details = $this->invoice($id, $table);
-
-        $users = Auth::user();
-        return response()->json([$table => $details, 'supplies' => $supplies, 'users' => $users]);
-
-        
     }
     public function destroy(Request $request)
     {

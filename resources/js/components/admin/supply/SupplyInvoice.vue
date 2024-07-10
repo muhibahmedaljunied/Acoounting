@@ -123,28 +123,35 @@
                  
                       <td>
 
-<div v-for="temx in supply_details.units">
+
+                        <div v-for="temx in supply_details.qty_after_convert['qty']">
 
 
-  <span v-if="temx.unit_type == 0">
 
-    <span v-if="supply_details.qty_remain / supply_details.rate >= 1">
-      {{ Math.floor((supply_details.qty_remain / supply_details.rate)) }}{{
-  supply_details.units[0].name
-}}
+<span v-for="temx2 in temx">
+
+
+  <span style="float: right;">
+    {{ temx2[0] }}
+    <span style="color: red;">
+      {{ temx2[1] }}
     </span>
 
-    <span v-if="supply_details.qty_remain % supply_details.rate >= 1">
-      {{ Math.floor((supply_details.qty_remain % supply_details.rate)) }}{{
-  supply_details.units[1].name
-}}
-    </span>
-
-    <span v-if="supply_details.qty_remain == 0">
-      0
-    </span>
   </span>
 
+
+
+</span>
+
+<!-- <span v-if="temx.unit_type == 0">
+
+
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
 
 </div>
 

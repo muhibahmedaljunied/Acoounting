@@ -20,11 +20,11 @@ class TransferDetail extends Model
 
     {
 
-        return $query->join('units', 'transfer_details.unit_id', '=', 'units.id')
+        return $query
             ->join('store_products', 'store_products.id', '=', 'transfer_details.store_product_id')
             ->join('products', 'store_products.product_id', '=', 'products.id')
-            ->join('statuses', 'store_products.status_id', '=', 'statuses.id')
-            ->join('stores', 'store_products.store_id', '=', 'stores.id');
+            ->join('statuses', 'store_products.status_id', '=', 'statuses.id');
+            // ->join('stores', 'store_products.store_id', '=', 'stores.id');
     }
 
     public function scopeWhereall($query, $request, $value)

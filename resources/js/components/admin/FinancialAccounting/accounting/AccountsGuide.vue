@@ -90,57 +90,83 @@
                   <form method="post">
 
                     <div class="card-body">
-                      <div class="form">
+                      <div class="row">
                         <!-- <h3 class="text-center">اضافه حساب</h3> -->
 
-                        <div class="form-group">
+                        <!-- <div class="col-md-4">
                           <ul>
                             <div v-for="error in errors">
                               <li>{{ error[0] }}</li>
                             </div>
                           </ul>
-                        </div>
+                        </div> -->
 
-                        <div class="form-group">
+                        <div class="col-md-4">
                           <label for="Product">رقم الحساب</label>
                           <input id='account_number' type="text" class="form-control" required />
 
                         </div>
 
-                        <div class="form-group">
+                        <div class="col-md-4">
                           <label for="Product">اسم الحساب</label>
                           <input v-model="text" type="text" name="Product" id="account_first_level" class="form-control"
                             required />
 
                         </div>
 
-                        <div class="form-group">
+
+                      </div>
+
+                      <br>
+                      <div class="row">
+
+                        <div class="col-md-4">
                           <label for="radio-example-one">متفرع </label>
 
                           <input type="checkbox" name='fieldset2' v-model="status" id="status" />
                         </div>
 
 
-                        <div class="form-group">
-                          <label for="radio-example-one">مدين </label>
 
-                          <input type="checkbox" name='field1' id="attend" @change="check()" />
-
-                          <label for="radio-example-one">داين </label>
-
-                          <input type="checkbox" name='field2' id="attend" @change="check()" />
-
-                        </div>
-
-                        <input id='parent' type="hidden" />
-
-                        <input id='rank' type="text" />
 
                       </div>
+<br>
+                      <div class="row">
+
+
+
+<div class="col-md-4">
+  <label for="radio-example-one">مدين </label>
+
+  <input type="checkbox" name='field1' id="attend" @change="check()" />
+
+  <label for="radio-example-one">داين </label>
+
+  <input type="checkbox" name='field2' id="attend" @change="check()" />
+
+</div>
+
+<input id='parent' type="hidden" />
+
+<input id='rank' type="text" />
+
+
+</div>
+
+<div class="row">
+
+  <div class="col-md-12">
+
+    <button type="button" class="btn btn-primary btn-lg btn-inline" @click="addnode"> حفظ </button>
+
+
+  </div>
+</div>
+
                     </div>
-                    <div class="card-footer">
+                    <!-- <div class="card-footer">
                       <button type="button" class="btn btn-primary btn-lg btn-block" @click="addnode"> حفظ </button>
-                    </div>
+                    </div> -->
                   </form>
                 </div>
               </div>
@@ -151,6 +177,114 @@
 
 
       </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <span class="h2">تفاصيل المنتجات</span>
+
+
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <!-- <th>  رقم الفاتوره </th> -->
+                      <th>اسم المنتج</th>
+                      <th> المواصفات والطراز</th>
+                      <th>الحاله</th>
+                      <th>المخزن</th>
+
+                      <th class="wd-15p border-bottom-0"> كميه الشراء</th>
+                      <!-- <th>الوحده</th> -->
+                      <th class="wd-15p border-bottom-0"> السعر </th>
+                      <!-- <th class="wd-15p border-bottom-0"> الاجمالي </th> -->
+
+                      <!-- <th class="wd-15p border-bottom-0">  الكميه المرتحعه</th> -->
+
+
+                    </tr>
+                  </thead>
+                  <tbody v-if="purchase_detail && purchase_detail.length > 0">
+                    <tr v-for="purchase_details in purchase_detail">
+                      <!-- <td>{{ purchase_details.id }}</td> -->
+                      <td>{{ purchase_details.product }}</td>
+                      <td>{{ purchase_details.desc }}</td>
+                      <td>{{ purchase_details.status }}</td>
+                      <td>{{ purchase_details.store }}</td>
+                      <!-- <td>{{ purchase_details.qty }} {{ purchase_details.unit }}</td> -->
+                      <td>
+
+
+                        <div v-for="temx in purchase_details.qty_after_convert['qty']">
+
+
+
+                          <span v-for="temx2 in temx">
+
+
+                            <span style="float: right;">
+                              {{ temx2[0] }}
+                              <span style="color: red;">
+                                {{ temx2[1] }}
+                              </span>
+
+                            </span>
+
+
+
+                          </span>
+
+                          <!-- <span v-if="temx.unit_type == 0">
+
+
+                          <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+                        temx.name }}</span>
+
+
+
+                        </span> -->
+
+                        </div>
+
+
+                      </td>
+
+                      <!-- <td>{{ purchase_details.unit }}</td> -->
+                      <td>{{ purchase_details.price }}</td>
+                      <!-- <td>{{ purchase_details.total }}</td> -->
+                      <!-- <td>{{ purchase_details.qty_return }}</td> -->
+
+
+
+                    </tr>
+                    <!-- <tr>
+
+                    <td colspan="7" style="text-align:center;color:red;font-size:large">الاجمالي</td>
+                    <td>{{ total }}</td>
+                  </tr> -->
+
+                  </tbody>
+                  <tbody v-else>
+                    <tr>
+                      <td align="center" colspan="8">
+                        <h3>
+                          لايوجد اي مشتريات
+                        </h3>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </template>

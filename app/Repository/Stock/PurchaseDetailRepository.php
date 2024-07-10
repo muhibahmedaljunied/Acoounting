@@ -3,12 +3,12 @@
 namespace App\Repository\Stock;
 
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Traits\Purchase\PurchaseTrait;
+use App\Traits\Purchase\PurchaseDetailsTrait;
 use App\Services\CoreService;
 class PurchaseDetailRepository implements DetailRepositoryInterface
 {
 
-use PurchaseTrait;
+use PurchaseDetailsTrait;
 
     public $core;
     public function __construct()
@@ -20,7 +20,7 @@ use PurchaseTrait;
 
 
 
-    public function init_details(...$list_data)
+    public function details(...$list_data)
     {
 
         $this->add_into_purchase_details_table();
@@ -28,6 +28,7 @@ use PurchaseTrait;
     }
 
    
+ 
 
    
 }

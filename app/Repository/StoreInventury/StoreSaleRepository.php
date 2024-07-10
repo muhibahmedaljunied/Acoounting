@@ -2,39 +2,44 @@
 
 
 namespace App\Repository\StoreInventury;
-use App\Traits\Sale\StoreProductTrait;
-class StoreSaleRepository extends StoreRepository
+
+use App\RepositoryInterface\StoreRepositoryInterface;
+use App\Services\CoreService;
+
+class StoreSaleRepository extends StoreRepository implements StoreRepositoryInterface
 {
 
-    use StoreProductTrait;
+    public function __construct(CoreService $core)
+    {
+      $this->core = $core;
+      $this->operation = 'decrement';
+    }
     public function store()
     {
+        
+  
+      $this->get_store_product_first();
+      $this->refresh_store_product();
 
-
-        $this->get_store_product();
-        $this->refresh_store_product(); // this make refresh for store_products
-
-
-
+    
     }
+  
 
-
-    function get_store_product()
+  
+    public function refresh_store_product()
     {
-
-     
-
-        $id_store_product = $this->get_store_product_table();
-
-        $this->core->id_store_product = (count($id_store_product->toarray()) == 0) ? 0 : $id_store_product[0]['id'];
+  
+  
+  
+            $this->refresh_qty_store_product_table();
+            $this->refresh_total_store_product_table();
+            $this->get_store_product_first();
+            $this->refresh_cost_store_product_table();
+            
     }
+  
+ 
 
-    public function refresh_store_product(...$list_data)
-    {
-
-
-        $this->core->store_product_f = $this->refresh_store_product_table();
-    }
 
 
 

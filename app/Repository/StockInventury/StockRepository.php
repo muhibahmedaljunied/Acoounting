@@ -3,41 +3,41 @@
 namespace App\Repository\StockInventury;
 
 use App\Services\CoreService;
-use App\Models\PurchaseDetail;
 use App\Models\Stock;
-use Illuminate\Support\Facades\DB;
 
-abstract class StockRepository
+ class StockRepository
 {
 
 
     public function __construct(protected CoreService $core)
     {
     }
-    abstract function Stock();
 
-    function refresh_stock_table($type_refresh = null)
-    {
+    // abstract function Stock();
+    
 
-        if ($this->core->stock_f != 0) {
-            return 0;
-        }
+    // function refresh_stock_table($type_refresh = null)
+    // {
 
-        $type = ($type_refresh) ? $type_refresh : $this->core->data['type_refresh'];
+    //     if ($this->core->stock_f != 0) {
+    //         return 0;
+    //     }
 
-        // return $type;
-        $stock_f = DB::table('stocks')
-            ->where('type_operation', $this->core->data['type'])
-            ->where('unit_id', $this->core->unit_array[0])
-            // ->$type('quantity', $this->core->micro_unit_qty);
-            ->$type('quantity', $this->core->data['qty'][$this->core->value]);
+    //     $type = ($type_refresh) ? $type_refresh : $this->core->data['type_refresh'];
+
+    //     // return $type;
+    //     $stock_f = DB::table('stocks')
+    //         ->where('type_operation', $this->core->data['type'])
+    //         ->where('unit_id', $this->core->unit_array[0])
+    //         ->$type('quantity', $this->core->micro_unit_qty);
+    //         // ->$type('quantity', $this->core->data['qty'][$this->core->value]);
 
 
-        $this->core->stock_f = $stock_f;
-        return $this;
-    }
+    //     $this->core->stock_f = $stock_f;
+    //     return $this;
+    // }
 
-    function init_stock_table()
+    function stock()
     {
 
         if ($this->core->stock_f != 0) {
@@ -50,8 +50,8 @@ abstract class StockRepository
         // $stocks->unit_id = $this->core->unit_value;
         $stocks->unit_id = $this->core->unit_array[0];
 
-        // $stocks->quantity = $this->core->micro_unit_qty;
-        $stocks->quantity = $this->core->data['qty'][$this->core->value];
+        $stocks->quantity = $this->core->micro_unit_qty;
+        // $stocks->quantity = $this->core->data['qty'][$this->core->value];
         $stocks->date = $this->core->data['date'];
         $stocks->stockable()->associate($this->core->stockable); //$this->core->purchase === $this->core->stockable
         $stocks->save();
@@ -60,30 +60,5 @@ abstract class StockRepository
         // }
     }
 
-    function refresh_price()
-    {
 
-        $qty = 0;
-        $total = 0;
-        $cost = 0;
-
-        $data = PurchaseDetail::where('purchase_details.store_product_id', $this->core->id_store_product)
-            ->select('purchase_details.*')
-            ->get();
-
-        if (count($data) > 1) {
-
-            foreach ($data as $key => $value) {
-
-                $qty += $value->qty;
-                $total += $value->total;
-            }
-
-            $cost = $total / $qty;
-            // dd($cost);
-
-            DB::table('store_products')->where('store_products.id', $this->core->id_store_product)
-                ->update(['cost' => $cost]);
-        }
-    }
 }

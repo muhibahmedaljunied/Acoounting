@@ -23,17 +23,17 @@ trait TransferTrait
 
     public function add_into_transfer_details_table($unit_id)
     {
-  
-        
-        // dd($this->core->data['fromstore']);
+     
+        // dd($this->core->data_store_product[0]['id']);
         $details = new TransferDetail();
         $details->transfer_id = $this->core->transfer_id;
         $details->from_store = $this->core->data['fromstore'];
         $details->into_store = $this->core->data['intostore'];
-        $details->store_product_id = $this->core->data_store_product['store_product_id'];
-        $details->unit_id = $unit_id[0];
+        $details->store_product_id = $this->core->data_store_product[0]['id'];
+        // $details->unit_id = $unit_id[0];
         $details->qty = $this->core->micro_unit_qty;
         $details->save();
+    
 
         // dd($details);
     

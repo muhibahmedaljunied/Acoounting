@@ -2,15 +2,21 @@
 
 
 namespace App\Repository\StoreInventury;
-use App\Services\CoreService;
-abstract class StoreRepository
+
+use App\RepositoryInterface\StoreRepositoryInterface;
+use App\Traits\StoreProductTrait;
+abstract class StoreRepository implements StoreRepositoryInterface
 {
 
-    public function __construct(protected CoreService $core)
-    {
-    }
+  use StoreProductTrait;
+  public $operation;
+  public $core;
 
-    abstract function store();
+  abstract function store();
+
+
+
+
 
 
 }

@@ -189,7 +189,7 @@ export default {
      setInterval(this.getNow, 1000);
   },
   mounted() {
-    let uri = `/invoice_return_sale/${this.$route.params.id}`;
+    let uri = `/return_sale_invoice/${this.data}`;
     this.axios.post(uri).then((response) => {
         // console.log(response.data.cash_return_details);
         this.user = response.data.users.name;

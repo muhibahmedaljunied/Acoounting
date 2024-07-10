@@ -42,28 +42,36 @@ trait SaleTrait
  
     }
 
-    public function add_into_sale_details_table()
-    {
+    // public function add_into_sale_details_table()
+    // {
 
 
-        $Details = new SaleDetail();
-        $Details->sale_id = $this->core->sale_id;
-        $Details->cost = $this->core->data['old'][$this->core->value]['cost'];
-        $Details->total = $this->core->data['sub_total'];
-        $Details->store_product_id = $this->core->id_store_product;
-        $Details->unit_id = $this->core->unit_array[0];
-        $Details->qty = $this->core->micro_unit_qty;
-        $Details->save();
-    }
+    //     $Details = new SaleDetail();
+    //     $Details->sale_id = $this->core->sale_id;
+    //     $Details->cost = $this->core->data['old'][$this->core->value]['cost'];
+    //     $Details->total = $this->core->data['sub_total'];
+    //     $Details->store_product_id = $this->core->id_store_product;
+    //     $Details->unit_id = $this->core->unit_array[0];
+    //     $Details->qty = $this->core->micro_unit_qty;
+    //     $Details->save();
 
-    function refresh_sale_details_table()
-    {
+    //     // $this->core->id_store_product =  $this->core->data_store_product->id;
+
+    //     // $this->core->id_store_product = ($this->core->data_store_product == null) ?0 : $this->core->data_store_product[0]['id'];
+
+
+
+        
+    // }
+
+    // function refresh_sale_details_table()
+    // {
 
  
-        DB::table('sale_details')
-            ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
-            ->increment('qty_return', $this->core->micro_unit_qty);
+    //     DB::table('sale_details')
+    //         ->where(['store_product_id' => $this->core->data['old'][$this->core->value]['store_product_id']])
+    //         ->increment('qty_return', $this->core->micro_unit_qty);
 
 
-    }
+    // }
 }

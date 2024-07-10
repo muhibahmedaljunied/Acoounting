@@ -163,25 +163,23 @@
                     <td>
 
 
-                      <div v-for="temx in purchase_details.qty_after_convert">
+                      <div v-for="temx in purchase_details.qty_after_convert['qty']">
 
 
 
                         <span v-for="temx2 in temx">
 
 
-                          <span v-for="temx3 in temx2">
-
-                            
-
-                            <span >
-                              {{  temx3[0] }}
-                             </span>
-                             <span style="color: red;" >
-                              {{  temx3[1] }}
-                             </span>
+                          <span style="float: right;">
+                            {{ temx2[0] }}
+                            <span style="color: red;">
+                              {{ temx2[1] }}
+                            </span>
 
                           </span>
+
+
+
                         </span>
 
                         <!-- <span v-if="temx.unit_type == 0">
@@ -270,7 +268,10 @@ export default {
 
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table,
+            type: this.type,
+            operation:'OperationQty'
+           })
           .then((response) => {
             console.log(response);
             this.purchase_detail = response.data.details;

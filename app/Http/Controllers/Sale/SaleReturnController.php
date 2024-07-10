@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Sale;
 use App\Services\StockService;
 use Illuminate\Support\Facades\Cache;
 use App\Traits\Return\ReturnTrait;
-use App\Traits\Details\ReturnDetailsTrait;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\SaleReturnDetail;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use App\Models\SaleReturn;
+use App\Repository\Qty\QtyStockRepository;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,22 +20,68 @@ class SaleReturnController extends Controller
 {
 
     use GeneralTrait,
-        ReturnDetailsTrait,
         ReturnTrait;
 
-
+    public $qty;
+    public $details;
+    public function  __construct(QtyStockRepository $qty)
+    {
+        $this->qty = $qty;
+    }
 
 
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
+        $this->qty->compare_array = ['qty', 'quantity', 'qty_remain'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
+        return response()->json([
+            'details' => $this->qty->details,
+            'sale' => $this->get_sale($request->id),
+        ]);
+    }
 
-        $this->units($details);
 
-        
-        $sale =  DB::table('sales')
-            ->where('sales.id', $request->id)
+    public function return_detail(Request $request, $table)
+    {
+
+
+
+        $this->qty->compare_array = ['qty'];
+
+        $tables = $request->post('table');
+
+        if ($tables == 'supply') {
+
+            $table = 'supplies';
+        }
+
+        if ($tables == 'cash') {
+
+            $table = 'cashes';
+        }
+
+        if ($tables == 'purchase') {
+
+            $table = 'purchases';
+        }
+
+        if ($tables == 'sale') {
+
+            $table = 'sales';
+        }
+        $this->get_return_details($request->id, $table, $tables);
+        $this->qty->handle_qty();
+        return response()->json(['return_details' => $this->qty->details]);
+    }
+
+    public function get_sale($id)
+    {
+
+
+        return DB::table('sales')
+            ->where('sales.id', $id)
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
             ->select(
                 'customers.id',
@@ -43,24 +91,16 @@ class SaleReturnController extends Controller
 
             )
             ->get();
-
-        return response()->json([
-            'details' => $details,
-            'sale' => $sale,
-
-            // 'customers' => $this->customers(),
-            // 'treasuries' => $this->treasuries()
-        ]);
     }
-
 
     public function index(Request $request, $id)
     {
 
-        $details = $this->details($request, $id);
+        $this->qty->compare_array = ['qty', 'quantity', 'qty_remain'];
+        $this->details($request, $id);
 
         return response()->json([
-            'sale_details' => $details,
+            'sale_details' => $this->qty->details,
             'customers' => $this->customers(),
             'treasuries' => $this->treasuries()
         ]);
@@ -122,29 +162,48 @@ class SaleReturnController extends Controller
         return response()->json(['daily_details' => $sale_returns]);
     }
 
-    public function show($id)
+    // public function show($id)
+    // {
+
+
+    //     $returns = DB::table('sale_returns')->where('sale_returns.sale_id', $id)
+    //         ->join('sales', 'sales.id', '=', 'sale_returns.sale_id')
+    //         ->select(
+    //             'sale_returns.*',
+    //             'sale_returns.date as return_date',
+    //             'sale_returns.id as return_id',
+    //             'sale_returns.quantity as quantity_return',
+    //             'sales.*'
+    //         )
+    //         ->get();
+
+
+    //     return response()->json(['returns' => $returns]);
+    // }
+
+
+    public function show()
     {
 
 
-        $returns = DB::table('sale_returns')->where('sale_returns.sale_id', $id)
-            ->join('sales', 'sales.id', '=', 'sale_returns.sale_id')
-            ->select(
-                'sale_returns.*',
-                'sale_returns.date as return_date',
-                'sale_returns.id as return_id',
-                'sale_returns.quantity as quantity_return',
-                'sales.*'
-            )
-            ->get();
+        $returns = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                SaleReturn::class => function ($query) {
+
+                    $query->select('sale_returns.*', 'sale_returns.id as return_id');
+                },
+            ]);
+        }])
+            ->where('paymentable_type', 'App\\Models\\SaleReturn')
+            ->paginate(5);
 
 
         return response()->json(['returns' => $returns]);
     }
 
-
-
     public function return_invoice($id)
     {
+
 
 
         return response()->json([
@@ -180,7 +239,10 @@ class SaleReturnController extends Controller
         return SaleReturnDetail::where('sale_return_details.sale_return_id', $id)
             ->join('sale_returns', 'sale_returns.id', '=', 'sale_return_details.sale_return_id')
             ->join('store_products', 'store_products.id', '=', 'sale_return_details.store_product_id')
-            ->joinall()
+            ->join('products', 'sale_details.product_id', '=', 'products.id')
+            ->join('statuses', 'sale_details.status_id', '=', 'statuses.id')
+            ->join('stores', 'sale_details.store_id', '=', 'stores.id')
+            // ->joinall()
             ->select(
                 'sale_return_details.*',
                 'sale_return_details.quantity as qty_return',
@@ -188,7 +250,7 @@ class SaleReturnController extends Controller
                 'statuses.*',
                 'statuses.name as status',
                 'stores.*',
-                'shelves.*',
+     
                 'products.text as product_name'
             )
             ->get();
@@ -199,7 +261,8 @@ class SaleReturnController extends Controller
     )   // this create return for supply,cashing,sale,purchase
     {
 
-      
+
+
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -210,7 +273,7 @@ class SaleReturnController extends Controller
             // dd(1);
             Cache::forget('stock');
 
-      
+
 
 
             // ------------------------------------------------------------------------------------------------------

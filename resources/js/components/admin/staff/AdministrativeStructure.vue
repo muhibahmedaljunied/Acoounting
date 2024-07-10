@@ -83,38 +83,28 @@
 
 
                         <div class="card-body">
-                            <div class="form">
+                            <div class="row">
                                 <!-- <h3 class="text-center">اضافه منتج</h3> -->
 
 
-                                <div class="form-group">
+                                <!-- <div class="col-md-4">
                                     <ul>
                                         <div v-for="error in errors">
                                             <li>{{ error[0] }}</li>
                                         </div>
                                     </ul>
-                                </div>
+                                </div> -->
 
-                                <div class="form-group">
+                                <div class="col-md-4">
                                     <label for="Staff">رقم الهيكل</label>
                                     <input id='structure_number' type="text" class="form-control" required readonly />
 
                                 </div>
-                                <div class="form-group">
+                                <div class="col-md-4">
                                     <label for="Staff">اسم الهيكل</label>
                                     <input style="background-color: beige;" v-model="text" type="text" name="Staff"
                                         id="staff" class="form-control" required /><span style="color:red">{{
                                                 error_text[0] }}</span>
-
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="radio-example-one">متفرع </label>
-
-                                    <input type="checkbox" name='fieldset2' v-model="status" id="status">
-                                    <input id='parent' type="hidden" />
-
-                                    <input id='rank' type="hidden" />
 
                                 </div>
 
@@ -127,11 +117,41 @@
 
 
                             </div>
+
+                            <br>
+                            <div class="row">
+
+                                <div class="col-md-">
+
+                                    
+                                <div class="col-md-4">
+                                    <label for="radio-example-one">متفرع </label>
+
+                                    <input type="checkbox" name='fieldset2' v-model="status" id="status">
+                                    <input id='parent' type="hidden" />
+
+                                    <input id='rank' type="hidden" />
+
+                                </div>
+
+
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+
+                                    <button type="button" class="btn btn-primary btn-lg btn-inline" @click="addnode()"> حفظ</button>
+
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <button type="button" class="btn btn-primary btn-lg btn-block" @click="addnode()"> حفظ
-                            </button>
-                        </div>
+                        <!-- <div class="card-footer">
+                            <button type="button" class="btn btn-primary btn-lg btn-block" @click="addnode()"> حفظ</button>
+                        </div> -->
                     </form>
                 </div>
             </div>

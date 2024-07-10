@@ -1,139 +1,106 @@
 <?php
-
 namespace App\Http\Controllers\Purchase;
-
-
 use Illuminate\Support\Facades\Cache;
-use App\Repository\CheckData\CheckPurchaseReturnRepository;
-use App\Traits\Details\ReturnDetailsTrait;
 use App\Traits\GeneralTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturn;
+use App\Repository\Qty\QtyStockRepository;
 use App\Services\StockService;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\DB;
-
 class PurchaseReturnController extends Controller
 {
 
-    use GeneralTrait,
-        ReturnDetailsTrait;
+    use GeneralTrait;
 
-    public $units;
-    public $value;
-    public $key;
+    public $qty;
+    public $details;
 
-    public $quantity = 0;
-    public $r = array(
-
-        array()
-    );
-
-
+    public function  __construct(QtyStockRepository $qty)
+    {
+        $this->qty = $qty;
+    }
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
-
-        // $this->units($details);
-
-        foreach ($details as $key => $value) {
-
-            $this->value = $value;
-            // dd($value);
-            $this->units();
-            $this->value->qty_after_convert = $this->convert_qty([$value->quantity, $value->avilable_qty, $value->qty_remain]);
-            // $this->value->qty_after_convert = $this->convert_qty($value->qty);
-            // $this->value->qty_after_convert = $this->convert_qty($value->qty);
-
-        }
-
-
-
-
-        $purchase =  DB::table('purchases')
-            ->where('purchases.id', $request->id)
-            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
-            ->select(
-                'suppliers.id',
-                'suppliers.name',
-                // 'suppliers.account_id',
-                'purchases.grand_total',
-
-
-            )
-            ->get();
-
+        $this->qty->compare_array = ['qty','quantity','qty_remain'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
         return response()->json([
-            'details' => $details,
-            'purchase' => $purchase,
+            'details' => $this->qty->details,
+            'purchase' => $this->get_purchase($request->id),
 
         ]);
     }
 
-    public function convert_qty(array $array)
+    public function return_detail(Request $request, $table)
     {
 
+      
 
+        $this->qty->compare_array = ['qty'];
 
-        $i =0;
-        foreach ($array as $value0) {
+        $tables = $request->post('table');
 
-            $this->quantity = $value0;
+        if ($tables == 'supply') {
 
-            foreach ($this->units as $key2 => $value2) {
-
-
-
-                if ($this->quantity / $value2->rate >= 1) {
-
-
-                    $this->r["$this->key"]["$key2"] = array(
-
-                        // "$key2" => array(
-                        [intval($this->quantity / $value2->rate), $value2->name]
-                        // )
-                    );
-                }
-
-                if ($this->quantity % $value2->rate >= 1) {
-
-                    $this->quantity = $this->quantity % $value2->rate;
-                } else {
-
-                    break;
-                }
-
-                // $this->divid_one($value2, $key);
-
-
-
-
-            }
-
-            $this->value->qty_after_convert[$i] = $this->r;
-            // // dd($this->r);
-            $this->r = array(
-                array()
-            );
-
-            $i = $i +1;
+            $table = 'supplies';
         }
+
+        if ($tables == 'cash') {
+
+            $table = 'cashes';
+        }
+
+        if ($tables == 'purchase') {
+
+            $table = 'purchases';
+        }
+
+        if ($tables == 'sale') {
+
+            $table = 'sales';
+        }
+        $this->get_return_details($request->id,$table,$tables);
+        $this->qty->handle_qty();
+
+        // $this->units($return_details);
+
+
+
+        return response()->json(['return_details' =>$this->qty->details]);
     }
 
+
+    public function get_purchase($id){
+
+        return DB::table('purchases')
+        ->where('purchases.id', $id)
+        ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+        ->select(
+            'suppliers.id',
+            'suppliers.name',
+            'purchases.grand_total',
+
+
+        )
+        ->get();
+
+
+    }
+   
     public function index(Request $request, $id)
     {
 
 
-
-        $details = $this->details($request, $id);
-
-
+        $this->qty->compare_array = ['qty','available_qty','qty_remain'];
+        $this->details($request, $id);
         return response()->json([
-            'purchase_details' => $details,
+            'purchase_details' => $this->qty->details,
             'suppliers' => $this->suppliers(),
             'treasuries' => $this->treasuries()
         ]);
@@ -219,25 +186,46 @@ class PurchaseReturnController extends Controller
             ->get();
     }
 
-    public function show($id)
+    // public function show($id)
+    // {
+
+
+    //     $returns = DB::table('purchase_returns')->where('purchase_returns.purchase_id', $id)
+    //         ->join('purchases', 'purchases.id', '=', 'purchase_returns.purchase_id')
+    //         ->select(
+    //             'purchase_returns.*',
+    //             'purchase_returns.date as return_date',
+    //             'purchase_returns.quantity as qty_return',
+    //             'purchase_returns.id as return_id',
+    //             'purchases.*'
+    //         )
+    //         ->paginate(10);
+
+
+
+    //     return response()->json(['returns' => $returns]);
+    // }
+
+    
+    public function show()
     {
 
 
-        $returns = DB::table('purchase_returns')->where('purchase_returns.purchase_id', $id)
-            ->join('purchases', 'purchases.id', '=', 'purchase_returns.purchase_id')
-            ->select(
-                'purchase_returns.*',
-                'purchase_returns.date as return_date',
-                'purchase_returns.quantity as qty_return',
-                'purchase_returns.id as return_id',
-                'purchases.*'
-            )
-            ->paginate(10);
-
+        $returns = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                PurchaseReturn::class => function ($query) {
+                    // $query->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id');
+                    $query->select('purchases.*', 'purchases.id as return_id');
+                },
+            ]);
+        }])
+            ->where('paymentable_type', 'App\\Models\\PurchaseReturn')
+            ->paginate(5);
 
 
         return response()->json(['returns' => $returns]);
     }
+
     public function create(
         StockService $stock,
     )   // this create return for supply,cashing,sale,purchase
@@ -246,7 +234,7 @@ class PurchaseReturnController extends Controller
 
 
 
-        // dd( $stock->core->data);
+        // dd('almuhib',$request->all());
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 

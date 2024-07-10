@@ -372,6 +372,7 @@ const routes = [
 
     
   },
+  
 
   {
     path: '/sale_daily/:id',
@@ -416,7 +417,7 @@ const routes = [
     component: ReturnSale
   },
   {
-    path: '/returnsalelist/:id',
+    path: '/listreturn_sale/:id',
     name: "returnsalelist",
     props: true,
     component: ReturnSaleList

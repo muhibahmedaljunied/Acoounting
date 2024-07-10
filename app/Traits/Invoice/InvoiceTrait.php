@@ -34,7 +34,7 @@ trait InvoiceTrait
                 ->join('units', 'units.id', '=', 'product_units.unit_id')
                 ->join('products', 'products.id', '=', 'product_units.product_id')
                 ->where('product_units.product_id', $value->product_id)
-                ->select('units.*', 'products.rate', 'product_units.unit_type')
+                ->select('units.*', 'product_units.rate', 'product_units.unit_type')
                 ->get();
 
             $value->units = $units;

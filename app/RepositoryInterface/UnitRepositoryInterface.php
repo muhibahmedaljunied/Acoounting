@@ -3,11 +3,8 @@ namespace App\RepositoryInterface;
 
 interface UnitRepositoryInterface{
 
-    public function decode_unit();
-    public function convert_qty();
-
-
-
+    public function handle_unit();
+    // public function convert_unit();
 
 
 }

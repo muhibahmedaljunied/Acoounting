@@ -17,85 +17,28 @@ use Illuminate\Http\Request;
 use App\Models\status;
 use App\Models\Temporale;
 use App\Models\Purchase;
-
-
-
+use App\Repository\Qty\QtyStockRepository;
 class PurchaseController extends Controller
 {
     use InvoiceTrait,
         GeneralTrait;
 
+    public $qty;
+    public function __construct(QtyStockRepository $qty)
+    {
 
-    public $units;
-    public $value;
-    public $key;
-
-    public $quantity = 0;
-    public $r = array(
-
-        array()
-    );
-
+        $this->qty = $qty;
+    }
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
-
-        foreach ($details as $key => $value) {
-
-            $this->value = $value;
-            $this->units();
-            $this->convert_qty($value->qty);
-        }
-
-        return response()->json([
-            'details' => $details,
-
-        ]);
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
+        return response()->json(['details' => $this->qty->details]);
     }
 
-    public function convert_qty($qty)
-    {
 
-
-        $this->quantity = $qty;
-
-        foreach ($this->units as $key2 => $value2) {
-
-
-
-            if ($this->quantity / $value2->rate >= 1) {
-
-
-                $this->r["$this->key"]["$key2"] = array(
-
-                    // "$key2" => array(
-                    [intval($this->quantity / $value2->rate), $value2->name]
-                    // )
-                );
-            }
-
-            if ($this->quantity % $value2->rate >= 1) {
-
-                $this->quantity = $this->quantity % $value2->rate;
-            } else {
-
-                break;
-            }
-
-            // $this->divid_one($value2, $key);
-
-
-
-
-        }
-
-        $this->value->qty_after_convert = $this->r;
-        // dd($this->r);
-        $this->r = array(
-            array()
-        );
-    }
     public function index()
     {
 
@@ -104,7 +47,22 @@ class PurchaseController extends Controller
             ->select('products.*',)
             ->get();
 
-        $stores = DB::table('stores')
+
+        return response()->json([
+            'products' => $products,
+            'suppliers' => $this->suppliers(),
+            'statuses' => Status::all(),
+            'stores' => $this->get_store()
+
+        ]);
+    }
+
+
+    public function get_store()
+    {
+
+
+        return  DB::table('stores')
             ->select(
                 'stores.account_id as store_account_id',
                 'stores.text as store_name',
@@ -112,20 +70,7 @@ class PurchaseController extends Controller
 
             )
             ->get();
-
-
-        return response()->json([
-            'products' => $products,
-            'suppliers' => $this->suppliers(),
-            'statuses' => Status::all(),
-            // 'treasuries' => $this->treasuries(),
-            'stores' => $stores
-
-        ]);
     }
-
-
-
     public function suppliers()
     {
 
@@ -181,6 +126,7 @@ class PurchaseController extends Controller
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
             $stock->handle();
+            
 
             // dd(2);
             Cache::forget('stock');
@@ -241,7 +187,7 @@ class PurchaseController extends Controller
             $morphTo->constrain([
                 Purchase::class => function ($query) {
                     $query->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id');
-                    $query->select('purchases.*', 'purchases.id as purchase_id');
+                    $query->select('purchases.*', 'purchases.id as purchase_id','suppliers.name as supplier_name');
                 },
             ]);
         }])
@@ -293,10 +239,27 @@ class PurchaseController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function invoice_purchase($id, $table = 'purchase_details')
+    public function invoice_purchase(Request $request, $id)
     {
 
-        $purchases = Purchase::where('purchases.id', $id)
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
+
+        return response()->json([
+            'purchase_details' => $this->qty->details,
+            'purchases' => $this->get_purchase($id),
+            'users' => Auth::user()
+        ]);
+    }
+
+    public function get_purchase($id)
+    {
+
+
+
+
+        return Purchase::where('purchases.id', $id)
             ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
             ->select(
                 'purchases.*',
@@ -304,13 +267,8 @@ class PurchaseController extends Controller
                 'purchases.*'
             )
             ->get();
-
-        $details = $this->invoice($id, $table);
-
-        $users = Auth::user();
-
-        return response()->json([$table => $details, 'purchases' => $purchases, 'users' => $users]);
     }
+
     public function destroy(Request $request)
     {
         if ($request->id) {

@@ -27,7 +27,7 @@
                   <tr>
                     <!-- <th class="wd-15p border-bottom-0">رقم التوريد</th> -->
                     <th class="wd-15p border-bottom-0">رقم السند</th>
-                    <th class="wd-15p border-bottom-0">المورد</th>
+                    <!-- <th class="wd-15p border-bottom-0">المورد</th> -->
                     <!-- <th class="wd-15p border-bottom-0"> الكميه المرتجعه</th> -->
                     <th class="wd-15p border-bottom-0">تاريخ المرتجع</th>
                     <th class="wd-15p border-bottom-0">سبب الارجاع </th>
@@ -38,11 +38,11 @@
                 <tbody v-if="return_purchases && return_purchases.data.length > 0">
                   <tr v-for="(return_purchase, index) in return_purchases.data" :key="index">
                     <!-- <td>{{ return_purchase.supply_id }}</td> -->
-                    <td>{{ return_purchase.return_id }}</td>
-                    <td>{{ return_purchase.supplier_name }}</td>
+                    <td>{{ return_purchase.paymentable.return_id }}</td>
+                    <!-- <td>{{ return_purchase.supplier_name }}</td> -->
                     <!-- <td>{{ return_purchase.qty_return }}</td> -->
-                    <td>{{ return_purchase.return_date }}</td>
-                    <td>{{ return_purchase.note }}</td>
+                    <td>{{ return_purchase.paymentable.date }}</td>
+                    <td>{{ return_purchase.paymentable.note }}</td>
                     <td>
                       <!-- <button
 
@@ -55,13 +55,13 @@
                     </button> -->
 
                       <!-- <router-link
-                      :to="`/return_purchase_details/${return_purchase.return_id}`"
+                      :to="`/return_purchase_details/${return_purchase.paymentable.return_id}`"
                       class="btn btn-success"
                     >
                       <span><i class="fa fa-search-plus"></i></span>
                     </router-link>
                      <router-link
-                    :to="`/return_purchase_invoice/${return_purchase.return_id}`"
+                    :to="`/return_purchase_invoice/${return_purchase.paymentable.return_id}`"
                         class="btn btn-success">
                     
                       <span>فاتوره</span>
@@ -73,17 +73,17 @@
                         <select @change="changeRoute(index)" v-model="operationselected[index]" name="العمليات"
                           class="form-control">
                           <option class="btn btn-success"
-                            v-bind:value="['/returnpurchase_details/', return_purchase.return_id, 0]">
+                            v-bind:value="['/returnpurchase_details/', return_purchase.paymentable.return_id, 0]">
                             تفاصيل
                           </option>
 
 
                           <option class="btn btn-success"
-                            v-bind:value="['/return_purchase_invoice/', return_purchase.return_id, 1]">
+                            v-bind:value="['return_purchase_invoice', return_purchase.paymentable.return_id, 1]">
                             سند مرتجع شراء
                           </option>
                           <option class="btn btn-success"
-                            v-bind:value="['/return_purchase_recive/', return_purchase.return_id, 2]">
+                            v-bind:value="['/return_purchase_recive/', return_purchase.paymentable.return_id, 2]">
                             سند استلام مرتجع شراء
                           </option>
                           <option class="btn btn-success"
@@ -94,7 +94,8 @@
                             v-bind:value="['/return_purchase_invoice_update/', return_purchase.purchase_id, 4]">
                             تعديل الفاتوره
                           </option>
-                          <option class="btn btn-success" v-bind:value="['return_purchase_daily', return_purchase.return_id, 5]">
+                          <option class="btn btn-success"
+                            v-bind:value="['return_purchase_daily', return_purchase.paymentable.return_id, 5]">
                             عرض القيد المحاسبي
                           </option>
 
@@ -136,7 +137,7 @@
                 </thead>
                 <tbody v-if="return_detail && return_detail.length > 0">
                   <tr v-for="(return_details, index) in return_detail" :key="index">
-                    <td>{{ index+ 1}}</td>
+                    <td>{{ index + 1 }}</td>
                     <!-- <td>{{ return_details.supply_return_id }}</td> -->
                     <td>{{ return_details.product_name }}</td>
                     <td>{{ return_details.status }}</td>
@@ -144,60 +145,40 @@
                     <!-- <td>{{ return_details.qty_return }}</td> -->
 
                     <td>
+                      <div v-for="temx in return_details.qty_after_convert['qty']">
 
-                      <div v-for="temx in return_details.units">
 
-                        <span v-if="temx.id == return_details.unit_id">
 
-                          <span v-if="temx.unit_type == 1">
+                        <span v-for="temx2 in temx">
 
-                            {{ return_details.qty_return }} {{ temx.name }}
+
+                          <span style="float: right;">
+                            {{ temx2[0] }}
+                            <span style="color: red;">
+                              {{ temx2[1] }}
+                            </span>
 
                           </span>
 
-                          <span v-if="temx.unit_type == 0">
 
-                            <span v-if="return_details.qty_return / return_details.rate >= 1">
-                              {{ Math.floor((return_details.qty_return / return_details.rate)) }}{{
-                                return_details.units[0].name
-                              }}
-                            </span>
-
-                            <span v-if="return_details.qty_return % return_details.rate >= 1">
-                              و
-                              {{ Math.floor((return_details.qty_return % return_details.rate)) }}{{
-                                return_details.units[1].name
-                              }}
-                            </span>
-                          </span>
 
                         </span>
 
+                        <!-- <span v-if="temx.unit_type == 0">
 
+
+  <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
 
                       </div>
 
                     </td>
 
-                    <!-- <td>
-                      <div v-for="temx in return_details.units">
-
-                        <span v-if="temx.unit_type == 1">
-                          {{ parseInt(return_details.qty_return / return_details.rate) }} {{ temx.name }}
-                        </span>
-                        <span v-if="temx.unit_type == 0">
-                          <span
-                            v-if="Math.floor(((return_details.qty_return / return_details.rate) - parseInt(return_details.qty_return / return_details.rate)) * return_details.rate) != 0">
-                            و
-                            {{ Math.floor(((return_details.qty_return / return_details.rate) - parseInt(return_details.qty_return / return_details.rate)) * return_details.rate) }}{{
-                              temx.name
-                            }}
-                          </span>
-
-                        </span>
-                      </div>
-
-                    </td> -->
+                  
                     <td>{{ return_details.text }}</td>
 
 
@@ -240,7 +221,7 @@ export default {
       word_search: "",
       operationselected: [],
       return_detail: '',
-      table:'',
+      table: '',
 
 
     };
@@ -263,7 +244,11 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1],{ table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], {
+            table: this.table,
+            operation: 'OperationQty'
+
+          })
           .then((response) => {
             console.log(response.data.return_details);
             this.return_detail = response.data.return_details;
@@ -306,7 +291,7 @@ export default {
           console.error(response);
         });
     },
-    
+
   },
 };
 </script>
@@ -324,4 +309,3 @@ export default {
   outline: none;
 }
 </style>
-

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Sale;
 
 use App\Services\StockService;
-use App\Repository\CheckData\CheckSaleReturnRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\Invoice\InvoiceTrait;
@@ -11,43 +10,52 @@ use App\Http\Controllers\Controller;
 use App\Models\HrAccount;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
-
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\StoreProduct;
 use App\Traits\Unit\UnitsTrait;
 use App\Models\Sale;
+use App\Repository\Qty\QtyStockRepository;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class SaleController extends Controller
 {
     use UnitsTrait,
-         GeneralTrait,
-         InvoiceTrait;
+        GeneralTrait,
+        InvoiceTrait;
 
+    public $qty;
+    public $details;
+
+    public function  __construct(QtyStockRepository $qty)
+    {
+
+        $this->qty = $qty;
+    }
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
-
-        $this->units($details);
-
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
         return response()->json([
-            'details' => $details,
+            'details' => $this->qty->details,
 
         ]);
     }
 
+
     public function index(Request $request)
     {
 
-        [$products, $units] = ($request->id) ? $this->get_one($request) : $this->get_all($request);
+        $this->qty->compare_array = ['quantity'];
+        $this->qty->details = ($request->id) ? $this->get_one($request, $this->qty) : $this->get_all($this->qty);
+        $this->qty->handle_qty();
 
         return response()->json([
-            'products' => $products,
-            'units' => $units,
+            'products' => $this->qty->details,
+            // 'units' => $this->qty->units,
             'customers' => $this->customers(),
-            // 'treasuries' => $this->treasuries(),
 
         ]);
     }
@@ -82,7 +90,7 @@ class SaleController extends Controller
     public function get_all()
     {
 
-        $products = StoreProduct::where('store_products.quantity', '!=', '0')
+        return StoreProduct::where('store_products.quantity', '!=', '0')
             ->joinall()
             ->select(
                 'products.*',
@@ -97,20 +105,23 @@ class SaleController extends Controller
                 'store_products.id as store_product_id'
             )
             ->paginate(100);
-        $units = $this->units($products);
 
-        return [$products, $units];
+        // $this->qty->handle_unit($products);
+
+
+
+
+
     }
     public function get_one($request)
     {
 
         $retVal = ($request->type == 'product') ? 'store_products.product_id' : 'store_products.store_id';
-        $products = StoreProduct::where($retVal, $request->id)
+        return StoreProduct::where($retVal, $request->id)
             ->where('store_products.quantity', '!=', '0')
             ->joinall()
             ->select(
                 'products.*',
-                // 'accounts.id as account_id',
                 'products.text as product',
                 'stores.text as store',
                 'stores.account_id as store_account_id',
@@ -121,8 +132,6 @@ class SaleController extends Controller
                 'store_products.id as store_product_id'
             )
             ->paginate(100);
-        $units = $this->units($products);
-        return [$products, $units];
     }
 
 
@@ -136,7 +145,7 @@ class SaleController extends Controller
 
 
         // dd($stock->core->data);
-  
+
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -238,16 +247,22 @@ class SaleController extends Controller
     function invoice_sale(Request $request, $id)
     {
 
-        $table = $request->post('table');
+        $this->qty->compare_array = ['qty'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
+        return response()->json([
+            'sale_details' => $this->qty->details,
+            'sales' => $this->get_sale($id),
+            'users' => Auth::user()
+        ]);
+    }
 
-        $sales = Sale::where('sales.id', $id)
+    function get_sale($id)
+    {
+
+        return Sale::where('sales.id', $id)
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
             ->select('sales.*', 'sales.id as sale_id', 'customers.*')
             ->get();
-         
-        $details = $this->invoice($id, $table);
-
-        $users = Auth::user();
-        return response()->json([$table => $details, 'sales' => $sales, 'users' => $users]);
     }
 }

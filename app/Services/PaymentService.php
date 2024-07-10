@@ -10,7 +10,7 @@ class PaymentService
     public function __construct(
 
 
-        protected CoreService $core,
+        public CoreService $core,
 
 
     ) {
@@ -22,6 +22,7 @@ class PaymentService
 
 
 
+        // dd($this->core->data);
         // $payment_status = 'pendding';
         // $payment_info = $this->core->data['type'];
 
@@ -49,7 +50,7 @@ class PaymentService
         // $payment_info = ($this->core->data['remaining'] == 1) ? $this->core->data['type'] : $payment_info = 'credit' ;
         $payment = new Payment();
         $payment->paymentable()->associate($this->core->paymentable);
-        $payment->payment_info = $this->core->data['payment_type'];
+        $payment->payment_info = $this->core->data['type_payment'];
         $payment->payment_status = $payment_status;
         $payment->paid = $this->core->data['paid'];
         $payment->remaining = $this->core->data['remaining'];

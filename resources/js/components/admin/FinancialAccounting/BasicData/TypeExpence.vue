@@ -182,7 +182,7 @@
 <script>
 import pagination from "laravel-vue-pagination";
 import tree from '../../../../../js/tree/tree.js';
-import operation from '../../../../../js/operation.js';
+import operation from '../../../../operation1.js';
 export default {
   mixins: [
     tree,

@@ -71,14 +71,11 @@ export default {
 
 
                             for (var i = 0; i < arrayLength; i++) {
-                                // console.log('muhib', this.units[i].name);
 
-                                html = html + `<option data-rate-${this.indexselected} = ${this.units[i].rate}   value=[${this.units[i].unit_id},${this.units[i].rate}]>${this.units[i].name}</option>`;
-                                // html = html + `<option data-rate-${this.indexselected} = ${this.units[i].rate} data-${this.indexselected} = ${this.units[i].unit_type}  value=[${this.units[i].unit_id},${this.units[i].rate},${this.units[i].unit_type}]>${this.units[i].name}</option>`;
+                                html = html + `<option  value=[${this.units[i].unit_id},${this.units[i].rate}]>${this.units[i].name}</option>`;
 
 
                             }
-                            // console.log(html);
                             $(`#select_unit${this.indexselected}`).html(html);
 
 
@@ -134,9 +131,12 @@ export default {
         
 
         get_product_for_sale(id, table) {
-            axios.post(`/sale/newsale/${id}`, { type: table }).then((responce) => {
+            axios.post(`/sale/newsale/${id}`, { "type": table ,"operation":"StockQty"}).then((responce) => {
 
-                this.all_products = responce.data.products.data;
+                this.detail = responce.data.products.data;
+                // console.log(responce.data);
+                this.units = responce.data.units;
+
 
             });
         },
@@ -144,9 +144,11 @@ export default {
 
 
         get_product_for_cash(id, table) {
-            axios.post(`/cash/newcash/${id}`, { type: table }).then((responce) => {
+            axios.post(`/cash/newcash/${id}`, { type: table,"operation":"StockQty" }).then((responce) => {
 
-                this.all_products = responce.data.products.data;
+                this.detail = responce.data.products.data;
+                this.units = responce.data.units
+
 
             });
         },
@@ -156,7 +158,7 @@ export default {
 
             let uri = `/get_product`;
             axios
-                .post(uri, { id: id, type: type })
+                .post(uri, { id: id, type_search: type,type:'Transfer',"operation":"StockQty" ,})
                 .then((responce) => {
                     this.detail = responce.data.products;
 

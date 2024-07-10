@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository\Stock;
-use App\Traits\Supply\SupplyTrait;
+use App\Traits\Supply\SupplyDetailsTrait;
 use App\Services\CoreService;
 use App\RepositoryInterface\Daily;
 use App\RepositoryInterface\DetailRepositoryInterface;
@@ -10,7 +10,7 @@ use DB;
 class SupplyDetailRepository implements DetailRepositoryInterface
 {
 
-use SupplyTrait;
+use SupplyDetailsTrait;
 
     public $core;
     public function __construct()
@@ -22,7 +22,7 @@ use SupplyTrait;
 
 
 
-    public function init_details(...$list_data)
+    public function details(...$list_data)
     {
 
         $this->add_into_supply_details_table();

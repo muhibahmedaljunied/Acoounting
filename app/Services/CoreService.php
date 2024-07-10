@@ -3,7 +3,7 @@
 namespace App\Services;
 class CoreService extends CoreDailyService
 {
-    public $id_store_product;
+    public $id_store_product = 0;
     public $data_store_product;
     public $store_product_f = 0;
     public $micro_unit_qty;

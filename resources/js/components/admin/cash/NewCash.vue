@@ -175,10 +175,10 @@
                     <th>اضافه</th>
                   </tr>
                 </thead>
-                <tbody v-if="all_products && all_products.length > 0">
+                <tbody v-if="detail && detail.length > 0">
                   <!-- <tr v-for="(products, index) in product"> -->
-                  <tr v-for="(product, index) in all_products" :key="index">
-                    <td>{{ index+1 }}</td>
+                  <tr v-for="(product, index) in detail" :key="index">
+                    <td>{{ index + 1 }}</td>
                     <td>
                       <div id="factura_producto" class="input_nombre">
                         {{
@@ -211,33 +211,28 @@
                       <div id="factura_producto" class="input_nombre" v-if="product.availabe_qty">
 
 
-                        <div v-for="temx in product.units">
+                        <div v-for="temx in product.qty_after_convert['quantity']">
 
 
 
+                          <span v-for="temx2 in temx">
 
 
+                            <span style="float: right;">
+                              {{ temx2[0] }}
+                              <span style="color: red;">
+                                {{ temx2[1] }}
+                              </span>
 
-                          <span v-if="temx.unit_type == 0">
-
-                            <span v-if="product.quantity / product.rate >= 1">
-                              {{ Math.floor((product.quantity / product.rate)) }}{{
-                  product.units[0].name
-                }}
                             </span>
 
-                            <span v-if="product.quantity % product.rate >= 1">
-                              {{ Math.floor((product.quantity % product.rate)) }}{{
-                  product.units[1].name
-                }}
-                            </span>
+
+
                           </span>
 
-
+     
 
                         </div>
-
-
 
                       </div>
 
@@ -254,8 +249,7 @@
                         <select v-if="check_state[index] == true" style="background-color: beige;"
                           :id="'select_unit' + index" v-model="unit[index]" name="type" class="form-control" required>
 
-                          <option disabled v-for="unit in product.units"
-                            v-bind:value="[unit.id, unit.rate, unit.unit_type]">
+                          <option disabled v-for="unit in product.units" v-bind:value="[unit.unit_id, unit.rate]">
                             {{ unit.name }}
                           </option>
 
@@ -263,10 +257,11 @@
                         </select>
 
 
-                        <select v-on:change="calculate_price(index)" v-else style="background-color: beige;"
-                          :id="'select_unit' + index" v-model="unit[index]" name="type" class="form-control" required>
+                        <select v-on:change="calculate_total(index,product.price)" v-else
+                          style="background-color: beige;" :id="'select_unit' + index" v-model="unit[index]" name="type"
+                          class="form-control" required>
 
-                          <option v-for="unit in product.units" v-bind:value="[unit.id, unit.rate, unit.unit_type]">
+                          <option v-for="unit in product.units" v-bind:value="[unit.unit_id, unit.rate]">
                             {{ unit.name }}
                           </option>
 
@@ -280,43 +275,39 @@
                       </div>
                     </td>
                     <td>
-                      <input v-if="check_state[index] == true" readonly type="number" v-model="product.price" id="price"
-                        class="form-control input_cantidad" onkeypress="return " />
-
-                      <input v-on:input="calculate_price(index)" v-else type="number" v-model="product.price" id="price"
-                        class="form-control input_cantidad" onkeypress="return " />
+               
+                        {{ product.cost }}
                     </td>
 
-                    <!-- <td>
-                      <input readonly style="background-color: beige;" type="number"
-                         v-model="price[index]" id="qty" class="form-control input_cantidad"
-                        onkeypress="return " />
-
-
-                    </td> -->
+                
                     <td>
-                      <!-- <input style="background-color: beige;" type="number" @input="on_input(qty[index], product.availabe_qty), calculate_price(product.price, qty[index],
+                      <!-- <input style="background-color: beige;" type="number" @input="on_input(qty[index], product.availabe_qty), calculate(product.price, qty[index],
                     index)" v-model="qty[index]" id="qty" class="form-control input_cantidad" onkeypress="return " /> -->
 
 
                       <input v-if="check_state[index] == true" readonly style="background-color: beige;" type="number"
-                        @input="calculate_price(index)" v-model="qty[index]" id="qty"
+                       v-model="qty[index]" id="qty"
                         class="form-control input_cantidad" onkeypress="return " />
 
-                      <input v-else style="background-color: beige;" type="number" @input="calculate_price(index)"
-                        v-model="qty[index]" id="qty" class="form-control input_cantidad" onkeypress="return " />
+                      <input v-else style="background-color: beige;" type="number"
+                        @input="calculate_total(index,product.price)" v-model="qty[index]" id="qty"
+                        class="form-control input_cantidad" onkeypress="return " />
                     </td>
 
 
                     <td>
 
 
-                      <input type="number" v-model="total[index]" :id="'total_row' + index" class="form-control"
-                        readonly />
+                      <input v-if="check_state[index] == true" readonly type="number" v-model="total[index]" :id="'total_row' + index" class="form-control"
+                       />
+
+                        <input @input="calculate_total(index,product.price)" v-else type="number" v-model="total[index]" :id="'total_row' + index" class="form-control"
+                         />
+
                     </td>
 
                     <td>
-                      <input v-model="check_state[index]" @change="add_one_cash(product, index)" type="checkbox"
+                      <input v-model="check_state[index]" @change="calculate()" type="checkbox"
                         class="btn btn-info waves-effect">
                     </td>
 
@@ -333,40 +324,7 @@
                   </tr>
                 </tbody>
 
-                <!-- <tfoot>
-
-
-
-                  <tr>
-                    <td colspan="11">
-                      <label for="pagoPrevio">اجمالي الكميه</label>
-                      <input type="text" readonly="readonly" id="cantidad_total" class="form-control"
-                        v-model="total_quantity" />
-                    </td>
-                  </tr>
-                  <tr>
-                 
-
-                  </tr>
-                  <tr>
-                    <td colspan="11">
-                      <label for="subTotal">الاجمالي (مع الضريبه) <small></small></label>
-
-                      <input type="text" readonly id="subtotal_general" name="subtotal_general" class="form-control"
-                        v-model="grand_total" />
-                      <input type="hidden" id="subtotal_general_sf" name="subtotal_general_sf" class="form-control"
-                        value="0.00" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="11">
-                      <label for="subTotal">الاجمالي (بدون ضريبه) <small></small></label>
-                      <input type="text" readonly id="subtotal_general_si" name="subtotal_general_si" class="form-control"
-                        value="0.00" v-model="grand_total" />
-
-                    </td>
-                  </tr>
-                </tfoot> -->
+             
 
               </table>
             </div>
@@ -384,24 +342,15 @@
 
 
 
-
-                <!-- <div class="col-md-12">
-                  <label for="pagoPrevio">الخصم (%)</label>
-                  <input type="number" @input="take_discount" v-model="discount" :min="0" :max="99" :step="1"
-                    oninput="validity.valid||(value='');" class="form-control input_cantidad" onkeypress="return " />
-
-                </div> -->
-
-
                 <div class="col-md-12" v-show="show">
                   <label for="pagoPrevio">المدفوع</label>
-                  <input type="text" id="paid" v-on:input="credit" class="form-control" v-model="paid"
+                  <input @input="calculate()" type="text"   class="form-control" v-model="paid"
                     style="color: red" />
 
                 </div>
                 <div class="col-md-12" v-show="show">
                   <label for="pagoPrevio">المتبقي</label>
-                  <input type="text" readonly="readonly" class="form-control" v-model="remaining" />
+                  <input @input="calculate()" type="text"  class="form-control" v-model="remaining" />
 
                 </div>
 
@@ -409,7 +358,7 @@
 
                 <div class="col-md-12">
                   <label for="total" class="text-left">المبلغ المستحق</label>
-                  <input type="text" readonly="readonly" class="form-control" v-model="To_pay" />
+                  <input @input="calculate()" type="text"  class="form-control" v-model="To_pay" />
 
                   <!-- <div class="col-md-12 letra_calculator_total text-center" id="div_total">
                     {{ To_pay }}
@@ -425,27 +374,18 @@
 
                 <div class="col-md-12">
                   <label for="pagoPrevio">اجمالي الكميه</label>
-                  <input type="text" readonly="readonly" id="cantidad_total" class="form-control"
+                  <input @input="calculate()" type="text"  id="cantidad_total" class="form-control"
                     v-model="total_quantity" />
                 </div>
 
 
 
 
-                <!-- <div class="col-md-12">
-                  <label for="subTotal">الاجمالي (مع الضريبه) <small></small></label>
-
-                  <input type="text" readonly id="subtotal_general" name="subtotal_general" class="form-control"
-                    v-model="grand_total" />
-                  <input type="hidden" id="subtotal_general_sf" name="subtotal_general_sf" class="form-control"
-                    value="0.00" />
-                </div> -->
-
 
                 <div class="col-md-12">
 
                   <label for="subTotal">الاجمالي <small></small></label>
-                  <input type="text" readonly id="subtotal_general_si" name="subtotal_general_si" class="form-control"
+                  <input @input="calculate()" type="text"  id="subtotal_general_si" name="subtotal_general_si" class="form-control"
                     value="0.00" v-model="grand_total" />
 
                 </div>
@@ -465,73 +405,7 @@ font-size: 18pt;
             </div>
 
           </div>
-          <!-- <div class="row">
-            <div class="col-md-12">
-
-
-              <div class="row">
-
-                <div class="col-md-12"> <label for="pagoPrevio">نوع العمله</label>
-                  <select name="forma_pago" class="form-control" id="forma_pago">
-                    <option v-bind:value="2">ريال يمني </option>
-                    <option v-bind:value="1">دولار امريكي</option>
-                    <option v-bind:value="2">ريال سعودي </option>
-                  </select>
-                </div>
-
          
-
-
-                <div class="col-md-12">
-                  <label for="pagoPrevio">الخصم (%)</label>
-                  <input type="number" @input="take_discount" v-model="discount" :min="0" :max="99" :step="1"
-                    oninput="validity.valid||(value='');" class="form-control input_cantidad" onkeypress="return " />
-
-                </div>
-
-             
-                  <input type="hidden" id="items_totales" />
-                  <input type="hidden" id="registros_totales" />
-                </div>
-                <div class="col-md-12" v-show="show">
-                  <label for="pagoPrevio">المتبقي</label>
-                  <input type="text" readonly="readonly"  class="form-control" v-model="remaining" />
-                  <input type="hidden" id="items_totales" />
-                  <input type="hidden" id="registros_totales" />
-                </div>
-
-                <div class="col-md-12">
-                  <label for="pagoPrevio">تاريخ الاستحقاق</label>
-                  <input type="date"  class="form-control" v-model="remaining" />
-
-                </div>
-
-                <div class="col-md-12">
-                  <label for="total" class="text-left">TO PAY (USD):</label>
-                  <div class="col-md-12 letra_calculator_total text-center" id="div_total">
-                    {{ To_pay }}
-                  </div>
-                  <input type="hidden" name="total" id="total" v-model="To_pay" />
-                </div>
-                <div class="col-md-12">
-                  <div class="text-center">
-                    <a style="
-              width: 100%;
-              padding-top: 0.5em;
-              padding-bottom: 0.5em;
-              font-size: 18pt;
-            " href="javascript:void" @click="payment()" class="btn btn-info waves-effect waves-light" id="pagar">
-                      <i class="fa fa-credit-card"></i></a>
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-
-
-
-          </div> -->
         </div>
 
       </div>
@@ -643,21 +517,8 @@ export default {
   data() {
     // return data;
     return {
-      price: [],
       account: '',
-      // product: [],
-      qty: [],
-      unit: [],
-      // account_in_list: [],
-      // desc: [],
-      store: [],
-      // status: [],
-      store_product_id: [],
-      counts: {},
       count: 1,
-      date: new Date().toISOString().substr(0, 10),
-      dateselected: new Date().toISOString().substr(0, 10),
-      expiry_date: new Date().toISOString().substr(0, 10),
       table: '',
       type: '',
       type_refresh: '',
@@ -665,35 +526,23 @@ export default {
       detail: '',
       Total_quantity: 0,
       total_quantity: 0,
-      check_state: [],
-      return_qty: [],
-      price: [],
-
       products: '',
       statuses: '',
       stores: '',
       statuses: '',
       units: '',
       opening: '',
-      availabe_qty: [],
       word_search: '',
-      total: [],
-      customer: [],
-      supplier: [],
       suppliers: '',
       customers: '',
       seen: false,
       id: '',
-
       index: 0,
-      all_products: '',
+      detail: '',
       jsonTreeData: '',
       type_of_tree: 1,
       indexselected: '',
-
       last_nodes: '',
-
-
       statusselected: 0,
       unitselected: 0,
       unitselectedname: '',
@@ -704,42 +553,28 @@ export default {
       descselected: "",
       operationselected: 0,
       dateselected: 0,
-      typeselected: [],
       checkselected: '',
       // ------------------------------------------------------------
-
       description: '',
-      treasury: [],
-      all_products: '',
+      detail: '',
       temporale: 1,
-      supplier: [],
       suppliers: '',
-      // total_quantity: 0,
-      // grand_total: 0,
-      // grand_total: 0,
-      // To_pay: 0,
       discount: 0,
-
       type_payment: 0,
-      // Way_to_pay_selected: 0,
       show: false,
       show_treasury: true,
       show_bank: false,
-      // paid: 0,
-      // remaining: 0,
-      return_qty: [],
       credit: '',
 
     }
   },
-  created() {
-
-  },
+ 
   mounted() {
     this.list();
     this.type = 'Cash';
     this.type_refresh = 'decrement';
     this.type_of_tree = 1;
+    this.first_row = 0;
     this.showtree('store', 'tree_store');
     this.showtree('product', 'tree_product');
     this.showtree('account', 'tree_account');
@@ -751,6 +586,7 @@ export default {
   methods: {
 
 
+ 
     list(page = 1) {
       this.axios
         .post(`/cash/newcash?page=${page}`)
@@ -774,37 +610,29 @@ export default {
     //   this.grand_total *= parseInt(this.discount) / 100;
     //   // this.grand_total = this.grand_total/100;
     // },
-    calculate_price(index) {
 
-      var unit = $(`#select_unit${index}`).val();
-      unit = unit.split(",");
+    // calculate(index,price) {
 
 
 
-      if (unit[2] == 0) {
-
-        this.total[index] = this.all_products[index].price * this.qty[index];
-
-      }
-
-      if (unit[2] == 1) {
-
-        this.total[index] = this.all_products[index].price * unit[1] * this.qty[index];
-
-      }
+    //   if (this.unit[index] && this.qty[index]) {
 
 
-      // console.log(this.total);
+    //     this.total[index] = price* this.qty[index] * this.unit[index][1];
 
-      if (this.qty[index] == 0) {
-        this.total[index] = 0;
+    //   } else {
 
-      }
+    //     toastMessage('فشل', "قم بأدخال الوحده", 'error');
+
+    //     this.total[index] = 0;
+    //   }
 
 
 
 
-    },
+    // },
+
+  
 
 
 
@@ -838,38 +666,37 @@ export default {
       }
 
     },
-    set_values(product, index) {
+    set_values() {
 
-      this.counts[index] = index;
-      this.store_product_id[index] = product.id;
-      this.storem_account[index] = product.store_account_id;
-      // console.log('almuhib',product.store_id,index);
-      this.storem[index] = product.store_id;
-    
-
-    },
-    add_one_cash(product, index) {
-
-
-      // var total = this.total;
-
-
-
-      if (this.check_qty(
-        this.qty[index],
-        this.unit[index],
-        product.availabe_qty
-      ) == 0) {
-        return 0;
-      }
-
-      
-      console.log();
-      this.handle(product, index);
-
+      this.counts[this.row_counter] = this.row_counter;
+      this.store_product_id[this.row_counter] = this.detail[this.row_counter].id;
+      this.storem_account[this.row_counter] = this.detail[this.row_counter].store_account_id;
+      this.storem[this.row_counter] = this.detail[this.row_counter].store_id;
 
 
     },
+    // add_one_cash(product, index) {
+
+
+    //   // var total = this.total;
+
+
+
+    //   if (this.check_qty(
+    //     this.qty[index],
+    //     this.unit[index],
+    //     product.availabe_qty
+    //   ) == 0) {
+    //     return 0;
+    //   }
+
+
+    //   console.log();
+    //   this.handle(product, index);
+
+
+
+    // },
     // on_input(qty, availabe_qty) {
     //   if (qty <= availabe_qty) {
 
@@ -879,35 +706,29 @@ export default {
     // },
 
 
-    check_qty(qty, unit, availabe_qty) {
+    // check_qty(qty, unit, availabe_qty) {
 
-      var producter_qty = 0;
-
-      if (unit[2] == 1) {
-
-        producter_qty = qty * unit[1];
-      } else {
-
-        producter_qty = qty;
-      }
-
-      if (producter_qty > availabe_qty) {
-
-        toastMessage('فشل', "الكميه المدخله اكبر من المتوفره", 'error');
-        return 0;
-
-      }
-
-      if (qty <= 0) {
-
-        toastMessage('فشل', "تأكد من الكميه المدخله", 'error');
-        return 0;
-
-      }
+    //   var producter_qty = 0;
 
 
-      return 1;
-    },
+
+    //   if (producter_qty > availabe_qty) {
+
+    //     toastMessage('فشل', "الكميه المدخله اكبر من المتوفره", 'error');
+    //     return 0;
+
+    //   }
+
+    //   if (qty <= 0) {
+
+    //     toastMessage('فشل', "تأكد من الكميه المدخله", 'error');
+    //     return 0;
+
+    //   }
+
+
+    //   return 1;
+    // },
     payment() {
 
 
@@ -925,7 +746,7 @@ export default {
           qty: this.qty,
           price: this.price,
           total: this.total,
-          old: this.all_products,
+          old: this.detail,
 
 
           // -------------this for dailies----------------------------------------------
@@ -947,7 +768,7 @@ export default {
           // -----------------------------------------------------------
           type_daily: 'cash',
           payment_type: this.Way_to_pay_selected,
-          daily_index:0,
+          daily_index: 0,
           // store_account: $(`#select_account_${this.type}`).val(),
           description: this.description,
           type_refresh: this.type_refresh,

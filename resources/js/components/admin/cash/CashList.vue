@@ -164,7 +164,7 @@
                   </tr>
                 </thead>
                 <tbody v-if="cash_detail && cash_detail.length > 0">
-                  <tr v-for="(cash_details,index) in cash_detail">
+                  <tr v-for="(cash_details, index) in cash_detail">
                     <!-- <td>{{ cash_details.id }}</td> -->
                     <td>{{ cash_details.product }}</td>
 
@@ -175,40 +175,35 @@
                     <!-- <td>{{ cash_details.qty }}</td>  -->
                     <td>
 
-                      <div v-for="temx in cash_details.units">
+
+                      <div v-for="temx in cash_details.qty_after_convert['qty']">
 
 
-                        <span v-if="temx.id == cash_details.unit_id">
 
-                          <!-- <span v-if="cash_details.qty / cash_details.units[0].rate >= 1"> -->
-                          {{ Math.floor((cash_details.qty * cash_details.units[index].rate) /
-                  cash_details.units[index].rate) }}{{
-                  cash_details.units[index].name
-                }}
-                          <!-- </span> -->
+                        <span v-for="temx2 in temx">
 
-                          <!-- <span v-if="cash_details.qty % cash_details.units[1].rate >= 1">
-{{ Math.floor((cash_details.qty % cash_details.units[1].rate)) }}{{
-cash_details.units[1].name
-}}
-</span> -->
+
+                          <span style="float: right;">
+                            {{ temx2[0] }}
+                            <span style="color: red;">
+                              {{ temx2[1] }}
+                            </span>
+
+                          </span>
+
+
+
                         </span>
-
 
                         <!-- <span v-if="temx.unit_type == 0">
 
-                          <span v-if="cash_details.qty / cash_details.rate >= 1">
-                            {{ Math.floor((cash_details.qty / cash_details.rate)) }}{{
-                              cash_details.units[0].name
-                            }}
-                          </span>
 
-                          <span v-if="cash_details.qty % cash_details.rate >= 1">
-                            {{ Math.floor((cash_details.qty % cash_details.rate)) }}{{
-                              cash_details.units[1].name
-                            }}
-                          </span>
-                        </span> -->
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
 
                       </div>
                       <!-- {{ cash_details.qty }} {{ cash_details.unit }} -->
@@ -268,7 +263,7 @@ export default {
     };
   },
   mounted() {
-    this.type = 'Purchase';
+    this.type = 'Cash';
     this.table = 'cash_details';
     this.list();
 
@@ -280,7 +275,12 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], {
+            table: this.table,
+            type: this.type,
+            operation: 'OperationQty'
+
+          })
           .then((response) => {
 
             console.log(response.data);

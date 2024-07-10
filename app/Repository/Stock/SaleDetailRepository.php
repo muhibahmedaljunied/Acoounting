@@ -3,12 +3,12 @@
 namespace App\Repository\Stock;
 
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Traits\Sale\SaleTrait;
+use App\Traits\Sale\SaleDetailsTrait;
 use App\Services\CoreService;
 class SaleDetailRepository implements DetailRepositoryInterface
 {
 
-use SaleTrait;
+use SaleDetailsTrait;
     public $core;
     public function __construct()
     {
@@ -16,10 +16,10 @@ use SaleTrait;
         $this->core = app(CoreService::class);
     }
   
-    public function init_details(...$list_data)
+    public function details(...$list_data)
     {
   
-        $this->add_into_sale_details_table();
+        $this->add_into_sale_details_table('');
         
     }
 

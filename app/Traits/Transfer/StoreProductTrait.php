@@ -13,62 +13,75 @@ trait StoreProductTrait
     {
 
 
-        if ($this->core->store_product_f == 0) {
+        // if ($this->init_status == false) {
 
 
-            $store_product = new StoreProduct();
-            $store_product->product_id = $this->core->data['old'][$this->core->value]['product_id'];
-            $store_product->store_id = $this->core->data['intostore_id'];
-            $store_product->status_id = $this->core->data['old'][$this->core->value]['status_id'];
-            $store_product->desc = $this->core->data['old'][$this->core->value]['desc'];
-            $store_product->quantity = $this->core->micro_unit_qty;
-            $store_product->cost = $this->core->data['old'][$this->core->value]['cost'];
-            $store_product->save();
 
-            // dd($store_product);
-            $this->core->id_store_product = $store_product->id;
-        }
+            $this->core->data_store_product =  new StoreProduct();
+            $this->core->data_store_product->product_id = $this->core->data['old'][$this->core->value]['product_id'];
+            $this->core->data_store_product->store_id = $this->core->data['intostore_id'];
+            $this->core->data_store_product->status_id = $this->core->data['old'][$this->core->value]['status_id'];
+            $this->core->data_store_product->desc = $this->core->data['old'][$this->core->value]['desc'];
+            $this->core->data_store_product->quantity = $this->core->micro_unit_qty;
+            $this->core->data_store_product->cost = $this->core->data['old'][$this->core->value]['cost'];
+            $this->core->data_store_product->total = $this->core->data['old'][$this->core->value]['cost'] * $this->core->micro_unit_qty;
+            $this->core->data_store_product->save();
+            $this->core->data_store_product = collect($this->core->data_store_product)->toArray();
+            $this->core->id_store_product = $this->core->data_store_product['id'];
+        // }
     }
 
 
-    public function increment_store_product_table()  //this make increase for store that trasfer into it
-    {
-        $this->core->store_product_f = 0;
-
-        $this->core->store_product_f =  DB::table('store_products')
-            ->where(['store_id' => $this->core->data['intostore_id']])
-            ->where(['product_id' => $this->core->data_store_product['product_id']])
-            ->where(['status_id' => $this->core->data_store_product['status_id']])
-            ->where(['desc' => $this->core->data_store_product['desc']])
-            ->increment('quantity', $this->core->micro_unit_qty);
-    }
+    // public function refresh_transfer_qty_store_product_table($operation)  //this make increase for store that trasfer into it
+    // {
+    // DB::table('store_products')
+    //         ->where(['id' => $this->core->data_store_product[0]['id']])
+    //         ->$operation('quantity', $this->core->micro_unit_qty);
+    // }
 
 
-    public function decrement_store_product_tale()  //this make decrease for store that trasfer from it
-    {
+    // public function refresh_transfer_total_store_product_table($operation)  //this make increase for store that trasfer into it
+    // {
+       
+    //     // dd($this->core->data_store_product);
+    //     DB::table('store_products')
+    //         ->where(['id' => $this->core->data_store_product[0]['id']])
+    //         ->$operation('total',($this->core->micro_unit_qty*$this->core->data_store_product[0]['cost']));
+    // }
 
-        $this->core->store_product_f = 0;
-        $this->core->store_product_f =  DB::table('store_products')
-            ->where(['id' => $this->core->data_store_product['store_product_id']])
-            ->decrement('quantity', $this->core->micro_unit_qty);
-    }
+    // public function refresh_cost_store_product_table()
+    // {
+
+
+    //     DB::table('store_products')
+    //         ->where(['id' => $this->core->data_store_product[0]['id']])
+    //         ->update(['cost' => ($this->core->data_store_product[0]['total'] / $this->core->data_store_product[0]['quantity'])]);
+    // }
 
 
 
     public function get_store_product_table()  // this check and return store that transfer from it
     {
 
-        return  StoreProduct::where([
-            'store_products.id' => $this->core->data['old'][$this->core->value]['store_product_id'],
+        
+        $this->core->data_store_product = collect(
+            StoreProduct::where([
+                'store_products.product_id' => $this->core->data['old'][$this->core->value]['product_id'],
+                'store_products.store_id' => $this->store,
+                'store_products.status_id' => $this->core->data['old'][$this->core->value]['status_id'],
+                'store_products.desc' => $this->core->data['old'][$this->core->value]['desc'],
 
-        ])
-            ->select(
-                'store_products.id',
-                'store_products.product_id',
-                'store_products.status_id',
-                'store_products.desc',
-                
-            )
-            ->get();
+
+            ])
+                ->select(
+                    'store_products.*',
+                )
+                ->get()
+        )->toArray();
+
+
+        // dd($this->core->data_store_product);
+        $this->core->id_store_product = ($this->core->data_store_product == null) ? 0 : $this->core->data_store_product[0]['id'];
+
     }
 }

@@ -13,11 +13,11 @@ class DailyStockService
 
 
     public $core;
-    public $daily_payment;
+    // public $daily_payment;
 
-    public function __construct(DailyPaymentStockService $daily_payment)
+    public function __construct(public DailyPaymentStockService $daily_payment)
     {
-        $this->daily_payment = $daily_payment;
+        // $this->daily_payment = $daily_payment;
         $this->core = $daily_payment->core;
     }
 
@@ -68,6 +68,8 @@ class DailyStockService
 
             $this->multble_daily();
         }
+
+  
     }
 
     public function one_daily()
@@ -82,14 +84,15 @@ class DailyStockService
     public function multble_daily()
     {
 
-        for ($i = $this->core->data['daily_index']; $i < count($this->core->data[$this->core->daily_type]['value']); $i++) {
+        
 
+        for ($i = $this->core->data['daily_index']; $i < count($this->core->data[$this->core->daily_type]['value']); $i++) {
 
 
             foreach ($this->core->data['count'] as $value) {
 
-                if ($value == $i) {
 
+                if ($value == $i) {
 
 
                     $this->core->set_row_daily_details($i);
@@ -99,6 +102,8 @@ class DailyStockService
 
                 }
             }
+
+
         }
     }
 
@@ -127,6 +132,8 @@ class DailyStockService
 
         $this->core->dailyDetailId_item[$this->core->daily_type] = (gettype($this->core->data[$this->core->daily_type]['value']) == 'array') ?
             $this->core->data[$this->core->daily_type]['value'][$this->core->row_daily_details] : $this->core->data[$this->core->daily_type]['value'];
+
+
     }
 
 

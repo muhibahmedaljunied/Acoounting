@@ -3,13 +3,13 @@
 namespace App\Repository\Stock;
 
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Traits\Cash\CashTrait;
+use App\Traits\Cash\CashDetailsTrait;
 use App\Services\CoreService;
 
 class CashDetailRepository implements DetailRepositoryInterface
 {
 
-    use CashTrait;
+    use CashDetailsTrait;
     public $core;
     public function __construct()
     {
@@ -17,7 +17,7 @@ class CashDetailRepository implements DetailRepositoryInterface
         $this->core = app(CoreService::class);
     }
 
-    public function init_details()
+    public function details()
     {
 
    

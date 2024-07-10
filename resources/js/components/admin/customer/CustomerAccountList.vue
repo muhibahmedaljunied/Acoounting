@@ -209,7 +209,7 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-import operation from '../../../../js/operation.js';
+import operation from '../../../operation1.js';
 export default {
 
   components: {

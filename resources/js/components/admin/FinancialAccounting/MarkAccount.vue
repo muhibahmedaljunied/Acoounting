@@ -181,7 +181,7 @@
   
 <script>
 
-import operation from '../../../../js/operation.js';
+import operation from '../../../operation1.js';
 export default {
 
     mixins: [operation],

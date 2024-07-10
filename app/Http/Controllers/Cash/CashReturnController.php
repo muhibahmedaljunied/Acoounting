@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Cash;
+
 use Illuminate\Support\Facades\Cache;
 use App\Traits\Return\ReturnTrait;
 use App\Traits\Details\ReturnDetailsTrait;
@@ -9,7 +10,12 @@ use Illuminate\Http\Request;
 use App\Models\CashReturnDetail;
 use App\Http\Controllers\Controller;
 use App\Models\CashReturn;
+use App\Models\Payment;
+use App\Repository\Qty\QtyStockRepository;
 use App\Services\StockReturnService;
+use App\Services\StockService;
+use App\Services\UnitService;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,34 +23,50 @@ class CashReturnController extends Controller
 {
 
     use GeneralTrait,
-        ReturnDetailsTrait,
         ReturnTrait;
+    public $details;
 
 
+    public function  __construct(public QtyStockRepository $qty)
+    {
+        $this->qty = $qty;
+    }
 
+    // public function details(Request $request, $id)
+    // {
+
+    //     $this->get_details($request, $id);
+    //     $this->unit->handle_unit($this->details);
+
+    //     // $this->units($details);
+
+    //     return response()->json([
+    //         'details' => $this->details,
+    //         'treasuries' => $this->treasuries()
+    //     ]);
+    // }
 
     public function details(Request $request, $id)
     {
 
-        $details = $this->get_details($request, $id);
-
-        $this->units($details);
-
+        $this->qty->compare_array = ['qty','quantity','qty_remain'];
+        $this->get_details($request, $id);
+        $this->qty->handle_qty();
         return response()->json([
-            'details' => $details,
-            // 'customers' => $this->customers(),
-            'treasuries' => $this->treasuries()
+            'details' => $this->qty->details,
+            // 'cash' => $this->get_sale($request->id),
         ]);
     }
+
 
 
     public function index(Request $request, $id)
     {
 
-        $details = $this->details($request, $id);
+        $this->details($request, $id);
 
         return response()->json([
-            'cash_details' => $details,
+            'cash_details' => $this->details,
             'customers' => $this->customers(),
             // 'treasuries' => $this->treasuries()
         ]);
@@ -152,12 +174,13 @@ class CashReturnController extends Controller
     }
 
     public function create(
-        StockReturnService $stock
+        StockService $stock,
+        
 
     )   // this create return for supply,cashing,cash,purchase
     {
 
-        dd($stock->core->data);
+        // dd($stock->core->data);
         try {
             DB::beginTransaction(); // Tell Laravel all the code beneath this is a transaction
 
@@ -212,4 +235,29 @@ class CashReturnController extends Controller
         // dd($cashes);
         return response()->json(['daily_details' => $cash_returns]);
     }
+
+    public function return_cash_list()
+    {
+
+
+        $cashes = Payment::with(['Paymentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                CashReturn::class => function ($query) {
+                    // $query->join('customers', 'customers.id', '=', 'cashes.customer_id');
+
+                    $query->select(
+                        'cashe_returns.*',
+                        'cashe_returns.id as return_id',
+
+                    );
+                },
+            ]);
+        }])
+            ->where('paymentable_type', 'App\\Models\\CashReturn')
+            ->paginate(5);
+
+
+        return response()->json(['cashes' => $cashes]);
+    }
+
 }

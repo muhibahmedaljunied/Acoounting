@@ -2,44 +2,105 @@
 
 
 namespace App\Repository\StoreInventury;
-use App\Traits\Supply\StoreProductTrait;
-class StoreSupplyRepository extends StoreRepository
+use App\RepositoryInterface\StoreRepositoryInterface;
+use App\Services\CoreService;
+
+class StoreSupplyRepository extends StoreRepository implements StoreRepositoryInterface
 {
 
-    use StoreProductTrait;
+  public function __construct(CoreService $core)
+  {
+    $this->core = $core;
+    $this->operation = 'increment';
+  }
+  public function store()
+  {
+
+    $this->get_store_product_tow();
+    $this->check_founded_store();
+  
+  }
+
+  
+  public function check_founded_store()
+  {
+
+
+      if ($this->core->id_store_product == 0) {
+
+
+          $this->init_store_product_table();
+
+      } else {
+
+
+          $this->refresh_store_product();
+      }
+
+
+
+  }
+
+  public function refresh_store_product()
+  {
+
+
+
+          $this->refresh_qty_store_product_table();
+          $this->refresh_total_store_product_table();
+          $this->get_store_product_tow();
+          $this->refresh_cost_store_product_table();
+  }
+  
     
-    public function store()
-    {
-        $this->get_store_product();
-        $this->refresh_store_product();
-        $this->init_store_product(); // this make refresh for store_products
+    // public function __construct(CoreService $core)
+    // {
+  
+    //   $this->core = $core;
+    //   $this->operation = 'increment';
+    // }
+    
+    // public function store()
+    // {
 
-    }
+    //     $this->get_store_product_one_table();
+    //     $this->init_store_product();
+    //     $this->refresh_store_product();
+    //     $this->get_store_product_table();
 
-
-    function get_store_product()
-    {
-
-        $id_store_product = $this->get_store_product_table();
-
-        $this->core->id_store_product = (count($id_store_product->toarray()) == 0) ? 0 : $id_store_product[0]['id'];
-    }
-
-
-    public function init_store_product()
-    {
+    //     if ($this->init_status == true) {
 
 
-        if ($this->core->store_product_f != 0) {
-            return 0;
-        }
-        $this->core->id_store_product = $this->init_store_product_table();
-    }
-
-    public function refresh_store_product(...$list_data)
-    {
+    //       $this->refresh_cost_store_product_table();
+    
+    //       }
+          
+    // }
 
 
-        $this->core->store_product_f = $this->refresh_store_product_table();
-    }
-}
+    
+    // function get_store_product()
+    // {
+
+    //      $this->get_store_product_table();
+             
+    //     $this->core->id_store_product = ($this->core->data_store_product == null) ? 0 : $this->core->data_store_product[0]['id'];
+
+       
+    // }
+
+    // public function handle_cost_store_product($operation)
+    // {
+  
+  
+    //   if ($this->init_status == true) {
+
+
+    //   $this->get_store_product_table($operation);
+    //   $this->refresh_cost_store_product_table($operation);
+
+    //   }
+
+    // }
+  
+  }

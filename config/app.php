@@ -161,6 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        
 
         /*
          * Package Service Providers...
@@ -174,7 +175,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\RepositoryServiceProvider::class,
         App\Providers\SanctionServiceProvider::class,
         App\Providers\DetailServiceProvider::class,
         App\Providers\StockServiceProvider::class,
@@ -183,12 +183,13 @@ return [
         App\Providers\HRServiceProvider::class,
         App\Providers\InventuryServiceProvider::class,
         App\Providers\WarehouseServiceProvider::class,
-        App\Providers\UnitServiceProvider::class,
         App\Providers\DailyServiceProvider::class,
         App\Providers\NoteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         App\Providers\PeriodServiceProvider::class,
-        // Fhsinchy\Inspire\Providers\InspirationProvider::class,
+        App\Providers\UnitServiceProvider::class,
+
+
  
 
     ],

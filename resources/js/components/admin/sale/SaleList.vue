@@ -163,44 +163,41 @@
                     <!-- <td>{{ sale_details.qty }}</td>  -->
                     <td>
 
-                      <div v-for="(temx, index) in sale_details.units">
+
+                      <div v-for="temx in sale_details.qty_after_convert['qty']">
 
 
-                        <span v-if="temx.unit_id == sale_details.unit_id">
 
-                          <!-- <span v-if="sale_details.qty / sale_details.units[0].rate >= 1"> -->
-                          {{ Math.floor((sale_details.qty *
-                sale_details.units[index].rate) / sale_details.units[index].rate) }}{{
-                sale_details.units[index].name
-              }}
-                          <!-- </span> -->
+                        <span v-for="temx2 in temx">
 
-                          <!-- <span v-if="sale_details.qty % sale_details.units[1].rate >= 1">
-  {{ Math.floor((sale_details.qty % sale_details.units[1].rate)) }}{{
-sale_details.units[1].name
-}}
-</span> -->
+
+                          <span style="float: right;">
+                            {{ temx2[0] }}
+                            <span style="color: red;">
+                              {{ temx2[1] }}
+                            </span>
+
+                          </span>
+
+
+
                         </span>
 
                         <!-- <span v-if="temx.unit_type == 0">
 
-                          <span v-if="sale_details.qty / sale_details.rate >= 1">
-                            {{ Math.floor((sale_details.qty / sale_details.rate)) }}{{
-                              sale_details.units[0].name
-                            }}
-                          </span>
 
-                          <span v-if="sale_details.qty % sale_details.rate >= 1">
-                            {{ Math.floor((sale_details.qty % sale_details.rate)) }}{{
-                              sale_details.units[1].name
-                            }}
-                          </span>
-                        </span> -->
+  <span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
 
                       </div>
+
                       <!-- {{ sale_details.qty }} {{ sale_details.unit }} -->
                     </td>
-                    <td>{{ sale_details.cost }}</td>
+                    <td>{{ sale_details.price }}</td>
                     <!-- <td>{{ sale_details.total }}</td> -->
                     <!-- <td>{{ sale_details.qty_return }}</td> -->
 
@@ -255,7 +252,7 @@ export default {
     };
   },
   mounted() {
-    this.type = 'Purchase';
+    this.type = 'sale';
     this.table = 'sale_details';
     this.list();
 
@@ -267,7 +264,10 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1], { table: this.table,
+            type: this.type,
+            operation:'OperationQty'
+           })
           .then((response) => {
 
             console.log(response.data);

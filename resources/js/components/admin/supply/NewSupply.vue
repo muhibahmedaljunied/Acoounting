@@ -543,7 +543,7 @@
 </template>
 <script>
 import pagination from "laravel-vue-pagination";
-import operation from '../../../operation.js';
+import operation from '../../../operation1.js';
 import tree from '../../../tree/tree.js';
 export default {
 
@@ -557,14 +557,13 @@ export default {
 
       description: '',
       store: '',
-      productm: [],
-      treasury: [],
+    
+      // treasury: [],
       text_message: '',
-      intostore: [],
-      intostore_id: [],
+
       treasuries: '',
       discount: 0,
-      customer: [],
+      // customer: [],
       suppliers: '',
       customers: '',
       temporale: 1,
@@ -626,50 +625,46 @@ export default {
 
 
 
-     this.init();
-      var unit = JSON.parse($(`#select_unit${index}`).val());
-
-      // --------------------------------------------------------------------------------------
-      if (unit && this.qty[index] && this.price[index]) {
-
-        if (unit[2] == 0) {
-
-          this.total[index] = this.price[index] * this.qty[index];
-        }
-
-        if (unit[2] == 1) {
-
-          this.total[index] = this.price[index] * unit[1] * this.qty[index];
-
-        }
-      } else {
-
-        toastMessage('فشل', "قم بأدخال الوحده", 'error');
-
-        this.total[index] = 0;
-      }
-
-      // --------------------------------------------------------------------------------------
-
-
+      this.init();
+      this.check_data(index);
       this.calculate_qty();
       this.calculate_tax();
       this.calculate_grand_total();
       this.credit();
-
-      this.To_pay = this.grand_total;
-
       this.calc_remaining();
 
 
-      if (this.qty[index] <= 0 || this.price[index] <= 0) {
 
-        toastMessage('فشل', "تأكد من البيانات المدخله", 'error');
-        return 0;
+    },
 
+    check_data(index) {
+
+      if (this.unit[index] && this.qty[index] && this.price[index]) {
+
+
+
+        if (this.qty[index] <= 0 || this.price[index] <= 0) {
+
+          this.total[index] = 0;
+          toastMessage('فشل', "تأكد من البيانات المدخله", 'error');
+          return 0;
+
+        }
+
+
+
+        this.total[index] = this.price[index] * this.qty[index]*JSON.parse(this.unit[index])[1];
+
+        // alert('zanam',this.total[index]);
+      } else {
+
+        toastMessage('فشل', "قم بأدخال الوحده", 'error');
+
+        // this.row_removed[index] = index;
+        this.total[index] = 0;
       }
 
-
+      
 
     },
     init() {
@@ -712,6 +707,8 @@ export default {
         console.log('calculate_grand_total', i, this.grand_total);
 
       }
+      this.To_pay = this.grand_total;
+
     },
 
     calculate_qty() {
@@ -849,11 +846,11 @@ export default {
 
 
           if (this.qty[index + 1] == 0 || !this.qty[index + 1]) {
-            
+
             toastMessage('فشل', " لايوجد كميه مدخله", 'error');
           }
           this.$delete(this.counts, index);
-        
+
 
         }
 
@@ -866,6 +863,7 @@ export default {
           count: this.counts,
           product: this.productm,
           unit: this.unit,
+          units: this.units,
           desc: this.desc,
           qty: this.qty,
           status: this.status,
@@ -893,7 +891,7 @@ export default {
           // -----------------------------------------------------------
           type_daily: 'supply',
           payment_type: this.Way_to_pay_selected,
-          daily_index:1,
+          daily_index: 1,
           supplier_id: this.supplier[0],
           supplier_name: this.supplier[1],
           date: this.date,

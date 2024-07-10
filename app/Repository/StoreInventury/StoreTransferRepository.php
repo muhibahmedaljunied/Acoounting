@@ -1,56 +1,83 @@
 <?php
 
 namespace App\Repository\StoreInventury;
-use App\Traits\Transfer\StoreProductTrait;
-use App\Services\CoreService;
 
+use App\Services\CoreService;
+use App\Traits\Transfer\StoreProductTrait;
 
 class StoreTransferRepository extends StoreRepository
 {
 
     use StoreProductTrait;
-    public function __construct(protected CoreService $core)
+    public $store = '';
+    public function __construct(CoreService $core)
     {
+      $this->core = $core;
     }
-
 
     public function store()
     {
 
-        $this->get_store_product();
-        $this->refresh_store_product();
-        $this->init_store_product_table();
+        // $this->refresh_store_product_transfer(['decrement', 'increment']);
+        // --------------------------------------
+
+
+        $this->handle_from_store();
+        
+        $this->handle_into_store();
+        // dd(198);
+
+
     }
 
 
-
-
-    function get_store_product()
+    public function handle_from_store()
     {
 
-        $id_store_product = $this->get_store_product_table();
-
-        $this->core->data_store_product = (count($id_store_product->toarray()) == 0) ? 0
-        :
-        [
-            'store_product_id' => $id_store_product[0]['id'],
-            'product_id' => $id_store_product[0]['product_id'],
-            'status_id' => $id_store_product[0]['status_id'],
-            'desc' => $id_store_product[0]['desc']
-        ];
-        
-
-      
+        $this->operation = 'decrement';
+        $this->store = $this->core->data['old'][$this->core->value]['store_id'];
+        $this->get_store_product_first();
+        $this->refresh_store_product();
 
     }
+    public function handle_into_store()
+    {
 
-
-
-
+        $this->operation = 'increment';
+        $this->store = $this->core->data['intostore_id'];
+        $this->get_store_product_table();
+        $this->check_founded_store();
+    }
     public function refresh_store_product()
     {
 
-        $this->decrement_store_product_tale();
-        $this->increment_store_product_table();
+
+
+        $this->refresh_qty_store_product_table();
+        $this->refresh_total_store_product_table();
+        $this->get_store_product_table();
+        $this->refresh_cost_store_product_table();
     }
+
+    public function check_founded_store()
+    {
+
+
+        if ($this->core->id_store_product == 0) {
+
+
+            $this->init_store_product_table();
+        } else {
+
+
+            $this->refresh_store_product();
+        }
+    }
+
+
+
+
+  
+
+
 }

@@ -264,7 +264,10 @@ export default {
       if (this.operationselected[index][2] == 0) {
 
         this.axios
-          .post(this.operationselected[index][0] + this.operationselected[index][1],{ table: this.table })
+          .post(this.operationselected[index][0] + this.operationselected[index][1],{ table: this.table,
+            operation:'OperationQty'
+
+           })
           .then((response) => {
             console.log(response.data.return_details);
             this.return_detail = response.data.return_details;

@@ -52,7 +52,7 @@
                           </button>
                         </div>
                       </div>
-                
+
                     </div>
                   </div>
                 </div>
@@ -115,12 +115,14 @@
                         </th>
                         <th class="wd-15p border-bottom-0" colspan="">المخزن</th>
                         <!-- <th class="wd-15p border-bottom-0" colspan="">المخزن المحول اليه</th> -->
+                        <th class="wd-15p border-bottom-0" colspan="">الوحده</th>
+                        <!-- <th class="wd-15p border-bottom-0" colspan="">التكلفه</th> -->
+
 
                         <th class="wd-15p border-bottom-0" rowspan="">
                           الكميه المحوله
                         </th>
-                        
-                        <th class="wd-15p border-bottom-0" colspan="">الوحده</th>
+
 
                         <th>اضافه</th>
                         <!-- <th>+</th> -->
@@ -152,42 +154,38 @@
                           </div>
                         </td>
                         <td>
-                          <div v-for="temx in data_product.units">
-                            <span v-if="temx.unit_type == 1">
-                              <span v-if="parseInt(
-                            data_product.quantity / data_product.rate
-                          ) != 0
-                            ">
-                                {{
-                            parseInt(
-                              data_product.quantity / data_product.rate
-                            )
-                          }}
-                                {{ temx.name }}
+
+                          <div v-for="temx in data_product.qty_after_convert['quantity']">
+
+
+
+                            <span v-for="temx2 in temx">
+
+
+                              <span style="float: right;">
+                                {{ temx2[0] }}
+                                <span style="color: red;">
+                                  {{ temx2[1] }}
+                                </span>
+
                               </span>
+
+
+
                             </span>
-                            <span v-if="temx.unit_type == 0">
-                              <span v-if="Math.round(
-                            (data_product.quantity / data_product.rate -
-                              parseInt(
-                                data_product.quantity / data_product.rate
-                              )) *
-                            data_product.rate
-                          ) != 0
-                            ">
-                                و
-                                {{
-                            Math.round(
-                              (data_product.quantity / data_product.rate -
-                                parseInt(
-                                  data_product.quantity / data_product.rate
-                                )) *
-                              data_product.rate
-                            )
-                          }}{{ temx.name }}
-                              </span>
-                            </span>
+
+                            <!-- <span v-if="temx.unit_type == 0">
+
+
+<span>{{ Math.floor((stock.quantity)) }}</span><span style="color: red;"> {{
+temx.name }}</span>
+
+
+
+</span> -->
+
                           </div>
+
                         </td>
                         <td>
                           <div id="factura_producto" class="input_nombre">
@@ -215,25 +213,37 @@
 
                       </td> -->
 
-                        <td>
-                          <input style="background-color: beige;" v-model="data_product.qty_transfer" type="number"
-                            class="form-control input_cantidad" onkeypress="return valida(event)" />
-                        </td>
+
 
                         <td>
                           <div id="factura_producto" class="input_nombre">
-                            <select style="background-color: beige;" :id="'select_unit' + index"
-                              v-model="data_product.unit_selected" name="type" class="form-control" required>
+                            <select v-on:change="calculate_price(index, data_product.cost)"
+                              style="background-color: beige;" :id="'select_unit' + index" v-model="unit[index]"
+                              name="type" class="form-control" required>
                               <option v-for="unit in data_product.units" v-bind:value="[
-                            unit.id,
+                            unit.unit_id,
                             unit.rate,
-                            unit.unit_type,
                           ]">
                                 {{ unit.name }}
                               </option>
                             </select>
                           </div>
                         </td>
+
+                        <td>
+
+
+                          <input style="background-color: beige;" v-on:input="calculate_price(index, data_product.cost)"
+                            v-model="qty[index]" type="number" class="form-control input_cantidad"
+                            onkeypress="return valida(event)" />
+
+                          <input style="background-color: beige;" v-model="data_product.cost" type="hidden"
+                            class="form-control input_cantidad" />
+
+                          <input style="background-color: beige;" v-model="total[index]" type="hidden"
+                            class="form-control input_cantidad" />
+                        </td>
+
                         <td>
                           <input @change="
                             add_one_transfer(
@@ -247,7 +257,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <button @click="addTransfer()"  class="tn btn-info btn-lg waves-effect btn-agregar">
+                  <button @click="addTransfer()" type="button" class="tn btn-info btn-lg waves-effect btn-agregar">
                     تحويل
                   </button>
                 </div>
@@ -311,7 +321,7 @@
 
 </template>
 <script>
-import operation from "../../../../operation.js";
+import operation from "../../../../operation1.js";
 import tree from "../../../../tree/tree.js";
 export default {
   mixins: [operation, tree],
@@ -321,7 +331,7 @@ export default {
       store_one: '',
       product: [],
       qty: [],
-      unit: [],
+      // unit: [],
       desc: [],
       store: [],
       status: [],
@@ -423,38 +433,47 @@ export default {
         });
     },
 
+    // calculate_price(index, price) {
+
+
+
+    //   if (this.unit[index] && this.qty[index]) {
+
+
+    //     this.total[index] = price * this.qty[index] * this.unit[index][1];
+
+    //     console.log('zher', price, this.qty[index], this.unit[index][1],this.total);
+    //   } else {
+
+    //     // toastMessage('فشل', "قم بأدخال الوحده", 'error');
+
+    //     this.total[index] = 0;
+    //   }
+
+
+
+
+    // },
+
     add_one_transfer(
       index,
       data_product
     ) {
 
-      var qty = data_product.qty_transfer;
-      var quantity = data_product.quantity;
-      var unit = data_product.unit_selected;
-
-      var result;
 
       if (this.check_state[index] == true) {
 
-        result = this.check_qty(qty, unit, quantity);
-        if (result == 0) { return 0; }
-
-        // if (qty != 0) {
-        // if (qty <= qty_avilable) {
+        if (this.check_qty(
+          this.qty[index],
+          this.unit[index],
+          data_product.quantity
+        ) == 0) { return 0; }
 
         this.counts[index] = index;
-        this.qty[index] = qty;
-        this.unit[index] = unit;
 
-
-        // }
-        // }
       } else if (this.check_state[index] == false) {
         this.$delete(this.counts, index);
       }
-      console.log(this.counts, index);
-      console.log(this.unit, index);
-      console.log(this.qty, index);
 
     },
 
@@ -505,26 +524,26 @@ export default {
 
 
 
-      this.axios
-        .post("store_transfer", {
+      this.axios.post("/store_transfer", {
 
-          type: this.type,
-          date: this.date,
-          count: this.counts,
-          qty_transfer: this.qty,
-          unit: this.unit,
-          units: this.units,
-          intostore: this.intostore,
-          intostore_id: this.intostore_id,
-          fromstore: this.fromstore,
-          fromstore_id: this.fromstore_id,
-          old: this.detail,
-        })
+        type: this.type,
+        date: this.date,
+        count: this.counts,
+        qty_transfer: this.qty,
+        unit: this.unit,
+        units: this.units,
+        intostore: this.intostore,
+        intostore_id: this.intostore_id,
+        fromstore: this.fromstore,
+        fromstore_id: this.fromstore_id,
+        total: this.total,
+        old: this.detail,
+      })
         .then(function (response) {
           console.log(response);
           if (response.data.message != 0) {
             toastMessage("تم التحويل بنجاح");
-            this.$router.go(0);
+            // this.$router.go(0);
           } else {
             toastMessage("فشل", response.data.text);
           }

@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
+use App\Repository\StockInventury\StockRepository;
 use Illuminate\Http\Request;
 use App\RepositoryInterface\DetailRefreshRepositoryInterface;
 use App\RepositoryInterface\DetailRepositoryInterface;
-use App\Repository\StockReturnInventury\StockReturnRepository;
-use App\Repository\StoreReturnInventury\StoreReturnRepository;
+use App\RepositoryInterface\StoreRepositoryInterface;
+use App\RepositoryInterface\UnitRepositoryInterface;
 use App\RepositoryInterface\WarehouseRepositoryInterface;
 use App\Services\DailyStockService;
 
@@ -23,9 +24,9 @@ use App\Services\DailyStockService;
         public WarehouseRepositoryInterface $warehouse,
         public DetailRefreshRepositoryInterface $refresh,
         public DetailRepositoryInterface $detail,
-        public StoreReturnRepository $store,
-        public StockReturnRepository $stock,
-        public UnitService $unit,
+        public StoreRepositoryInterface $store,
+        public StockRepository $stock,
+        public UnitRepositoryInterface $unit,
         public DailyStockService $daily,
     ) {
 
@@ -56,13 +57,9 @@ use App\Services\DailyStockService;
             // -------------------------------------------------------------------------------------
        
             $this->core->setValue($value);
-      
-            $this->unit->unit_and_qty(); // this make decode for unit and convert qty into miqro
-   
+            $this->unit->handle_unit();
             $this->store->store();
-            $this->detail->init_details();
-            $this->refresh->refresh_details();
-        
+            $this->detail->details();
             $this->stock->stock();
         
    
@@ -70,7 +67,6 @@ use App\Services\DailyStockService;
         // dd(1);
 
         $this->daily->daily()->exicute('debit')->exicute('credit');
-
         $this->warehouse->refresh(); //this update purchase_return table by daily_id
     }
 }
